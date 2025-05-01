@@ -1,0 +1,23 @@
+# cosmeticObsidian (Player player)
+
+@fast
+@using Harha
+
+@if Int(math::random(1.0D, 11.0D)) >= 7
+    @var obsidianNumber[player] = 1
+@else
+    @var obsidianNumber[player] = 0
+@fi
+
+@var blockSelection[player] = obsidianList[obsidianNumber]
+@if obsidianNumber[player] != lastObsidianNumber[player]
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+@fi
+@if numberOfBlocksToGive[player] >= 1
+    @bypass /item replace entity {{player}} container.0 with {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] {{numberOfBlocksToGive[player]}}
+@fi
+@var numberOfBlocksToGive[player] -= 1
+@var lastObsidianNumber[player] = obsidianNumber[player]
+
+
+# @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

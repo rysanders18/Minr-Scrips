@@ -1,0 +1,5 @@
+# splits(Int stage, Player player)
+@using Harha
+@fast
+
+@var startTime = system::currentTimeMillis()

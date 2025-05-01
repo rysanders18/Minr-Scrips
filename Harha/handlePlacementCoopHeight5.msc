@@ -1,0 +1,22 @@
+# handlePlacementHeight5 (Block block, Player player)
+@define Int height = 5
+
+@fast
+@using Harha
+
+# define variables for less typing
+@define Int x = block.getX()
+@define Int y = block.getY()
+@define Int z = block.getZ()
+
+# time block stays + 1 from target script
+@delay 7
+    
+@bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
+@bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{coopBlockSelection}}}, DropItem: 0, CancelDrop:1}
+
+@delay 13
+
+@bypass /playsound minecraft:block.wool.break master @a[distance=..20] ~ {{y - height}} ~ 1 0.8
+@bypass /execute in minecraft:theta run particle block{block_state:{Name:{{coopBlockSelection}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
+@return

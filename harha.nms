@@ -1,0 +1,146 @@
+@namespace Harha
+
+    # VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES 
+
+    relative String difficultySelection = "normal"
+    relative String blockSelection = "packed_mud"
+    relative String blockSelectionStored = "packed_mud"
+    relative String blockSelectionCosmetic = "packed_mud"
+    relative String temporaryBlockSelection = "packed_mud"
+    relative String temporaryBlockSelection1 = "packed_mud"
+    relative String temporaryBlockSelection2 = "packed_mud"
+    relative String temporaryBlockSelection3 = "packed_mud"
+    relative String temporaryBlockSelection4 = "packed_mud"
+    relative Int sessionFalls = 0
+    relative Int totalFalls = 0
+    relative Int sessionBlocks = 0
+    relative Int totalBlocks = 0
+    relative Int stage = 0
+    relative Int numberOfBlocksToGive = 63
+    relative Int blocksThisStage = 0
+    Int globalBlocks = 0
+    Int globalFalls = 0
+
+    # coop stuff
+    relative Boolean isOrange = false
+    relative Boolean isBlue = false
+    relative String coopBlockSelection
+
+    relative Boolean bootsObtained = false
+    relative Boolean iceSwapped = false
+    relative Boolean slimeSwapped = false
+    relative Boolean codeGenerated = false
+    relative String[] code = String[""]
+    relative String code1 = ""
+    relative String code2 = ""
+    relative String code3 = ""
+    relative String code4 = ""
+    relative String code5 = ""
+    relative String code6 = ""
+    relative String code7 = ""
+    relative String code8 = ""
+    relative String code9 = ""
+    relative String code10 = ""
+    relative String code11 = ""
+    relative Int randomCodeNumber
+    relative String totalCode = ""
+    relative String[] codeList = String["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+
+    Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
+    Int[] directionsY = Int[0, 0, 1, -1, 0, 0]
+    Int[] directionsZ = Int[0, 0, 0, 0, 1, -1]
+
+    Int[] directionsZTarget = Int[0, 0, 0, 0, -1, -1]
+    Int[] failMilestones = Int[100, 250, 500, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 20000, 30000, 50000, 100000]
+
+    String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block"]
+
+    String[] blocksSound = String["obsidian", "crying_obsidian", "prismarine", "polished_andesite"]
+    String[] blocksSoundOres = String["iron_block", "gold_block", "diamond_block", "emerald_block"]
+    String[] grateList = String["waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "waxed_weathered_copper_grate", "waxed_exposed_copper_grate", "waxed_copper_grate", "waxed_exposed_copper_grate"]
+    String[] woolList = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool", "pink_wool", "red_wool", "orange_wool", "yellow_wool", "lime_wool"]
+    String[] glassList = String["red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass"]
+    String[] leafList = String["azalea_leaves", "flowering_azalea_leaves"]
+    String[] obsidianList = String["obsidian", "crying_obsidian"]
+    String[] spongeList = String["sponge", "sponge", "wet_sponge", "sponge"]
+    String[] sculkList = String["sculk_catalyst", "sculk_catalyst[bloom=true]"]
+    String[] spawnerList = String["trial_spawner", "trial_spawner[block_state={trial_spawner_state:"waiting_for_players"}]"]
+    String[] oreList = String["iron_block", "gold_block", "diamond_block", "emerald_block", "netherite_block"]
+    String[] coolGlassList = String["orange_stained_glass", "light_blue_stained_glass"]
+    String[] pumpkinList = String["pumpkin", "melon"]
+    String[] coralList = String["tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block"]
+
+    relative Boolean copperGrate = false
+    relative Boolean cosmeticSwap = false
+    relative Boolean coolGlass = false
+    relative Long startTime
+
+    relative Int grateNumber = 0
+    relative Int woolNumber = 0
+    relative Int glassNumber = 0
+    relative Int spongeNumber = 0
+    relative Int lastSpongeNumber = 0
+    relative Int leafNumber = 0
+    relative Int lastLeafNumber = 0
+    relative Int obsidianNumber = 0
+    relative Int lastObsidianNumber = 0
+    relative Int oreNumber = 0
+    relative Int lastOreNumber = 0
+    relative Int pumpkinNumber = 0
+    relative Int lastPumpkinNumber = 0
+    relative Int coolGlassNumber = 0
+    relative Int lastCoolGlassNumber = 
+    relative Int coralNumber = 0
+    relative Int lastCoralNumber = 0
+
+    # JM4s secret variables
+
+    relative Int[] diamondsFound = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] emeraldsFound = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    # FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
+
+    cosmeticCopper(Player player)
+    cosmeticWool(Player player)
+    cosmeticGlass(Player player)
+    cosmeticSponge(Player player)
+    cosmeticLeaf(Player player)
+    cosmeticObsidian(Player player)
+    cosmeticOre(Player player)
+    cosmeticPumpkin(Player player)
+    cosmeticCoolGlass(Player player)
+    cosmeticCoral(Player player)
+
+    handlePlacementHeight1(Block block, Player player)
+    handlePlacementHeight2(Block block, Player player)
+    handlePlacementHeight3(Block block, Player player)
+    handlePlacementHeight4(Block block, Player player)
+    handlePlacementHeight5(Block block, Player player)
+    handlePlacementHeight6(Block block, Player player)
+    handlePlacementHeight7(Block block, Player player)
+    handlePlacementHeight8(Block block, Player player)
+    handlePlacementHeight9(Block block, Player player)
+    handlePlacementHeight10(Block block, Player player)
+    handlePlacementHeight11(Block block, Player player)
+    handlePlacementHeight12(Block block, Player player)
+    handlePlacementHeight13(Block block, Player player)
+    handlePlacementHeight14(Block block, Player player)
+    handlePlacementHeight15(Block block, Player player)
+    handlePlacementHeight5Fast(Block block, Player player)
+
+    splits(Int stage, Player player)
+
+    handlePlacementCoopHeight2(Block block, Player player)
+    handlePlacementCoopHeight3(Block block, Player player)
+    handlePlacementCoopHeight4(Block block, Player player)
+    handlePlacementCoopHeight5(Block block, Player player)
+    handlePlacementCoopHeight6(Block block, Player player)
+    handlePlacementCoopHeight7(Block block, Player player)
+    handlePlacementCoopHeight8(Block block, Player player)
+
+
+
+
+@endnamespace
+
+

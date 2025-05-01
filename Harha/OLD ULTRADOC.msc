@@ -1,0 +1,1482 @@
+@player &7[&#20a0d0VSCode&7] &eNow importing namespace Harha.
+
+
+@bypass /namespace remove Harha
+@bypass /namespace define Harha
+
+# VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES 
+# VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES 
+# VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES VARIABLES 
+
+
+@bypass /var define Harha relative String difficultySelection = "normal"
+@bypass /var define Harha relative String blockSelection = "packed_mud"
+@bypass /var define Harha relative String blockSelectionStored = "packed_mud"
+@bypass /var define Harha relative String blockSelectionCosmetic = "packed_mud"
+@bypass /var define Harha relative String temporaryBlockSelection = "packed_mud"
+@bypass /var define Harha relative String temporaryBlockSelection1 = "packed_mud"
+@bypass /var define Harha relative String temporaryBlockSelection2 = "packed_mud"
+@bypass /var define Harha relative String temporaryBlockSelection3 = "packed_mud"
+@bypass /var define Harha relative String temporaryBlockSelection4 = "packed_mud"
+@bypass /var define Harha relative Int sessionFalls = 0
+@bypass /var define Harha relative Int totalFalls = 0
+@bypass /var define Harha relative Int sessionBlocks = 0
+@bypass /var define Harha relative Int totalBlocks = 0
+@bypass /var define Harha relative Int stage = 0
+@bypass /var define Harha relative Int numberOfBlocksToGive = 63
+@bypass /var define Harha relative Int blocksThisStage = 0
+@bypass /var define Harha Int globalBlocks = 0
+@bypass /var define Harha Int globalFalls = 0
+@bypass /var define Harha relative Boolean bootsObtained = false
+@bypass /var define Harha relative Boolean iceSwapped = false
+@bypass /var define Harha relative Boolean slimeSwapped = false
+
+@bypass /var define Harha relative String[] code = String[""]
+@bypass /var define Harha relative String code1 = ""
+@bypass /var define Harha relative String code2 = ""
+@bypass /var define Harha relative String code3 = ""
+@bypass /var define Harha relative String code4 = ""
+@bypass /var define Harha relative String code5 = ""
+@bypass /var define Harha relative String code6 = ""
+@bypass /var define Harha relative String code7 = ""
+@bypass /var define Harha relative String code8 = ""
+@bypass /var define Harha relative String code9 = ""
+@bypass /var define Harha relative String code10 = ""
+@bypass /var define Harha relative String code11 = ""
+@bypass /var define Harha relative Int randomCodeNumber
+@bypass /var define Harha relative String totalCode = ""
+@bypass /var define Harha relative String[] codeList = String["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+
+@delay 0
+
+@bypass /var define Harha Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
+@bypass /var define Harha Int[] directionsY = Int[0, 0, 1, -1, 0, 0]
+@bypass /var define Harha Int[] directionsZ = Int[0, 0, 0, 0, 1, -1]
+
+@bypass /var define Harha Int[] directionsZTarget = Int[0, 0, 0, 0, -1, -1]
+
+@bypass /var define Harha Int[] failMilestones = Int[100, 250, 500, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 20000, 30000, 50000, 100000]
+
+# Cosmetic Block Lists
+@bypass /var define Harha String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block"]
+
+@bypass /var define Harha String[] blocksSound = String["obsidian", "crying_obsidian", "prismarine", "polished_andesite"]
+@bypass /var define Harha String[] blocksSoundOres = String["iron_block", "gold_block", "diamond_block", "emerald_block"]
+
+@bypass /var define Harha String[] grateList = String["waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "waxed_weathered_copper_grate", "waxed_exposed_copper_grate", "waxed_copper_grate", "waxed_exposed_copper_grate"]
+@bypass /var define Harha String[] woolList = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool", "pink_wool", "red_wool", "orange_wool", "yellow_wool", "lime_wool"]
+@bypass /var define Harha String[] glassList = String["red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass"]
+@bypass /var define Harha String[] leafList = String["azalea_leaves", "flowering_azalea_leaves"]
+@bypass /var define Harha String[] obsidianList = String["obsidian", "crying_obsidian"]
+@bypass /var define Harha String[] spongeList = String["sponge", "sponge", "wet_sponge", "sponge"]
+@bypass /var define Harha String[] sculkList = String["sculk_catalyst", "sculk_catalyst[bloom=true]"]
+@bypass /var define Harha String[] spawnerList = String["trial_spawner", "trial_spawner[block_state={trial_spawner_state:"waiting_for_players"}]"]
+@bypass /var define Harha String[] oreList = String["iron_block", "gold_block", "diamond_block", "emerald_block", "netherite_block"]
+@bypass /var define Harha String[] coolGlassList = String["orange_stained_glass", "light_blue_stained_glass"]
+@bypass /var define Harha String[] pumpkinList = String["pumpkin", "melon"]
+@bypass /var define Harha String[] coralList = String["tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block"]
+
+@bypass /var define Harha relative Long startTime
+@bypass /var define Harha relative Boolean copperGrate = false
+@bypass /var define Harha relative Boolean cosmeticSwap = false
+
+@bypass /var define Harha relative Boolean stage1completed = false
+@bypass /var define Harha relative Boolean stage2completed = false
+@bypass /var define Harha relative Boolean stage3completed = false
+@bypass /var define Harha relative Boolean stage4completed = false
+@bypass /var define Harha relative Boolean stage5completed = false
+@bypass /var define Harha relative Boolean stage6completed = false
+@bypass /var define Harha relative Boolean stage7completed = false
+
+@delay 0
+
+
+# FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
+# FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
+# FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
+
+
+# all cosmetic functions
+@bypass /var define Harha relative Int grateNumber = 0
+@bypass /function define Harha cosmeticCopper(Player player)
+@bypass /s i f Harha cosmeticCopper(Player player) https://paste.minr.org/zaxatuwugo
+
+@bypass /var define Harha relative Int woolNumber = 0
+@bypass /function define Harha cosmeticWool(Player player)
+@bypass /s i f Harha cosmeticWool(Player player) https://paste.minr.org/ayomahixub
+
+@bypass /var define Harha relative Int glassNumber = 0
+@bypass /function define Harha cosmeticGlass(Player player)
+@bypass /s i f Harha cosmeticGlass(Player player) https://paste.minr.org/hehuquxesa
+
+@bypass /var define Harha relative Int spongeNumber = 0
+@bypass /var define Harha relative Int lastSpongeNumber = 0
+@bypass /function define Harha cosmeticSponge(Player player)
+@bypass /s i f Harha cosmeticSponge(Player player) https://paste.minr.org/dehoroseyi
+
+@bypass /var define Harha relative Int leafNumber = 0
+@bypass /var define Harha relative Int lastLeafNumber = 0
+@bypass /function define Harha cosmeticLeaf(Player player)
+@bypass /s i f Harha cosmeticLeaf(Player player) https://paste.minr.org/qigodaveli
+
+@bypass /var define Harha relative Int obsidianNumber = 0
+@bypass /var define Harha relative Int lastObsidianNumber = 0
+@bypass /function define Harha cosmeticObsidian(Player player)
+@bypass /s i f Harha cosmeticObsidian(Player player) https://paste.minr.org/arubuvifex
+
+@bypass /var define Harha relative Int oreNumber = 0
+@bypass /var define Harha relative Int lastOreNumber = 0
+@bypass /function define Harha cosmeticOre(Player player)
+@bypass /s i f Harha cosmeticOre(Player player) https://paste.minr.org/uyumusazan
+
+@bypass /var define Harha relative Int pumpkinNumber = 0
+@bypass /var define Harha relative Int lastPumpkinNumber = 0
+@bypass /function define Harha cosmeticPumpkin(Player player)
+@bypass /s i f Harha cosmeticPumpkin(Player player) https://paste.minr.org/atenuqikej
+
+@bypass /var define Harha relative Int coolGlassNumber = 0
+@bypass /var define Harha relative Int lastCoolGlassNumber = 0
+@bypass /var define Harha relative Boolean coolGlass = false
+@bypass /function define Harha cosmeticCoolGlass(Player player)
+@bypass /s i f Harha cosmeticCoolGlass(Player player) https://paste.minr.org/awezefirat
+
+@bypass /var define Harha relative Int coralNumber = 0
+@bypass /var define Harha relative Int lastCoralNumber = 0
+@bypass /function define Harha cosmeticCoral(Player player)
+@bypass /s i f Harha cosmeticCoral(Player player) https://paste.minr.org/jazutuyame
+
+
+
+@bypass /function define Harha handlePlacementHeight1(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight1(Block block, Player player) https://paste.minr.org/ijocugizif
+@bypass /function define Harha handlePlacementHeight2(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight2(Block block, Player player) https://paste.minr.org/favimolafa
+@bypass /function define Harha handlePlacementHeight3(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight3(Block block, Player player) https://paste.minr.org/zecugazeta
+
+@bypass /function define Harha handlePlacementHeight4(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight4(Block block, Player player) https://paste.minr.org/ikejujaquh
+@bypass /function define Harha handlePlacementHeight5(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight5(Block block, Player player) https://paste.minr.org/wenugazixe
+@bypass /function define Harha handlePlacementHeight6(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight6(Block block, Player player) https://paste.minr.org/irodimuviw
+
+@bypass /function define Harha handlePlacementHeight7(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight7(Block block, Player player) https://paste.minr.org/aseyufaxuy
+@bypass /function define Harha handlePlacementHeight8(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight8(Block block, Player player) https://paste.minr.org/aseleragux
+@bypass /function define Harha handlePlacementHeight9(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight9(Block block, Player player) https://paste.minr.org/xototamame
+
+@bypass /function define Harha handlePlacementHeight10(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight10(Block block, Player player) https://paste.minr.org/iyesageyaz
+@bypass /function define Harha handlePlacementHeight11(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight11(Block block, Player player) https://paste.minr.org/eheqakekap
+@bypass /function define Harha handlePlacementHeight12(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight12(Block block, Player player) https://paste.minr.org/irucacopig
+
+@bypass /function define Harha handlePlacementHeight13(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight13(Block block, Player player) https://paste.minr.org/raqodaxinu
+@bypass /function define Harha handlePlacementHeight14(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight14(Block block, Player player) https://paste.minr.org/isajixomuf
+@bypass /function define Harha handlePlacementHeight15(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight15(Block block, Player player) https://paste.minr.org/epuqalaqaw
+
+@bypass /function define Harha handlePlacementHeight5Fast(Block block, Player player)
+@bypass /s i f Harha handlePlacementHeight5Fast(Block block, Player player) https://paste.minr.org/xujuniruri
+
+@delay 0
+
+
+# BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS
+# BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS
+# BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS
+
+
+# adventure mode button
+@bypass /s i i -9200 96 9702 Theta https://paste.minr.org/yurodemefu
+
+# 06-06 trapdoor button
+@bypass /s i i -9078 103 9580 Theta https://paste.minr.org/isahexatun
+
+# 01-08 trapdoor button
+@bypass /s i i -9158 104 9655 Theta https://paste.minr.org/yemuyiliqe
+
+# stats display button
+@bypass /s i i -9211 96 9689 Theta https://paste.minr.org/xuyivetuqi
+
+# stats reset button
+@bypass /s i i -9211 96 9691 Theta https://paste.minr.org/foquyuronu
+
+# normal button
+@bypass /s i i -9211 96 9699 Theta https://paste.minr.org/bikerogura
+
+# master button
+@bypass /s i i -9211 96 9697 Theta https://paste.minr.org/xohudikuba
+
+# ultraMaster button
+@bypass /s i i -9211 96 9695 Theta https://paste.minr.org/hulotoyuvi
+
+# BOOTS CHEST SCRIPT
+@bypass /s i i -9203 70 9632 Theta https://paste.minr.org/huyebizowe
+
+# packed mud button
+@bypass /s i i -9208 98 9699 Theta https://paste.minr.org/emivexiziv
+
+# prismarine button
+@bypass /s i i -9208 98 9695 Theta https://paste.minr.org/ducuhizobi
+
+# slime block button
+@bypass /s i i -9208 100 9695 Theta https://paste.minr.org/otoyizayel
+
+# polished andesite button
+@bypass /s i i -9208 98 9697 Theta https://paste.minr.org/exocosifuz
+
+# amethyst button
+@bypass /s i i -9208 96 9699 Theta https://paste.minr.org/fahidudaje
+
+# sculk button
+@bypass /s i i -9208 96 9697 Theta https://paste.minr.org/ocisaseqox
+
+# blue ice button
+@bypass /s i i -9208 96 9695 Theta https://paste.minr.org/ujomenecaj
+
+# copper grate button
+@bypass /s i i -9208 96 9693 Theta https://paste.minr.org/holituhohe
+
+# rainbow wool button
+@bypass /s i i -9208 96 9681 Theta https://paste.minr.org/ekebahikef
+
+# rainbow glass button
+@bypass /s i i -9208 96 9679 Theta https://paste.minr.org/xezejuquwa
+
+# obsidian button
+@bypass /s i i -9208 96 9691 Theta https://paste.minr.org/colobixilu
+
+# azalea leaf button
+@bypass /s i i -9208 98 9691 Theta https://paste.minr.org/mumoqipemu
+
+# sponge button
+@bypass /s i i -9208 96 9687 Theta https://paste.minr.org/idahoqiten
+
+# pumpkin melon button
+@bypass /s i i -9208 96 9689 Theta https://paste.minr.org/pefupoqoro
+
+# cool glass
+@bypass /s i i -9208 98 9689 Theta https://paste.minr.org/woqarefawu
+
+# ore button
+@bypass /s i i -9208 96 9685 Theta https://paste.minr.org/bobexabuhi
+
+# coral button
+@bypass /s i i -9208 96 9683 Theta https://paste.minr.org/ekehinunay
+
+# poekie lecturn script
+@bypass /s i i -9110 91 9655 Theta https://paste.minr.org/qudalajaji
+
+# COMPUTERS
+# code 00
+@bypass /s i i -9048 97 9555 Theta https://paste.minr.org/defakukayu
+
+# code 01
+@bypass /s i i -9055 102 9556 Theta https://paste.minr.org/desikodapo
+
+# code 02
+@bypass /s i i -9047 96 9582 Theta https://paste.minr.org/ocehugopil
+
+# code 03
+@bypass /s i i -9050 96 9582 Theta https://paste.minr.org/yajocevugi
+
+# code 04
+@bypass /s i i -9060 97 9595 Theta https://paste.minr.org/ajofutexeq
+
+# code 05
+@bypass /s i i -9046 97 9599 Theta https://paste.minr.org/ocaxupopus
+
+# code 06
+@bypass /s i i -9059 97 9606 Theta https://paste.minr.org/mohefeheqa
+
+# code 07
+@bypass /s i i -9078 97 9553 Theta https://paste.minr.org/gotofopoke
+
+# code 08
+@bypass /s i i -9064 96 9531 Theta https://paste.minr.org/kayenekobi
+
+# code 09
+@bypass /s i i -9064 100 9557 Theta https://paste.minr.org/udupocecul
+
+# code 10
+@bypass /s i i -9068 104 9597 Theta https://paste.minr.org/ekipewuhef
+
+# code 11
+@bypass /s i i -9043 106 9552 Theta https://paste.minr.org/azakayemoz
+
+# code 12
+@bypass /s i i -9052 103 9597 Theta https://paste.minr.org/obuhoregux
+
+
+@bypass /function define Harha splits(Int stage, Player player)
+@bypass /s i f Harha splits(Int stage, Player player) https://paste.minr.org/onudubayuq
+
+
+# TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS 
+# TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS 
+# TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS TARGETS 
+
+
+# Height 1:       https://paste.minr.org/omehofiyih
+@bypass /s i i -9096 100 9529 Theta https://paste.minr.org/omehofiyih
+
+# Height 2:       https://paste.minr.org/elocizuhez
+@bypass /s i i -9197 97 9651 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9114 98 9635 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9114 98 9636 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9113 98 9594 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9095 100 9529 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9094 100 9529 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9127 103 9536 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9120 103 9537 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9120 103 9538 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9120 103 9539 Theta https://paste.minr.org/elocizuhez
+@bypass /s i i -9080 101 9509 Theta https://paste.minr.org/elocizuhez
+
+# Height 3:       https://paste.minr.org/kavabuqani
+@bypass /s i i -9193 93 9684 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9172 97 9661 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9184 95 9662 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9194 97 9662 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9195 98 9648 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9197 99 9645 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9161 100 9669 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9160 100 9673 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9120 94 9657 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9114 98 9637 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9112 99 9618 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9128 100 9627 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9128 100 9625 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9146 98 9597 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9146 98 9595 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9157 101 9559 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9106 101 9543 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9107 101 9543 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9108 101 9543 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9096 102 9509 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9107 102 9544 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9115 100 9518 Theta https://paste.minr.org/kavabuqani
+@bypass /s i i -9079 101 9509 Theta https://paste.minr.org/kavabuqani
+
+
+# Height 4:       https://paste.minr.org/eribukuriw
+@bypass /s i i -9199 95 9695 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9186 95 9677 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9182 95 9677 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9174 98 9639 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9174 98 9641 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9169 99 9639 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9169 99 9640 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9169 99 9641 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9164 100 9654 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9162 100 9657 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9147 95 9666 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9120 93 9653 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9135 96 9643 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9143 100 9611 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9120 100 9602 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9138 100 9591 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9146 98 9596 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9157 101 9555 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9133 101 9568 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9133 101 9564 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9104 101 9534 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9127 103 9553 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9138 103 9536 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9133 103 9536 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9090 102 9507 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9088 102 9507 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9080 101 9508 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9080 101 9507 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9104 101 9535 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9108 102 9544 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9109 102 9544 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9115 100 9513 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9087 102 9507 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9079 101 9507 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9079 101 9508 Theta https://paste.minr.org/eribukuriw
+@bypass /s i i -9073 89 9599 Theta https://paste.minr.org/eribukuriw
+
+# Height 5:       https://paste.minr.org/sogiwikahu
+@bypass /s i i -9201 95 9695 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9200 95 9695 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9190 94 9681 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9179 97 9639 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9179 97 9640 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9179 97 9641 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9174 98 9640 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9147 96 9666 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9132 92 9675 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9132 93 9689 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9119 94 9696 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9118 95 9694 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9108 95 9685 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9111 95 9667 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9112 96 9664 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9131 97 9643 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9119 96 9692 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9114 100 9629 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9123 100 9618 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9123 101 9621 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9128 100 9626 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9142 99 9627 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9142 99 9625 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9147 101 9618 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9143 100 9612 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9130 101 9606 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9129 102 9564 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9129 102 9568 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9109 102 9560 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9098 103 9559 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9094 102 9547 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9096 103 9543 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9103 99 9557 Theta https://paste.minr.org/sogiwikahu
+# fast below
+@bypass /s i i -9100 100 9557 Theta https://paste.minr.org/emegiverax
+@bypass /s i i -9132 103 9552 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9138 103 9551 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9098 102 9509 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9068 91 9544 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9069 91 9544 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9070 91 9544 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9057 92 9554 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9057 92 9550 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9043 92 9566 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9044 92 9573 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9045 92 9573 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9046 92 9573 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9054 88 9565 Theta https://paste.minr.org/sogiwikahu
+@bypass /s i i -9050 88 9565 Theta https://paste.minr.org/sogiwikahu
+
+# Height 6:       https://paste.minr.org/tirapimovi
+@bypass /s i i -9147 97 9666 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9123 95 9666 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9119 92 9677 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9132 94 9692 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9108 96 9684 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9108 97 9683 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9112 97 9665 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9121 95 9655 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9120 97 9657 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9135 98 9643 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9143 100 9610 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9120 99 9584 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9138 99 9592 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9143 98 9585 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9151 99 9581 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9159 100 9574 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9196 78 9604 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9098 103 9560 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9098 103 9561 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9105 102 9536 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9050 89 9569 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9054 89 9569 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9066 91 9561 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9066 91 9560 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9066 91 9559 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9075 92 9580 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9075 91 9597 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9060 91 9601 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9060 91 9600 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9060 91 9599 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9057 91 9601 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9057 91 9600 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9057 91 9599 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9054 91 9601 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9054 91 9600 Theta https://paste.minr.org/tirapimovi
+@bypass /s i i -9054 91 9599 Theta https://paste.minr.org/tirapimovi
+
+# Height 7:       https://paste.minr.org/izifivitab
+@bypass /s i i -9147 98 9666 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9122 96 9666 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9119 93 9677 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9133 93 9675 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9132 94 9675 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9132 95 9689 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9118 97 9694 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9112 98 9664 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9120 96 9653 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9131 99 9643 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9146 102 9617 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9140 102 9602 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9127 96 9587 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9143 99 9586 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9151 100 9581 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9143 99 9579 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9143 100 9578 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9159 100 9576 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9196 79 9604 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9176 70 9633 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9180 70 9631 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9184 70 9633 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9188 70 9631 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9105 103 9559 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9094 104 9538 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9103 101 9557 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9119 101 9519 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9122 100 9519 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9107 102 9539 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9075 93 9574 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9053 92 9611 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9044 87 9632 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9043 87 9632 Theta https://paste.minr.org/izifivitab
+@bypass /s i i -9042 87 9632 Theta https://paste.minr.org/izifivitab
+
+# Height 8:       https://paste.minr.org/adefawediw
+@bypass /s i i -9147 99 9666 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9123 97 9666 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9119 94 9677 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9132 96 9692 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9108 98 9685 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9127 97 9590 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9138 101 9592 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9151 101 9583 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9201 97 9616 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9200 97 9616 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9199 97 9616 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9205 80 9605 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9205 80 9604 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9205 80 9603 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9196 80 9604 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9073 93 9595 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9053 93 9610 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9044 90 9626 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9043 90 9626 Theta https://paste.minr.org/adefawediw
+@bypass /s i i -9042 90 9626 Theta https://paste.minr.org/adefawediw
+
+# Height 9:       https://paste.minr.org/zelahukagi
+@bypass /s i i -9122 98 9666 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9115 94 9677 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9133 95 9675 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9133 95 9671 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9119 98 9696 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9118 99 9694 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9121 98 9655 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9143 101 9586 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9143 100 9587 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9151 102 9583 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9143 101 9579 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9159 100 9575 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9201 98 9610 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9200 98 9610 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9199 98 9610 Theta https://paste.minr.org/zelahukagi
+@bypass /s i i -9196 81 9604 Theta https://paste.minr.org/zelahukagi
+
+# Height 10:      https://paste.minr.org/sezohovosu
+@bypass /s i i -9123 99 9666 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9115 95 9677 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9119 96 9677 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9132 96 9671 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9177 91 9621 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9196 82 9604 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9167 72 9614 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9166 72 9616 Theta https://paste.minr.org/sezohovosu
+@bypass /s i i -9075 96 9568 Theta https://paste.minr.org/sezohovosu
+
+# Height 11:      https://paste.minr.org/ejixeyodov
+@bypass /s i i -9115 96 9677 Theta https://paste.minr.org/ejixeyodov
+@bypass /s i i -9119 97 9677 Theta https://paste.minr.org/ejixeyodov
+@bypass /s i i -9133 97 9671 Theta https://paste.minr.org/ejixeyodov
+@bypass /s i i -9143 102 9577 Theta https://paste.minr.org/ejixeyodov
+
+# Height 12:      https://paste.minr.org/qokanekixu
+@bypass /s i i -9119 98 9677 Theta https://paste.minr.org/qokanekixu
+@bypass /s i i -9132 98 9671 Theta https://paste.minr.org/qokanekixu
+
+# Height 13:      https://paste.minr.org/wabuwamara
+@bypass /s i i -9133 99 9671 Theta https://paste.minr.org/wabuwamara
+
+# Height 14:      https://paste.minr.org/gebuxagixi
+@bypass /s i i -9044 96 9627 Theta https://paste.minr.org/gebuxagixi
+@bypass /s i i -9043 96 9627 Theta https://paste.minr.org/gebuxagixi
+@bypass /s i i -9042 96 9627 Theta https://paste.minr.org/gebuxagixi
+# Height 15:      https://paste.minr.org/jebeyiniba
+
+# COOP TARGETS 
+
+# Height 2: https://paste.minr.org/qanupaquwi
+
+
+# Height 3: https://paste.minr.org/edubuqunep
+@bypass /s i i -9124 72 9676 Theta https://paste.minr.org/edubuqunep
+@bypass /s i i -9124 72 9680 Theta https://paste.minr.org/edubuqunep
+@bypass /s i i -9128 72 9680 Theta https://paste.minr.org/edubuqunep
+@bypass /s i i -9128 72 9676 Theta https://paste.minr.org/edubuqunep
+
+
+# Height 4: https://paste.minr.org/yokofeqiza
+
+
+# Height 5: https://paste.minr.org/muzawidali
+
+
+# Height 6: https://paste.minr.org/diretidebo
+
+
+# Height 7: https://paste.minr.org/unoranabeb
+
+
+# Height 8: https://paste.minr.org/eyuxijojow
+
+
+
+
+
+
+
+
+
+@delay 0
+
+
+# HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT 
+# HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT # HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT REGIONS!!!!!! HARDER HAT 
+
+# enter regions
+
+# //pos -9198,101,9703 -9202,96,9706
+# /rg create harhastage1enter RYgamer1
+
+@bypass /s i a Theta harhastage1enter https://paste.minr.org/velodagixo
+
+# //pos -9152,98,9679 -9149,102,9681
+# /rg create harhastage2enter RYgamer1
+
+@bypass /s i a Theta harhastage2enter https://paste.minr.org/awihadowot
+
+# //pos -9135,105,9640 -9131,100,9637
+# /rg create harhastage3enter RYgamer1
+
+@bypass /s i a Theta harhastage3enter https://paste.minr.org/geloxojali
+
+# //pos -9181,99,9587 -9183,103,9590
+# /rg create harhastage4enter RYgamer1
+
+@bypass /s i a Theta harhastage4enter https://paste.minr.org/otecofexem
+
+# //pos -9165,104,9560 -9161,101,9554
+# /rg create harhastage5enter RYgamer1
+
+# //pos -9070,106,9513 -9066,102,9509
+# /rg create harhastage6enter RYgamer1
+
+@bypass /s i a Theta harhaafter01-01 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-02 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-03 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-04 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-05 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-06 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-07 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-08 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-09 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter01-10 https://paste.minr.org/yedohopobi
+
+@bypass /s i a Theta harhaafter02-01 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-02 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-03 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-04 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-05 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-06 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-07 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-08 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-09 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter02-10 https://paste.minr.org/yedohopobi
+
+@bypass /s i a Theta harhaafter03-01 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-02 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-03 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-04 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-05 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-06 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-07 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-08 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-09 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter03-10 https://paste.minr.org/yedohopobi
+
+@bypass /s i a Theta harhaafter04-01 https://paste.minr.org/texayayava
+@bypass /s i a Theta harhaafter04-02 https://paste.minr.org/texayayava
+@bypass /s i a Theta harhaafter04-03 https://paste.minr.org/texayayava
+@bypass /s i a Theta harhaafter04-04 https://paste.minr.org/texayayava
+@bypass /s i a Theta harhaafter04-05 https://paste.minr.org/texayayava
+@bypass /s i a Theta harhaafter04-06 https://paste.minr.org/ajiqojidil
+@bypass /s i a Theta harhaafter04-07 https://paste.minr.org/ajiqojidil
+@bypass /s i a Theta harhaafter04-08 https://paste.minr.org/ajiqojidil
+@bypass /s i a Theta harhaafter04-09 https://paste.minr.org/ajiqojidil
+@bypass /s i a Theta harhaafter04-10 https://paste.minr.org/ajiqojidil
+
+@bypass /s i a Theta harhaafter05-01 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-02 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-03 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-04 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-05 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-06 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-07 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-08 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-09 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter05-10 https://paste.minr.org/yedohopobi
+
+@bypass /s i a Theta harhaafter06-01 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-02 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-03 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-04 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-05 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-06 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-07 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-08 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-09 https://paste.minr.org/yedohopobi
+@bypass /s i a Theta harhaafter06-10 https://paste.minr.org/yedohopobi
+
+@bypass /s i a Theta harhabefore05-00 https://paste.minr.org/yucagefaja
+@bypass /s i a Theta harhaafter05-00 https://paste.minr.org/sigoyuyiji
+
+@bypass /s i a Theta harhabefore06-00 https://paste.minr.org/iyuyelikax
+@bypass /s i a Theta harhaafter06-00 https://paste.minr.org/pudufegasu
+
+# //pos -9067,95,9531 -9070,100,9535
+# /rg create harhaAfter06-00 RYgamer1
+
+# //pos -9073,107,9511 -9077,102,9505
+# /rg create harhaBefore06-00 RYgamer1
+
+# //pos -9178,101,9555 -9174,104,9560
+# /rg create harhaAfter05-00 RYgamer1
+
+# TODO IMPORT THIS
+# //pos -9181,101,9571 -9185,106,9576
+# /rg create harhaBefore05-00 RYgamer1
+
+# 01-01 after
+# //pos -9202,99,9689 -9194,92,9693
+# /rg create harhaAfter01-01 RYgamer1
+
+# 01-02 after
+# //pos -9190,95,9678 -9194,100,9677
+# /rg create harhaAfter01-02 RYgamer1
+
+# 01-03 after
+# //pos -9176,95,9677 -9170,101,9673
+# /rg create harhaAfter01-03 RYgamer1
+
+# 01-04 after
+# //pos -9170,101,9656 -9176,96,9652
+# /rg create harhaAfter01-04 RYgamer1
+
+# 01-05 after
+# //pos -9187,100,9662 -9188,96,9666
+# /rg create harhaAfter01-05 RYgamer1
+
+# 01-06 after
+# //pos -9194,102,9659 -9198,96,9657
+# /rg create harhaAfter01-06 RYgamer1
+
+# 01-07 after
+# //pos -9198,103,9638 -9193,98,9642
+# /rg create harhaAfter01-07 RYgamer1
+
+# 01-08 after
+# //pos -9168,103,9638 -9164,99,9642
+# /rg create harhaAfter01-08 RYgamer1
+
+# 01-09 after
+# //pos -9158,100,9660 -9162,105,9662
+# /rg create harhaAfter01-09 RYgamer1
+
+# 01-10 after
+# //pos -9158,100,9677 -9162,105,9682
+# /rg create harhaAfter01-10 RYgamer1
+
+# -=-=-=
+# //pos -9143,101,9663 -9147,105,9660
+# /rg create harhaAfter02-01 RYgamer1
+
+# //pos -9120,100,9665 -9119,105,9661
+# /rg create harhaAfter02-02 RYgamer1
+
+# //pos -9115,100,9681 -9119,104,9687
+# /rg create harhaAfter02-03 RYgamer1
+
+# //pos -9137,103,9671 -9140,99,9676
+# /rg create harhaAfter02-04 RYgamer1
+
+# //pos -9124,100,9692 -9127,97,9689
+# /rg create harhaAfter02-05 RYgamer1
+
+# //pos -9117,104,9696 -9114,99,9692
+# /rg create harhaAfter02-06 RYgamer1
+
+# //pos -9112,103,9681 -9108,99,9679
+# /rg create harhaAfter02-07 RYgamer1
+
+# //pos -9111,103,9660 -9108,98,9658
+# /rg create harhaAfter02-08 RYgamer1
+
+# //pos -9122,103,9657 -9126,99,9652
+# /rg create harhaAfter02-09 RYgamer1
+
+# //pos -9135,105,9640 -9132,101,9635
+# /rg create harhaAfter02-10 RYgamer1
+
+# -=-=-=
+# //pos -9114,103,9638 -9110,100,9635
+# /rg create harhaAfter03-01 RYgamer1
+
+# //pos -9110,104,9614 -9116,100,9610
+# /rg create harhaAfter03-02 RYgamer1
+
+# //pos -9128,105,9623 -9128,101,9628
+# /rg create harhaAfter03-03 RYgamer1
+
+# //pos -9147,105,9629 -9152,105,9624
+# /rg create harhaAfter03-04 RYgamer1
+
+# //pos -9145,105,9613 -9149,101,9608
+# /rg create harhaAfter03-05 RYgamer1
+
+# //pos -9116,104,9606 -9111,100,9603
+# /rg create harhaAfter03-06 RYgamer1
+
+# //pos -9111,100,9589 -9115,104,9588
+# /rg create harhaAfter03-07 RYgamer1 
+
+# //pos -9131,104,9594 -9129,98,9598
+# /rg create harhaAfter03-08 RYgamer1
+
+# //pos -9146,99,9595 -9149,104,9597
+# /rg create harhaAfter03-09 RYgamer1
+
+# //pos -9161,101,9577 -9166,104,9573
+# /rg create harhaAfter03-10 RYgamer1
+
+# -=-=-=
+# //pos -9201,98,9618 -9199,102,9622 
+# /rg create harhaAfter04-01 RYgamer1
+
+# //pos -9179,96,9625 -9175,91,9627 
+# /rg create harhaAfter04-02 RYgamer1
+
+# //pos -9188,84,9607 -9184,79,9601 
+# /rg create harhaAfter04-03 RYgamer1
+
+# //pos -9166,73,9621 -9162,78,9625 
+# /rg create harhaAfter04-04 RYgamer1
+
+# //pos -9193,71,9634 -9195,76,9630 
+# /rg create harhaAfter04-05 RYgamer1
+
+# //pos -9171,71,9630 -9169,77,9633 
+# /rg create harhaAfter04-06 RYgamer1
+
+# //pos -9172,73,9615 -9176,78,9611 
+# /rg create harhaAfter04-07 RYgamer1
+
+# //pos -9206,82,9606 -9209,87,9602 
+# /rg create harhaAfter04-08 RYgamer1
+
+# //pos -9179,93,9615 -9176,97,9610
+# /rg create harhaAfter04-09 RYgamer1
+
+# //pos -9201,99,9609 -9199,103,9606
+# /rg create harhaAfter04-10 RYgamer1
+
+# -=-=-=
+# //pos -9149,101,9560 -9143,105,9564
+# /rg create harhaAfter05-01 RYgamer1
+
+# //pos -9122,107,9568 -9118,101,9564
+# /rg create harhaAfter05-02 RYgamer1
+
+# //pos -9097,108,9562 -9093,104,9558
+# /rg create harhaAfter05-03 RYgamer1
+
+# //pos -9093,101,9527 -9098,105,9524
+# /rg create harhaAfter05-04 RYgamer1
+
+# //pos -9112,107,9545 -9107,100,9550
+# /rg create harhaAfter05-05 RYgamer1
+
+# //pos -9114,104,9556 -9118,108,9551
+# /rg create harhaAfter05-06 RYgamer1
+
+# //pos -9147,104,9553 -9152,107,9549
+# /rg create harhaAfter05-07 RYgamer1
+
+# //pos -9118,107,9540 -9113,104,9536
+# /rg create harhaAfter05-08 RYgamer1
+
+# //pos -9118,105,9501 -9122,101,9498
+# /rg create harhaAfter05-09 RYgamer1
+
+# //pos -9078,102,9509 -9077,105,9507
+# /rg create harhaAfter05-10 RYgamer1
+
+# -=-=-=
+# //pos -9071,94,9549 -9068,99,9553
+# /rg create harhaAfter06-01 RYgamer1
+
+# //pos -9051,98,9553 -9048,94,9551
+# /rg create harhaAfter06-02 RYgamer1
+
+# //pos -9046,97,9574 -9044,95,9576
+# /rg create harhaAfter06-03 RYgamer1
+
+# //pos -9051,92,9561 -9054,97,9558
+# /rg create harhaAfter06-04 RYgamer1
+
+# //pos -9071,97,9561 -9073,95,9559 
+# /rg create harhaAfter06-05 RYgamer1
+
+# //pos -9076,97,9586 -9072,94,9588 
+# /rg create harhaAfter06-06 RYgamer1
+
+# //pos -9067,93,9601 -9064,103,9599 
+# /rg create harhaAfter06-07 RYgamer1
+
+# //pos -9050,99,9602 -9046,95,9599 
+# /rg create harhaAfter06-08 RYgamer1
+
+# //pos -9049,95,9614 -9046,99,9612 
+# /rg create harhaAfter06-09 RYgamer1
+
+# //pos -9041,94,9636 -9045,90,9638 
+# /rg create harhaAfter06-10 RYgamer1
+
+@bypass /s i a Theta harha01-01 https://paste.minr.org/xeyukuhisu
+@bypass /s i a Theta harha01-02 https://paste.minr.org/sididekuda
+@bypass /s i a Theta harha01-03 https://paste.minr.org/uxodamejih
+@bypass /s i a Theta harha01-04 https://paste.minr.org/ewomixuhuk
+@bypass /s i a Theta harha01-05 https://paste.minr.org/jepixeridi
+@bypass /s i a Theta harha01-06 https://paste.minr.org/orekonudoc
+@bypass /s i a Theta harha01-07 https://paste.minr.org/nojamavumi
+@bypass /s i a Theta harha01-08 https://paste.minr.org/murozohiha
+@bypass /s i a Theta harha01-08-2 https://paste.minr.org/tozojanuni
+@bypass /s i a Theta harha01-09 https://paste.minr.org/gumabititi
+@bypass /s i a Theta harha01-10 https://paste.minr.org/newaxupebu
+
+# 01-01
+# //pos -9196,93,9694 -9205,88,9702
+# /rg create harha01-01 RYgamer1
+
+# 01-02
+# //pos -9194,91,9687 -9187,87,9678
+# /rg create harha01-02 RYgamer1
+
+# 01-03
+# //pos -9175,93,9677 -9189,89,9670
+# /rg create harha01-03 RYgamer1
+
+# 01-04
+# //pos -9176,95,9666 -9169,91,9658
+# /rg create harha01-04 RYgamer1
+
+# 01-05
+# //pos -9186,93,9666 -9180,90,9660
+# /rg create harha01-05 RYgamer1
+
+# 01-06
+# //pos -9198,94,9660 -9192,92,9666
+# /rg create harha01-06 RYgamer1
+
+# 01-07
+# //pos -9198,94,9653 -9194,95,9643
+# /rg create harha01-07 RYgamer1
+
+# 01-08
+# //pos -9169,96,9642 -9174,94,9638
+# /rg create harha01-08 RYgamer1
+
+# 01-08-2
+# //pos -9174,95,9638 -9184,92,9642
+# /rg create harha01-08-2 RYgamer1
+
+# 01-09
+# //pos -9168,98,9652 -9158,94,9659
+# /rg create harha01-09 RYgamer1
+
+# 01-10
+# //pos -9158,99,9666 -9162,97,9675
+# /rg create harha01-10 RYgamer1
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# stage 2 enter
+# //pos -9152,103,9681 -9152,97,9679
+# /rg create harhaStage2Enter RYgamer1
+
+@bypass /s i a Theta harha02-01 https://paste.minr.org/qapokifijo
+@bypass /s i a Theta harha02-02 https://paste.minr.org/esiyuyolus
+@bypass /s i a Theta harha02-03 https://paste.minr.org/irixanumin
+@bypass /s i a Theta harha02-04 https://paste.minr.org/nutewipoqe
+@bypass /s i a Theta harha02-05 https://paste.minr.org/kayuzoluye
+@bypass /s i a Theta harha02-06 https://paste.minr.org/pirutopici
+@bypass /s i a Theta harha02-07 https://paste.minr.org/xivubinaqa
+@bypass /s i a Theta harha02-08 https://paste.minr.org/asaxecayox
+@bypass /s i a Theta harha02-09 https://paste.minr.org/ikotehalir
+@bypass /s i a Theta harha02-10 https://paste.minr.org/wamecevovu
+
+# 02-01
+# -9144.5 95.0 9671.5 180.0 10.0
+# //pos -9147,93,9669 -9143,90,9663
+# /rg define harha02-01 
+
+# 02-02
+# -9127.5 95.0 9664.5 270.0 10.0
+# //pos -9125,88,9665 -9121,92,9662
+# /rg define harha02-02 
+
+# 02-03
+# -9116.5 92.0 9672.5 0.0 10.0
+# //pos -9118,90,9680 -9115,85,9675
+# /rg define harha02-03 
+
+# 02-04
+# -9128.0 92.0 9673.5 450.0 10.0
+# //pos -9136,90,9675 -9130,86,9671 
+# /rg define harha02-04 
+
+# 02-05
+# -9137.5 94.0 9691.0 270.0 10.0
+# //pos -9135,91,9689 -9129,88,9692
+# /rg define harha02-05 
+
+# 02-06
+# -9123.5 94.0 9694.5 270.0 10.0
+# //pos -9122,91,9692 -9119,88,9696
+# /rg define harha02-06 
+
+# 02-07
+# -9109.5 95.0 9689.5 180.0 10.0
+# //pos -9111,93,9686 -9109,90,9682
+# /rg define harha02-07 
+
+# 02-08
+# -9107.5 96.0 9672.5 180.0 10.0
+# //pos -9107,94,9669 -9111,88,9661
+# /rg define harha02-08 
+
+# 02-09
+# -9114.5 93.0 9655.5 90.0 10.0
+# //pos -9118,88,9654 -9120,91,9656
+# /rg define harha02-09 
+
+# 02-10
+# -9132.5 96.0 9648.5 180.0 10.0
+# //pos -9135,94,9645 -9131,91,9642
+# /rg define harha02-10 
+
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+@bypass /s i a Theta harha03-01 https://paste.minr.org/eposijiqaz
+@bypass /s i a Theta harha03-02 https://paste.minr.org/omajofalun
+@bypass /s i a Theta harha03-03 https://paste.minr.org/laxoricexo
+@bypass /s i a Theta harha03-04 https://paste.minr.org/acavekiyuk
+@bypass /s i a Theta harha03-05 https://paste.minr.org/ukabagafen
+@bypass /s i a Theta harha03-06 https://paste.minr.org/wukudehicu
+@bypass /s i a Theta harha03-06-02 https://paste.minr.org/uyezatunef
+@bypass /s i a Theta harha03-07 https://paste.minr.org/izusipaboc
+@bypass /s i a Theta harha03-08 https://paste.minr.org/ohosahequq
+@bypass /s i a Theta harha03-08-02 https://paste.minr.org/bilepaceco
+@bypass /s i a Theta harha03-08-03 https://paste.minr.org/huhofecake
+@bypass /s i a Theta harha03-08-04 https://paste.minr.org/inidaxofol
+@bypass /s i a Theta harha03-09 https://paste.minr.org/ciquzipone
+@bypass /s i a Theta harha03-10 https://paste.minr.org/huzohubepa
+
+# 03-01
+# //pos -9128,95,9633 -9115,93,9639
+# /rg create harha03-01 RYgamer1
+
+# 03-02
+# //pos -9115,97,9631 -9112,93,9616
+# /rg create harha03-02 RYgamer1
+
+# 03-03
+# //pos -9118,97,9616 -9129,93,9628   
+# /rg create harha03-03 RYgamer1
+
+# 03-04
+# //pos -9130,97,9629 -9145,93,9622
+# /rg create harha03-04 RYgamer1
+
+# 03-05
+# //pos -9151,96,9620 -9138,92,9609
+# /rg create harha03-05 RYgamer1
+
+# 03-06
+# //pos -9143,99,9602 -9139,93,9606
+# /rg create harha03-06 RYgamer1
+
+# 03-06-02
+# //pos -9138,97,9606 -9118,93,9602
+# /rg create harha03-06-02 RYgamer1
+
+# 03-07
+# //pos -9117,96,9600 -9109,88,9589
+# /rg create harha03-07 RYgamer1
+
+# 03-08
+# //pos -9116,94,9588 -9122,89,9583
+# /rg create harha03-08 RYgamer1
+
+# 03-08-02 lower
+# //pos -9122,91,9583 -9131,85,9592
+# /rg create harha03-08-02 RYgamer1
+
+# 03-08-03 water
+# //pos -9119,93,9598 -9131,93,9590
+# /rg create harha03-08-03 RYgamer1
+
+# 03-08-04 mushroom
+# //pos -9131,93,9590 -9127,94,9593
+# /rg create harha03-08-04 RYgamer1
+
+# 03-09
+# //pos -9133,95,9590 -9145,91,9598
+# /rg create harha03-09 RYgamer1
+
+# 03-10
+# //pos -9143,94,9591 -9159,90,9572
+# /rg create harha03-10 RYgamer1
+
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+@bypass /s i a Theta harha04-01 https://paste.minr.org/edibehelin
+@bypass /s i a Theta harha04-02 https://paste.minr.org/unewelalad
+@bypass /s i a Theta harha04-03 https://paste.minr.org/vozabasifa
+@bypass /s i a Theta harha04-04 https://paste.minr.org/efefogihib
+@bypass /s i a Theta harha04-05 https://paste.minr.org/okunoxogab
+
+
+
+# 04-01
+# //pos -9202,95,9615 -9198,89,9611
+# /rg create harha04-01 Theta RYgamer1
+
+# 04-02
+# //pos -9175,89,9623 -9179,81,9618
+# /rg create harha04-02 Theta RYgamer1
+
+# 04-03
+# //pos -9191,76,9600 -9204,72,9608
+# /rg create harha04-03 Theta RYgamer1
+
+# 04-04
+# //pos -9170,70,9610 -9162,62,9619
+# /rg create harha04-04 Theta RYgamer1
+
+# 04-05
+# //pos -9173,68,9630 -9191,63,9634
+# /rg create harha04-05 Theta RYgamer1
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+@bypass /s i a Theta harha05-00 https://paste.minr.org/owapiwigeh
+@bypass /s i a Theta harha05-01 https://paste.minr.org/tibufaretu
+@bypass /s i a Theta harha05-02 https://paste.minr.org/ciweqaliwi
+@bypass /s i a Theta harha05-03 https://paste.minr.org/kegeqaxuwo
+@bypass /s i a Theta harha05-04 https://paste.minr.org/mofepujuni
+@bypass /s i a Theta harha05-05 https://paste.minr.org/upideyezuy
+@bypass /s i a Theta harha05-06 https://paste.minr.org/rarurobage
+@bypass /s i a Theta harha05-07 https://paste.minr.org/elidifeval
+@bypass /s i a Theta harha05-08 https://paste.minr.org/giceregipo
+@bypass /s i a Theta harha05-09 https://paste.minr.org/divagoziye
+@bypass /s i a Theta harha05-10 https://paste.minr.org/iqotemibat
+
+# 05-00
+# //pos -9180,99,9563 -9186,94,9571 
+# /rg create harha05-00 Theta RYgamer1
+
+# 05-01
+# //pos -9152,99,9555 -9159,94,9559
+# /rg create harha05-01 Theta RYgamer1
+
+# 05-02
+# //pos -9135,99,9568 -9125,93,9564
+# /rg create harha05-02 Theta RYgamer1
+
+# 05-03
+# //pos -9113,99,9564 -9097,92,9559
+# /rg create harha05-03 Theta RYgamer1
+
+# 05-04
+# //pos -9092,99,9549 -9097,94,9530
+# /rg create harha05-04 Theta RYgamer1
+
+# 05-05
+# //pos -9100,98,9533 -9111,93,9542
+# /rg create harha05-05 Theta RYgamer1
+
+# 05-06
+# //pos -9106,96,9553 -9099,92,9557
+# /rg create harha05-06 Theta RYgamer1
+
+# 05-07
+# //pos -9123,100,9557 -9144,94,9550
+# /rg create harha05-07 Theta RYgamer1
+
+# 05-08
+# //pos -9142,101,9536 -9121,96,9542
+# /rg create harha05-08 Theta RYgamer1
+
+# 05-09
+# //pos -9115,98,9523 -9125,93,9518
+# /rg create harha05-09 Theta RYgamer1
+
+# 05-10
+# //pos -9101,96,9511 -9078,100,9505
+# /rg create harha05-10 Theta RYgamer1
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+@bypass /s i a Theta harha06-01 https://paste.minr.org/jofalodunu
+@bypass /s i a Theta harha06-02 https://paste.minr.org/agivoyufof
+@bypass /s i a Theta harha06-03 https://paste.minr.org/ejitideduk
+@bypass /s i a Theta harha06-04 https://paste.minr.org/boviqinigo
+@bypass /s i a Theta harha06-05 https://paste.minr.org/kuhigawelo
+@bypass /s i a Theta harha06-06 https://paste.minr.org/bibifidovu
+@bypass /s i a Theta harha06-07 https://paste.minr.org/aqobuhayih
+@bypass /s i a Theta harha06-08 https://paste.minr.org/ihifaruren
+@bypass /s i a Theta harha06-09 https://paste.minr.org/isawakevon
+@bypass /s i a Theta harha06-10 https://paste.minr.org/ucohanedat
+# 06-01
+# -9068.5 95.0 9534.5 0 10
+# //pos -9071,89,9537 -9067,85,9548
+# /rg create harha06-01 Theta RYgamer1
+
+# 06-02
+# -9064.5 96.0 9552.5 270 10
+# //pos -9062,90,9550 -9052,86,9554
+# /rg create harha06-02 Theta RYgamer1
+
+# 06-03
+# -9044.5 96.0 9558.5 0 10
+# //pos -9043,90,9561 -9047,85,9573
+# /rg create harha06-03 Theta RYgamer1
+
+# 06-04
+# -9051.5 95.0 9578.5 180 10
+# //pos -9050,86,9574 -9054,82,9562
+# /rg create harha06-04 Theta RYgamer1
+
+# 06-05
+# -9056.5 96.0 9560.5 90 10
+# //pos -9058,89,9563 -9069,84,9557
+# /rg create harha06-05 Theta RYgamer1
+
+# 06-06
+# -9074.5 96.0 9563.5 0 10
+# //pos -9070,91,9563 -9081,86,9584
+# /rg create harha06-06 Theta RYgamer1
+
+# 06-07
+# -9065.5 96.0 9594.5 90 10
+# //pos -9068,88,9592 -9078,84,9602
+# /rg create harha06-07 Theta RYgamer1
+
+# 06-08
+# -9060.5 96.0 9600.5 270 10
+# //pos -9060,89,9597 -9050,84,9603
+# /rg create harha06-08 Theta RYgamer1
+
+# 06-09 
+# -9045.5 96.0 9608.5 90 10
+# //pos -9049,90,9606 -9057,83,9615
+# /rg create harha06-09 Theta RYgamer1
+
+# 06-10
+# -9042.5 95.0 9615.5 0 10
+# //pos -9040,85,9619 -9046,78,9634
+# /rg create harha06-10 Theta RYgamer1
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# @bypass /s i a Theta harha07-01 asdiuahsd
+# @bypass /s i a Theta harha07-02 asdiuahsd
+# @bypass /s i a Theta harha07-03 asdiuahsd
+# @bypass /s i a Theta harha07-04 asdiuahsd
+# @bypass /s i a Theta harha07-05 asdiuahsd
+# @bypass /s i a Theta harha07-06 asdiuahsd
+# @bypass /s i a Theta harha07-07 asdiuahsd
+# @bypass /s i a Theta harha07-08 asdiuahsd
+# @bypass /s i a Theta harha07-09 asdiuahsd
+# @bypass /s i a Theta harha07-10 asdiuahsd
+# @bypass /s i a Theta harha07-11 asdiuahsd
+# @bypass /s i a Theta harha07-12 asdiuahsd
+# @bypass /s i a Theta harha07-13 asdiuahsd
+# @bypass /s i a Theta harha07-14 asdiuahsd
+# @bypass /s i a Theta harha07-15 asdiuahsd
+# @bypass /s i a Theta harha07-16 asdiuahsd
+# @bypass /s i a Theta harha07-17 asdiuahsd
+# @bypass /s i a Theta harha07-18 asdiuahsd
+# @bypass /s i a Theta harha07-19 asdiuahsd
+# @bypass /s i a Theta harha07-20 asdiuahsd
+
+# 07-01
+# //pos
+# /rg create harha07-01 Theta RYgamer1
+
+# 07-02
+# //pos
+# /rg create harha07-02 Theta RYgamer1
+
+# 07-03
+# //pos
+# /rg create harha07-03 Theta RYgamer1
+
+# 07-04
+# //pos
+# /rg create harha07-04 Theta RYgamer1
+
+# 07-05
+# //pos
+# /rg create harha07-05 Theta RYgamer1
+
+# 07-06
+# //pos
+# /rg create harha07-06 Theta RYgamer1
+
+# 07-07
+# //pos
+# /rg create harha07-07 Theta RYgamer1
+
+# 07-08
+# //pos
+# /rg create harha07-08 Theta RYgamer1
+
+# 07-09
+# //pos
+# /rg create harha07-09 Theta RYgamer1
+
+# 07-10
+# //pos
+# /rg create harha07-10 Theta RYgamer1
+
+# 07-11
+# //pos
+# /rg create harha07-11 Theta RYgamer1
+
+# 07-12
+# //pos
+# /rg create harha07-12 Theta RYgamer1
+
+# 07-13
+# //pos
+# /rg create harha07-13 Theta RYgamer1
+
+# 07-14
+# //pos
+# /rg create harha07-14 Theta RYgamer1
+
+# 07-15
+# //pos
+# /rg create harha07-15 Theta RYgamer1
+
+# 07-16
+# //pos
+# /rg create harha07-16 Theta RYgamer1
+
+# 07-17
+# //pos
+# /rg create harha07-17 Theta RYgamer1
+
+# 07-18
+# //pos
+# /rg create harha07-18 Theta RYgamer1
+
+# 07-19
+# //pos
+# /rg create harha07-19 Theta RYgamer1
+
+# 07-20
+# //pos
+# /rg create harha07-20 Theta RYgamer1
+
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# COOP REGIONS COOP REGIONS COOP REGIONS COOP REGIONS 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+@bypass /s i a Theta harhac-01 https://paste.minr.org/eziqakoqoy
+@bypass /s i a Theta harhac-02
+@bypass /s i a Theta harhac-03
+@bypass /s i a Theta harhac-04
+@bypass /s i a Theta harhac-05
+@bypass /s i a Theta harhac-06
+@bypass /s i a Theta harhac-07
+@bypass /s i a Theta harhac-08
+@bypass /s i a Theta harhac-09
+@bypass /s i a Theta harhac-10
+
+
+# coopStartOrange
+# //pos -9125,72,9665 -9123,75,9662
+# /rg create coopstartorange Theta RYgamer1
+
+# coopStartBlue
+# //pos -9129,72,9665 -9127,75,9662
+# /rg create coopstartblue Theta RYgamer1
+
+# C-01
+# //pos -9124,71,9673 -9128,68,9683 
+# /rg create harhac-01 Theta RYgamer1
+
+# C-02
+# //pos -9137,72,9691 -9150,69,9687
+# /rg create harhac-02 Theta RYgamer1
+
+# C-03
+# //pos -9160,72,9676 -9154,70,9664
+# /rg create harhac-03 Theta RYgamer1
+
+# C-04
+# //pos -9158,65,9652 -9170,64,9646
+# /rg create harhac-04 Theta RYgamer1
+
+# C-05
+# //pos -9173,66,9676 -9185,65,9662
+# /rg create harhac-05 Theta RYgamer1
+
+# C-06
+# //pos -9187,71,9688 -9175,68,9717
+# /rg create harhac-06 Theta RYgamer1
+
+# C-07
+# //pos -9178,74,9719 -9184,71,9741
+# /rg create harhac-07 Theta RYgamer1
+
+# C-08
+# //pos -9172,74,9738 -9166,73,9729
+# /rg create harhac-08 Theta RYgamer1
+
+# C-09
+# //pos -9144,73,9721 -9158,72,9734
+# /rg create harhac-09 Theta RYgamer1
+
+# C-10
+# //pos -9125,71,9736 -9118,70,9742
+# /rg create harhac-10 Theta RYgamer1
+
+# C-11
+# //pos -9103,72,9755 -9109,70,9767
+# /rg create harhac-11 Theta RYgamer1
+
+# C-12
+# //pos -9130,65,9763 -9145,64,9757
+# /rg create harhac-12 Theta RYgamer1
+
+ 
+
+@player &7[&#20a0d0VSCode&7] &aNamespace import finished!
