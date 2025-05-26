@@ -626,13 +626,6 @@
 # Height 8: https://paste.minr.org/eyuxijojow
 
 
-
-
-
-
-
-
-
 @delay 0
 
 
@@ -753,7 +746,7 @@
 # /rg create harhaBefore05-00 RYgamer1
 
 # 01-01 after
-# //pos -9202,99,9689 -9194,92,9693
+# //pos -9194,93,9692 -9202,99,9689
 # /rg create harhaAfter01-01 RYgamer1
 
 # 01-02 after

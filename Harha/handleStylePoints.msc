@@ -1,0 +1,33 @@
+# handleStylePoints(Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage)
+@using Harha
+@fast
+
+@define Int pointsToGive = 0
+
+@for Int i in list::range(0, thresholds.length())
+    @define Int threshold = thresholds[i]
+    @define Int reward = rewards[i]
+    @define Int globalIndex = claimedIndexStart + i
+
+    @if blocksThisStage <= threshold && claimedStylePoints[player][globalIndex] == false
+        @var swagPoints[player] += reward
+        @var pointsToGive += reward
+        @var claimedStylePoints[globalIndex] = true
+    @fi
+@done
+
+@if pointsToGive > 0
+    @var swagTitle(pointsToGive, player)
+@fi
+
+@if hasGainedStylePoints[player] == false
+    @delay 3s
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    @player &7You just earned your first &#ffc71d&lSTYLE POINTS!
+    @delay 3s
+    @player &7Click on a sign &#d4d4d4&ltwice &7to see if that stage can be &#d4d4d4&lbeaten in less blocks &7than intended!
+    @delay 3s
+    @player &7Collect enough &#ffc71dstyle points &7to unlock &#d4d4d4&lspecial cosmetic blocks &7to use!
+    @var hasGainedStylePoints[player] = true
+@fi
+

@@ -16,20 +16,30 @@
     relative Int sessionBlocks = 0
     relative Int totalBlocks = 0
     relative Int stage = 0
+    relative Int level = 1
     relative Int numberOfBlocksToGive = 63
     relative Int blocksThisStage = 0
+    relative Int numberCompletions = 0
+    relative Int numberCompletionsMaster = 0
+    relative Int numberCompletionsUMM = 0
+    relative Int swagPoints = 0
+
+
     Int globalBlocks = 0
     Int globalFalls = 0
+    Int pcSelect = 0
 
     # coop stuff
     relative Boolean isOrange = false
     relative Boolean isBlue = false
     relative String coopBlockSelection
 
+    # relative variables
     relative Boolean bootsObtained = false
     relative Boolean iceSwapped = false
     relative Boolean slimeSwapped = false
     relative Boolean codeGenerated = false
+    relative Boolean hasGainedStylePoints = false
     relative String[] code = String[""]
     relative String code1 = ""
     relative String code2 = ""
@@ -45,6 +55,167 @@
     relative Int randomCodeNumber
     relative String totalCode = ""
     relative String[] codeList = String["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    
+
+    # Swag Route Variables
+    relative Boolean[] claimedStylePoints = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+
+    Int[] l104Thresholds = Int[1]
+    Int[] l104Rewards = Int[30]
+    Int l104StartIndex = 0
+
+    Int[] l105Thresholds = Int[1]
+    Int[] l105Rewards = Int[100]
+    Int l105StartIndex = 1
+
+    Int[] l109Thresholds = Int[2, 3]
+    Int[] l109Rewards = Int[120, 30]
+    Int l109StartIndex = 2
+
+    Int[] l201Thresholds = Int[3, 4]
+    Int[] l201Rewards = Int[30, 40]
+    Int l201StartIndex = 4
+
+    Int[] l203Thresholds = Int[4, 5, 6, 7, 8]
+    Int[] l203Rewards = Int[100, 230, 100, 10, 10]
+    Int l203StartIndex = 6
+
+    Int[] l204Thresholds = Int[5, 6, 7, 8]
+    Int[] l204Rewards = Int[120, 50, 30, 20]
+    Int l204StartIndex = 11
+
+    Int[] l205Thresholds = Int[2, 3]
+    Int[] l205Rewards = Int[40, 20]
+    Int l205StartIndex = 15
+
+    Int[] l206Thresholds = Int[5]
+    Int[] l206Rewards = Int[60]
+    Int l206StartIndex = 17
+
+    Int[] l207Thresholds = Int[3]
+    Int[] l207Rewards = Int[60]
+    Int l207StartIndex = 18
+
+    Int[] l209Thresholds = Int[4, 5]
+    Int[] l209Rewards = Int[60, 40]
+    Int l209StartIndex = 19
+
+    Int[] l303Thresholds = Int[2]
+    Int[] l303Rewards = Int[20]
+    Int l303StartIndex = 21
+
+    Int[] l305Thresholds = Int[2]
+    Int[] l305Rewards = Int[30]
+    Int l305StartIndex = 22
+
+    Int[] l310Thresholds = Int[6, 7, 8, 9, 10, 11, 12]
+    Int[] l310Rewards = Int[190, 60, 20, 20, 20, 20, 20]
+    Int l310StartIndex = 23
+
+    Int[] l403Thresholds = Int[1, 2, 3]
+    Int[] l403Rewards = Int[30, 10, 10]
+    Int l403StartIndex = 30
+
+    Int[] l408Thresholds = Int[3, 4, 5]
+    Int[] l408Rewards = Int[200, 60, 40]
+    Int l408StartIndex = 33
+
+    Int[] l503Thresholds = Int[3]
+    Int[] l503Rewards = Int[40]
+    Int l503StartIndex = 36
+
+    Int[] l504Thresholds = Int[3]
+    Int[] l504Rewards = Int[60]
+    Int l504StartIndex = 37
+
+    Int[] l505Thresholds = Int[2, 3, 4]
+    Int[] l505Rewards = Int[100, 40, 10]
+    Int l505StartIndex = 38
+
+    Int[] l506Thresholds = Int[3]
+    Int[] l506Rewards = Int[100]
+    Int l506StartIndex = 41
+
+    Int[] l701Thresholds = Int[5, 6, 7]
+    Int[] l701Rewards = Int[280, 130, 70]
+    Int l701StartIndex = 42
+
+    Int[] l702Thresholds = Int[2]
+    Int[] l702Rewards = Int[120]
+    Int l702StartIndex = 45
+
+    # end of sg route stuff
+    # =-=-=-=-=-=-=-=-=-
+
+    # blocks lowkey
+    # =-=-=-=-=-=-=-=-=-
+
+    
+    Block[] b101 = Block[Block(-9201, 95, 9696, "Theta"), Block(-9200, 95, 9696, "Theta"), Block(-9199, 95, 9696, "Theta")]
+    Block[] b102 = Block[Block(-9192, 93, 9684, "Theta"), Block(-9191, 94, 9681, "Theta")]
+    Block[] b103 = Block[Block(-9186, 95, 9676, "Theta"), Block(-9182, 95, 9676, "Theta")]
+    Block[] b104 = Block[Block(-9173, 97, 9661, "Theta"), Block(-9172, 97, 9660, "Theta"), Block(-9172, 97, 9662, "Theta"), Block(-9171, 97, 9661, "Theta")]
+    Block[] b105 = Block[Block(-9184, 95, 9663, "Theta"), Block(-9183, 95, 9662, "Theta")]
+    Block[] b106 = Block[Block(-9195, 97, 9662, "Theta"), Block(-9194, 97, 9663, "Theta")]
+    Block[] b107 = Block[Block(-9196, 97, 9651, "Theta"), Block(-9196, 98, 9648, "Theta"), Block(-9196, 99, 9645, "Theta")]
+    Block[] b108 = Block[Block(-9180, 97, 9641, "Theta"), Block(-9180, 97, 9640, "Theta"), Block(-9180, 97, 9639, "Theta"), Block(-9175, 98, 9641, "Theta"), Block(-9175, 98, 9640, "Theta"), Block(-9175, 98, 9639, "Theta"), Block(-9170, 99, 9641, "Theta"), Block(-9170, 99, 9640, "Theta"), Block(-9170, 99, 9639, "Theta")]
+    Block[] b109 = Block[Block(-9165, 100, 9654, "Theta"), Block(-9164, 100, 9655, "Theta"), Block(-9162, 100, 9656, "Theta"), Block(-9161, 100, 9657, "Theta")]
+    Block[] b110 = Block[Block(-9161, 100, 9673, "Theta"), Block(-9160, 100, 9669, "Theta")]
+    Block[] b201 = Block[Block(-9146, 95, 9666, "Theta"), Block(-9146, 96, 9666, "Theta"), Block(-9146, 97, 9666, "Theta"), Block(-9146, 98, 9666, "Theta"), Block(-9146, 99, 9666, "Theta")]
+    Block[] b202 = Block[Block(-9123, 95, 9665, "Theta"), Block(-9123, 97, 9665, "Theta"), Block(-9123, 99, 9665, "Theta"), Block(-9122, 96, 9665, "Theta"), Block(-9122, 98, 9665, "Theta")]
+    Block[] b203 = Block[Block(-9118, 92, 9677, "Theta"), Block(-9118, 93, 9677, "Theta"), Block(-9118, 94, 9677, "Theta"), Block(-9118, 96, 9677, "Theta"), Block(-9118, 97, 9677, "Theta"), Block(-9118, 98, 9677, "Theta"), Block(-9116, 94, 9677, "Theta"), Block(-9116, 95, 9677, "Theta"), Block(-9116, 96, 9677, "Theta")]
+    Block[] b204 = Block[Block(-9133, 93, 9674, "Theta"), Block(-9133, 95, 9674, "Theta"), Block(-9133, 95, 9672, "Theta"), Block(-9133, 97, 9672, "Theta"), Block(-9133, 99, 9672, "Theta"), Block(-9132, 92, 9674, "Theta"), Block(-9132, 94, 9674, "Theta"), Block(-9132, 96, 9672, "Theta"), Block(-9132, 98, 9672, "Theta")]
+    Block[] b205 = Block[Block(-9132, 93, 9690, "Theta"), Block(-9132, 95, 9690, "Theta"), Block(-9132, 94, 9691, "Theta"), Block(-9132, 96, 9691, "Theta")]
+    Block[] b206 = Block[Block(-9119, 94, 9695, "Theta"), Block(-9119, 95, 9694, "Theta"), Block(-9119, 96, 9693, "Theta"), Block(-9119, 97, 9694, "Theta"), Block(-9119, 98, 9695, "Theta"), Block(-9119, 99, 9694, "Theta")]
+    Block[] b207 = Block[Block(-9109, 95, 9685, "Theta"), Block(-9109, 96, 9684, "Theta"), Block(-9109, 97, 9683, "Theta"), Block(-9109, 98, 9685, "Theta")]
+    Block[] b208 = Block[Block(-9111, 96, 9664, "Theta"), Block(-9111, 97, 9665, "Theta"), Block(-9111, 98, 9664, "Theta"), Block(-9110, 95, 9667, "Theta")]
+    Block[] b209 = Block[Block(-9120, 93, 9654, "Theta"), Block(-9120, 94, 9656, "Theta"), Block(-9120, 95, 9655, "Theta"), Block(-9120, 96, 9654, "Theta"), Block(-9120, 97, 9656, "Theta"), Block(-9120, 98, 9655, "Theta")]
+    Block[] b210 = Block[Block(-9134, 96, 9643, "Theta"), Block(-9134, 98, 9643, "Theta"), Block(-9132, 97, 9643, "Theta"), Block(-9132, 99, 9643, "Theta")]
+    Block[] b301 = Block[Block(-9115, 98, 9635, "Theta"), Block(-9115, 98, 9636, "Theta"), Block(-9115, 98, 9637, "Theta")]
+    Block[] b302 = Block[Block(-9113, 100, 9629, "Theta"), Block(-9113, 99, 9618, "Theta")]
+    Block[] b303 = Block[Block(-9127, 100, 9627, "Theta"), Block(-9127, 100, 9626, "Theta"), Block(-9127, 100, 9625, "Theta"), Block(-9122, 100, 9618, "Theta"), Block(-9122, 101, 9621, "Theta")]
+    Block[] b304 = Block[Block(-9142, 99, 9626, "Theta")]
+    Block[] b305 = Block[Block(-9148, 101, 9618, "Theta"), Block(-9146, 102, 9616, "Theta"), Block(-9143, 100, 9612, "Theta"), Block(-9143, 100, 9611, "Theta"), Block(-9143, 100, 9610, "Theta")]
+    Block[] b306 = Block[Block(-9140, 102, 9603, "Theta"), Block(-9130, 101, 9605, "Theta"), Block(-9120, 100, 9603, "Theta")]
+    Block[] b307 = Block[Block(-9113, 98, 9593, "Theta")]
+    Block[] b308 = Block[Block(-9128, 96, 9587, "Theta"), Block(-9128, 97, 9590, "Theta"), Block(-9120, 99, 9585, "Theta")]
+    Block[] b309 = Block[Block(-9145, 98, 9597, "Theta"), Block(-9145, 98, 9596, "Theta"), Block(-9145, 98, 9595, "Theta"), Block(-9137, 99, 9592, "Theta"), Block(-9137, 100, 9591, "Theta"), Block(-9137, 101, 9592, "Theta")]
+    Block[] b310 = Block[Block(-9158, 100, 9576, "Theta"), Block(-9158, 100, 9575, "Theta"), Block(-9158, 100, 9574, "Theta"), Block(-9150, 99, 9581, "Theta"), Block(-9150, 100, 9581, "Theta"), Block(-9150, 101, 9583, "Theta"), Block(-9150, 102, 9583, "Theta"), Block(-9144, 98, 9585, "Theta"), Block(-9144, 99, 9586, "Theta"), Block(-9144, 100, 9587, "Theta"), Block(-9144, 101, 9586, "Theta"), Block(-9144, 99, 9579, "Theta"), Block(-9144, 101, 9579, "Theta"), Block(-9144, 100, 9578, "Theta"), Block(-9144, 102, 9577, "Theta")]
+    Block[] b401 = Block[Block(-9201, 97, 9615, "Theta"), Block(-9201, 98, 9611, "Theta"), Block(-9200, 97, 9615, "Theta"), Block(-9200, 98, 9611, "Theta"), Block(-9199, 97, 9615, "Theta"), Block(-9199, 98, 9611, "Theta")]
+    Block[] b402 = Block[Block(-9177, 91, 9620, "Theta"), Block(-9177, 90, 9621, "Theta")]
+    Block[] b403 = Block[Block(-9204, 80, 9605, "Theta"), Block(-9204, 80, 9604, "Theta"), Block(-9204, 80, 9603, "Theta"), Block(-9195, 78, 9604, "Theta"), Block(-9195, 79, 9604, "Theta"), Block(-9195, 80, 9604, "Theta"), Block(-9195, 81, 9604, "Theta"), Block(-9195, 82, 9604, "Theta")]
+    Block[] b404 = Block[Block(-9167, 72, 9613, "Theta"), Block(-9165, 72, 9616, "Theta")]
+    Block[] b405 = Block[Block(-9188, 70, 9632, "Theta"), Block(-9184, 70, 9632, "Theta"), Block(-9180, 70, 9632, "Theta"), Block(-9176, 70, 9632, "Theta")]
+    Block[] b501 = Block[Block(-9157, 101, 9558, "Theta"), Block(-9157, 101, 9556, "Theta")]
+    Block[] b502 = Block[Block(-9133, 101, 9567, "Theta"), Block(-9133, 101, 9565, "Theta"), Block(-9129, 102, 9567, "Theta"), Block(-9129, 102, 9565, "Theta")]
+    Block[] b503 = Block[Block(-9109, 102, 9561, "Theta"), Block(-9105, 103, 9560, "Theta"), Block(-9099, 103, 9559, "Theta"), Block(-9099, 103, 9560, "Theta"), Block(-9099, 103, 9561, "Theta")]
+    Block[] b504 = Block[Block(-9096, 100, 9530, "Theta"), Block(-9095, 103, 9543, "Theta"), Block(-9095, 102, 9547, "Theta"), Block(-9095, 104, 9538, "Theta"), Block(-9095, 100, 9530, "Theta"), Block(-9094, 100, 9530, "Theta")]
+    Block[] b505 = Block[Block(-9109, 102, 9543, "Theta"), Block(-9108, 102, 9539, "Theta"), Block(-9108, 102, 9543, "Theta"), Block(-9107, 102, 9538, "Theta"), Block(-9107, 102, 9543, "Theta"), Block(-9104, 101, 9536, "Theta"), Block(-9103, 101, 9535, "Theta")]
+    Block[] b506 = Block[Block(-9103, 99, 9556, "Theta"), Block(-9103, 101, 9556, "Theta"), Block(-9100, 100, 9556, "Theta")]
+    Block[] b507 = Block[Block(-9138, 103, 9552, "Theta"), Block(-9132, 103, 9553, "Theta"), Block(-9127, 103, 9554, "Theta")]
+    Block[] b508 = Block[Block(-9138, 103, 9537, "Theta"), Block(-9133, 103, 9537, "Theta"), Block(-9127, 103, 9537, "Theta"), Block(-9121, 103, 9537, "Theta"), Block(-9121, 103, 9538, "Theta"), Block(-9121, 103, 9539, "Theta")]
+    Block[] b509 = Block[Block(-9116, 100, 9518, "Theta"), Block(-9116, 100, 9513, "Theta")]
+    Block[] b510 = Block[Block(-9098, 102, 9508, "Theta"), Block(-9096, 102, 9508, "Theta"), Block(-9090, 102, 9508, "Theta"), Block(-9087, 102, 9508, "Theta"), Block(-9080, 101, 9507, "Theta"), Block(-9080, 101, 9508, "Theta"), Block(-9080, 101, 9509, "Theta")]
+    Block[] b601 = Block[Block(-9070, 91, 9543, "Theta"), Block(-9070, 91, 9545, "Theta"), Block(-9069, 91, 9543, "Theta"), Block(-9069, 91, 9545, "Theta"), Block(-9068, 91, 9543, "Theta"), Block(-9068, 91, 9545, "Theta")]
+    Block[] b602 = Block[Block(-9057, 92, 9553, "Theta"), Block(-9057, 92, 9551, "Theta")]
+    Block[] b603 = Block[Block(-9046, 92, 9572, "Theta"), Block(-9045, 92, 9572, "Theta"), Block(-9044, 92, 9566, "Theta"), Block(-9044, 92, 9572, "Theta")]
+    Block[] b604 = Block[Block(-9053, 89, 9569, "Theta"), Block(-9053, 88, 9565, "Theta"), Block(-9051, 89, 9569, "Theta"), Block(-9051, 88, 9565, "Theta")]
+    Block[] b605 = Block[Block(-9067, 91, 9559, "Theta"), Block(-9067, 91, 9560, "Theta"), Block(-9067, 91, 9561, "Theta"), Block(-9065, 91, 9561, "Theta"), Block(-9065, 91, 9560, "Theta"), Block(-9065, 91, 9559, "Theta")]
+    Block[] b606 = Block[Block(-9076, 96, 9568, "Theta"), Block(-9076, 93, 9574, "Theta"), Block(-9076, 92, 9580, "Theta"), Block(-9074, 96, 9568, "Theta"), Block(-9074, 93, 9574, "Theta"), Block(-9074, 92, 9580, "Theta")]
+    Block[] b607 = Block[Block(-9076, 91, 9597, "Theta"), Block(-9073, 93, 9594, "Theta"), Block(-9073, 89, 9600, "Theta")]
+    Block[] b608 = Block[Block(-9059, 91, 9601, "Theta"), Block(-9059, 91, 9600, "Theta"), Block(-9059, 91, 9599, "Theta"), Block(-9056, 91, 9601, "Theta"), Block(-9056, 91, 9600, "Theta"), Block(-9056, 91, 9599, "Theta"), Block(-9053, 91, 9601, "Theta"), Block(-9053, 91, 9600, "Theta"), Block(-9053, 91, 9599, "Theta")]
+    Block[] b609 = Block[Block(-9053, 93, 9609, "Theta"), Block(-9053, 92, 9612, "Theta")]
+    Block[] b610 = Block[Block(-9044, 90, 9625, "Theta"), Block(-9044, 95, 9627, "Theta"), Block(-9044, 87, 9631, "Theta"), Block(-9044, 87, 9633, "Theta"), Block(-9043, 90, 9625, "Theta"), Block(-9043, 95, 9627, "Theta"), Block(-9043, 87, 9631, "Theta"), Block(-9043, 87, 9633, "Theta"), Block(-9042, 90, 9625, "Theta"), Block(-9042, 95, 9627, "Theta"), Block(-9042, 87, 9631, "Theta"), Block(-9042, 87, 9633, "Theta")]
+    Block[] b701 = Block[Block(-4637, 89, 5181, "Theta_the_end"), Block(-4637, 89, 5179, "Theta_the_end"), Block(-4637, 89, 5180, "Theta_the_end"), Block(-4632, 90, 5179, "Theta_the_end"), Block(-4632, 90, 5181, "Theta_the_end"), Block(-4624, 91, 5179, "Theta_the_end"), Block(-4621, 91, 5181, "Theta_the_end"), Block(-4620, 91, 5182, "Theta_the_end"), Block(-4618, 91, 5189, "Theta_the_end"), Block(-4617, 91, 5190, "Theta_the_end"), Block(-4614, 90, 5191, "Theta_the_end")]
+    Block[] b702 = Block[Block(-4645, 88, 5148, "Theta_the_end"), Block(-4645, 89, 5145, "Theta_the_end"), Block(-4644, 93, 5157, "Theta_the_end"), Block(-4643, 93, 5157, "Theta_the_end"), Block(-4642, 93, 5157, "Theta_the_end"), Block(-4641, 88, 5148, "Theta_the_end"), Block(-4641, 89, 5145, "Theta_the_end")]
+    Block[] b703 = Block[Block(-4626, 90, 5130, "Theta_the_end"), Block(-4626, 90, 5131, "Theta_the_end"), Block(-4626, 90, 5132, "Theta_the_end"), Block(-4625, 90, 5130, "Theta_the_end"), Block(-4625, 90, 5131, "Theta_the_end"), Block(-4625, 90, 5132, "Theta_the_end"), Block(-4625, 91, 5130, "Theta_the_end"), Block(-4625, 91, 5131, "Theta_the_end"), Block(-4625, 91, 5132, "Theta_the_end"), Block(-4625, 90, 5133, "Theta_the_end"), Block(-4625, 90, 5129, "Theta_the_end"), Block(-4613, 90, 5130, "Theta_the_end"), Block(-4613, 90, 5131, "Theta_the_end"), Block(-4613, 90, 5132, "Theta_the_end"), Block(-4612, 90, 5130, "Theta_the_end"), Block(-4612, 90, 5131, "Theta_the_end"), Block(-4612, 90, 5132, "Theta_the_end"), Block(-4612, 91, 5130, "Theta_the_end"), Block(-4612, 91, 5131, "Theta_the_end"), Block(-4612, 91, 5132, "Theta_the_end"), Block(-4612, 90, 5133, "Theta_the_end"), Block(-4612, 90, 5129, "Theta_the_end")]
+    Block[] b704 = Block[Block(-4607, 92, 5112, "Theta_the_end"), Block(-4606, 92, 5117, "Theta_the_end"), Block(-4606, 92, 5107, "Theta_the_end")]
+    Block[] b705 = Block[Block(-4634, 90, 5096, "Theta_the_end"), Block(-4634, 90, 5095, "Theta_the_end"), Block(-4634, 90, 5094, "Theta_the_end"), Block(-4630, 89, 5096, "Theta_the_end"), Block(-4630, 89, 5094, "Theta_the_end"), Block(-4627, 89, 5096, "Theta_the_end"), Block(-4627, 89, 5094, "Theta_the_end"), Block(-4624, 87, 5096, "Theta_the_end"), Block(-4624, 87, 5094, "Theta_the_end"), Block(-4621, 87, 5096, "Theta_the_end"), Block(-4621, 87, 5094, "Theta_the_end")]
+    Block[] b706 = Block[Block(-4662, 91, 5103, "Theta_the_end"), Block(-4658, 91, 5103, "Theta_the_end"), Block(-4655, 91, 5102, "Theta_the_end"), Block(-4651, 91, 5102, "Theta_the_end")]
+    Block[] b707 = Block[Block(-4677, 90, 5118, "Theta_the_end"), Block(-4677, 89, 5121, "Theta_the_end"), Block(-4677, 90, 5121, "Theta_the_end")]
+    Block[] b708 = Block[Block(-4692, 92, 5144, "Theta_the_end"), Block(-4691, 92, 5144, "Theta_the_end"), Block(-4690, 92, 5144, "Theta_the_end"), Block(-4688, 95, 5146, "Theta_the_end"), Block(-4687, 93, 5143, "Theta_the_end"), Block(-4685, 92, 5140, "Theta_the_end")]
+    Block[] b709 = Block[Block(-4699, 91, 5117, "Theta_the_end"), Block(-4698, 91, 5129, "Theta_the_end"), Block(-4698, 91, 5125, "Theta_the_end"), Block(-4698, 91, 5121, "Theta_the_end"), Block(-4697, 91, 5117, "Theta_the_end")]
+    Block[] b710 = Block[Block(-4702, 91, 5053, "Theta_the_end"), Block(-4701, 93, 5061, "Theta_the_end"), Block(-4701, 91, 5053, "Theta_the_end"), Block(-4700, 91, 5089, "Theta_the_end"), Block(-4700, 91, 5069, "Theta_the_end"), Block(-4700, 92, 5065, "Theta_the_end"), Block(-4700, 91, 5053, "Theta_the_end"), Block(-4699, 92, 5086, "Theta_the_end"), Block(-4699, 93, 5076, "Theta_the_end"), Block(-4698, 92, 5080, "Theta_the_end"), Block(-4697, 92, 5086, "Theta_the_end"), Block(-4697, 93, 5076, "Theta_the_end"), Block(-4696, 91, 5089, "Theta_the_end"), Block(-4696, 91, 5069, "Theta_the_end"), Block(-4696, 92, 5065, "Theta_the_end"), Block(-4696, 91, 5053, "Theta_the_end"), Block(-4695, 93, 5061, "Theta_the_end"), Block(-4695, 91, 5053, "Theta_the_end"), Block(-4694, 91, 5053, "Theta_the_end")]
 
     Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
     Int[] directionsY = Int[0, 0, 1, -1, 0, 0]
@@ -53,7 +224,11 @@
     Int[] directionsZTarget = Int[0, 0, 0, 0, -1, -1]
     Int[] failMilestones = Int[100, 250, 500, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 15000, 20000, 30000, 50000, 100000]
 
-    String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block"]
+    relative Int[] sectionFallsNormal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionFallsMaster = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionFallsUMM = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block", "deepslate_diamond_ore"]
 
     String[] blocksSound = String["obsidian", "crying_obsidian", "prismarine", "polished_andesite"]
     String[] blocksSoundOres = String["iron_block", "gold_block", "diamond_block", "emerald_block"]
@@ -100,6 +275,14 @@
 
     # FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
 
+    handleFalling(Position coord1, Position coord2, Int levelNormal, Int levelMaster, Player player)
+    handleAfter(Int levelNumber, Boolean stylePresent, Block[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+    completeStage(Int stage, Player player)
+    pcStats(Int pcSelect, Player player)
+    resetBlocks(Player player)
+    handleStylePoints(Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+    swagTitle(Int points, Player player)
+
     cosmeticCopper(Player player)
     cosmeticWool(Player player)
     cosmeticGlass(Player player)
@@ -127,6 +310,9 @@
     handlePlacementHeight14(Block block, Player player)
     handlePlacementHeight15(Block block, Player player)
     handlePlacementHeight5Fast(Block block, Player player)
+    handlePlacementHeight5Slow(Block block, Player player)
+
+    anticheat(Block block, Player player)
 
     splits(Int stage, Player player)
 

@@ -1,0 +1,67 @@
+@using Harha
+
+@define String user
+@player &#D3D6E0&lEnter a username:
+@prompt 20s user
+@define String name = player.getName()
+
+@if pcSelect == 0
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0&lDisplaying stats for &#917E9C&l{{user}}
+    @player
+    @player &#D3D6E0&lTimes completed map: &#8596A6&lxx
+    @player 
+    @player &#D3D6E0&lPB Blocks placed: &#8596A6&lxx
+    @player &#D3D6E0&lTotal Blocks Placed: &#8596A6&l{{totalBlocks[Player(user)]}}
+    @player &#D3D6E0&lPB Falls: &#8596A6&lxx
+    @chatscript 20s fruitC pcStats(1, player)
+    @player &#D3D6E0&lTotal Falls: &#8596A6&l{{totalFalls[Player(user)]}} &r&l(click)
+    
+    @chatscript 20s fruitC pcStats(3, player)
+    @player xxx
+    
+    @chatscript 20s fruitD pcStats(4, player)
+    @player xxx
+    
+    @chatscript 20s fruitE pcStats(5, player)
+    @player xxx
+    
+    @chatscript 20s berryA pcStats(6, player)
+    @player xxx
+    
+    @chatscript 20s berryB pcStats(7, player)
+    @player xxx
+    
+    @chatscript 20s berryC pcStats(8, player)
+    @player xxx
+
+    @chatscript 20s berryD pcStats(9, player)
+    @player xxx
+
+    @chatscript 20s berryE pcStats(10, player)
+    @player xxx
+    
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    
+    
+@elseif pcSelect == 1
+    @player Hm! I've heard &c&lApples&7 can usually be found &f&lin the leaves of a tree&7!
+@elseif pcSelect == 2
+    @player In my experience, I've always found &5&lGrapes &f&lnext to a tree&7!
+@elseif pcSelect == 3
+    @player &6&lOranges&7 always grow &f&linside a tree&7, don't you know?
+@elseif pcSelect == 4
+    @player Ah, &d&lDragonfruit&7! A rare one. You can find these &f&lin hay stacks&7, if you keep a keen eye.
+@elseif pcSelect == 5
+    @player &c&lTomatos&7 are my favorite! So juicy, so tasty. You can find them &f&lin hay stacks&7.
+@elseif pcSelect == 6
+    @player &7Everybody loves &3&lBlueberries&7! They're in high demand this time of year - I thought I saw the &f&ltractor pulling some&7.
+@elseif pcSelect == 7
+    @player If you're looking for a &c&lStrawberry&7, I suggest &f&lchecking the hay stacks&7!
+@elseif pcSelect == 8
+    @player The elusive &c&lElderberry&7 commonly grows alongside &f&la patch of flowers&7!
+@elseif pcSelect == 9
+    @player &c&lRaspberries &7usually hang out &f&lnear ponds&7!
+@elseif pcSelect == 10
+    @player If you're looking for a &5&lBlackberry&7, you'll want to check &f&lon the hillside&7! They often grow &f&lin the dirt&7.
+@fi

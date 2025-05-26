@@ -1,0 +1,5 @@
+# completion01-01 script
+@using Harha
+@fast
+
+@var completeStage(0, player)

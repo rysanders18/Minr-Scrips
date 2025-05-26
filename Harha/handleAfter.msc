@@ -1,0 +1,33 @@
+# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+# Function for after stage area script
+# Clears blocks, sets level, checks for style points, and runs anticheat
+@using Harha
+@fast
+
+
+# if the players level is correct then check for style points
+@if level[player] == (levelNumber - 1) && stylePresent == true
+    @var handleStylePoints(thresholds, rewards, claimedIndexStart, blocksThisStage, player)
+@fi
+
+# set the players level
+@var level[player] = levelNumber
+@bypass /xp set {{player}} 22 levels
+@if levelNumber == 0
+    @bypass /xp set {{player}} 0 points
+@else
+    @bypass /xp set {{player}} {{levelNumber + 1}} points
+@fi
+@bypass /xp set {{player}} {{levelNumber + 1}} levels 
+
+# reset blocksThisStage
+@var blocksThisStage = 0
+
+# clear blocks at end because cooldown
+@var numberOfBlocksToGive[player] = 63
+@var resetBlocks(player)
+
+# anticheat
+@for Int i in list::range(0, cheatList.length())
+    @var anticheat(cheatList[i], player)
+@done

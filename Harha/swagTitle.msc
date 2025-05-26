@@ -1,0 +1,50 @@
+# swagTitle(Int points, Player player)
+@using Harha
+@fast
+
+@bypass /title @s times 0 20 20
+@bypass /title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"gold"},{"text":"style ","bold":true,"color":"#ffc71d"},{"text":"points: ","bold":true,"color":"#ffe339"},{"text":"{{swagPoints}}","bold":true,"underlined":true,"color":"#ffff57"}]
+@bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#ffc71d"}]
+@bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"gold"}]
+
+
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 1.059
+
+@delay 2
+
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 1.059
+
+@delay 2
+
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 1.059
+
+@delay 4
+
+@bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"yle Points!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"St","bold":true,"color":"gold"},{"text":"y","bold":true,"color":"yellow"},{"text":"l","bold":true,"color":"white"},{"text":"e Points!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Styl","bold":true,"color":"gold"},{"text":"e ","bold":true,"color":"yellow"},{"text":"P","bold":true,"color":"white"},{"text":"oints!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Style P","bold":true,"color":"gold"},{"text":"o","bold":true,"color":"yellow"},{"text":"i","bold":true,"color":"white"},{"text":"nts!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"yle Poi","bold":true,"color":"gold"},{"text":"n","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"s!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"St","bold":true,"color":"gold"},{"text":"y","bold":true,"color":"yellow"},{"text":"l","bold":true,"color":"white"},{"text":"e Point","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"yellow"},{"text":"!","bold":true,"color":"white"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Styl","bold":true,"color":"gold"},{"text":"e ","bold":true,"color":"yellow"},{"text":"P","bold":true,"color":"white"},{"text":"oints!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Style P","bold":true,"color":"gold"},{"text":"o","bold":true,"color":"yellow"},{"text":"i","bold":true,"color":"white"},{"text":"nts!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Style Poi","bold":true,"color":"gold"},{"text":"n","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"s!","bold":true,"color":"gold"}]
+@delay 1
+@bypass /title {{player}} title ["",{"text":"Style Point","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"yellow"},{"text":"!","bold":true,"color":"white"}]
+@delay 1
+@bypass /title @s times 0 30 20
+@bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"gold"}]

@@ -1,0 +1,11 @@
+# End Regions Prep
+
+@using Harha
+@fast
+
+# set PB for session variables
+@if (sessionBlocksPB[player] = null) || (sessionfallsPB[player] > sessionBlocks[player])
+    @var sessionBlocksPB[player] = sessionBlocks[player]
+@elseif sessionFallsPB[player] = null
+    @var sessionFallsPB[player] = sessionFalls[player]
+@fi

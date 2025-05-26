@@ -1,0 +1,70 @@
+# handleFalling(Location coord1, Location coord2, Int levelNormal, Int levelMaster, Player player)
+@using Harha
+@fast 
+
+@if difficultySelection == "normal"
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+    @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    @var player.teleport(coord1)
+    
+    @var sectionFallsNormal[level] += 1
+    @var level[player] = levelNormal
+    @bypass /xp set {{player}} 22 levels
+    @if levelNormal == 0
+        @bypass /xp set {{player}} 0 points
+    @else
+        @bypass /xp set {{player}} {{levelNormal + 1}} points
+    @fi
+    @bypass /xp set {{player}} {{levelNormal + 1}} levels 
+
+    
+@elseif difficultySelection == "master" || player.getCurrentChallenge() == "Even Harder Hat"
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+    @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    @var player.teleport(coord2)
+    
+    @var sectionFallsMaster[level] += 1
+    @var level[player] = levelMaster
+    @bypass /xp set {{player}} 22 levels
+    @if levelMaster == 0
+        @bypass /xp set {{player}} 0 points
+    @else
+        @bypass /xp set {{player}} {{levelMaster + 1}} points
+    @fi
+    @bypass /xp set {{player}} {{levelMaster + 1}} levels 
+
+@elseif difficultySelection == "ultraMaster" || player.getCurrentChallenge() == "Hardest Hat"
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+    @bypass clear {{player}} leather_boots
+    @var bootsObtained[player] = false
+    @var blockSelection[player] = blockSelectionStored[player]
+    @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    @bypass minecraft:teleport {{player}} -9199.5 96.0 9704.5 180 10 
+
+    @var sectionFallsUMM[level] += 1
+    @var level[player] = 0
+    @bypass /xp set {{player}} 0 points
+    @bypass /xp set {{player}} 1 levels
+
+@fi
+
+@var sessionFalls[player] += 1
+@var totalFalls[player] += 1
+@var globalFalls += 1
+@var numberOfBlocksToGive[player] = 63
+@var blocksThisStage[player] = 0
+
+# Handles Fail Milestones
+@for Int x in failMilestones
+    @if totalFalls == x
+        @player &lYou have fallen a total of &6&l{{x}} &r&ltimes!
+        @if totalFalls == 10000
+            @player &6&lCosmetic Unlocked!
+            @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt
+            # TODO:
+            # implement playsound for cosmetic
+            @player  
+        @fi
+    @fi
+@done
+
