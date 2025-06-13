@@ -1,10 +1,11 @@
-# handlePlacementHeight2 (Block block, Player player)
-@define Int height = 2
+# handlePlacement(Block block, Int height, Player player)
+
 
 @fast
 @using Harha
 
 # define variables for less typing
+@define Int delayTime = delayTimes[height - 1]
 @define Int x = block.getX()
 @define Int y = block.getY()
 @define Int z = block.getZ()
@@ -88,12 +89,12 @@
 
 @if totalBlocks % 4 == 0
     # time block stays + 1 from target script
-    @delay 4
+    @delay 3
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 7
+    @var delay(delayTime)
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -122,12 +123,12 @@
     
 @elseif totalBlocks % 4 == 1
     # time block stays + 1 from target script
-    @delay 4
+    @delay 3
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 7
+    @var delay(delayTime)
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -156,12 +157,12 @@
     
 @elseif totalBlocks % 4 == 2
     # time block stays + 1 from target script
-    @delay 4
+    @delay 3
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 7
+    @var delay(delayTime)
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -190,12 +191,12 @@
     
 @elseif totalBlocks % 4 == 3
     # time block stays + 1 from target script
-    @delay 4
+    @delay 3
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 7
+    @var delay(delayTime)
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -219,8 +220,4 @@
     
     @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection4}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
-    
-    
-    
-    
 @fi

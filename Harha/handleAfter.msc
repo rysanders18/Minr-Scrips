@@ -4,8 +4,10 @@
 @using Harha
 @fast
 
+@cooldown 1s
 
 # if the players level is correct then check for style points
+# DEBUG @player {{level[player]}} = {{levelNumber - 1}} && {{stylePresent}}
 @if level[player] == (levelNumber - 1) && stylePresent == true
     @var handleStylePoints(thresholds, rewards, claimedIndexStart, blocksThisStage, player)
 @fi
@@ -22,9 +24,9 @@
 
 # reset blocksThisStage
 @var blocksThisStage = 0
+@var numberOfBlocksToGive[player] = 63
 
 # clear blocks at end because cooldown
-@var numberOfBlocksToGive[player] = 63
 @var resetBlocks(player)
 
 # anticheat

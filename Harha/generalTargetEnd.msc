@@ -1,0 +1,112 @@
+# generalTargetEnd(Block block, Int[] directions, Int level, Player player)
+@using Harha
+@fast
+
+# if block not in main hand (i.e. player did not place block), do nothing
+@if (player.getItemInMainHand().getItemType().toLowerCase() == "air" && player.getItemInOffHand().getItemType().toLowerCase() == "air")
+    @return
+@fi
+
+@delay 1
+
+# Handles cosmetics
+@if cosmeticSwap == true
+    @if (grateList.contains(blockSelection))
+        @var cosmeticCopper(player)
+    @elseif (coralList.contains(blockSelection))
+        @var cosmeticCoral(player)
+    @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
+        @var cosmeticCoolGlass(player)
+    @elseif (woolList.contains(blockSelection))
+        @var cosmeticWool(player)
+    @elseif (glassList.contains(blockSelection)) && coolGlass == false
+        @var cosmeticGlass(player)
+    @elseif (spongeList.contains(blockSelection))
+        @var cosmeticSponge(player)
+    @elseif (leafList.contains(blockSelection))
+        @var cosmeticLeaf(player)
+    @elseif (obsidianList.contains(blockSelection))
+        @var cosmeticObsidian(player)
+    @elseif (oreList.contains(blockSelection))
+        @var cosmeticOre(player)
+    @elseif (pumpkinList.contains(blockSelection))
+        @var cosmeticPumpkin(player)
+    @fi
+@fi
+
+@define Int[] endDirectionsX = Int[]
+@define Int[] endDirectionsY = Int[]
+@define Int[] endDirectionsZ = Int[]
+
+@if directions[0] == 1
+    @var endDirectionsX.append(0)
+    @var endDirectionsY.append(0)
+    @var endDirectionsZ.append(-1)
+@fi
+@if directions[1] == 1
+    @var endDirectionsX.append(1)
+    @var endDirectionsY.append(0)
+    @var endDirectionsZ.append(0)
+@fi
+@if directions[2] == 1
+    @var endDirectionsX.append(0)
+    @var endDirectionsY.append(0)
+    @var endDirectionsZ.append(1)
+@fi
+@if directions[3] == 1
+    @var endDirectionsX.append(-1)
+    @var endDirectionsY.append(0)
+    @var endDirectionsZ.append(0)
+@fi
+@if directions[4] == 1
+    @var endDirectionsX.append(0)
+    @var endDirectionsY.append(1)
+    @var endDirectionsZ.append(0)
+@fi
+@if directions[5] == 1
+    @var endDirectionsX.append(0)
+    @var endDirectionsY.append(-1)
+    @var endDirectionsZ.append(0)
+@fi
+
+# DEBUG @player {{endDirectionsX}}
+# DEBUG @player {{endDirectionsY}}
+# DEBUG @player {{endDirectionsZ}}
+
+# scan for adjacent blockSelection blocks
+@for Int i in list::range(0, endDirectionsX.length())
+    # get current offset positions
+    @define Int offsetX = endDirectionsX[i]
+    @define Int offsetY = endDirectionsY[i]
+    @define Int offsetZ = endDirectionsZ[i]
+    
+    # get current adjacent block
+    @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
+    
+    # if adjacentBlock = a block that can be selected
+    @if (adjacentBlock.getBlockType().toLowerCase() == blockSelection) || (allBlockSelections.contains(adjacentBlock.getBlockType().toLowerCase()))
+        
+        @define Int x = block.getX()
+        @define Int y = block.getY()
+        @define Int z = block.getZ()
+        
+        @var totalBlocks[player] += 1
+        @var sessionBlocks[player] += 1
+        @var globalBlocks += 1
+        @var blocksThisStage[player] += 1
+        @var blocksThisStageGlobal[level] += 1
+        
+        @if totalBlocks % 4 == 0
+            @var temporaryBlockSelection1 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 1
+            @var temporaryBlockSelection2 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 2
+            @var temporaryBlockSelection3 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 3
+            @var temporaryBlockSelection4 = adjacentBlock.getBlockType().toLowerCase()
+        @fi
+        
+
+        @var handlePlacementEnd(adjacentBlock, player)
+    @fi
+@done

@@ -3,9 +3,29 @@
 @using Harha
 @fast
 
+@cooldown 10s
+
 # set PB for session variables
 @if (sessionBlocksPB[player] = null) || (sessionfallsPB[player] > sessionBlocks[player])
     @var sessionBlocksPB[player] = sessionBlocks[player]
 @elseif sessionFallsPB[player] = null
     @var sessionFallsPB[player] = sessionFalls[player]
+@fi
+
+@var numberCompletions += 1
+
+@if player.getCurrentChallenge() == "hahahahaha" 
+    @var numberCompletionsUMM[player] += 1
+@elseif player.getCurrentChallenge() == "hahahaha"
+    @var numberCompletionsMaster[player] += 1
+@else
+    @var numberCompletionsNormal[player] += 1
+@fi
+@var numberCompletions[player] += 1
+
+
+
+# rainbow glass cosmetic
+@if sessionFalls[player] <= 25 && cosmeticsUnlocked[player][8] == 0
+    
 @fi

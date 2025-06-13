@@ -5,40 +5,10 @@
 
 @define Int randomBlockNumber = Int(math::random(1.0D, 11.0D))
 
-@if lastOreNumber[player] == 0
-    @if randomBlockNumber < 4
-        @var oreNumber[player] += 1
-    @else
-        @var oreNumber[player] = 0
-    @fi
-    
-@elseif lastOreNumber[player] == 1
-    @if randomBlockNumber < 6
-        @var oreNumber[player] += 1
-    @else
-        @var oreNumber[player] = 0
-    @fi
-    
-@elseif lastOreNumber[player] == 2
-    @if randomBlockNumber < 6
-        @var oreNumber[player] += 1
-    @else
-        @var oreNumber[player] = 0
-    @fi
-    
-@elseif lastOreNumber[player] == 3
-    @if randomBlockNumber < 6
-        @var oreNumber[player] += 1
-    @else
-        @var oreNumber[player] = 0
-    @fi
-    
-@elseif lastOreNumber[player] == 4
-    @if randomBlockNumber < 6
-        @var oreNumber[player] = 4
-    @else
-        @var oreNumber[player] = 0
-    @fi
+@if randomBlockNumber < 3
+    @var oreNumber[player] = 0
+@elseif lastOreNumber[player] != 4
+    @var oreNumber[player] = lastOreNumber[player] + 1
 @fi
 
 @var blockSelection[player] = oreList[oreNumber]

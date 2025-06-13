@@ -14,10 +14,10 @@
     # time block stays + 1 from target script
     @delay 8
     
-    @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
-    @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1}}}, DropItem: 0, CancelDrop:1}
+    @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+    @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 11
+    @delay 13
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -39,7 +39,7 @@
         @bypass /playsound minecraft:block.{{temporaryBlockSelection1}}.break master @a[distance=..20] ~ {{y - height}} ~ 1 0.8
     @fi
     
-    @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection1}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
+    @bypass /execute in minecraft:theta_the_end run particle block{block_state:{Name:{{temporaryBlockSelection1}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
     
     
@@ -48,10 +48,10 @@
     # time block stays + 1 from target script
     @delay 8
     
-    @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
-    @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2}}}, DropItem: 0, CancelDrop:1}
+    @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+    @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 11
+    @delay 13
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -73,7 +73,7 @@
         @bypass /playsound minecraft:block.{{temporaryBlockSelection2}}.break master @a[distance=..20] ~ {{y - height}} ~ 1 0.8
     @fi
     
-    @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection2}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
+    @bypass /execute in minecraft:theta_the_end run particle block{block_state:{Name:{{temporaryBlockSelection2}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
     
     
@@ -82,10 +82,10 @@
     # time block stays + 1 from target script
     @delay 8
     
-    @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
-    @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3}}}, DropItem: 0, CancelDrop:1}
+    @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+    @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 11
+    @delay 13
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -107,7 +107,7 @@
         @bypass /playsound minecraft:block.{{temporaryBlockSelection3}}.break master @a[distance=..20] ~ {{y - height}} ~ 1 0.8
     @fi
     
-    @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection3}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
+    @bypass /execute in minecraft:theta_the_end run particle block{block_state:{Name:{{temporaryBlockSelection3}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
     
     
@@ -116,10 +116,10 @@
     # time block stays + 1 from target script
     @delay 8
     
-    @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
-    @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4}}}, DropItem: 0, CancelDrop:1}
+    @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+    @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4}}}, DropItem: 0, CancelDrop:1}
     
-    @delay 11
+    @delay 13
     
     @if (grateList.contains(blockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] ~ {{y - height}} ~ 1 1
@@ -141,7 +141,7 @@
         @bypass /playsound minecraft:block.{{temporaryBlockSelection4}}.break master @a[distance=..20] ~ {{y - height}} ~ 1 0.8
     @fi
     
-    @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection4}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
+    @bypass /execute in minecraft:theta_the_end run particle block{block_state:{Name:{{temporaryBlockSelection4}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
     
     

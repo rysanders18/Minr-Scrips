@@ -1,0 +1,14 @@
+# delay(Int seconds)
+
+@using Harha
+@fast
+
+@define Long startTick = system::currentTimeMillis()
+@define Long limit = Long(1000*seconds)
+
+@for Int tickCount in list::range(0, 500)
+    @delay 1
+    @if (system::currentTimeMillis() - startTick) >= limit
+        @return
+    @fi
+@done

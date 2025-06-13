@@ -1,22 +1,88 @@
 # startSignPrep
+@cooldown 5s
 
 @fast
 @using Harha
 @bypass /gamemode adventure {{player}}
-@bypass clear {{player}}
-@bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+
+# basic variables
+@var blockSelection[player] = blockSelectionStored[player]
 @var bootsObtained[player] = false
 @var sessionFalls[player] = 0
 @var sessionBlocks[player] = 0
 @var stage[player] = 0
 @var level[player] = 0
+@var iceSwapped[player] = false
+@var slimeSwapped[player] = false
+@var ummFalls[player] = 5
+
+
+
+
+# handles difficulty selection
+@if player.getCurrentChallenge() == "hahahaha"
+    @var difficultySelection[player] = "master"
+@elseif player.getCurrentChallenge() == "hahahahaha"
+    @var difficultySelection[player] = "ultraMaster"
+@fi
+
+
+
+
+@bypass /effect give {{player}} minecraft:darkness 2 10 true
+@bypass /playsound minecraft:ui.button.click master @s 
+
+@delay 1s
 
 @bypass /xp set {{player}} 0 points
 @bypass /xp set {{player}} 1 levels
 
+@bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+@if player.getCurrentChallenge() == "hahahahaha" 
+    @bypass /playsound minecraft:entity.ender_dragon.growl master @s ~ ~ ~ 1 {{math::random(1.1D, 1.4D)}}
+    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
+    @bypass /particle minecraft:flame -9199.5 92.5 9733.5 0 0 0 00.25 250
+    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @bypass /particle minecraft:dust_color_transition{from_color:[0.549,0.000,0.000],scale:1,to_color:[1.000,0.000,0.000]} -9199.5 93.5 9731.5 1.5 1 1.5 22.25 250
+    @bypass /attribute @s minecraft:max_health base set 10
+@elseif player.getCurrentChallenge() == "hahahaha"
+    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
+    @bypass /particle minecraft:flame -9199.5 92.5 9733.5 0 0 0 00.25 250
+    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @bypass /attribute @s minecraft:max_health base set 20
+@else
+    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
+    @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
+    @bypass /effect clear @s
+    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @bypass /attribute @s minecraft:max_health base set 20
+    @var difficultySelection[player] = "normal"
+@fi 
+@bypass clear {{player}}
+@bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
 
 # TODO: hat stuff
-
+@if numberCompletions == 0
+    @bypass /item replace entity @s armor.head with leather_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=false,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:2,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif numberCompletions == 1
+    @bypass /item replace entity @s armor.head with chainmail_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:4,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif numberCompletions == 2
+    @bypass /item replace entity @s armor.head with iron_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:6,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif numberCompletions == 3
+    @bypass /item replace entity @s armor.head with golden_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:8,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif numberCompletions == 4
+    @bypass /item replace entity @s armor.head with diamond_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:10,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif 5 <= numberCompletions <= 99
+    @bypass /item replace entity @s armor.head with netherite_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:20,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@elseif numberCompletions >= 100
+    @bypass /item replace entity @s armor.head with white_stained_glass[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:20,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+@fi
 
 # only runs once due to codeGenerated
 @if codeGenerated[player] == false

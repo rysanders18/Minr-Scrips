@@ -1,10 +1,12 @@
-# After area script 01-04
+# After area script 06-10
 # gives blocks and runs handleStylePoints function
 # handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
 
 @using Harha
 @fast
 
-@if Region("Harhaafter01-04", "Theta").containsPlayer(player) && player.getGameMode() == "ADVENTURE"
-    @var handleAfter(4, "true", b104, l104Thresholds, l104Rewards, l104StartIndex, blocksThisStage, player)
+@if bootsObtained[player] == true
+    @if Region("Harhaafter06-10", "Theta").containsPlayer(player) && player.getGameMode() == "ADVENTURE"
+        @var handleAfter(60, false, b610, l610Thresholds, l610Rewards, l610StartIndex, blocksThisStage, player)
+    @fi
 @fi

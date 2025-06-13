@@ -1,0 +1,122 @@
+# generalTarget(Block block, Int level, Int height, Player player)
+@using Harha
+@fast
+
+@using Harha
+@fast
+
+# if block not in main hand (i.e. player did not place block), do nothing
+@if (player.getItemInMainHand().getItemType().toLowerCase() == "air" && player.getItemInOffHand().getItemType().toLowerCase() == "air")
+    @return
+@fi
+
+@delay 1
+
+# Handles cosmetics
+@if cosmeticSwap == true
+    @if (grateList.contains(blockSelection))
+        @var cosmeticCopper(player)
+    @elseif (coralList.contains(blockSelection))
+        @var cosmeticCoral(player)
+    @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
+        @var cosmeticCoolGlass(player)
+    @elseif (woolList.contains(blockSelection))
+        @var cosmeticWool(player)
+    @elseif (glassList.contains(blockSelection)) && coolGlass == false
+        @var cosmeticGlass(player)
+    @elseif (spongeList.contains(blockSelection))
+        @var cosmeticSponge(player)
+    @elseif (leafList.contains(blockSelection))
+        @var cosmeticLeaf(player)
+    @elseif (obsidianList.contains(blockSelection))
+        @var cosmeticObsidian(player)
+    @elseif (oreList.contains(blockSelection))
+        @var cosmeticOre(player)
+    @elseif (pumpkinList.contains(blockSelection))
+        @var cosmeticPumpkin(player)
+        
+    @fi
+@fi
+
+# scan for adjacent blockSelection blocks
+@for Int i in list::range(0, directionsX.length())
+    # get current offset positions
+    @define Int offsetX = directionsX[i]
+    @define Int offsetY = directionsY[i]
+    @define Int offsetZ = directionsZ[i]
+    
+    # get current adjacent block
+    @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
+    
+    # if adjacentBlock = a block that can be selected
+    @if (adjacentBlock.getBlockType().toLowerCase() == blockSelection) || (allBlockSelections.contains(adjacentBlock.getBlockType().toLowerCase()))
+        
+        @define Int x = block.getX()
+        @define Int y = block.getY()
+        @define Int z = block.getZ()
+        
+        @var totalBlocks[player] += 1
+        @var sessionBlocks[player] += 1
+        @var globalBlocks += 1
+        @var blocksThisStage[player] += 1
+        @var blocksThisStageGlobal[level] += 1
+        
+        @if totalBlocks % 4 == 0
+            @var temporaryBlockSelection1 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 1
+            @var temporaryBlockSelection2 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 2
+            @var temporaryBlockSelection3 = adjacentBlock.getBlockType().toLowerCase()
+        @elseif totalBlocks % 4 == 3
+            @var temporaryBlockSelection4 = adjacentBlock.getBlockType().toLowerCase()
+        @fi
+        
+        @if height == 1
+            @var handlePlacementHeight1(adjacentBlock, player)
+            @return
+        @elseif height == 2
+            @var handlePlacementHeight2(adjacentBlock, player)
+            @return
+        @elseif height == 3
+            @var handlePlacementHeight3(adjacentBlock, player)
+            @return
+        @elseif height == 4
+            @var handlePlacementHeight4(adjacentBlock, player)
+            @return
+        @elseif height == 5
+            @var handlePlacementHeight5(adjacentBlock, player)
+            @return
+        @elseif height == 6
+            @var handlePlacementHeight6(adjacentBlock, player)
+            @return
+        @elseif height == 7
+            @var handlePlacementHeight7(adjacentBlock, player)
+            @return
+        @elseif height == 8
+            @var handlePlacementHeight8(adjacentBlock, player)
+            @return
+        @elseif height == 9
+            @var handlePlacementHeight9(adjacentBlock, player)
+            @return
+        @elseif height == 10
+            @var handlePlacementHeight10(adjacentBlock, player)
+            @return
+        @elseif height == 11
+            @var handlePlacementHeight11(adjacentBlock, player)
+            @return
+        @elseif height == 12
+            @var handlePlacementHeight12(adjacentBlock, player)
+            @return
+        @elseif height == 13
+            @var handlePlacementHeight13(adjacentBlock, player)
+            @return
+        @elseif height == 14
+            @var handlePlacementHeight14(adjacentBlock, player)
+            @return
+        @elseif height == 15
+            @var handlePlacementHeight15(adjacentBlock, player)
+            @return
+        @fi
+        
+    @fi
+@done

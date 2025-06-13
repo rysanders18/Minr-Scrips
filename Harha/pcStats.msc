@@ -1,44 +1,46 @@
 @using Harha
+@fast
+# pcStat(Int pcSelect, Player user)
 
-@define String user
-@player &#D3D6E0&lEnter a username:
-@prompt 20s user
-@define String name = player.getName()
-
+# 0 = Main Screen
 @if pcSelect == 0
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(math::random(0.0D, 24.0D))]}}
     @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
-    @player &#D3D6E0&lDisplaying stats for &#917E9C&l{{user}}
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
     @player
-    @player &#D3D6E0&lTimes completed map: &#8596A6&lxx
+    @chatscript 20s group1 pcStats(1, user)
+    @player &#D3D6E0Times completed map: &#8596A6&l{{numberCompletions[(user)]}} &#D3D6E0&n(click)
+    @chatscript 20s group2 pcStats(2, user)
+    @player &#D3D6E0Cosmetics Unlocked: &#8596A6&l{{numberCompletions[(user)]}} &#D3D6E0&n(click)
     @player 
-    @player &#D3D6E0&lPB Blocks placed: &#8596A6&lxx
-    @player &#D3D6E0&lTotal Blocks Placed: &#8596A6&l{{totalBlocks[Player(user)]}}
-    @player &#D3D6E0&lPB Falls: &#8596A6&lxx
-    @chatscript 20s fruitC pcStats(1, player)
-    @player &#D3D6E0&lTotal Falls: &#8596A6&l{{totalFalls[Player(user)]}} &r&l(click)
+    @player &#D3D6E0PB Blocks placed: &#8596A6&lxx
+    @player &#D3D6E0Total Blocks Placed: &#8596A6&l{{totalBlocks[(user)]}}
+    @player &#D3D6E0PB Falls: &#8596A6&lxx
     
-    @chatscript 20s fruitC pcStats(3, player)
+    @player &#D3D6E0Total Falls: &#8596A6&l{{totalFalls[(user)]}}  &#D3D6E0&n(click)
+    
+    @chatscript 20s group3 pcStats(3, user)
     @player xxx
     
-    @chatscript 20s fruitD pcStats(4, player)
+    @chatscript 20s group4 pcStats(4, user)
     @player xxx
     
-    @chatscript 20s fruitE pcStats(5, player)
+    @chatscript 20s group5 pcStats(5, user)
     @player xxx
     
-    @chatscript 20s berryA pcStats(6, player)
+    @chatscript 20s group6 pcStats(6, user)
     @player xxx
     
-    @chatscript 20s berryB pcStats(7, player)
+    @chatscript 20s group7 pcStats(7, user)
     @player xxx
     
-    @chatscript 20s berryC pcStats(8, player)
+    @chatscript 20s group8 pcStats(8, user)
     @player xxx
 
-    @chatscript 20s berryD pcStats(9, player)
+    @chatscript 20s group9 pcStats(9, user)
     @player xxx
 
-    @chatscript 20s berryE pcStats(10, player)
+    @chatscript 20s group10 pcStats(10, user)
     @player xxx
     
     @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-

@@ -1,0 +1,479 @@
+
+# styleViewer(Player player, Int level)
+@using Harha
+@fast
+
+@define Int[] thresholds = Int[]
+@define Int[] rewards = Int[]
+@define Int startIndex = 0
+@define Int pointsToEarn = 0
+@define Int totalPoints = 0
+
+@bypass playsound minecraft:ui.button.click master @s
+
+@if level == 0
+    @var thresholds = l101Thresholds
+    @var rewards = l101Rewards
+    @var startIndex = l101StartIndex
+@elseif level == 1
+    @var thresholds = l102Thresholds
+    @var rewards = l102Rewards
+    @var startIndex = l102StartIndex
+@elseif level == 2
+    @var thresholds = l103Thresholds
+    @var rewards = l103Rewards
+    @var startIndex = l103StartIndex
+@elseif level == 3
+    @var thresholds = l104Thresholds
+    @var rewards = l104Rewards
+    @var startIndex = l104StartIndex
+@elseif level == 4
+    @var thresholds = l105Thresholds
+    @var rewards = l105Rewards
+    @var startIndex = l105StartIndex
+@elseif level == 5
+    @var thresholds = l106Thresholds
+    @var rewards = l106Rewards
+    @var startIndex = l106StartIndex
+@elseif level == 6
+    @var thresholds = l107Thresholds
+    @var rewards = l107Rewards
+    @var startIndex = l107StartIndex
+@elseif level == 7
+    @var thresholds = l108Thresholds
+    @var rewards = l108Rewards
+    @var startIndex = l108StartIndex
+@elseif level == 8
+    @var thresholds = l109Thresholds
+    @var rewards = l109Rewards
+    @var startIndex = l109StartIndex
+@elseif level == 9
+    @var thresholds = l110Thresholds
+    @var rewards = l110Rewards
+    @var startIndex = l110StartIndex
+@elseif level == 10
+    @var thresholds = l201Thresholds
+    @var rewards = l201Rewards
+    @var startIndex = l201StartIndex
+@elseif level == 11
+    @var thresholds = l202Thresholds
+    @var rewards = l202Rewards
+    @var startIndex = l202StartIndex
+@elseif level == 12
+    @var thresholds = l203Thresholds
+    @var rewards = l203Rewards
+    @var startIndex = l203StartIndex
+@elseif level == 13
+    @var thresholds = l204Thresholds
+    @var rewards = l204Rewards
+    @var startIndex = l204StartIndex
+@elseif level == 14
+    @var thresholds = l205Thresholds
+    @var rewards = l205Rewards
+    @var startIndex = l205StartIndex
+@elseif level == 15
+    @var thresholds = l206Thresholds
+    @var rewards = l206Rewards
+    @var startIndex = l206StartIndex
+@elseif level == 16
+    @var thresholds = l207Thresholds
+    @var rewards = l207Rewards
+    @var startIndex = l207StartIndex
+@elseif level == 17
+    @var thresholds = l208Thresholds
+    @var rewards = l208Rewards
+    @var startIndex = l208StartIndex
+@elseif level == 18
+    @var thresholds = l209Thresholds
+    @var rewards = l209Rewards
+    @var startIndex = l209StartIndex
+@elseif level == 19
+    @var thresholds = l210Thresholds
+    @var rewards = l210Rewards
+    @var startIndex = l210StartIndex
+@elseif level == 20
+    @var thresholds = l301Thresholds
+    @var rewards = l301Rewards
+    @var startIndex = l301StartIndex
+@elseif level == 21
+    @var thresholds = l302Thresholds
+    @var rewards = l302Rewards
+    @var startIndex = l302StartIndex
+@elseif level == 22
+    @var thresholds = l303Thresholds
+    @var rewards = l303Rewards
+    @var startIndex = l303StartIndex
+@elseif level == 23
+    @var thresholds = l304Thresholds
+    @var rewards = l304Rewards
+    @var startIndex = l304StartIndex
+@elseif level == 24
+    @var thresholds = l305Thresholds
+    @var rewards = l305Rewards
+    @var startIndex = l305StartIndex
+@elseif level == 25
+    @var thresholds = l306Thresholds
+    @var rewards = l306Rewards
+    @var startIndex = l306StartIndex
+@elseif level == 26
+    @var thresholds = l307Thresholds
+    @var rewards = l307Rewards
+    @var startIndex = l307StartIndex
+@elseif level == 27
+    @var thresholds = l308Thresholds
+    @var rewards = l308Rewards
+    @var startIndex = l308StartIndex
+@elseif level == 28
+    @var thresholds = l309Thresholds
+    @var rewards = l309Rewards
+    @var startIndex = l309StartIndex
+@elseif level == 29
+    @var thresholds = l310Thresholds
+    @var rewards = l310Rewards
+    @var startIndex = l310StartIndex
+@elseif level == 30
+    @var thresholds = l401Thresholds
+    @var rewards = l401Rewards
+    @var startIndex = l401StartIndex
+@elseif level == 31
+    @var thresholds = l402Thresholds
+    @var rewards = l402Rewards
+    @var startIndex = l402StartIndex
+@elseif level == 32
+    @var thresholds = l403Thresholds
+    @var rewards = l403Rewards
+    @var startIndex = l403StartIndex
+@elseif level == 33
+    @var thresholds = l404Thresholds
+    @var rewards = l404Rewards
+    @var startIndex = l404StartIndex
+@elseif level == 34
+    @var thresholds = l405Thresholds
+    @var rewards = l405Rewards
+    @var startIndex = l405StartIndex
+@elseif level == 35
+    @var thresholds = l406Thresholds
+    @var rewards = l406Rewards
+    @var startIndex = l406StartIndex
+@elseif level == 36
+    @var thresholds = l407Thresholds
+    @var rewards = l407Rewards
+    @var startIndex = l407StartIndex
+@elseif level == 37
+    @var thresholds = l408Thresholds
+    @var rewards = l408Rewards
+    @var startIndex = l408StartIndex
+@elseif level == 38
+    @var thresholds = l409Thresholds
+    @var rewards = l409Rewards
+    @var startIndex = l409StartIndex
+@elseif level == 39
+    @var thresholds = l410Thresholds
+    @var rewards = l410Rewards
+    @var startIndex = l410StartIndex
+@elseif level == 40
+    @var thresholds = l501Thresholds
+    @var rewards = l501Rewards
+    @var startIndex = l501StartIndex
+@elseif level == 41
+    @var thresholds = l502Thresholds
+    @var rewards = l502Rewards
+    @var startIndex = l502StartIndex
+@elseif level == 42
+    @var thresholds = l503Thresholds
+    @var rewards = l503Rewards
+    @var startIndex = l503StartIndex
+@elseif level == 43
+    @var thresholds = l504Thresholds
+    @var rewards = l504Rewards
+    @var startIndex = l504StartIndex
+@elseif level == 44
+    @var thresholds = l505Thresholds
+    @var rewards = l505Rewards
+    @var startIndex = l505StartIndex
+@elseif level == 45
+    @var thresholds = l506Thresholds
+    @var rewards = l506Rewards
+    @var startIndex = l506StartIndex
+@elseif level == 46
+    @var thresholds = l507Thresholds
+    @var rewards = l507Rewards
+    @var startIndex = l507StartIndex
+@elseif level == 47
+    @var thresholds = l508Thresholds
+    @var rewards = l508Rewards
+    @var startIndex = l508StartIndex
+@elseif level == 48
+    @var thresholds = l509Thresholds
+    @var rewards = l509Rewards
+    @var startIndex = l509StartIndex
+@elseif level == 49
+    @var thresholds = l510Thresholds
+    @var rewards = l510Rewards
+    @var startIndex = l510StartIndex
+@elseif level == 50
+    @var thresholds = l601Thresholds
+    @var rewards = l601Rewards
+    @var startIndex = l601StartIndex
+@elseif level == 51
+    @var thresholds = l602Thresholds
+    @var rewards = l602Rewards
+    @var startIndex = l602StartIndex
+@elseif level == 52
+    @var thresholds = l603Thresholds
+    @var rewards = l603Rewards
+    @var startIndex = l603StartIndex
+@elseif level == 53
+    @var thresholds = l604Thresholds
+    @var rewards = l604Rewards
+    @var startIndex = l604StartIndex
+@elseif level == 54
+    @var thresholds = l605Thresholds
+    @var rewards = l605Rewards
+    @var startIndex = l605StartIndex
+@elseif level == 55
+    @var thresholds = l606Thresholds
+    @var rewards = l606Rewards
+    @var startIndex = l606StartIndex
+@elseif level == 56
+    @var thresholds = l607Thresholds
+    @var rewards = l607Rewards
+    @var startIndex = l607StartIndex
+@elseif level == 57
+    @var thresholds = l608Thresholds
+    @var rewards = l608Rewards
+    @var startIndex = l608StartIndex
+@elseif level == 58
+    @var thresholds = l609Thresholds
+    @var rewards = l609Rewards
+    @var startIndex = l609StartIndex
+@elseif level == 59
+    @var thresholds = l610Thresholds
+    @var rewards = l610Rewards
+    @var startIndex = l610StartIndex
+@elseif level == 60
+    @var thresholds = l701Thresholds
+    @var rewards = l701Rewards
+    @var startIndex = l701StartIndex
+@elseif level == 61
+    @var thresholds = l702Thresholds
+    @var rewards = l702Rewards
+    @var startIndex = l702StartIndex
+@elseif level == 62
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 63
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 64
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 65
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 66
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 67
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 68
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@elseif level == 69
+    @var thresholds = l703Thresholds
+    @var rewards = l703Rewards
+    @var startIndex = l703StartIndex
+@fi
+
+@if startIndex == 0 && level != 3
+
+    @player &#d4d4d4-=-=-=-= &n{{allLevels[level]}}&#d4d4d4 =-=-=-=-
+    @player &#7e7e7e{{allLevels[level]}} has no style points.
+    @player
+
+@else
+
+    @player &#d4d4d4-=-=-=-= &n{{allLevels[level]}}&#d4d4d4 =-=-=-=-
+    @for Int i in list::range(0, thresholds.length())
+        # DEBUG @player i = {{i}}
+        # DEBUG @player claimed style points? {{claimedStylePoints[startIndex + rewards.length() - i - 1]}} {{startIndex + rewards.length() - i - 1}}
+        @if claimedStylePoints[startIndex + rewards.length() - i - 1] == true
+
+            @var totalPoints += rewards[rewards.length() - 1 - i]
+            @var pointsToEarn += rewards[rewards.length() - 1 - i]
+
+            @if thresholds[thresholds.length() - 1 - i] == 1
+                @player &aBeat in {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✔
+            @else
+                @player &aBeat in {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✔
+            @fi
+            
+            
+        @else
+            @var totalPoints += rewards[rewards.length() - 1 - i]
+            
+            @if thresholds[thresholds.length() - 1 - i] == 1
+                @player &cBeat in {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✕
+            @else
+                @player &cBeat in {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✕
+            @fi
+            
+        @fi
+        
+    @done
+    @player &#ffd534Style points this stage = ({{pointsToEarn}}/{{totalPoints}}), Total = ({{swagPoints[player]}}/3500)
+    @player
+
+@fi
+
+@if level == 0
+    @player &#d4d4d4&lAdvice:&7 These signs will give &#d4d4d4&ltips and advice &7for each level! If you’re stuck, these signs can help you out. It is good practice to try to &#d4d4d4&lplace right before you land.
+@elseif level == 1
+    @player &#d4d4d4&lAdvice:&7 Here it helps to &#d4d4d4&lturn as soon as you place.&7 Try to stafe so you &#d4d4d4&ldon’t slam into the walls.
+@elseif level == 2
+    @player &#d4d4d4&lAdvice:&7 If you’re running into the iron bar, &#d4d4d4&ltry landing further left &7on the first block. Turn right after you place and strafe left away from the wall. You can stand suprisingly far left on the block!
+@elseif level == 3
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lslow down &7so you &#d4d4d4&ldon't run into the corner. &7It's easier to &#d4d4d4&lonly place 2 blocks!
+@elseif level == 4
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe left &7away from the wall so you don’t hit the corner. &#d4d4d4&lYou can land very far left &7on the first block. Further than you think!
+@elseif level == 5
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe left &7away from the wall so you don’t hit the corner. &#d4d4d4&lYou can land very far left &7on the first block. Further than you think!
+@elseif level == 6
+    @player &#d4d4d4&lAdvice:&7 Some players find this level &#d4d4d4&leasier without straffing. &7Flick your mouse down to the target, then flick it back fowards before you jump. Strafing away from the targets may help. 
+@elseif level == 7
+    @player &#d4d4d4&lAdvice:&7 You can carry your momentum and &#d4d4d4&lchain the jumps,&7 or you can stop and take each jump slow! The choice is yours.
+@elseif level == 8
+    @player &#d4d4d4&lAdvice:&7 It might help if you &#d4d4d4&lslow down around the corners! &7You can slow down by letting go of W for a bit or by stopping your sprint. &#d4d4d4&lTry to avoid bonking against the corners. &7You can stand pretty far out on the blocks you place.
+@elseif level == 9
+    @player &#d4d4d4&lAdvice:&7 Try to land &#d4d4d4&las far as possible &7on the first block, &#d4d4d4&lstrafe right, and turn in &7to pass the iron bars!
+@elseif level == 10
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lplace right before you land &7when stacking! Get as much speed as you can for the last 2+1. If you &#d4d4d4&lstart gaining momentum earlier &7and &#d4d4d4&lland on the edge &7you can make it! You can &#d4d4d4&lrun a bit &7on the last block if you &#d4d4d4&lplace it right before landing &7on it.
+@elseif level == 11
+    @player &#d4d4d4&lAdvice:&7 If you stand in the middle, you &#d4d4d4&ldon’t have to strafe left and right! &7Just move your mouse, not your body. Make sure you gain enough speed to make the final jump.
+@elseif level == 12
+    @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move less distance and its easier to aim!
+@elseif level == 13
+    @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move less distance and its easier to aim! You also don’t have to strafe left and right.
+@elseif level == 14
+    @player &#d4d4d4&lAdvice:&7 It helps if you try to &#d4d4d4&ljump halfway between the blocks &7so you &#d4d4d4&ldon’t have to move left and right. &7You can &#d4d4d4&lrun a bit on the last block &7to gain more speed if you &#d4d4d4&lplace it right before landing &7on it.
+@elseif level == 15
+    @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the sides. &7You have to move less distance and its easier to aim!
+@elseif level == 16
+    @player &#d4d4d4&lAdvice:&7 If you’re failing the last jump, try to &#d4d4d4&lrun a bit &7before you jump on the last block.
+@elseif level == 17
+    @player &#d4d4d4&lAdvice:&7 If you’re failing the last jump, try to &#d4d4d4&lrun a bit &7before you jump on the last block.
+@elseif level == 18
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstay as close to the middle &7as you can, and don’t press against any walls. This level is easier if you &#d4d4d4&ldon’t sprint.
+@elseif level == 19
+    @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lrun as long as possible &7on each block. It will help your aim if you&#d4d4d4&l stand towards the closer edge &7of the block, because you have to move your mouse less. &#d4d4d4&lStrafe!
+@elseif level == 20
+    @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lHold space &7for most of the slimes in this section!
+@elseif level == 21
+    @player &#d4d4d4&lAdvice:&7 Get as much momentum as you can and &#d4d4d4&lhold space &7on the slime. Flick fowards after placing.
+@elseif level == 22
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 23
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 24
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 25
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 26
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 27
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 28
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 29
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 30
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 31
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 32
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 33
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 34
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 35
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 36
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 37
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 38
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 39
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 40
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 41
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 42
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 43
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 44
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 45
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 46
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 47
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 48
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 49
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 50
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 51
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 52
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 53
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 54
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 55
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 56
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 57
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 58
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 59
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 60
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 61
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 62
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 63
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 64
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 65
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 66
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 67
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 68
+    @player &#d4d4d4&lAdvice:&7 
+@elseif level == 69
+    @player &#d4d4d4&lAdvice:&7 
+@fi
+
+@player &#d4d4d4-=-=-=-=-=-=-=-=-=-=-

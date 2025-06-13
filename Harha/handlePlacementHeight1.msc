@@ -15,8 +15,8 @@
     @elseif temporaryBlockSelection1 == "crying_obsidian"
         @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
     @elseif temporaryBlockSelection1 == "sculk_catalyst"
-        @if (totalFalls / 500) < 101
-            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 500}}
+        @if (totalFalls / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 1000}}
         @else
             @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
         @fi
@@ -34,8 +34,8 @@
     @elseif temporaryBlockSelection2 == "crying_obsidian"
         @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
     @elseif temporaryBlockSelection2 == "sculk_catalyst"
-        @if (totalFalls / 500) < 101
-            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 500}}
+        @if (totalFalls / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 1000}}
         @else
             @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
         @fi
@@ -53,8 +53,8 @@
     @elseif temporaryBlockSelection3 == "crying_obsidian"
         @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
     @elseif temporaryBlockSelection3 == "sculk_catalyst"
-        @if (totalFalls / 500) < 101
-            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 500}}
+        @if (totalFalls / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 1000}}
         @else
             @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
         @fi
@@ -72,8 +72,8 @@
     @elseif temporaryBlockSelection4 == "crying_obsidian"
         @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
     @elseif temporaryBlockSelection4 == "sculk_catalyst"
-        @if (totalFalls / 500) < 101
-            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 500}}
+        @if (totalFalls / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 1000}}
         @else
             @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
         @fi
@@ -88,7 +88,7 @@
 
 @if totalBlocks % 4 == 0
     # time block stays + 1 from target script
-    @delay 3
+    @delay 4
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1}}}, DropItem: 0, CancelDrop:1}
@@ -122,7 +122,7 @@
     
 @elseif totalBlocks % 4 == 1
     # time block stays + 1 from target script
-    @delay 3
+    @delay 4
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2}}}, DropItem: 0, CancelDrop:1}
@@ -156,7 +156,7 @@
     
 @elseif totalBlocks % 4 == 2
     # time block stays + 1 from target script
-    @delay 3
+    @delay 4
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3}}}, DropItem: 0, CancelDrop:1}
@@ -190,7 +190,7 @@
     
 @elseif totalBlocks % 4 == 3
     # time block stays + 1 from target script
-    @delay 3
+    @delay 4
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4}}}, DropItem: 0, CancelDrop:1}
@@ -219,8 +219,4 @@
     
     @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection4}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
     @return
-    
-    
-    
-    
 @fi

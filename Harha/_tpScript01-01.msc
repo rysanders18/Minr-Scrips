@@ -1,10 +1,12 @@
-# 01-10 falling tp script
+# 07-01 falling tp script
 
 @using Harha
 @fast
 
-@if Region("Harha01-10", "Theta").containsPlayer(player) && player.getGameMode() == "ADVENTURE"
-    @var handleFalling(Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), 9, 5, player)
+
+@if Region("Harha07-01", "Theta").containsPlayer(player) && player.getGameMode() == "ADVENTURE"
+    @var handleFalling(Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-9074.5, 96.0, 9563.5, 0, 10, "Theta"), 59, 55, player)
 @fi
+
 
 

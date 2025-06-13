@@ -13,20 +13,26 @@
     relative String temporaryBlockSelection4 = "packed_mud"
     relative Int sessionFalls = 0
     relative Int totalFalls = 0
+    relative Int pbfalls = 1000000000
     relative Int sessionBlocks = 0
     relative Int totalBlocks = 0
+    relative Int pbBlocks = 1000000000
     relative Int stage = 0
     relative Int level = 1
     relative Int numberOfBlocksToGive = 63
     relative Int blocksThisStage = 0
     relative Int numberCompletions = 0
+    relative Int numberCompletionsNormal = 0
     relative Int numberCompletionsMaster = 0
     relative Int numberCompletionsUMM = 0
     relative Int swagPoints = 0
+    relative Int secretsFound = 0
+    relative Int ummFalls = 5
 
 
     Int globalBlocks = 0
     Int globalFalls = 0
+
     Int pcSelect = 0
 
     # coop stuff
@@ -40,6 +46,20 @@
     relative Boolean slimeSwapped = false
     relative Boolean codeGenerated = false
     relative Boolean hasGainedStylePoints = false
+    relative Boolean stage2Entered = false
+    relative Boolean stage3Entered = false
+    relative Boolean stage4Entered = false
+    relative Boolean stage5Entered = false
+    relative Boolean stage6Entered = false
+    relative Boolean stage7Entered = false
+    relative Boolean stage8Entered = false
+    relative Long stage1PB = 0
+    relative Long stage2PB = 0
+    relative Long stage3PB = 0
+    relative Long stage4PB = 0
+    relative Long stage5PB = 0
+    relative Long stage6PB = 0
+    relative Long stage7PB = 0
     relative String[] code = String[""]
     relative String code1 = ""
     relative String code2 = ""
@@ -60,21 +80,55 @@
     # Swag Route Variables
     relative Boolean[] claimedStylePoints = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
 
+    Int[][] allThresholds = Int[][[], [], [], [1], [1], [], [], [], [2, 3], [3, 4], [], [4, 5, 6, 7, 8], [5, 6, 7, 8], [2, 3], [5], [3], [], [4, 5], [], [], [], [2], [], [2], [], [], [], [6, 7, 8, 9, 10, 11, 12], [], [], [1, 2, 3], [], [], [], [], [3, 4, 5], [], [4], [], [], [2], [3], [2, 3, 4], [3], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [5, 6, 7], [2], [], [], [], [], [], [], [], [], []]
+
+    Int[] l101Thresholds = Int[]
+    Int[] l101Rewards = Int[]
+    Int l101StartIndex = 0
+
+    Int[] l102Thresholds = Int[]
+    Int[] l102Rewards = Int[]
+    Int l102StartIndex = 0
+
+    Int[] l103Thresholds = Int[]
+    Int[] l103Rewards = Int[]
+    Int l103StartIndex = 0
+
     Int[] l104Thresholds = Int[1]
     Int[] l104Rewards = Int[30]
     Int l104StartIndex = 0
 
     Int[] l105Thresholds = Int[1]
-    Int[] l105Rewards = Int[100]
+    Int[] l105Rewards = Int[120]
     Int l105StartIndex = 1
 
+    Int[] l106Thresholds = Int[]
+    Int[] l106Rewards = Int[]
+    Int l106StartIndex = 0
+
+    Int[] l107Thresholds = Int[]
+    Int[] l107Rewards = Int[]
+    Int l107StartIndex = 0
+
+    Int[] l108Thresholds = Int[]
+    Int[] l108Rewards = Int[]
+    Int l108StartIndex = 0
+
     Int[] l109Thresholds = Int[2, 3]
-    Int[] l109Rewards = Int[120, 30]
+    Int[] l109Rewards = Int[100, 30]
     Int l109StartIndex = 2
+
+    Int[] l110Thresholds = Int[]
+    Int[] l110Rewards = Int[]
+    Int l110StartIndex = 0
 
     Int[] l201Thresholds = Int[3, 4]
     Int[] l201Rewards = Int[30, 40]
     Int l201StartIndex = 4
+
+    Int[] l202Thresholds = Int[] 
+    Int[] l202Rewards = Int[]
+    Int l202StartIndex = 0
 
     Int[] l203Thresholds = Int[4, 5, 6, 7, 8]
     Int[] l203Rewards = Int[100, 230, 100, 10, 10]
@@ -96,55 +150,219 @@
     Int[] l207Rewards = Int[60]
     Int l207StartIndex = 18
 
+    Int[] l208Thresholds = Int[] 
+    Int[] l208Rewards = Int[]
+    Int l208StartIndex = 0
+
     Int[] l209Thresholds = Int[4, 5]
     Int[] l209Rewards = Int[60, 40]
     Int l209StartIndex = 19
+
+    Int[] l210Thresholds = Int[] 
+    Int[] l210Rewards = Int[]
+    Int l210StartIndex = 0
+
+    Int[] l301Thresholds = Int[] 
+    Int[] l301Rewards = Int[]
+    Int l301StartIndex = 0
+
+    Int[] l302Thresholds = Int[] 
+    Int[] l302Rewards = Int[]
+    Int l302StartIndex = 0
 
     Int[] l303Thresholds = Int[2]
     Int[] l303Rewards = Int[20]
     Int l303StartIndex = 21
 
+    Int[] l304Thresholds = Int[] 
+    Int[] l304Rewards = Int[]
+    Int l304StartIndex = 0
+
     Int[] l305Thresholds = Int[2]
     Int[] l305Rewards = Int[30]
     Int l305StartIndex = 22
+
+    Int[] l306Thresholds = Int[] 
+    Int[] l306Rewards = Int[]
+    Int l306StartIndex = 0
+
+    Int[] l307Thresholds = Int[] 
+    Int[] l307Rewards = Int[]
+    Int l307StartIndex = 0
+
+    Int[] l308Thresholds = Int[] 
+    Int[] l308Rewards = Int[]
+    Int l308StartIndex = 0
+
+    Int[] l309Thresholds = Int[] 
+    Int[] l309Rewards = Int[]
+    Int l309StartIndex = 0
 
     Int[] l310Thresholds = Int[6, 7, 8, 9, 10, 11, 12]
     Int[] l310Rewards = Int[190, 60, 20, 20, 20, 20, 20]
     Int l310StartIndex = 23
 
+    Int[] l401Thresholds = Int[] 
+    Int[] l401Rewards = Int[]
+    Int l401StartIndex = 0
+
+    Int[] l402Thresholds = Int[] 
+    Int[] l402Rewards = Int[]
+    Int l402StartIndex = 0
+
     Int[] l403Thresholds = Int[1, 2, 3]
     Int[] l403Rewards = Int[30, 10, 10]
     Int l403StartIndex = 30
 
+    Int[] l404Thresholds = Int[] 
+    Int[] l404Rewards = Int[]
+    Int l404StartIndex = 0
+
+    Int[] l405Thresholds = Int[] 
+    Int[] l405Rewards = Int[]
+    Int l405StartIndex = 0
+
+    Int[] l406Thresholds = Int[] 
+    Int[] l406Rewards = Int[]
+    Int l406StartIndex = 0
+
+    Int[] l407Thresholds = Int[] 
+    Int[] l407Rewards = Int[]
+    Int l407StartIndex = 0
+
     Int[] l408Thresholds = Int[3, 4, 5]
-    Int[] l408Rewards = Int[200, 60, 40]
+    Int[] l408Rewards = Int[180, 60, 40]
     Int l408StartIndex = 33
 
-    Int[] l503Thresholds = Int[3]
+    Int[] l409Thresholds = Int[] 
+    Int[] l409Rewards = Int[]
+    Int l409StartIndex = 0
+
+    Int[] l410Thresholds = Int[4]
+    Int[] l410Rewards = Int[40]
+    Int l410StartIndex = 34
+
+    Int[] l501Thresholds = Int[] 
+    Int[] l501Rewards = Int[]
+    Int l501StartIndex = 0
+
+    Int[] l502Thresholds = Int[] 
+    Int[] l502Rewards = Int[]
+    Int l502StartIndex = 0
+
+    Int[] l503Thresholds = Int[2]
     Int[] l503Rewards = Int[40]
-    Int l503StartIndex = 36
+    Int l503StartIndex = 37
 
     Int[] l504Thresholds = Int[3]
     Int[] l504Rewards = Int[60]
-    Int l504StartIndex = 37
+    Int l504StartIndex = 38
 
     Int[] l505Thresholds = Int[2, 3, 4]
     Int[] l505Rewards = Int[100, 40, 10]
-    Int l505StartIndex = 38
+    Int l505StartIndex = 39
 
     Int[] l506Thresholds = Int[3]
     Int[] l506Rewards = Int[100]
-    Int l506StartIndex = 41
+    Int l506StartIndex = 42
+
+    Int[] l507Thresholds = Int[] 
+    Int[] l507Rewards = Int[]
+    Int l507StartIndex = 0
+
+    Int[] l508Thresholds = Int[] 
+    Int[] l508Rewards = Int[]
+    Int l508StartIndex = 0
+
+    Int[] l509Thresholds = Int[] 
+    Int[] l509Rewards = Int[]
+    Int l509StartIndex = 0
+
+    Int[] l510Thresholds = Int[] 
+    Int[] l510Rewards = Int[]
+    Int l510StartIndex = 0
+
+    Int[] l601Thresholds = Int[] 
+    Int[] l601Rewards = Int[]
+    Int l601StartIndex = 0
+
+    Int[] l602Thresholds = Int[] 
+    Int[] l602Rewards = Int[]
+    Int l602StartIndex = 0
+
+    Int[] l603Thresholds = Int[] 
+    Int[] l603Rewards = Int[]
+    Int l603StartIndex = 0
+
+    Int[] l604Thresholds = Int[] 
+    Int[] l604Rewards = Int[]
+    Int l604StartIndex = 0
+
+    Int[] l605Thresholds = Int[] 
+    Int[] l605Rewards = Int[]
+    Int l605StartIndex = 0
+
+    Int[] l606Thresholds = Int[] 
+    Int[] l606Rewards = Int[]
+    Int l606StartIndex = 0
+
+    Int[] l607Thresholds = Int[] 
+    Int[] l607Rewards = Int[]
+    Int l607StartIndex = 0
+
+    Int[] l608Thresholds = Int[] 
+    Int[] l608Rewards = Int[]
+    Int l608StartIndex = 0
+
+    Int[] l609Thresholds = Int[] 
+    Int[] l609Rewards = Int[]
+    Int l609StartIndex = 0
+
+    Int[] l610Thresholds = Int[] 
+    Int[] l610Rewards = Int[]
+    Int l610StartIndex = 0
 
     Int[] l701Thresholds = Int[5, 6, 7]
     Int[] l701Rewards = Int[280, 130, 70]
-    Int l701StartIndex = 42
+    Int l701StartIndex = 43
 
     Int[] l702Thresholds = Int[2]
-    Int[] l702Rewards = Int[120]
-    Int l702StartIndex = 45
+    Int[] l702Rewards = Int[100]
+    Int l702StartIndex = 46
+    
+    Int[] l703Thresholds = Int[] 
+    Int[] l703Rewards = Int[]
+    Int l703StartIndex = 0
+        
+    Int[] l704Thresholds = Int[] 
+    Int[] l704Rewards = Int[]
+    Int l704StartIndex = 0
+        
+    Int[] l705Thresholds = Int[] 
+    Int[] l705Rewards = Int[]
+    Int l705StartIndex = 0
+        
+    Int[] l706Thresholds = Int[] 
+    Int[] l706Rewards = Int[]
+    Int l706StartIndex = 0
+        
+    Int[] l707Thresholds = Int[] 
+    Int[] l707Rewards = Int[]
+    Int l707StartIndex = 0
+        
+    Int[] l708Thresholds = Int[] 
+    Int[] l708Rewards = Int[]
+    Int l708StartIndex = 0
+        
+    Int[] l709Thresholds = Int[] 
+    Int[] l709Rewards = Int[]
+    Int l709StartIndex = 0
+        
+    Int[] l710Thresholds = Int[] 
+    Int[] l710Rewards = Int[]
+    Int l710StartIndex = 0
 
-    # end of sg route stuff
+    # end of style point stuff
     # =-=-=-=-=-=-=-=-=-
 
     # blocks lowkey
@@ -217,6 +435,12 @@
     Block[] b709 = Block[Block(-4699, 91, 5117, "Theta_the_end"), Block(-4698, 91, 5129, "Theta_the_end"), Block(-4698, 91, 5125, "Theta_the_end"), Block(-4698, 91, 5121, "Theta_the_end"), Block(-4697, 91, 5117, "Theta_the_end")]
     Block[] b710 = Block[Block(-4702, 91, 5053, "Theta_the_end"), Block(-4701, 93, 5061, "Theta_the_end"), Block(-4701, 91, 5053, "Theta_the_end"), Block(-4700, 91, 5089, "Theta_the_end"), Block(-4700, 91, 5069, "Theta_the_end"), Block(-4700, 92, 5065, "Theta_the_end"), Block(-4700, 91, 5053, "Theta_the_end"), Block(-4699, 92, 5086, "Theta_the_end"), Block(-4699, 93, 5076, "Theta_the_end"), Block(-4698, 92, 5080, "Theta_the_end"), Block(-4697, 92, 5086, "Theta_the_end"), Block(-4697, 93, 5076, "Theta_the_end"), Block(-4696, 91, 5089, "Theta_the_end"), Block(-4696, 91, 5069, "Theta_the_end"), Block(-4696, 92, 5065, "Theta_the_end"), Block(-4696, 91, 5053, "Theta_the_end"), Block(-4695, 93, 5061, "Theta_the_end"), Block(-4695, 91, 5053, "Theta_the_end"), Block(-4694, 91, 5053, "Theta_the_end")]
 
+    # other stuff
+    # =-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+    String[] allLevels = String["1-01", "1-02", "1-03", "1-04", "1-05", "1-06", "1-07", "1-08", "1-09", "1-10", "2-01", "2-02", "2-03", "2-04", "2-05", "2-06", "2-07", "2-08", "2-09", "2-10", "3-01", "3-02", "3-03", "3-04", "3-05", "3-06", "3-07", "3-08", "3-09", "3-10", "4-01", "4-02", "4-03", "4-04", "4-05", "4-06", "4-07", "4-08", "4-09", "4-10", "5-01", "5-02", "5-03", "5-04", "5-05", "5-06", "5-07", "5-08", "5-09", "5-10", "6-01", "6-02", "6-03", "6-04", "6-05", "6-06", "6-07", "6-08", "6-09", "6-10", "7-01", "7-02", "7-03", "7-04", "7-05", "7-06", "7-07", "7-08", "7-09", "7-10"]
+    Position[] allPositions = Position[Position(-9199.5, 96.0, 9704.5, 180, 10, "Theta"), Position(-9191.5, 93.0, 9689.5, 180, 10, "Theta"), Position(-9191.5, 96.0, 9675.5, 270, 10, "Theta"), Position(-9171.5, 98.0, 9669.5, 180, 10, "Theta"), Position(-9181.5, 95.0, 9656.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), Position(-9195.5, 97.0, 9656.5, 180, 10, "Theta"), Position(-9186.5, 97.0, 9640.5, 270, 10, "Theta"), Position(-9165.5, 100.0, 9648.5, 0, 10, "Theta"), Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9144.5, 95.0, 9671.5, 180.0, 10.0, "Theta"), Position(-9127.5, 95.0, 9664.5, 270.0, 10.0, "Theta"), Position(-9116.5, 92.0, 9672.5, 0.0, 10.0, "Theta"), Position(-9128.0, 92.0, 9673.5, 450.0, 10.0, "Theta"), Position(-9137.5, 94.0, 9691.0, 270.0, 10.0, "Theta"), Position(-9123.5, 94.0, 9694.5, 270.0, 10.0, "Theta"), Position(-9109.5, 95.0, 9689.5, 180.0, 10.0, "Theta"), Position(-9107.5, 96.0, 9672.5, 180.0, 10.0, "Theta"), Position(-9114.5, 93.0, 9655.5, 90.0, 10.0, "Theta"), Position(-9132.5, 96.0, 9648.5, 180.0, 10.0, "Theta"), Position(-9129.5, 101.0, 9636.5, 270.0, 10.0, "Theta"), Position(-9112.0, 100.0, 9634.5, 180.0, 10.0, "Theta"), Position(-9120.5, 100.0, 9613.5, 0.0, 10.0, "Theta"), Position(-9128.5, 101.0, 9626.5, 90.0, 10.0, "Theta"), Position(-9148.5, 101.0, 9623.5, 180.0, 10.0, "Theta"), Position(-9145.5, 103.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9112.5, 100.0, 9602.5, 180.0, 10.0, "Theta"), Position(-9113.5, 100.0, 9586.5, 90.0, 10.0, "Theta"), Position(-9131.5, 99.0, 9596.5, 90.0, 10.0, "Theta"), Position(-9146.5, 100.0, 9594.5, 180.0, 10.0, "Theta"), Position(-9199.5, 99.0625, 9607.5, 0.0, 10.0, "Theta"), Position(-9176.5, 93.0, 9614.5, 0.0, 10.0, "Theta"), Position(-9206.5, 82.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9172.5, 73.0, 9613.5, 270.0, 10.0, "Theta"), Position(-9169.5, 71.0, 9632.5, 90.0, 10.0, "Theta"), Position(-9193.5, 71.0, 9632.5, 270.0, 10.0, "Theta"), Position(-9163.5, 73.0, 9622.5, 180.0, 10.0, "Theta"), Position(-9187.5, 79.0, 9604.5, 90.0, 10.0, "Theta"), Position(-9176.5, 92.0, 9626.5, 180.0, 10.0, "Theta"), Position(-9199.5, 98.0, 9618.5, 180.0, 10.0, "Theta"), Position(-9161.5, 101.0, 9557.5, 270.0, 10.0, "Theta"), Position(-9137.5, 101.0, 9566.5, 270.0, 10.0, "Theta"), Position(-9114.5, 102.0, 9563.5, 270.0, 10.0, "Theta"), Position(-9094.5, 102.0, 9552.5, 180.0, 10.0, "Theta"), Position(-9101.5, 101.0, 9530.5, 0.0, 10.0, "Theta"), Position(-9107.5, 99.0, 9555.5, 270.0, 10.0, "Theta"), Position(-9120.5, 104.0, 9555.5, 90.0, 10.0, "Theta"), Position(-9143.5, 104.0, 9538.5, 270.0, 10.0, "Theta"), Position(-9116.5, 101.0, 9525.5, 180.0, 10.0, "Theta"), Position(-9103.5, 103.0, 9508.5, 270.0, 10.0, "Theta"), Position(-9068.5, 95.0, 9534.5, 0, 10, "Theta"), Position(-9064.5, 96.0, 9552.5, 270, 10, "Theta"), Position(-9044.5, 96.0, 9558.5, 0, 10, "Theta"), Position(-9051.5, 95.0, 9578.5, 180, 10, "Theta"), Position(-9056.5, 96.0, 9560.5, 90, 10, "Theta"), Position(-9074.5, 96.0, 9563.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9594.5, 90, 10, "Theta"), Position(-9060.5, 96.0, 9600.5, 270, 10, "Theta"), Position(-9045.5, 96.0, 9608.5, 90, 10, "Theta"), Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-4608.5, 90.0, 5191.0, 90, 10, "Theta_the_end"), Position(-4642.5, 93.0, 5169.5, 180, 10, "Theta_the_end"), Position(-4637.5, 91.0, 5131.5, 270, 10, "Theta_the_end"), Position(-4606.0, 93.0, 5124.5, 180, 10, "Theta_the_end"), Position(-4615.5, 86.0, 5095.5, 90, 10, "Theta_the_end"), Position(-4644.5, 92.0, 5102.5, 90, 10, "Theta_the_end"), Position(-4676.5, 91.0, 5111.5, 0.0, 10.0, "Theta_the_end"), Position(-4683.5, 92.0, 5134.5, 0.0, 10.0, "Theta_the_end"), Position(-4697.5, 92.0, 5136.5, 180.0, 10.0, "Theta_the_end"), Position(-4697.5, 93.0, 5097.5, 180.0, 10.0, "Theta_the_end")]
+
     Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
     Int[] directionsY = Int[0, 0, 1, -1, 0, 0]
     Int[] directionsZ = Int[0, 0, 0, 0, 1, -1]
@@ -227,6 +451,12 @@
     relative Int[] sectionFallsNormal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] sectionFallsMaster = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] sectionFallsUMM = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    Int[] blocksThisStageGlobal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    Int[] delayTimes = Int[5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 24, 25, 26, 27, 28]
+
+    Int[] musicNotes = Int[0.5, 0.53, 0.561, 0.595, 0.63, 0.667, 0.707, 0.749, 0.794, 0.841, 0.891, 0.944, 1, 1.059, 1.122, 1.189, 1.26, 1.335, 1.414, 1.498, 1.587, 1.682, 1.782, 1.888, 2]
 
     String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block", "deepslate_diamond_ore"]
 
@@ -239,7 +469,6 @@
     String[] obsidianList = String["obsidian", "crying_obsidian"]
     String[] spongeList = String["sponge", "sponge", "wet_sponge", "sponge"]
     String[] sculkList = String["sculk_catalyst", "sculk_catalyst[bloom=true]"]
-    String[] spawnerList = String["trial_spawner", "trial_spawner[block_state={trial_spawner_state:"waiting_for_players"}]"]
     String[] oreList = String["iron_block", "gold_block", "diamond_block", "emerald_block", "netherite_block"]
     String[] coolGlassList = String["orange_stained_glass", "light_blue_stained_glass"]
     String[] pumpkinList = String["pumpkin", "melon"]
@@ -264,9 +493,11 @@
     relative Int pumpkinNumber = 0
     relative Int lastPumpkinNumber = 0
     relative Int coolGlassNumber = 0
-    relative Int lastCoolGlassNumber = 
+    relative Int lastCoolGlassNumber = 0
     relative Int coralNumber = 0
     relative Int lastCoralNumber = 0
+
+    relative Int[] cosmeticsUnlocked = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     # JM4s secret variables
 
@@ -275,13 +506,16 @@
 
     # FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
 
-    handleFalling(Position coord1, Position coord2, Int levelNormal, Int levelMaster, Player player)
+    handleFalling(Int levelNormal, Player player)
     handleAfter(Int levelNumber, Boolean stylePresent, Block[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
-    completeStage(Int stage, Player player)
-    pcStats(Int pcSelect, Player player)
+    pcStats(Int pcSelect, Player user)
     resetBlocks(Player player)
     handleStylePoints(Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+    styleViewer(Player player, Int level)
     swagTitle(Int points, Player player)
+
+    generalTarget(Block block, Int level, Int height, Player player)
+    generalTargetEnd(Block block, Int[] directions, Int level, Player player)
 
     cosmeticCopper(Player player)
     cosmeticWool(Player player)
@@ -294,6 +528,9 @@
     cosmeticCoolGlass(Player player)
     cosmeticCoral(Player player)
 
+    handlePlacement(Block block, Int height, Player player)
+    handlePlacementEnd(Block block, Player player)
+    # handlePlacementEnd(Block block, Player player, Int height, Int level)
     handlePlacementHeight1(Block block, Player player)
     handlePlacementHeight2(Block block, Player player)
     handlePlacementHeight3(Block block, Player player)
@@ -313,7 +550,7 @@
     handlePlacementHeight5Slow(Block block, Player player)
 
     anticheat(Block block, Player player)
-
+    delay(Int seconds)
     splits(Int stage, Player player)
 
     handlePlacementCoopHeight2(Block block, Player player)
