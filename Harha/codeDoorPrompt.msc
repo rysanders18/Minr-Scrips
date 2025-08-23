@@ -6,7 +6,7 @@
 @player &#32B773&lEnter Access Code (case sensitive)
 @bypass playsound minecraft:ui.button.click master {{player}} ~ ~ ~ 1 1
         @define String answer 
-        @prompt 20s answer
+        @prompt 20s answer &cYou took too long!
         @if answer == totalCode
             @player &a&lAccess granted!
             @bypass playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 1 1

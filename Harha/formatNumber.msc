@@ -1,0 +1,17 @@
+# formatNumber(String numberToFormat)
+
+@fast
+@using Harha
+
+@define String formatedNumber = ""
+
+@for Int i in list::range(0, numberToFormat.length())
+    @var i = numberToFormat.length() - i
+    @if formatedNumber.length() % 4 == 3 && i != numberToFormat.length()
+        @var formatedNumber = numberToFormat.substring(i - 1, i) + "," + formatedNumber
+    @else
+        @var formatedNumber = numberToFormat.substring(i - 1, i) + formatedNumber
+    @fi
+@done
+
+@return formatedNumber

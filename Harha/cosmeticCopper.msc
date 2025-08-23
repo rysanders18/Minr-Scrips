@@ -10,8 +10,7 @@
 @fi
 
 @var blockSelection[player] = grateList[grateNumber]
-@bypass clear {{player}} *[custom_data~{clear:true}]
 @if numberOfBlocksToGive[player] >= 1
-    @bypass item replace entity {{player}} container.0 with {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] {{numberOfBlocksToGive[player]}}
+    @var resetBlocks(player, numberOfBlocksToGive[player])
 @fi
 @var numberOfBlocksToGive[player] -= 1

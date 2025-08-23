@@ -1,42 +1,50 @@
-# handleFalling(Location coord1, Location coord2, Int levelNormal, Int levelMaster, Player player)
+# handleFalling(Int levelNormal, Player player, Int[] cheatList)
 @using Harha
 @fast 
 
 @cooldown 1
 
 @if difficultySelection == "normal"
-    @bypass clear {{player}} *[custom_data~{clear:true}]
-    @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    @var ensureBlockSelection(levelNormal, player)
     @var player.teleport(allPositions[levelNormal])
-    
     @if levelNormal <= 70
-        @var sectionFallsNormal[level] += 1
-        @var level[player] = levelNormal
-        @bypass /xp set {{player}} 22 levels
-        @if levelNormal == 0
-            @bypass /xp set {{player}} 0 points
-        @else
-            @bypass /xp set {{player}} {{levelNormal + 1}} points
-        @fi
-        @bypass /xp set {{player}} {{levelNormal + 1}} levels 
+        @var sectionFallsNormal[levelNormal] += 1
+        @var setLevel(levelNormal, player)
     @fi
-    
+    @var resetBlocks(player, 64)
+
+    # Anomaly
+    @if Int(math::random(1.0D, 100000.0D)) == 69
+        @var player.teleport(allPositions[levelNormal + 1])
+        @bypass playsound minecraft:entity.enderman.teleport master @s
+        @bypass playsound minecraft:entity.ender_dragon.death master @s ~ ~ ~ 1 2
+        @player
+        @player &#ff76bbTeleported to the next stage...
+        @player &6This had a &#ff966e&l1/100,000 chance &#ff8996of happening! &d&lWOW!
+        @player &#ff76bbThis has happened &d&l{{globalAnomaly}} &#ff76bbtimes since the map came out!
+        @player
+        @bypass /execute at @s anchored feet run particle minecraft:scrape ~ ~1 ~ 2 1 2 0.5 500 force @a[distance=..30]
+        @bypass /execute at @s anchored feet run particle minecraft:wax_on ~ ~1 ~ 2 1 2 0.5 500 force @a[distance=..30]
+        @var globalAnomaly += 1
+        @var anomaliesExperienced[player] += 1
+        @var top100Function(player, 26)
+        @bypass /mail send RYgamer1 {{player}} ecountered the anomaly at {{totalFalls[player]}} falls on stage {{levelNormal}}. globalAnomaly now = {{globalAnomaly}}
+    @fi
+
+# ============================================================================================================
+
 @elseif difficultySelection == "master" || player.getCurrentChallenge() == "hahahaha"
     @define Int levelMaster2 = math::floor(Double(levelNormal) / 5) * 5
-    @bypass clear {{player}} *[custom_data~{clear:true}]
-    @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    @var ensureBlockSelection(levelMaster2, player)
+    
     @var player.teleport(allPositions[levelMaster2])
     
     
-    @var sectionFallsMaster[level] += 1
-    @var level[player] = levelMaster2
-    @bypass /xp set {{player}} 22 levels
-    @if levelMaster2 == 0
-        @bypass /xp set {{player}} 0 points
-    @else
-        @bypass /xp set {{player}} {{levelMaster2 + 1}} points
-    @fi
-    @bypass /xp set {{player}} {{levelMaster2 + 1}} levels 
+    @var sectionFallsMaster[levelNormal] += 1
+    @var setLevel(levelMaster2, player)
+    @var resetBlocks(player, 64)
+
+# ===============================================================================
 
 @elseif difficultySelection == "ultraMaster" || player.getCurrentChallenge() == "hahahahaha"
     # if out of lives 
@@ -52,7 +60,7 @@
         @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
         @bypass minecraft:teleport {{player}} -9199.5 96.0 9704.5 180 10 
 
-        @var sectionFallsUMM[level] += 1
+        @var sectionFallsUMM[levelNormal] += 1
         @var level[player] = 0
         @bypass /xp set {{player}} 0 points
         @bypass /xp set {{player}} 1 levels
@@ -67,38 +75,151 @@
         @else
             @bypass title @s actionbar [{"color":"#FF5555","text":"❤ "},{"bold":true,"color":"#F84E4E","text":"F"},{"bold":true,"color":"#F14747","text":"i"},{"bold":true,"color":"#EA4040","text":"n"},{"bold":true,"color":"#E33939","text":"a"},{"bold":true,"color":"#DC3232","text":"l "},{"bold":true,"color":"#D52B2B","text":"L"},{"bold":true,"color":"#CD2323","text":"i"},{"bold":true,"color":"#C61C1C","text":"f"},{"bold":true,"color":"#BF1515","text":"e"},{"bold":true,"color":"#B80E0E","text":"! "},{"color":"#AA0000","text":"❤"}]
         @fi
-        @bypass clear {{player}} *[custom_data~{clear:true}]
-        @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+        @var resetBlocks(player, 64)
         @var player.teleport(allPositions[levelNormal])
         
-        @var sectionFallsNormal[level] += 1
-        @var level[player] = levelNormal
-        @bypass /xp set {{player}} 22 levels
-        @if levelNormal == 0
-            @bypass /xp set {{player}} 0 points
-        @else
-            @bypass /xp set {{player}} {{levelNormal + 1}} points
-        @fi
-        @bypass /xp set {{player}} {{levelNormal + 1}} levels
+        @var sectionFallsUMM[level] += 1
+        @var setLevel(levelNormal, player)
         @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 {{(ummFalls[player] * 0.135) + 0.46}}
+    @fi
+
+# =============================================================================================================
+
+@elseif difficultySelection == "soulLink" || player.getCurrentChallenge() == "hahahas" || difficultySelection == "masterSoulLink" || player.getCurrentChallenge() == "hahahahas"
+    @define String playerFallen = player.getName()
+    @define Int lowestLevel = 10000
+    @define Boolean allOnline = true
+
+    @for Player partner in partners[player]
+        @if partner.isOnline() == false
+            @player &c{{partner}} is offline! everything is going to break im gonna fix this later
+            @var allOnline = false
+        @fi
+    @done
+
+    
+
+        # 2-5, 7-01, 7-4
+        # @for Player partner in partners[player]
+        # @if allPositions[levelNormal].getYaw() == 180.0
+        #     @player {{partner}} Position
+        #     @player {{Position((allPositions[levelNormal].getX() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[levelNormal].getY(), allPositions[levelNormal].getZ(), allPositions[levelNormal].getYaw(), allPositions[levelNormal].getPitch(), allPositions[levelNormal].getWorld())}}
+        #     @player Float(partners[player].find(partner)) = {{Float(partners[player].find(partner))}}
+        #     @player Float(partners[player].length()) - 1 = {{Float(partners[player].length()) - 1}}
+        #     @player ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2) = {{((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 )* 2)}}
+        # @fi 
+        # @done
+
+
+    @if allOnline == false
+        # ...
+    @else
+        
+        @if difficultySelection == "soulLink" || player.getCurrentChallenge() == "hahahas"
+            @for Player partner in partners[player]
+                @if level[partner] < lowestLevel
+                    @var lowestLevel = level[partner]
+                @fi
+            @done
+        @else
+            @for Player partner in partners[player]
+                @if level[partner] < lowestLevel
+                    @var lowestLevel = level[partner]
+                    @var lowestLevel = math::floor(Double(lowestLevel) / 5) * 5
+                @fi
+            @done
+        @fi
+
+        # if the player is at the lowest level, tp everyone
+        @if level[player] == level[player]
+            @for Player partner in partners[player]
+                @if sessionFalls[partner] == 0
+                    @bypass /title {{partner}} actionbar [{"bold":true,"color":"{{colorList2[partners[partner].find(player)]}}","text":"{{player}} "}, {"bold":false,"color":"#FF5555","text":"has fallen {{sessionFalls[player] + 1}} time!"}]
+                @else
+                    @bypass /title {{partner}} actionbar [{"bold":true,"color":"{{colorList2[partners[partner].find(player)]}}","text":"{{player}} "}, {"bold":false,"color":"#FF5555","text":"has fallen {{sessionFalls[player] + 1}} times!"}]
+                @fi
+
+                # Plays different note block pitch based on the person, if >= 10 split it evenly
+                @if partners[player].length() < 10
+                    @bypass /playsound minecraft:block.note_block.didgeridoo record {{partner}} ~ ~ ~ 1 {{musicNotes[partners[partner].find(player) * 3]}}
+                @else
+                    @bypass /playsound minecraft:block.note_block.didgeridoo record {{partner}} ~ ~ ~ 1 {{(Float(partners[partner].find(player)) / Float(partners[partner].length() - 1)) * 1.5 + 0.5}}
+                @fi
+                @var ensureBlockSelection(lowestLevel, partner)
+
+                # Teleport all players in an evenly spaced line
+                @if allPositions[lowestLevel].getYaw() == 180.0 || allPositions[lowestLevel].getYaw() == 0.0
+                    @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
+                        @var partner.teleport(Position((allPositions[lowestLevel].getX() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
+                    @else
+                        @var partner.teleport(Position((allPositions[lowestLevel].getX() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
+                    @fi
+                @else 
+                    @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
+                        @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
+                    @else
+                        @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
+                    @fi
+                @fi
+
+                @if lowestLevel <= 70
+                    @var sectionFallsSoulLink[partner][lowestLevel] += 1
+                    @var setLevel(lowestLevel, partner)
+                @fi
+                @var resetBlocks(partner, 64)
+            @done
+
+        # if the player is ahead, only tp them
+        @else
+            @var ensureBlockSelection(lowestLevel, player)
+            @var player.teleport(allPositions[lowestLevel])
+            @if lowestLevel <= 70
+                @var sectionFallsSoulLink[levelNormal] += 1
+                @var setLevel(levelNormal, player)
+            @fi
+            @bypass /playsound minecraft:block.note_block.didgeridoo record {{player}} ~ ~ ~ 1 {{musicNotes[partners[player].find(player) * 3]}}
+
+            @var resetBlocks(player, 64)
+        @fi
     @fi
 @fi
 
 @var sessionFalls[player] += 1
-@var totalFalls[player] += 1
 @var globalFalls += 1
 @var numberOfBlocksToGive[player] = 63
 @var blocksThisStage[player] = 0
+@var blocksThisStageGlobal[levelNormal] = 0
+@bypass effect clear {{player}}
+@var totalFalls[player] += 1
+
+@var top100Function(player, 1)
+@var fallTracker(player)
+
+# anticheat
+@if levelNormal <= 60
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheat(cheatList[i], player)
+    @done
+@else 
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheatEnd(cheatList[i], player)
+    @done
+@fi
+
 
 # Handles Fail Milestones
 @if failMilestones.contains(totalFalls)
     @player &#d4d4d4&lYou have fallen a total of &6&l{{totalFalls}} &#d4d4d4&ltimes!
     @bypass /playsound minecraft:entity.chicken.egg master @s
     @if totalFalls == 10000
-        @player
+        @var cosmeticsUnlocked[player][6] = 1
+        @player &#d4d4d4--------------------------------------
         @player &6&lCosmetic Unlocked!
         @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt
-        @player
-        @bypass /playsound minecraft:entity.player.levelup master @s
+        @player &#d4d4d4--------------------------------------
+        @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
+        @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @fi
 @fi
+
+

@@ -1,0 +1,82 @@
+8/6: Not the final import
+
+* I accidentally deleted this changelog and forgot everything that I added but this update is MASSIVE, heres the bits and pieces that I remember.
+
+* !!! Almost scripted everything for secret1 (tons of scripting, took hours) (currently not accessible, im almost done)
+* !!! Complete rewrite of all target blocks
+* !!! Fundamentals of leaderboards (selection and pages WIP, but they exist)
+* !!! Fixed everything that broke with 1.21.5
+
+* Various statistic computer formating improvements
+* Teleport sign now sets your xp bar correctly
+* Coral blocks now have a 1/15 chance to give a random dead coral
+* Reworked 5-09
+* New lore on blocks given
+* Can no longer place on sides of player head target in 7-10 (added cool buttons)
+* Progress on secret collectible cutscene
+* Progress on secret 24 (aim trainer)
+* Progress on lagbolo secret
+* Sculk catalyst cosmetic falling blocks now have bloom animation
+* Progress on Even Harder Hats
+* Changed glass at very start
+* Added a tiny bit of 1.21.5 deco
+* Armor bar increases by 1 half every map completion, boots no longer give armor
+
+
+* Fixed 6-09 bug
+* So many bug fixes I forgot them all sadly
+* Lots and lots of other stuff I forgot, sorry
+
+I think I was a bit ambitious saying the next import will be the last, my todo list has gotten longer since then... oh well, enjoy!
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+8/7
+
+Main Changes:
+* !!! Added a statistics viewer in the inventory (for everyone asking for fall tracker, youre welcome)
+* !!! Added new leaderboard for "Sum Of Best Section PBs" (in stat checker as well)
+* !!! Reworked Stage x PB calculator, old system did not work correctly actually, added titles for stage 5 & 6
+* Leaderboard now supports players being tied for a position, and doesnt sort inversely anymore
+* Added detailed breakdown of Blocks Placed to stat checker
+* New Stage PB chat message now includes old pb
+
+Secret Stuff:
+* Scripted lagbolo's secret
+* Scripted Poekie's secret
+* Rescripted Crowenza's secret 
+  * Removed chat tp msgs
+  * Added a couple sound effects
+  * Scripted reset progress sign
+  * Progress should now reset upon completion
+
+Bug Fixes:
+* Fixed boots not being given
+* Changed sound effect for new Stage PB
+* Fixed 7-03 (broke with 1.21.5 changes)
+* Fixed leaderboard section pb times sorting inversely
+* Fixed a bug (found by Quatcher (and also johnplumber apparently)) that messed with style points in 1-09 & 2-01
+
+Small stuff:
+* Reduced super secret hat from 1000 completions to 500 completions (updates hat upon custom glass selection)
+* Added Harder Hats and Even Harder Hats completions to stat checker
+
+Cosmetic Stuff:
+* !!! Replaced Pumpkin/Melon cosmetic with Nether Blocks
+* !!! Rainbow Wool now has particles
+* Fixed dead coral & iron block breaking sound
+* Added falling sand block support for:
+    * Logs (because of hyphae in new cosmetic)
+    * Stairs
+    * Slabs
+    * Panes and Iron Bars
+    * Trapdoors (not hardcoded anymore)
+    * basically everything
+
+Backend:
+* Removed handlePlacementEnd, it all goes thru handlePlacement now
+
+8/19
+
+* Fixed bug where Stats Nether Star is off by 1 for session falls

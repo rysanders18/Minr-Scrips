@@ -88,7 +88,11 @@
 
 @if totalBlocks % 4 == 0
     # time block stays + 1 from target script
-    @delay 4
+    @if blockSelection == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1}}}, DropItem: 0, CancelDrop:1}
@@ -122,7 +126,11 @@
     
 @elseif totalBlocks % 4 == 1
     # time block stays + 1 from target script
-    @delay 4
+    @if blockSelection == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2}}}, DropItem: 0, CancelDrop:1}
@@ -156,7 +164,11 @@
     
 @elseif totalBlocks % 4 == 2
     # time block stays + 1 from target script
-    @delay 4
+    @if blockSelection == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3}}}, DropItem: 0, CancelDrop:1}
@@ -190,7 +202,11 @@
     
 @elseif totalBlocks % 4 == 3
     # time block stays + 1 from target script
-    @delay 4
+    @if blockSelection == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
     
     @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4}}}, DropItem: 0, CancelDrop:1}

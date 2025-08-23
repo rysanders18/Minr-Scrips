@@ -1,0 +1,55 @@
+# Start Sign Progress Saver
+@fast
+@using Harha
+
+# # four save points
+# @if harhaProgress < 1
+#     @var harhaProgress = 1
+#     @player &5Maze progress saved!
+# @fi
+
+# @if harhaProgress < 2
+#     @var harhaProgress = 2
+#     @player &5Maze progress saved!
+# @fi
+
+# @if harhaProgress < 3
+#     @var harhaProgress = 3
+#     @player &5Maze progress saved!
+# @fi
+
+# @if harhaProgress < 4
+#     @var harhaProgress = 4
+#     @player &5Maze progress saved!
+# @fi
+
+# # reset at end
+# @var harhaProgress = 0
+
+
+@define String askPlayer
+@player &eAre you sure you want to continue your progress? You will get a completion, but your timer will be invalidated (Type Y/N)
+@prompt 10s askPlayer &cYou took too long!
+
+@if askPlayer.toLowerCase() != "y"
+  @return
+@fi
+
+@define timer::Timer timer = timer::getMapTimer(player, "frac")
+
+@if timer != null
+    @var timer.nullify()
+@fi
+
+@if harhaProgress == 1
+  @bypass /minecraft:tp {{player}} -4789.5 114 -7088.5 90 0
+@elseif harhaProgress == 2
+  @bypass /minecraft:tp {{player}} -4838.5 148 -7089.5 180 0
+@elseif harhaProgress == 3
+  @bypass /minecraft:tp {{player}} -4871.5 159 -7213.5 90 0
+@elseif harhaProgress == 4
+  @bypass /minecraft:tp {{player}} -4885.5 182 -7273.5 -90 0
+@else
+  @player &cYou have not reached a checkpoint yet!
+  @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 1
+@fi

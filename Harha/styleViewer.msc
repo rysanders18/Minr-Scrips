@@ -264,36 +264,36 @@
     @var rewards = l703Rewards
     @var startIndex = l703StartIndex
 @elseif level == 63
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l704Thresholds
+    @var rewards = l704Rewards
+    @var startIndex = l704StartIndex
 @elseif level == 64
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l705Thresholds
+    @var rewards = l705Rewards
+    @var startIndex = l705StartIndex
 @elseif level == 65
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l706Thresholds
+    @var rewards = l706Rewards
+    @var startIndex = l706StartIndex
 @elseif level == 66
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l707Thresholds
+    @var rewards = l707Rewards
+    @var startIndex = l707StartIndex
 @elseif level == 67
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l708Thresholds
+    @var rewards = l708Rewards
+    @var startIndex = l708StartIndex
 @elseif level == 68
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l709Thresholds
+    @var rewards = l709Rewards
+    @var startIndex = l709StartIndex
 @elseif level == 69
-    @var thresholds = l703Thresholds
-    @var rewards = l703Rewards
-    @var startIndex = l703StartIndex
+    @var thresholds = l710Thresholds
+    @var rewards = l710Rewards
+    @var startIndex = l710StartIndex
 @fi
 
-@if startIndex == 0 && level != 3
+@if startIndex == 0 && level != 0
 
     @player &#d4d4d4-=-=-=-= &n{{allLevels[level]}}&#d4d4d4 =-=-=-=-
     @player &#7e7e7e{{allLevels[level]}} has no style points.
@@ -311,9 +311,9 @@
             @var pointsToEarn += rewards[rewards.length() - 1 - i]
 
             @if thresholds[thresholds.length() - 1 - i] == 1
-                @player &aBeat in {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✔
+                @player &aBeat using {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✔
             @else
-                @player &aBeat in {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✔
+                @player &aBeat using {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✔
             @fi
             
             
@@ -321,15 +321,15 @@
             @var totalPoints += rewards[rewards.length() - 1 - i]
             
             @if thresholds[thresholds.length() - 1 - i] == 1
-                @player &cBeat in {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✕
+                @player &cBeat using {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✕
             @else
-                @player &cBeat in {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✕
+                @player &cBeat using {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✕
             @fi
             
         @fi
         
     @done
-    @player &#ffd534Style points this stage = ({{pointsToEarn}}/{{totalPoints}}), Total = ({{swagPoints[player]}}/3500)
+    @player &#d4d4d4Style points this stage: ({{pointsToEarn}}/{{totalPoints}}), Total: ({{swagPoints[player]}}/3500)
     @player
 
 @fi
@@ -339,7 +339,7 @@
 @elseif level == 1
     @player &#d4d4d4&lAdvice:&7 Here it helps to &#d4d4d4&lturn as soon as you place.&7 Try to stafe so you &#d4d4d4&ldon’t slam into the walls.
 @elseif level == 2
-    @player &#d4d4d4&lAdvice:&7 If you’re running into the iron bar, &#d4d4d4&ltry landing further left &7on the first block. Turn right after you place and strafe left away from the wall. You can stand suprisingly far left on the block!
+    @player &#d4d4d4&lAdvice:&7 If you’re running into the iron bar, &#d4d4d4&ltry landing further left &7on the first block. Turn immediately after you place and strafe left away from the wall. You can stand suprisingly far left on the block!
 @elseif level == 3
     @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lslow down &7so you &#d4d4d4&ldon't run into the corner. &7It's easier to &#d4d4d4&lonly place 2 blocks!
 @elseif level == 4
@@ -359,11 +359,11 @@
 @elseif level == 11
     @player &#d4d4d4&lAdvice:&7 If you stand in the middle, you &#d4d4d4&ldon’t have to strafe left and right! &7Just move your mouse, not your body. Make sure you gain enough speed to make the final jump.
 @elseif level == 12
-    @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move less distance and its easier to aim!
+    @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move less distance and its easier to aim! Don't sprint until the jump to the end.
 @elseif level == 13
     @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move less distance and its easier to aim! You also don’t have to strafe left and right.
 @elseif level == 14
-    @player &#d4d4d4&lAdvice:&7 It helps if you try to &#d4d4d4&ljump halfway between the blocks &7so you &#d4d4d4&ldon’t have to move left and right. &7You can &#d4d4d4&lrun a bit on the last block &7to gain more speed if you &#d4d4d4&lplace it right before landing &7on it.
+    @player &#d4d4d4&lAdvice:&7 It helps if you try to &#d4d4d4&ljump halfway between the blocks &7so you &#d4d4d4&ldon’t have to move left and right. &7You can &#d4d4d4&lrun a bit on the last block &7to gain more speed if you &#d4d4d4&lplace it right before landing &7on it. It helps if you stand towards the closer edge of the blocks, so you don't have to move your mouse as much.
 @elseif level == 15
     @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the sides. &7You have to move less distance and its easier to aim!
 @elseif level == 16

@@ -6,7 +6,7 @@
 @define Long startTick = system::currentTimeMillis()
 @define Long limit = Long(1000*seconds)
 
-@for Int tickCount in list::range(0, 500)
+@for Int tickCount in list::range(0, seconds)
     @delay 1
     @if (system::currentTimeMillis() - startTick) >= limit
         @return

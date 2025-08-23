@@ -1,0 +1,1499 @@
+# leaderboardSelection(Int variation, Int page, Player player)
+
+@fast
+@using Harha
+
+# Variation ints list
+# -=-=-=-=-=-=-=-=-=-
+# top100BlocksTotal = 0 
+@var totalBlocks
+# top100FallsTotal = 1
+@var totalFalls
+
+# top100FallsPBNormal = 2
+@var pbFalls
+# top100FallsPBMaster = 3
+@var pbFallsMaster
+# top100FallsPBUMM = 4
+@var pbFallsUMM
+# top100FallsPBSoulLink = 5
+@var pbFallsSoulLink
+# top100FallsPBMasterSoulLink = 6
+@var pbFallsMasterSoulLink
+
+# top100BlocksPBNormal = 7
+@var pbBlocks
+# top100BlocksPBMaster = 8
+@var pbBlocksMaster
+# top100BlocksPBUMM = 9
+@var pbBlocksUMM
+# top100BlocksPBSoulLink = 10
+@var pbBlocksSoulLink
+# top100BlocksPBMasterSoulLink = 11
+@var pbBlocksMasterSoulLink
+
+# top100MapCompletionsTotal = 12
+@var numberCompletions
+# top100MapCompletionsNormal = 13
+@var numberCompletionsNormal
+# top100MapCompletionsMaster = 14
+@var numberCompletionsMaster
+# top100MapCompletionsUMM = 15
+@var numberCompletionsUMM
+# top100MapCompletionsSoulLink = 16
+@var numberCompletionsSoulLink
+# top100MapCompletionsMasterSoulLink = 17
+@var numberCompletionsMasterSoulLink
+
+# top100Section1PB = 18
+@var stage1PB
+# top100Section2PB = 19
+@var stage2PB
+# top100Section3PB = 20
+@var stage3PB
+# top100Section4PB = 21
+@var stage4PB
+# top100Section5PB = 22
+@var stage5PB
+# top100Section6PB = 23
+@var stage6PB
+# top100Section7PB = 24
+@var stage8PB
+# top100Section7PB = 25
+@var stage8PB
+
+# top100Anomalies = 26
+@var anomaliesExperienced
+
+@define String[] topPlayersRank = String[]
+@define String[] topPlayers = String[]
+@define String[] topPlayersStat = String[]
+@define String[] topPlayersColor = String[]
+@define Int playerColor
+@define Int length
+
+@if variation == 0
+    # Lets handle topPlayers first
+    @var length = top100BlocksTotal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        # @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksTotal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(totalBlocks[Player(top100BlocksTotal[i])])))
+            @define String color = Player(top100BlocksTotal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+
+        @if i <= length
+            @define Int rankToAdd = 0
+            @for Int j in list::range(0, i)
+                @if j + 1 < length
+                    # DEBUG @player Checking Ahead, j = {{j}}, checking if {{totalBlocks[Player(top100BlocksTotal[j])]}} == {{totalBlocks[Player(top100BlocksTotal[j + 1])]}}
+                    @if totalBlocks[Player(top100BlocksTotal[j])] == totalBlocks[Player(top100BlocksTotal[j + 1])]
+                        @var rankToAdd += 1
+                    @else
+                        @var rankToAdd = 0
+                    @fi
+                @fi
+            @done
+            @var topPlayersRank.append(String(i + 1 - rankToAdd))
+            # DEBUG @player i = {{i}} rankToAdd = {{rankToAdd}}
+        @else
+            @var topPlayersRank.append(String(i + 1))
+        @fi
+
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksTotal.contains(player.getUniqueId())
+
+        # Sets rank for the specific personalized player
+        @define Int i = (top100BlocksTotal.find(player.getUniqueId()))
+        @if i != 0 && i <= length
+            @define Int rankToAdd = 0
+            @for Int j in list::range(0, i)
+                @if j + 1 < length
+                    @player Checking Ahead, j = {{j}}, checking if {{totalBlocks[Player(top100BlocksTotal[j])]}} == {{totalBlocks[Player(top100BlocksTotal[j + 1])]}}
+                    @if totalBlocks[Player(top100BlocksTotal[j])] == totalBlocks[Player(top100BlocksTotal[j + 1])]
+                        @var rankToAdd += 1
+                    @else
+                        @var rankToAdd = 0
+                    @fi
+                @fi
+            @done
+            @var topPlayersRank.append(String(i + 1 - rankToAdd))
+            @player i = {{i}} rankToAdd = {{rankToAdd}}
+        @else
+            @var topPlayersRank.append(String(i + 1))
+        @fi
+        @var topPlayersStat.append(formatNumber(String(totalBlocks[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+    @var topPlayersStat.append(formatNumber(String(totalBlocks[player])))
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 1
+
+    # Lets handle topPlayers first
+    @var length = top100FallsTotal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsTotal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(totalFalls[Player(top100FallsTotal[i])])))
+            @define String color = Player(top100FallsTotal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsTotal.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsTotal.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(totalFalls[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 2
+
+    # Lets handle topPlayers first
+    @var length = top100FallsPBNormal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsPBNormal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbFalls[Player(top100FallsPBNormal[i])])))
+            @define String color = Player(top100FallsPBNormal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsPBNormal.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsPBNormal.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbFalls[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 3
+
+    # Lets handle topPlayers first
+    @var length = top100FallsPBMaster.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsPBMaster[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbFallsMaster[Player(top100FallsPBMaster[i])])))
+            @define String color = Player(top100FallsPBMaster[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsPBMaster.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsPBMaster.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbFallsMaster[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 4
+
+    # Lets handle topPlayers first
+    @var length = top100FallsPBUMM.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsPBUMM[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbFallsUMM[Player(top100FallsPBUMM[i])])))
+            @define String color = Player(top100FallsPBUMM[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsPBUMM.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsPBUMM.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbFallsUMM[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 5
+
+    # Lets handle topPlayers first
+    @var length = top100FallsPBSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsPBSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbFallsSoulLink[Player(top100FallsPBSoulLink[i])])))
+            @define String color = Player(top100FallsPBSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsPBSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsPBSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbFallsSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 6
+
+    # Lets handle topPlayers first
+    @var length = top100FallsPBMasterSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100FallsPBMasterSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbFallsMasterSoulLink[Player(top100FallsPBMasterSoulLink[i])])))
+            @define String color = Player(top100FallsPBMasterSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100FallsPBMasterSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100FallsPBMasterSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbFallsMasterSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 7
+
+    # Lets handle topPlayers first
+    @var length = top100BlocksPBNormal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksPBNormal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbBlocks[Player(top100BlocksPBNormal[i])])))
+            @define String color = Player(top100BlocksPBNormal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksPBNormal.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100BlocksPBNormal.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbBlocks[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 8
+
+    # Lets handle topPlayers first
+    @var length = top100BlocksPBMaster.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksPBMaster[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbBlocksMaster[Player(top100BlocksPBMaster[i])])))
+            @define String color = Player(top100BlocksPBMaster[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksPBMaster.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100BlocksPBMaster.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbBlocksMaster[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 9
+
+    # Lets handle topPlayers first
+    @var length = top100BlocksPBUMM.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksPBUMM[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbBlocksUMM[Player(top100BlocksPBUMM[i])])))
+            @define String color = Player(top100BlocksPBUMM[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksPBUMM.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100BlocksPBUMM.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbBlocksUMM[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 10
+
+    # Lets handle topPlayers first
+    @var length = top100BlocksPBSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksPBSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbBlocksSoulLink[Player(top100BlocksPBSoulLink[i])])))
+            @define String color = Player(top100BlocksPBSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksPBSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100BlocksPBSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbBlocksSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 11
+
+    # Lets handle topPlayers first
+    @var length = top100BlocksPBMasterSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100BlocksPBMasterSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(pbBlocksMasterSoulLink[Player(top100BlocksPBMasterSoulLink[i])])))
+            @define String color = Player(top100BlocksPBMasterSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100BlocksPBMasterSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100BlocksPBMasterSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(pbBlocksMasterSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 12
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsTotal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsTotal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletions[Player(top100MapCompletionsTotal[i])])))
+            @define String color = Player(top100MapCompletionsTotal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsTotal.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsTotal.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletions[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 13
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsNormal.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsNormal[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletionsNormal[Player(top100MapCompletionsNormal[i])])))
+            @define String color = Player(top100MapCompletionsNormal[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsNormal.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsNormal.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletionsNormal[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 14
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsMaster.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsMaster[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletionsMaster[Player(top100MapCompletionsMaster[i])])))
+            @define String color = Player(top100MapCompletionsMaster[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsMaster.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsMaster.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletionsMaster[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 15
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsUMM.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsUMM[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletionsUMM[Player(top100MapCompletionsUMM[i])])))
+            @define String color = Player(top100MapCompletionsUMM[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsUMM.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsUMM.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletionsUMM[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 16
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletionsSoulLink[Player(top100MapCompletionsSoulLink[i])])))
+            @define String color = Player(top100MapCompletionsSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletionsSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 17
+
+    # Lets handle topPlayers first
+    @var length = top100MapCompletionsMasterSoulLink.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100MapCompletionsMasterSoulLink[i]).getName() + " ")
+            @var topPlayersStat.append(formatNumber(String(numberCompletionsMasterSoulLink[Player(top100MapCompletionsMasterSoulLink[i])])))
+            @define String color = Player(top100MapCompletionsMasterSoulLink[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100MapCompletionsMasterSoulLink.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100MapCompletionsMasterSoulLink.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(numberCompletionsMasterSoulLink[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 18
+
+    # Lets handle topPlayers first
+    @var length = top100Section1PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section1PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage1PB[Player(top100Section1PB[i])])))
+            @define String color = Player(top100Section1PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section1PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section1PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage1PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 19
+
+    # Lets handle topPlayers first
+    @var length = top100Section2PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section2PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage2PB[Player(top100Section2PB[i])])))
+            @define String color = Player(top100Section2PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section2PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section2PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage2PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 20
+
+    # Lets handle topPlayers first
+    @var length = top100Section3PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section3PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage3PB[Player(top100Section3PB[i])])))
+            @define String color = Player(top100Section3PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section3PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section3PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage3PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 21
+
+    # Lets handle topPlayers first
+    @var length = top100Section4PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section4PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage4PB[Player(top100Section4PB[i])])))
+            @define String color = Player(top100Section4PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section4PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section4PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage4PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 22
+
+    # Lets handle topPlayers first
+    @var length = top100Section5PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section5PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage5PB[Player(top100Section5PB[i])])))
+            @define String color = Player(top100Section5PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section5PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section5PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage5PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 23
+
+    # Lets handle topPlayers first
+    @var length = top100Section6PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section6PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage6PB[Player(top100Section6PB[i])])))
+            @define String color = Player(top100Section6PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section6PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section6PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage6PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 24
+
+    # Lets handle topPlayers first
+    @var length = top100Section7PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section7PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage7PB[Player(top100Section7PB[i])])))
+            @define String color = Player(top100Section7PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section7PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section7PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage7PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 25
+
+    # Lets handle topPlayers first
+    @var length = top100Section8PB.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Section8PB[i]).getName() + " ")
+            @var topPlayersStat.append(String(timer::formatTime(stage8PB[Player(top100Section8PB[i])])))
+            @define String color = Player(top100Section8PB[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Section8PB.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Section8PB.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append((String(timer::formatTime(stage8PB[player]))))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+
+@elseif variation == 26
+
+    # Lets handle topPlayers first
+    @var length = top100Anomalies.length()
+    @for Int i in list::range(page * 10, (page * 10) + 10)
+        @var topPlayersRank.append(String(i + 1))
+        @if i < length
+            @var topPlayers.append(Player(top100Anomalies[i]).getName() + " ")
+            @var topPlayersStat.append(String(anomaliesExperienced[Player(top100Anomalies[i])]))
+            @define String color = Player(top100Anomalies[i]).getRank()
+            @if color == "admins"
+                @var topPlayersColor.append("gold")
+            @elseif color == "mods"
+                @var topPlayersColor.append("dark_green")
+            @elseif color == "greenies"
+                @var topPlayersColor.append("green")
+            @elseif color == "blues"
+                @var topPlayersColor.append("aqua")
+            @else
+                @var topPlayersColor.append("white")
+            @fi
+        @else
+            @var topPlayers.append("--")
+            @var topPlayersColor.append("gray")
+            @var topPlayersStat.append("")
+        @fi
+    @done
+
+    @var topPlayers.append(player.getName())
+    @if top100Anomalies.contains(player.getUniqueId())
+        @var topPlayersRank.append(String(top100Anomalies.find(player.getUniqueId()) + 1))
+        @var topPlayersStat.append(formatNumber(String(anomaliesExperienced[player])))
+    @else
+        @var topPlayersRank.append("N/A")
+        @var topPlayersStat.append("N/A")
+    @fi
+    
+
+    @define String color = player.getRank()
+    @if color == "admins"
+        @var topPlayersColor.append("gold")
+    @elseif color == "mods"
+        @var topPlayersColor.append("dark_green")
+    @elseif color == "greenies"
+        @var topPlayersColor.append("green")
+    @elseif color == "blues"
+        @var topPlayersColor.append("aqua")
+    @else
+        @var topPlayersColor.append("white")
+    @fi
+@fi
+
+    # @player topPlayers = {{topPlayers}}
+    # @player topPlayersColor = {{topPlayersColor}}
+    # @player topPlayersStat = {{topPlayersStat}}
+    # @player topPlayersRank = {{topPlayersRank}}
+# leaderboardExecute(String[] topPlayersRank, String[] topPlayers, String[] topPlayersStat, String[] topPlayersColor, Int variation)
+@var leaderboardExecute(topPlayersRank, topPlayers, topPlayersStat, topPlayersColor, variation)

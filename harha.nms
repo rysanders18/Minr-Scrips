@@ -13,10 +13,18 @@
     relative String temporaryBlockSelection4 = "packed_mud"
     relative Int sessionFalls = 0
     relative Int totalFalls = 0
-    relative Int pbfalls = 1000000000
+    relative Int pbFalls = 1000000000
+    relative Int pbFallsMaster = 1000000000
+    relative Int pbFallsUMM = 1000000000
+    relative Int pbFallsSoulLink = 1000000000
+    relative Int pbFallsMasterSoulLink = 1000000000
+    relative Int pbBlocks = 1000000000
+    relative Int pbBlocksMaster = 1000000000
+    relative Int pbBlocksUMM = 1000000000
+    relative Int pbBlocksSoulLink = 1000000000
+    relative Int pbBlocksMasterSoulLink = 1000000000
     relative Int sessionBlocks = 0
     relative Int totalBlocks = 0
-    relative Int pbBlocks = 1000000000
     relative Int stage = 0
     relative Int level = 1
     relative Int numberOfBlocksToGive = 63
@@ -25,27 +33,147 @@
     relative Int numberCompletionsNormal = 0
     relative Int numberCompletionsMaster = 0
     relative Int numberCompletionsUMM = 0
+    relative Int numberCompletionsSoulLink = 0
+    relative Int numberCompletionsMasterSoulLink
     relative Int swagPoints = 0
-    relative Int secretsFound = 0
     relative Int ummFalls = 5
+    relative Int duckCount = 0
+    relative Boolean fishCompleted = false
+    relative Int harhaProgress = 0
+    relative Boolean canTalkToDuck = true
+    relative Float progress100 = 0.0
+    relative Player[] partners
+    relative Int highestPartners = 0
+    relative Boolean certifiedTrackpad = false
+    relative Boolean stupidMapTowerCompleted = false
+    relative Int stupidBackroomsNumber = 0
+    Int stupidMapClickerTimeNumber1 = 0
+    Int stupidMapClickerTimeNumber2 = 0
+    Int stupidMapClickerTimeNumber3 = 0
+    Boolean stupidMapClickerTime = false
+    Boolean stupidMapClickerTime2 = false
+    Boolean stupidMapClickerTime3 = false
+    Int stupidMapClickerCount = 0
+    Int stupidMapClickerCount2 = 0
+    Int stupidMapClickerCount3 = 0
+    Int stupidMapClickerFails = 0
+    Int stupidMapClickerFails2 = 0
+    Int stupidMapClickerFails3 = 0
 
+    String[] top100FallsTotal = String[]
+    String[] top100BlocksTotal = String[]
+
+    String[] top100FallsPBNormal = String[]
+    String[] top100FallsPBMaster = String[]
+    String[] top100FallsPBUMM = String[]
+    String[] top100FallsPBSoulLink = String[]
+    String[] top100FallsPBMasterSoulLink = String[]
+
+    String[] top100BlocksPBNormal = String[]
+    String[] top100BlocksPBMaster = String[]
+    String[] top100BlocksPBUMM = String[]
+    String[] top100BlocksPBSoulLink = String[]
+    String[] top100BlocksPBMasterSoulLink = String[]
+
+    String[] top100MapCompletionsTotal = String[]
+    String[] top100MapCompletionsNormal = String[]
+    String[] top100MapCompletionsMaster = String[]
+    String[] top100MapCompletionsUMM = String[]
+    String[] top100MapCompletionsSoulLink = String[]
+    String[] top100MapCompletionsMasterSoulLink = String[]
+
+    String[] top100Section1PB = String[]
+    String[] top100Section2PB = String[]
+    String[] top100Section3PB = String[]
+    String[] top100Section4PB = String[]
+    String[] top100Section5PB = String[]
+    String[] top100Section6PB = String[]
+    String[] top100Section7PB = String[]
+    String[] top100Section8PB = String[]
+
+    String[] top100Anomalies = String[]
+
+    String[] leaderboardTitles = String["Total Blocks Placed", "Total Times Fallen", "PB Lowest Falls", "PB Lowest Falls Even Harder", "PB Lowest Falls Hardest", "PB Lowest Falls Soul Link", "PB Lowest Falls Harder Soul Link", "PB Lowest Blocks Placed", "PB Lowest Blocks Placed Even Harder", "PB Lowest Blocks Placed Hardest", "PB Lowest Blocks Placed Soul Link", "PB Lowest Blocks Placed Harder Soul Link", "# Of Completions Total", "# Of Completions Normal", "# Of Completions Even Harder", "# Of Completions Hardest", "# Of Completions Soul Link", "# Of Completions Harder Soul Link", "Section 1 Times", "Section 2 Times", "Section 3 Times", "Section 4 Times", "Section 5 Times", "Section 6 Times", "Section 7 Times", "Sum of Best Sections", "? Anomalies Experienced ?"]
+    String[] leaderboardColorList = String["aqua", "aqua", "green", "gold", "red", "aqua", "light_purple", "green", "gold", "red", "aqua", "light_purple", "aqua" ,"green", "gold", "red", "aqua", "light_purple", "green", "gold", "dark_green", "red", "aqua", "green", "light_purple", "light_purple", "dark_purple"]
+    String leftArrow = ""
+    String rightArrow = ""
 
     Int globalBlocks = 0
     Int globalFalls = 0
-
+    Int globalAnomaly = 0
+    relative Int anomaliesExperienced = 0
     Int pcSelect = 0
+
+    # uuid stuff
+    String[] usernameList1 = String[]
+    String[] usernameList2 = String[]
+    String[] usernameList3 = String[]
+    String[] usernameList4 = String[]
+    String[] usernameList5 = String[]
+    String[] usernameList6 = String[]
+    String[] usernameList7 = String[]
+    String[] usernameList8 = String[]
+    String[] usernameList9 = String[]
+    String[] usernameList10 = String[]
+    String[] usernameList11 = String[]
+    String[] usernameList12 = String[]
+    String[] usernameList13 = String[]
+    String[] usernameList14 = String[]
+    String[] usernameList15 = String[]
+    String[] usernameList16 = String[]
+    String[] usernameList17 = String[]
+    String[] usernameList18 = String[]
+    String[] usernameList19 = String[]
+    String[] usernameList20 = String[]
+    String[] uuidList1 = String[]
+    String[] uuidList2 = String[]
+    String[] uuidList3 = String[]
+    String[] uuidList4 = String[]
+    String[] uuidList5 = String[]
+    String[] uuidList6 = String[]
+    String[] uuidList7 = String[]
+    String[] uuidList8 = String[]
+    String[] uuidList9 = String[]
+    String[] uuidList10 = String[]
+    String[] uuidList11 = String[]
+    String[] uuidList12 = String[]
+    String[] uuidList13 = String[]
+    String[] uuidList14 = String[]
+    String[] uuidList15 = String[]
+    String[] uuidList16 = String[]
+    String[] uuidList17 = String[]
+    String[] uuidList18 = String[]
+    String[] uuidList19 = String[]
+    String[] uuidList20 = String[]
+    
 
     # coop stuff
     relative Boolean isOrange = false
     relative Boolean isBlue = false
     relative String coopBlockSelection
 
+    # clicker stuff
+    BlockLocation[] clickerBlockLocation = BlockLocation[BlockLocation(-4628, 93, 5072 , "Theta_the_end"), BlockLocation(-4627, 93, 5072 , "Theta_the_end"), BlockLocation(-4626, 93, 5072 , "Theta_the_end"), BlockLocation(-4628, 92, 5072, "Theta_the_end"), BlockLocation(-4627, 92, 5072, "Theta_the_end"), BlockLocation(-4626, 92, 5072 , "Theta_the_end"), BlockLocation(-4628, 91, 5072, "Theta_the_end"), BlockLocation(-4627, 91, 5072, "Theta_the_end"), BlockLocation(-4626, 91, 5072 , "Theta_the_end")]
+    String[] woolList1 = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool"]
+    Int[] order = Int[6, 5, 3, 8, 1, 7, 2, 0, 6, 5, 3, 8, 1, 7, 2, 0, 6, 7, 8, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 8, 3, 5, 0, 2, 3, 5, 6, 8, 3, 5, 0, 2, 3, 5, 4, 4, 4]
+
+    BlockLocation[] clickerBlockLocation2 = BlockLocation[BlockLocation(-4629, 93, 5052, "Theta_the_end"), BlockLocation(-4628, 93, 5052, "Theta_the_end"), BlockLocation(-4627, 93, 5052, "Theta_the_end"), BlockLocation(-4626, 93, 5052, "Theta_the_end"), BlockLocation(-4625, 93, 5052, "Theta_the_end"), BlockLocation(-4629, 92, 5052, "Theta_the_end"), BlockLocation(-4628, 92, 5052, "Theta_the_end"), BlockLocation(-4627, 92, 5052, "Theta_the_end"), BlockLocation(-4626, 92, 5052, "Theta_the_end"), BlockLocation(-4625, 92, 5052, "Theta_the_end"), BlockLocation(-4629, 91, 5052, "Theta_the_end"), BlockLocation(-4628, 91, 5052, "Theta_the_end"), BlockLocation(-4627, 91, 5052, "Theta_the_end"), BlockLocation(-4626, 91, 5052, "Theta_the_end"), BlockLocation(-4625, 91, 5052, "Theta_the_end")]
+    String[] woolList2 = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "blue_wool", "yellow_wool", "lime_wool", "light_blue_wool", "blue_wool", "purple_wool"]
+    Int[] order2 = Int[2, 12, 1, 11, 3, 13, 0, 10, 4, 14, 0, 2, 5, 7, 10, 12, 1, 3, 6, 8, 11, 13, 2, 4, 7, 9, 12, 14, 0, 7, 4, 14, 7, 10, 0, 7, 4, 14, 7, 10, 0, 7, 4, 14, 7, 10, 7]
+
+
+
     # relative variables
     relative Boolean bootsObtained = false
     relative Boolean iceSwapped = false
     relative Boolean slimeSwapped = false
+    relative Boolean trapdoorSwapped = false
+    relative Boolean targetSwapped = false
     relative Boolean codeGenerated = false
     relative Boolean hasGainedStylePoints = false
+    relative Boolean pcSort = false
+    relative Boolean hasTeleported = false
+    relative Boolean speedrunMode = false
     relative Boolean stage2Entered = false
     relative Boolean stage3Entered = false
     relative Boolean stage4Entered = false
@@ -53,13 +181,14 @@
     relative Boolean stage6Entered = false
     relative Boolean stage7Entered = false
     relative Boolean stage8Entered = false
-    relative Long stage1PB = 0
-    relative Long stage2PB = 0
-    relative Long stage3PB = 0
-    relative Long stage4PB = 0
-    relative Long stage5PB = 0
-    relative Long stage6PB = 0
-    relative Long stage7PB = 0
+    relative Long stage1PB = 0L
+    relative Long stage2PB = 0L
+    relative Long stage3PB = 0L
+    relative Long stage4PB = 0L
+    relative Long stage5PB = 0L
+    relative Long stage6PB = 0L
+    relative Long stage7PB = 0L
+    relative Long stage8PB = 0L
     relative String[] code = String[""]
     relative String code1 = ""
     relative String code2 = ""
@@ -82,8 +211,8 @@
 
     Int[][] allThresholds = Int[][[], [], [], [1], [1], [], [], [], [2, 3], [3, 4], [], [4, 5, 6, 7, 8], [5, 6, 7, 8], [2, 3], [5], [3], [], [4, 5], [], [], [], [2], [], [2], [], [], [], [6, 7, 8, 9, 10, 11, 12], [], [], [1, 2, 3], [], [], [], [], [3, 4, 5], [], [4], [], [], [2], [3], [2, 3, 4], [3], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [5, 6, 7], [2], [], [], [], [], [], [], [], [], []]
 
-    Int[] l101Thresholds = Int[]
-    Int[] l101Rewards = Int[]
+    Int[] l101Thresholds = Int[0]
+    Int[] l101Rewards = Int[80]
     Int l101StartIndex = 0
 
     Int[] l102Thresholds = Int[]
@@ -96,11 +225,11 @@
 
     Int[] l104Thresholds = Int[1]
     Int[] l104Rewards = Int[30]
-    Int l104StartIndex = 0
+    Int l104StartIndex = 1
 
     Int[] l105Thresholds = Int[1]
     Int[] l105Rewards = Int[120]
-    Int l105StartIndex = 1
+    Int l105StartIndex = 2
 
     Int[] l106Thresholds = Int[]
     Int[] l106Rewards = Int[]
@@ -116,7 +245,7 @@
 
     Int[] l109Thresholds = Int[2, 3]
     Int[] l109Rewards = Int[100, 30]
-    Int l109StartIndex = 2
+    Int l109StartIndex = 3
 
     Int[] l110Thresholds = Int[]
     Int[] l110Rewards = Int[]
@@ -124,7 +253,7 @@
 
     Int[] l201Thresholds = Int[3, 4]
     Int[] l201Rewards = Int[30, 40]
-    Int l201StartIndex = 4
+    Int l201StartIndex = 5
 
     Int[] l202Thresholds = Int[] 
     Int[] l202Rewards = Int[]
@@ -132,23 +261,23 @@
 
     Int[] l203Thresholds = Int[4, 5, 6, 7, 8]
     Int[] l203Rewards = Int[100, 230, 100, 10, 10]
-    Int l203StartIndex = 6
+    Int l203StartIndex = 7
 
     Int[] l204Thresholds = Int[5, 6, 7, 8]
     Int[] l204Rewards = Int[120, 50, 30, 20]
-    Int l204StartIndex = 11
+    Int l204StartIndex = 12
 
     Int[] l205Thresholds = Int[2, 3]
     Int[] l205Rewards = Int[40, 20]
-    Int l205StartIndex = 15
+    Int l205StartIndex = 16
 
     Int[] l206Thresholds = Int[5]
     Int[] l206Rewards = Int[60]
-    Int l206StartIndex = 17
+    Int l206StartIndex = 18
 
     Int[] l207Thresholds = Int[3]
     Int[] l207Rewards = Int[60]
-    Int l207StartIndex = 18
+    Int l207StartIndex = 19
 
     Int[] l208Thresholds = Int[] 
     Int[] l208Rewards = Int[]
@@ -156,7 +285,7 @@
 
     Int[] l209Thresholds = Int[4, 5]
     Int[] l209Rewards = Int[60, 40]
-    Int l209StartIndex = 19
+    Int l209StartIndex = 20
 
     Int[] l210Thresholds = Int[] 
     Int[] l210Rewards = Int[]
@@ -172,7 +301,7 @@
 
     Int[] l303Thresholds = Int[2]
     Int[] l303Rewards = Int[20]
-    Int l303StartIndex = 21
+    Int l303StartIndex = 22
 
     Int[] l304Thresholds = Int[] 
     Int[] l304Rewards = Int[]
@@ -180,7 +309,7 @@
 
     Int[] l305Thresholds = Int[2]
     Int[] l305Rewards = Int[30]
-    Int l305StartIndex = 22
+    Int l305StartIndex = 23
 
     Int[] l306Thresholds = Int[] 
     Int[] l306Rewards = Int[]
@@ -200,7 +329,7 @@
 
     Int[] l310Thresholds = Int[6, 7, 8, 9, 10, 11, 12]
     Int[] l310Rewards = Int[190, 60, 20, 20, 20, 20, 20]
-    Int l310StartIndex = 23
+    Int l310StartIndex = 24
 
     Int[] l401Thresholds = Int[] 
     Int[] l401Rewards = Int[]
@@ -212,7 +341,7 @@
 
     Int[] l403Thresholds = Int[1, 2, 3]
     Int[] l403Rewards = Int[30, 10, 10]
-    Int l403StartIndex = 30
+    Int l403StartIndex = 31
 
     Int[] l404Thresholds = Int[] 
     Int[] l404Rewards = Int[]
@@ -231,16 +360,16 @@
     Int l407StartIndex = 0
 
     Int[] l408Thresholds = Int[3, 4, 5]
-    Int[] l408Rewards = Int[180, 60, 40]
-    Int l408StartIndex = 33
+    Int[] l408Rewards = Int[200, 80, 40]
+    Int l408StartIndex = 34
 
     Int[] l409Thresholds = Int[] 
     Int[] l409Rewards = Int[]
     Int l409StartIndex = 0
 
-    Int[] l410Thresholds = Int[4]
-    Int[] l410Rewards = Int[40]
-    Int l410StartIndex = 34
+    Int[] l410Thresholds = Int[]
+    Int[] l410Rewards = Int[]
+    Int l410StartIndex = 0
 
     Int[] l501Thresholds = Int[] 
     Int[] l501Rewards = Int[]
@@ -252,19 +381,19 @@
 
     Int[] l503Thresholds = Int[2]
     Int[] l503Rewards = Int[40]
-    Int l503StartIndex = 37
+    Int l503StartIndex = 38
 
     Int[] l504Thresholds = Int[3]
     Int[] l504Rewards = Int[60]
-    Int l504StartIndex = 38
+    Int l504StartIndex = 39
 
     Int[] l505Thresholds = Int[2, 3, 4]
     Int[] l505Rewards = Int[100, 40, 10]
-    Int l505StartIndex = 39
+    Int l505StartIndex = 40
 
     Int[] l506Thresholds = Int[3]
-    Int[] l506Rewards = Int[100]
-    Int l506StartIndex = 42
+    Int[] l506Rewards = Int[140]
+    Int l506StartIndex = 43
 
     Int[] l507Thresholds = Int[] 
     Int[] l507Rewards = Int[]
@@ -278,9 +407,9 @@
     Int[] l509Rewards = Int[]
     Int l509StartIndex = 0
 
-    Int[] l510Thresholds = Int[] 
-    Int[] l510Rewards = Int[]
-    Int l510StartIndex = 0
+    Int[] l510Thresholds = Int[4] 
+    Int[] l510Rewards = Int[150]
+    Int l510StartIndex = 44
 
     Int[] l601Thresholds = Int[] 
     Int[] l601Rewards = Int[]
@@ -294,17 +423,17 @@
     Int[] l603Rewards = Int[]
     Int l603StartIndex = 0
 
-    Int[] l604Thresholds = Int[] 
-    Int[] l604Rewards = Int[]
-    Int l604StartIndex = 0
+    Int[] l604Thresholds = Int[1] 
+    Int[] l604Rewards = Int[100]
+    Int l604StartIndex = 45
 
     Int[] l605Thresholds = Int[] 
     Int[] l605Rewards = Int[]
     Int l605StartIndex = 0
 
-    Int[] l606Thresholds = Int[] 
-    Int[] l606Rewards = Int[]
-    Int l606StartIndex = 0
+    Int[] l606Thresholds = Int[2] 
+    Int[] l606Rewards = Int[380]
+    Int l606StartIndex = 46
 
     Int[] l607Thresholds = Int[] 
     Int[] l607Rewards = Int[]
@@ -323,12 +452,12 @@
     Int l610StartIndex = 0
 
     Int[] l701Thresholds = Int[5, 6, 7]
-    Int[] l701Rewards = Int[280, 130, 70]
-    Int l701StartIndex = 43
+    Int[] l701Rewards = Int[130, 100, 70]
+    Int l701StartIndex = 47
 
     Int[] l702Thresholds = Int[2]
-    Int[] l702Rewards = Int[100]
-    Int l702StartIndex = 46
+    Int[] l702Rewards = Int[150]
+    Int l702StartIndex = 50
     
     Int[] l703Thresholds = Int[] 
     Int[] l703Rewards = Int[]
@@ -350,9 +479,9 @@
     Int[] l707Rewards = Int[]
     Int l707StartIndex = 0
         
-    Int[] l708Thresholds = Int[] 
-    Int[] l708Rewards = Int[]
-    Int l708StartIndex = 0
+    Int[] l708Thresholds = Int[4] 
+    Int[] l708Rewards = Int[250]
+    Int l708StartIndex = 51
         
     Int[] l709Thresholds = Int[] 
     Int[] l709Rewards = Int[]
@@ -365,9 +494,9 @@
     # end of style point stuff
     # =-=-=-=-=-=-=-=-=-
 
-    # blocks lowkey
-    # =-=-=-=-=-=-=-=-=-
 
+    # Anticheat Blocks
+    # =-=-=-=-=-=-=-=-=-
     
     Block[] b101 = Block[Block(-9201, 95, 9696, "Theta"), Block(-9200, 95, 9696, "Theta"), Block(-9199, 95, 9696, "Theta")]
     Block[] b102 = Block[Block(-9192, 93, 9684, "Theta"), Block(-9191, 94, 9681, "Theta")]
@@ -412,7 +541,7 @@
     Block[] b506 = Block[Block(-9103, 99, 9556, "Theta"), Block(-9103, 101, 9556, "Theta"), Block(-9100, 100, 9556, "Theta")]
     Block[] b507 = Block[Block(-9138, 103, 9552, "Theta"), Block(-9132, 103, 9553, "Theta"), Block(-9127, 103, 9554, "Theta")]
     Block[] b508 = Block[Block(-9138, 103, 9537, "Theta"), Block(-9133, 103, 9537, "Theta"), Block(-9127, 103, 9537, "Theta"), Block(-9121, 103, 9537, "Theta"), Block(-9121, 103, 9538, "Theta"), Block(-9121, 103, 9539, "Theta")]
-    Block[] b509 = Block[Block(-9116, 100, 9518, "Theta"), Block(-9116, 100, 9513, "Theta")]
+    Block[] b509 = Block[Block(-9117, 100, 9518, "Theta"), Block(-9117, 100, 9513, "Theta")]
     Block[] b510 = Block[Block(-9098, 102, 9508, "Theta"), Block(-9096, 102, 9508, "Theta"), Block(-9090, 102, 9508, "Theta"), Block(-9087, 102, 9508, "Theta"), Block(-9080, 101, 9507, "Theta"), Block(-9080, 101, 9508, "Theta"), Block(-9080, 101, 9509, "Theta")]
     Block[] b601 = Block[Block(-9070, 91, 9543, "Theta"), Block(-9070, 91, 9545, "Theta"), Block(-9069, 91, 9543, "Theta"), Block(-9069, 91, 9545, "Theta"), Block(-9068, 91, 9543, "Theta"), Block(-9068, 91, 9545, "Theta")]
     Block[] b602 = Block[Block(-9057, 92, 9553, "Theta"), Block(-9057, 92, 9551, "Theta")]
@@ -426,7 +555,7 @@
     Block[] b610 = Block[Block(-9044, 90, 9625, "Theta"), Block(-9044, 95, 9627, "Theta"), Block(-9044, 87, 9631, "Theta"), Block(-9044, 87, 9633, "Theta"), Block(-9043, 90, 9625, "Theta"), Block(-9043, 95, 9627, "Theta"), Block(-9043, 87, 9631, "Theta"), Block(-9043, 87, 9633, "Theta"), Block(-9042, 90, 9625, "Theta"), Block(-9042, 95, 9627, "Theta"), Block(-9042, 87, 9631, "Theta"), Block(-9042, 87, 9633, "Theta")]
     Block[] b701 = Block[Block(-4637, 89, 5181, "Theta_the_end"), Block(-4637, 89, 5179, "Theta_the_end"), Block(-4637, 89, 5180, "Theta_the_end"), Block(-4632, 90, 5179, "Theta_the_end"), Block(-4632, 90, 5181, "Theta_the_end"), Block(-4624, 91, 5179, "Theta_the_end"), Block(-4621, 91, 5181, "Theta_the_end"), Block(-4620, 91, 5182, "Theta_the_end"), Block(-4618, 91, 5189, "Theta_the_end"), Block(-4617, 91, 5190, "Theta_the_end"), Block(-4614, 90, 5191, "Theta_the_end")]
     Block[] b702 = Block[Block(-4645, 88, 5148, "Theta_the_end"), Block(-4645, 89, 5145, "Theta_the_end"), Block(-4644, 93, 5157, "Theta_the_end"), Block(-4643, 93, 5157, "Theta_the_end"), Block(-4642, 93, 5157, "Theta_the_end"), Block(-4641, 88, 5148, "Theta_the_end"), Block(-4641, 89, 5145, "Theta_the_end")]
-    Block[] b703 = Block[Block(-4626, 90, 5130, "Theta_the_end"), Block(-4626, 90, 5131, "Theta_the_end"), Block(-4626, 90, 5132, "Theta_the_end"), Block(-4625, 90, 5130, "Theta_the_end"), Block(-4625, 90, 5131, "Theta_the_end"), Block(-4625, 90, 5132, "Theta_the_end"), Block(-4625, 91, 5130, "Theta_the_end"), Block(-4625, 91, 5131, "Theta_the_end"), Block(-4625, 91, 5132, "Theta_the_end"), Block(-4625, 90, 5133, "Theta_the_end"), Block(-4625, 90, 5129, "Theta_the_end"), Block(-4613, 90, 5130, "Theta_the_end"), Block(-4613, 90, 5131, "Theta_the_end"), Block(-4613, 90, 5132, "Theta_the_end"), Block(-4612, 90, 5130, "Theta_the_end"), Block(-4612, 90, 5131, "Theta_the_end"), Block(-4612, 90, 5132, "Theta_the_end"), Block(-4612, 91, 5130, "Theta_the_end"), Block(-4612, 91, 5131, "Theta_the_end"), Block(-4612, 91, 5132, "Theta_the_end"), Block(-4612, 90, 5133, "Theta_the_end"), Block(-4612, 90, 5129, "Theta_the_end")]
+    Block[] b703 = Block[Block(-4625, 94, 5130, "Theta_the_end"), Block(-4625, 93, 5130, "Theta_the_end"), Block(-4624, 93, 5130, "Theta_the_end"), Block(-4626, 93, 5130, "Theta_the_end"), Block(-4623, 92, 5130, "Theta_the_end"), Block(-4624, 92, 5130, "Theta_the_end"), Block(-4625, 92, 5130, "Theta_the_end"), Block(-4626, 92, 5130, "Theta_the_end"), Block(-4627, 92, 5130, "Theta_the_end"), Block(-4628, 91, 5130, "Theta_the_end"), Block(-4627, 91, 5130, "Theta_the_end"), Block(-4626, 91, 5130, "Theta_the_end"), Block(-4625, 91, 5130, "Theta_the_end"), Block(-4629, 90, 5130, "Theta_the_end"), Block(-4628, 90, 5130, "Theta_the_end"), Block(-4627, 90, 5130, "Theta_the_end"), Block(-4626, 90, 5130, "Theta_the_end"), Block(-4628, 89, 5130, "Theta_the_end"), Block(-4627, 89, 5130, "Theta_the_end"), Block(-4627, 88, 5130, "Theta_the_end"), Block(-4626, 89, 5130, "Theta_the_end"), Block(-4626, 88, 5130, "Theta_the_end"), Block(-4626, 87, 5130, "Theta_the_end"), Block(-4625, 86, 5130, "Theta_the_end"), Block(-4625, 87, 5130, "Theta_the_end"), Block(-4625, 88, 5130, "Theta_the_end"), Block(-4624, 87, 5130, "Theta_the_end"), Block(-4624, 88, 5130, "Theta_the_end"), Block(-4623, 88, 5130, "Theta_the_end"), Block(-4625, 94, 5131, "Theta_the_end"), Block(-4625, 93, 5131, "Theta_the_end"), Block(-4624, 93, 5131, "Theta_the_end"), Block(-4626, 93, 5131, "Theta_the_end"), Block(-4623, 92, 5131, "Theta_the_end"), Block(-4624, 92, 5131, "Theta_the_end"), Block(-4625, 92, 5131, "Theta_the_end"), Block(-4626, 92, 5131, "Theta_the_end"), Block(-4627, 92, 5131, "Theta_the_end"), Block(-4628, 91, 5131, "Theta_the_end"), Block(-4627, 91, 5131, "Theta_the_end"), Block(-4626, 91, 5131, "Theta_the_end"), Block(-4625, 91, 5131, "Theta_the_end"), Block(-4629, 90, 5131, "Theta_the_end"), Block(-4628, 90, 5131, "Theta_the_end"), Block(-4627, 90, 5131, "Theta_the_end"), Block(-4626, 90, 5131, "Theta_the_end"), Block(-4628, 89, 5131, "Theta_the_end"), Block(-4627, 89, 5131, "Theta_the_end"), Block(-4627, 88, 5131, "Theta_the_end"), Block(-4626, 89, 5131, "Theta_the_end"), Block(-4626, 88, 5131, "Theta_the_end"), Block(-4626, 87, 5131, "Theta_the_end"), Block(-4625, 86, 5131, "Theta_the_end"), Block(-4625, 87, 5131, "Theta_the_end"), Block(-4625, 88, 5131, "Theta_the_end"), Block(-4624, 87, 5131, "Theta_the_end"), Block(-4624, 88, 5131, "Theta_the_end"), Block(-4623, 88, 5131, "Theta_the_end"), Block(-4625, 94, 5132, "Theta_the_end"), Block(-4625, 93, 5132, "Theta_the_end"), Block(-4624, 93, 5132, "Theta_the_end"), Block(-4626, 93, 5132, "Theta_the_end"), Block(-4623, 92, 5132, "Theta_the_end"), Block(-4624, 92, 5132, "Theta_the_end"), Block(-4625, 92, 5132, "Theta_the_end"), Block(-4626, 92, 5132, "Theta_the_end"), Block(-4627, 92, 5132, "Theta_the_end"), Block(-4628, 91, 5132, "Theta_the_end"), Block(-4627, 91, 5132, "Theta_the_end"), Block(-4626, 91, 5132, "Theta_the_end"), Block(-4625, 91, 5132, "Theta_the_end"), Block(-4629, 90, 5132, "Theta_the_end"), Block(-4628, 90, 5132, "Theta_the_end"), Block(-4627, 90, 5132, "Theta_the_end"), Block(-4626, 90, 5132, "Theta_the_end"), Block(-4628, 89, 5132, "Theta_the_end"), Block(-4627, 89, 5132, "Theta_the_end"), Block(-4627, 88, 5132, "Theta_the_end"), Block(-4626, 89, 5132, "Theta_the_end"), Block(-4626, 88, 5132, "Theta_the_end"), Block(-4626, 87, 5132, "Theta_the_end"), Block(-4625, 86, 5132, "Theta_the_end"), Block(-4625, 87, 5132, "Theta_the_end"), Block(-4625, 88, 5132, "Theta_the_end"), Block(-4624, 87, 5132, "Theta_the_end"), Block(-4624, 88, 5132, "Theta_the_end"), Block(-4623, 88, 5132, "Theta_the_end"), Block(-4626, 90, 5129, "Theta_the_end"), Block(-4628, 90, 5129, "Theta_the_end"), Block(-4627, 91, 5129, "Theta_the_end"), Block(-4627, 90, 5129, "Theta_the_end"), Block(-4627, 90, 5128, "Theta_the_end"), Block(-4627, 89, 5129, "Theta_the_end"), Block(-4626, 89, 5129, "Theta_the_end"), Block(-4625, 89, 5129, "Theta_the_end"), Block(-4625, 88, 5129, "Theta_the_end"), Block(-4626, 88, 5129, "Theta_the_end"), Block(-4625, 87, 5129, "Theta_the_end"), Block(-4626, 89, 5128, "Theta_the_end"), Block(-4626, 91, 5129, "Theta_the_end"), Block(-4628, 90, 5133, "Theta_the_end"), Block(-4627, 91, 5133, "Theta_the_end"), Block(-4626, 92, 5133, "Theta_the_end"), Block(-4626, 91, 5133, "Theta_the_end"), Block(-4627, 90, 5133, "Theta_the_end"), Block(-4626, 90, 5133, "Theta_the_end"), Block(-4627, 89, 5133, "Theta_the_end"), Block(-4626, 89, 5133, "Theta_the_end"), Block(-4626, 88, 5133, "Theta_the_end"), Block(-4625, 88, 5133, "Theta_the_end"), Block(-4625, 87, 5133, "Theta_the_end"), Block(-4627, 90, 5134, "Theta_the_end"), Block(-4626, 90, 5134, "Theta_the_end"), Block(-4625, 89, 5133, "Theta_the_end"), Block(-4626, 89, 5134, "Theta_the_end"), Block(-4625, 91, 5133, "Theta_the_end"), Block(-4626, 91, 5134, "Theta_the_end"), Block(-4616, 90, 5130, "Theta_the_end"), Block(-4615, 91, 5130, "Theta_the_end"), Block(-4615, 90, 5130, "Theta_the_end"), Block(-4615, 89, 5130, "Theta_the_end"), Block(-4614, 92, 5130, "Theta_the_end"), Block(-4614, 91, 5130, "Theta_the_end"), Block(-4614, 90, 5130, "Theta_the_end"), Block(-4614, 89, 5130, "Theta_the_end"), Block(-4614, 88, 5130, "Theta_the_end"), Block(-4613, 93, 5130, "Theta_the_end"), Block(-4613, 92, 5130, "Theta_the_end"), Block(-4613, 91, 5130, "Theta_the_end"), Block(-4613, 90, 5130, "Theta_the_end"), Block(-4613, 89, 5130, "Theta_the_end"), Block(-4613, 88, 5130, "Theta_the_end"), Block(-4613, 87, 5130, "Theta_the_end"), Block(-4612, 93, 5130, "Theta_the_end"), Block(-4612, 92, 5130, "Theta_the_end"), Block(-4612, 86, 5130, "Theta_the_end"), Block(-4612, 87, 5130, "Theta_the_end"), Block(-4616, 90, 5131, "Theta_the_end"), Block(-4615, 91, 5131, "Theta_the_end"), Block(-4615, 90, 5131, "Theta_the_end"), Block(-4615, 89, 5131, "Theta_the_end"), Block(-4614, 92, 5131, "Theta_the_end"), Block(-4614, 91, 5131, "Theta_the_end"), Block(-4614, 90, 5131, "Theta_the_end"), Block(-4614, 89, 5131, "Theta_the_end"), Block(-4614, 88, 5131, "Theta_the_end"), Block(-4613, 93, 5131, "Theta_the_end"), Block(-4613, 92, 5131, "Theta_the_end"), Block(-4613, 91, 5131, "Theta_the_end"), Block(-4613, 90, 5131, "Theta_the_end"), Block(-4613, 89, 5131, "Theta_the_end"), Block(-4613, 88, 5131, "Theta_the_end"), Block(-4613, 87, 5131, "Theta_the_end"), Block(-4612, 93, 5131, "Theta_the_end"), Block(-4612, 92, 5131, "Theta_the_end"), Block(-4612, 86, 5131, "Theta_the_end"), Block(-4612, 87, 5131, "Theta_the_end"), Block(-4616, 90, 5132, "Theta_the_end"), Block(-4615, 91, 5132, "Theta_the_end"), Block(-4615, 90, 5132, "Theta_the_end"), Block(-4615, 89, 5132, "Theta_the_end"), Block(-4614, 92, 5132, "Theta_the_end"), Block(-4614, 91, 5132, "Theta_the_end"), Block(-4614, 90, 5132, "Theta_the_end"), Block(-4614, 89, 5132, "Theta_the_end"), Block(-4614, 88, 5132, "Theta_the_end"), Block(-4613, 93, 5132, "Theta_the_end"), Block(-4613, 92, 5132, "Theta_the_end"), Block(-4613, 91, 5132, "Theta_the_end"), Block(-4613, 90, 5132, "Theta_the_end"), Block(-4613, 89, 5132, "Theta_the_end"), Block(-4613, 88, 5132, "Theta_the_end"), Block(-4613, 87, 5132, "Theta_the_end"), Block(-4612, 93, 5132, "Theta_the_end"), Block(-4612, 92, 5132, "Theta_the_end"), Block(-4612, 86, 5132, "Theta_the_end"), Block(-4612, 87, 5132, "Theta_the_end"), Block(-4615, 90, 5129, "Theta_the_end"), Block(-4614, 91, 5129, "Theta_the_end"), Block(-4614, 90, 5129, "Theta_the_end"), Block(-4614, 89, 5129, "Theta_the_end"), Block(-4613, 92, 5129, "Theta_the_end"), Block(-4613, 91, 5129, "Theta_the_end"), Block(-4613, 90, 5129, "Theta_the_end"), Block(-4613, 89, 5129, "Theta_the_end"), Block(-4613, 88, 5129, "Theta_the_end"), Block(-4614, 90, 5128, "Theta_the_end"), Block(-4613, 90, 5128, "Theta_the_end"), Block(-4613, 89, 5128, "Theta_the_end"), Block(-4615, 90, 5133, "Theta_the_end"), Block(-4614, 91, 5133, "Theta_the_end"), Block(-4614, 90, 5133, "Theta_the_end"), Block(-4614, 89, 5133, "Theta_the_end"), Block(-4613, 92, 5133, "Theta_the_end"), Block(-4613, 91, 5133, "Theta_the_end"), Block(-4613, 90, 5133, "Theta_the_end"), Block(-4613, 89, 5133, "Theta_the_end"), Block(-4613, 88, 5133, "Theta_the_end"), Block(-4614, 90, 5134, "Theta_the_end"), Block(-4613, 91, 5134, "Theta_the_end"), Block(-4613, 90, 5134, "Theta_the_end"), Block(-4613, 89, 5134, "Theta_the_end"), Block(-4612, 94, 5131, "Theta_the_end"), Block(-4611, 93, 5131, "Theta_the_end"), Block(-4610, 92, 5131, "Theta_the_end"), Block(-4626, 92, 5129, "Theta_the_end"), Block(-4625, 92, 5129, "Theta_the_end"), Block(-4625, 91, 5129, "Theta_the_end"), Block(-4623, 91, 5129, "Theta_the_end"), Block(-4624, 88, 5129, "Theta_the_end"), Block(-4623, 89, 5129, "Theta_the_end"), Block(-4612, 94, 5130, "Theta_the_end"), Block(-4611, 93, 5130, "Theta_the_end"), Block(-4613, 91, 5128, "Theta_the_end"), Block(-4625, 88, 5134, "Theta_the_end"), Block(-4625, 91, 5130, "Theta_the_end"), Block(-4625, 91, 5131, "Theta_the_end"), Block(-4625, 91, 5132, "Theta_the_end"), Block(-4625, 89, 5130, "Theta_the_end"), Block(-4625, 89, 5131, "Theta_the_end"), Block(-4625, 89, 5132, "Theta_the_end"), Block(-4625, 90, 5130, "Theta_the_end"), Block(-4625, 90, 5131, "Theta_the_end"), Block(-4625, 90, 5132, "Theta_the_end"), Block(-4625, 90, 5133, "Theta_the_end"), Block(-4625, 88, 5128, "Theta_the_end"), Block(-4626, 90, 5128, "Theta_the_end"), Block(-4612, 91, 5129, "Theta_the_end"), Block(-4612, 92, 5129, "Theta_the_end"), Block(-4612, 90, 5129, "Theta_the_end"), Block(-4612, 89, 5129, "Theta_the_end"), Block(-4612, 88, 5129, "Theta_the_end"), Block(-4612, 87, 5129, "Theta_the_end"), Block(-4612, 88, 5128, "Theta_the_end"), Block(-4612, 89, 5128, "Theta_the_end"), Block(-4612, 89, 5130, "Theta_the_end"), Block(-4612, 88, 5130, "Theta_the_end"), Block(-4612, 90, 5130, "Theta_the_end"), Block(-4612, 91, 5130, "Theta_the_end"), Block(-4612, 89, 5131, "Theta_the_end"), Block(-4612, 88, 5131, "Theta_the_end"), Block(-4612, 90, 5131, "Theta_the_end"), Block(-4612, 91, 5131, "Theta_the_end"), Block(-4612, 89, 5132, "Theta_the_end"), Block(-4612, 88, 5132, "Theta_the_end"), Block(-4612, 90, 5132, "Theta_the_end"), Block(-4612, 91, 5132, "Theta_the_end"), Block(-4612, 92, 5133, "Theta_the_end"), Block(-4612, 91, 5133, "Theta_the_end"), Block(-4612, 90, 5133, "Theta_the_end"), Block(-4612, 89, 5133, "Theta_the_end"), Block(-4612, 88, 5133, "Theta_the_end"), Block(-4612, 87, 5133, "Theta_the_end"), Block(-4612, 88, 5134, "Theta_the_end"), Block(-4611, 87, 5132, "Theta_the_end"), Block(-4623, 91, 5133, "Theta_the_end"), Block(-4623, 89, 5133, "Theta_the_end"), Block(-4624, 88, 5133, "Theta_the_end"), Block(-4625, 92, 5133, "Theta_the_end"), Block(-4612, 94, 5132, "Theta_the_end"), Block(-4611, 93, 5132, "Theta_the_end"), Block(-4625, 93, 5129, "Theta_the_end"), Block(-4626, 90, 5127, "Theta_the_end"), Block(-4612, 91, 5128, "Theta_the_end"), Block(-4612, 90, 5128, "Theta_the_end"), Block(-4624, 92, 5129, "Theta_the_end"), Block(-4624, 89, 5129, "Theta_the_end"), Block(-4611, 92, 5130, "Theta_the_end"), Block(-4610, 92, 5130, "Theta_the_end"), Block(-4626, 91, 5128, "Theta_the_end"), Block(-4611, 87, 5131, "Theta_the_end"), Block(-4625, 89, 5128, "Theta_the_end"), Block(-4613, 90, 5127, "Theta_the_end"), Block(-4612, 89, 5127, "Theta_the_end"), Block(-4612, 92, 5128, "Theta_the_end"), Block(-4612, 93, 5129, "Theta_the_end"), Block(-4611, 87, 5130, "Theta_the_end"), Block(-4626, 90, 5135, "Theta_the_end"), Block(-4625, 90, 5134, "Theta_the_end"), Block(-4625, 89, 5134, "Theta_the_end"), Block(-4625, 93, 5133, "Theta_the_end"), Block(-4612, 91, 5134, "Theta_the_end"), Block(-4612, 90, 5134, "Theta_the_end"), Block(-4612, 89, 5134, "Theta_the_end"), Block(-4613, 90, 5135, "Theta_the_end"), Block(-4624, 92, 5133, "Theta_the_end"), Block(-4611, 92, 5132, "Theta_the_end"), Block(-4610, 92, 5132, "Theta_the_end"), Block(-4624, 91, 5133, "Theta_the_end"), Block(-4624, 91, 5129, "Theta_the_end"), Block(-4625, 91, 5134, "Theta_the_end"), Block(-4612, 93, 5133, "Theta_the_end"), Block(-4612, 92, 5134, "Theta_the_end"), Block(-4624, 89, 5133, "Theta_the_end"), Block(-4611, 92, 5131, "Theta_the_end"), Block(-4611, 88, 5132, "Theta_the_end")]
     Block[] b704 = Block[Block(-4607, 92, 5112, "Theta_the_end"), Block(-4606, 92, 5117, "Theta_the_end"), Block(-4606, 92, 5107, "Theta_the_end")]
     Block[] b705 = Block[Block(-4634, 90, 5096, "Theta_the_end"), Block(-4634, 90, 5095, "Theta_the_end"), Block(-4634, 90, 5094, "Theta_the_end"), Block(-4630, 89, 5096, "Theta_the_end"), Block(-4630, 89, 5094, "Theta_the_end"), Block(-4627, 89, 5096, "Theta_the_end"), Block(-4627, 89, 5094, "Theta_the_end"), Block(-4624, 87, 5096, "Theta_the_end"), Block(-4624, 87, 5094, "Theta_the_end"), Block(-4621, 87, 5096, "Theta_the_end"), Block(-4621, 87, 5094, "Theta_the_end")]
     Block[] b706 = Block[Block(-4662, 91, 5103, "Theta_the_end"), Block(-4658, 91, 5103, "Theta_the_end"), Block(-4655, 91, 5102, "Theta_the_end"), Block(-4651, 91, 5102, "Theta_the_end")]
@@ -439,7 +568,7 @@
     # =-=-=-=-=-=-=-=-=-=-=-=-=-=
 
     String[] allLevels = String["1-01", "1-02", "1-03", "1-04", "1-05", "1-06", "1-07", "1-08", "1-09", "1-10", "2-01", "2-02", "2-03", "2-04", "2-05", "2-06", "2-07", "2-08", "2-09", "2-10", "3-01", "3-02", "3-03", "3-04", "3-05", "3-06", "3-07", "3-08", "3-09", "3-10", "4-01", "4-02", "4-03", "4-04", "4-05", "4-06", "4-07", "4-08", "4-09", "4-10", "5-01", "5-02", "5-03", "5-04", "5-05", "5-06", "5-07", "5-08", "5-09", "5-10", "6-01", "6-02", "6-03", "6-04", "6-05", "6-06", "6-07", "6-08", "6-09", "6-10", "7-01", "7-02", "7-03", "7-04", "7-05", "7-06", "7-07", "7-08", "7-09", "7-10"]
-    Position[] allPositions = Position[Position(-9199.5, 96.0, 9704.5, 180, 10, "Theta"), Position(-9191.5, 93.0, 9689.5, 180, 10, "Theta"), Position(-9191.5, 96.0, 9675.5, 270, 10, "Theta"), Position(-9171.5, 98.0, 9669.5, 180, 10, "Theta"), Position(-9181.5, 95.0, 9656.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), Position(-9195.5, 97.0, 9656.5, 180, 10, "Theta"), Position(-9186.5, 97.0, 9640.5, 270, 10, "Theta"), Position(-9165.5, 100.0, 9648.5, 0, 10, "Theta"), Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9144.5, 95.0, 9671.5, 180.0, 10.0, "Theta"), Position(-9127.5, 95.0, 9664.5, 270.0, 10.0, "Theta"), Position(-9116.5, 92.0, 9672.5, 0.0, 10.0, "Theta"), Position(-9128.0, 92.0, 9673.5, 450.0, 10.0, "Theta"), Position(-9137.5, 94.0, 9691.0, 270.0, 10.0, "Theta"), Position(-9123.5, 94.0, 9694.5, 270.0, 10.0, "Theta"), Position(-9109.5, 95.0, 9689.5, 180.0, 10.0, "Theta"), Position(-9107.5, 96.0, 9672.5, 180.0, 10.0, "Theta"), Position(-9114.5, 93.0, 9655.5, 90.0, 10.0, "Theta"), Position(-9132.5, 96.0, 9648.5, 180.0, 10.0, "Theta"), Position(-9129.5, 101.0, 9636.5, 270.0, 10.0, "Theta"), Position(-9112.0, 100.0, 9634.5, 180.0, 10.0, "Theta"), Position(-9120.5, 100.0, 9613.5, 0.0, 10.0, "Theta"), Position(-9128.5, 101.0, 9626.5, 90.0, 10.0, "Theta"), Position(-9148.5, 101.0, 9623.5, 180.0, 10.0, "Theta"), Position(-9145.5, 103.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9112.5, 100.0, 9602.5, 180.0, 10.0, "Theta"), Position(-9113.5, 100.0, 9586.5, 90.0, 10.0, "Theta"), Position(-9131.5, 99.0, 9596.5, 90.0, 10.0, "Theta"), Position(-9146.5, 100.0, 9594.5, 180.0, 10.0, "Theta"), Position(-9199.5, 99.0625, 9607.5, 0.0, 10.0, "Theta"), Position(-9176.5, 93.0, 9614.5, 0.0, 10.0, "Theta"), Position(-9206.5, 82.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9172.5, 73.0, 9613.5, 270.0, 10.0, "Theta"), Position(-9169.5, 71.0, 9632.5, 90.0, 10.0, "Theta"), Position(-9193.5, 71.0, 9632.5, 270.0, 10.0, "Theta"), Position(-9163.5, 73.0, 9622.5, 180.0, 10.0, "Theta"), Position(-9187.5, 79.0, 9604.5, 90.0, 10.0, "Theta"), Position(-9176.5, 92.0, 9626.5, 180.0, 10.0, "Theta"), Position(-9199.5, 98.0, 9618.5, 180.0, 10.0, "Theta"), Position(-9161.5, 101.0, 9557.5, 270.0, 10.0, "Theta"), Position(-9137.5, 101.0, 9566.5, 270.0, 10.0, "Theta"), Position(-9114.5, 102.0, 9563.5, 270.0, 10.0, "Theta"), Position(-9094.5, 102.0, 9552.5, 180.0, 10.0, "Theta"), Position(-9101.5, 101.0, 9530.5, 0.0, 10.0, "Theta"), Position(-9107.5, 99.0, 9555.5, 270.0, 10.0, "Theta"), Position(-9120.5, 104.0, 9555.5, 90.0, 10.0, "Theta"), Position(-9143.5, 104.0, 9538.5, 270.0, 10.0, "Theta"), Position(-9116.5, 101.0, 9525.5, 180.0, 10.0, "Theta"), Position(-9103.5, 103.0, 9508.5, 270.0, 10.0, "Theta"), Position(-9068.5, 95.0, 9534.5, 0, 10, "Theta"), Position(-9064.5, 96.0, 9552.5, 270, 10, "Theta"), Position(-9044.5, 96.0, 9558.5, 0, 10, "Theta"), Position(-9051.5, 95.0, 9578.5, 180, 10, "Theta"), Position(-9056.5, 96.0, 9560.5, 90, 10, "Theta"), Position(-9074.5, 96.0, 9563.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9594.5, 90, 10, "Theta"), Position(-9060.5, 96.0, 9600.5, 270, 10, "Theta"), Position(-9045.5, 96.0, 9608.5, 90, 10, "Theta"), Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-4608.5, 90.0, 5191.0, 90, 10, "Theta_the_end"), Position(-4642.5, 93.0, 5169.5, 180, 10, "Theta_the_end"), Position(-4637.5, 91.0, 5131.5, 270, 10, "Theta_the_end"), Position(-4606.0, 93.0, 5124.5, 180, 10, "Theta_the_end"), Position(-4615.5, 86.0, 5095.5, 90, 10, "Theta_the_end"), Position(-4644.5, 92.0, 5102.5, 90, 10, "Theta_the_end"), Position(-4676.5, 91.0, 5111.5, 0.0, 10.0, "Theta_the_end"), Position(-4683.5, 92.0, 5134.5, 0.0, 10.0, "Theta_the_end"), Position(-4697.5, 92.0, 5136.5, 180.0, 10.0, "Theta_the_end"), Position(-4697.5, 93.0, 5097.5, 180.0, 10.0, "Theta_the_end")]
+    Position[] allPositions = Position[Position(-9199.5, 96.0, 9704.5, 180, 10, "Theta"), Position(-9191.5, 93.0, 9689.5, 180, 10, "Theta"), Position(-9191.5, 96.0, 9675.5, 270, 10, "Theta"), Position(-9171.5, 98.0, 9669.5, 180, 10, "Theta"), Position(-9181.5, 95.0, 9656.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), Position(-9195.5, 97.0, 9656.5, 180, 10, "Theta"), Position(-9186.5, 97.0, 9640.5, 270, 10, "Theta"), Position(-9165.5, 100.0, 9648.5, 0, 10, "Theta"), Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9144.5, 95.0, 9671.5, 180.0, 10.0, "Theta"), Position(-9127.5, 95.0, 9664.5, 270.0, 10.0, "Theta"), Position(-9116.5, 92.0, 9672.5, 0.0, 10.0, "Theta"), Position(-9126.0, 92.0, 9673.5, 450.0, 10.0, "Theta"), Position(-9137.5, 94.0, 9691.0, 270.0, 10.0, "Theta"), Position(-9123.5, 94.0, 9694.5, 270.0, 10.0, "Theta"), Position(-9109.5, 95.0, 9689.5, 180.0, 10.0, "Theta"), Position(-9107.5, 96.0, 9672.5, 180.0, 10.0, "Theta"), Position(-9114.5, 93.0, 9655.5, 90.0, 10.0, "Theta"), Position(-9132.5, 96.0, 9648.5, 180.0, 10.0, "Theta"), Position(-9129.5, 101.0, 9636.5, 270.0, 10.0, "Theta"), Position(-9112.0, 100.0, 9634.5, 180.0, 10.0, "Theta"), Position(-9120.5, 100.0, 9613.5, 0.0, 10.0, "Theta"), Position(-9128.5, 101.0, 9626.5, 90.0, 10.0, "Theta"), Position(-9148.5, 101.0, 9623.5, 180.0, 10.0, "Theta"), Position(-9145.5, 103.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9112.5, 100.0, 9602.5, 180.0, 10.0, "Theta"), Position(-9113.5, 100.0, 9586.5, 90.0, 10.0, "Theta"), Position(-9131.5, 99.0, 9596.5, 90.0, 10.0, "Theta"), Position(-9146.5, 100.0, 9594.5, 180.0, 10.0, "Theta"), Position(-9199.5, 99.0625, 9607.5, 0.0, 10.0, "Theta"), Position(-9176.5, 93.0, 9614.5, 0.0, 10.0, "Theta"), Position(-9206.5, 82.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9172.5, 73.0, 9613.5, 270.0, 10.0, "Theta"), Position(-9169.5, 71.0, 9632.5, 90.0, 10.0, "Theta"), Position(-9193.5, 71.0, 9632.5, 270.0, 10.0, "Theta"), Position(-9163.5, 73.0, 9622.5, 180.0, 10.0, "Theta"), Position(-9187.5, 79.0, 9604.5, 90.0, 10.0, "Theta"), Position(-9176.5, 92.0, 9626.5, 180.0, 10.0, "Theta"), Position(-9199.5, 98.0, 9619.5, 180.0, 10.0, "Theta"), Position(-9161.5, 101.0, 9557.5, 270.0, 10.0, "Theta"), Position(-9138.5, 101.0, 9566.5, 270.0, 10.0, "Theta"), Position(-9114.5, 102.0, 9563.5, 270.0, 10.0, "Theta"), Position(-9094.5, 102.0, 9552.5, 180.0, 10.0, "Theta"), Position(-9101.5, 101.0, 9530.5, 0.0, 10.0, "Theta"), Position(-9107.5, 99.0, 9555.5, 270.0, 10.0, "Theta"), Position(-9120.5, 104.0, 9555.5, 90.0, 10.0, "Theta"), Position(-9143.5, 104.0, 9538.5, 270.0, 10.0, "Theta"), Position(-9116.5, 101.0, 9525.5, 180.0, 10.0, "Theta"), Position(-9103.5, 103.0, 9508.5, 270.0, 10.0, "Theta"), Position(-9068.5, 95.0, 9533.5, 0, 10, "Theta"), Position(-9064.5, 96.0, 9552.5, 270, 10, "Theta"), Position(-9044.5, 96.0, 9558.5, 0, 10, "Theta"), Position(-9051.5, 95.0, 9578.5, 180, 10, "Theta"), Position(-9056.5, 96.0, 9560.5, 90, 10, "Theta"), Position(-9074.5, 96.0, 9563.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9594.5, 90, 10, "Theta"), Position(-9060.5, 96.0, 9600.5, 270, 10, "Theta"), Position(-9045.5, 96.0, 9608.5, 90, 10, "Theta"), Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-4608.5, 90.0, 5191.0, 90, 10, "Theta_the_end"), Position(-4642.5, 93.0, 5170.5, 180, 10, "Theta_the_end"), Position(-4637.5, 91.0, 5131.5, 270, 10, "Theta_the_end"), Position(-4606.0, 93.0, 5124.5, 180, 10, "Theta_the_end"), Position(-4615.5, 86.0, 5095.5, 90, 10, "Theta_the_end"), Position(-4644.5, 92.0, 5102.5, 90, 10, "Theta_the_end"), Position(-4676.5, 91.0, 5111.5, 0.0, 10.0, "Theta_the_end"), Position(-4683.5, 92.0, 5134.5, 0.0, 10.0, "Theta_the_end"), Position(-4705.5, 93.0, 5139.5, 180.0, 10.0, "Theta_the_end"), Position(-4705.5, 94.0, 5100.5, 180.0, 10.0, "Theta_the_end")]
 
     Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
     Int[] directionsY = Int[0, 0, 1, -1, 0, 0]
@@ -451,32 +580,47 @@
     relative Int[] sectionFallsNormal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] sectionFallsMaster = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] sectionFallsUMM = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionFallsSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionFallsMasterSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] globalSectionFallsNormal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] globalSectionFallsMaster = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] globalSectionFallsUMM = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] globalSectionFallsSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] globalSectionFallsMasterSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionBlocksPlacedNormal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionBlocksPlacedMaster = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionBlocksPlacedUMM = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionBlocksPlacedSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] sectionBlocksPlacedMasterSoulLink = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     Int[] blocksThisStageGlobal = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     Int[] delayTimes = Int[5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 24, 25, 26, 27, 28]
 
-    Int[] musicNotes = Int[0.5, 0.53, 0.561, 0.595, 0.63, 0.667, 0.707, 0.749, 0.794, 0.841, 0.891, 0.944, 1, 1.059, 1.122, 1.189, 1.26, 1.335, 1.414, 1.498, 1.587, 1.682, 1.782, 1.888, 2]
+    Float[] musicNotes = Float[0.5, 0.53, 0.561, 0.595, 0.63, 0.667, 0.707, 0.749, 0.794, 0.841, 0.891, 0.944, 1.0, 1.059, 1.122, 1.189, 1.26, 1.335, 1.414, 1.498, 1.587, 1.682, 1.782, 1.888, 2.0]
+    String[] colorList = String["#ff5757", "#ff6f4b", "#ff843d", "#ff982a", "#ffaa00", "#ffc020", "#ffd534", "#ffea46", "#ffff57", "#d2ff57", "#9fff57", "#57ff57"]
+    String[] colorList2 = String["#55FFFF", "#FF55FF", "#FFAA00", "#FF5555", "#55FF55", "#5555FF", "#FFFF55", "#00AAAA", "#AA00AA", "#00AA00"]
 
-    String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "pumpkin", "melon", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block", "deepslate_diamond_ore"]
+    String[] allBlockSelections = String["suspicious_sand", "suspicious_gravel", "packed_mud", "mud_bricks", "amethyst_block", "waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "netherite_block","red_wool","orange_wool","yellow_wool","lime_wool","light_blue_wool","cyan_wool","blue_wool","purple_wool","magenta_wool","pink_wool","blue_ice","red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "azalea_leaves", "flowering_azalea_leaves", "obsidian", "crying_obsidian", "sponge", "wet_sponge", "iron_block", "gold_block", "diamond_block", "emerald_block", "prismarine", "polished_andesite", "warped_wart_block", "warped_hyphae", "crimson_hyphae", "nether_wart_block", "sculk_catalyst", "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "slime_block", "deepslate_diamond_ore", "iron_trapdoor"]
 
     String[] blocksSound = String["obsidian", "crying_obsidian", "prismarine", "polished_andesite"]
     String[] blocksSoundOres = String["iron_block", "gold_block", "diamond_block", "emerald_block"]
     String[] grateList = String["waxed_copper_grate", "waxed_exposed_copper_grate", "waxed_weathered_copper_grate", "waxed_oxidized_copper_grate", "waxed_weathered_copper_grate", "waxed_exposed_copper_grate", "waxed_copper_grate", "waxed_exposed_copper_grate"]
-    String[] woolList = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool", "pink_wool", "red_wool", "orange_wool", "yellow_wool", "lime_wool"]
-    String[] glassList = String["red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass"]
+    String[] woolList = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool", "pink_wool"]
+    relative String[] glassList = String["red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass"]
     String[] leafList = String["azalea_leaves", "flowering_azalea_leaves"]
     String[] obsidianList = String["obsidian", "crying_obsidian"]
     String[] spongeList = String["sponge", "sponge", "wet_sponge", "sponge"]
     String[] sculkList = String["sculk_catalyst", "sculk_catalyst[bloom=true]"]
     String[] oreList = String["iron_block", "gold_block", "diamond_block", "emerald_block", "netherite_block"]
     String[] coolGlassList = String["orange_stained_glass", "light_blue_stained_glass"]
-    String[] pumpkinList = String["pumpkin", "melon"]
-    String[] coralList = String["tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block"]
+    String[] pumpkinList = String["warped_wart_block", "warped_hyphae", "crimson_hyphae", "nether_wart_block", "crimson_hyphae", "warped_hyphae"]
+    String[] coralList = String["tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block", "dead_tube_coral_block", "dead_brain_coral_block", "dead_bubble_coral_block", "dead_fire_coral_block", "dead_horn_coral_block"]
 
     relative Boolean copperGrate = false
     relative Boolean cosmeticSwap = false
     relative Boolean coolGlass = false
+    relative Boolean coolWool = false
     relative Long startTime
 
     relative Int grateNumber = 0
@@ -497,7 +641,10 @@
     relative Int coralNumber = 0
     relative Int lastCoralNumber = 0
 
+    relative Int[] masterSoftCP = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] cosmeticsUnlocked = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] secretsFoundList = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] secretsCompletedList = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     # JM4s secret variables
 
@@ -506,15 +653,32 @@
 
     # FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS FUNCTIONS 
 
-    handleFalling(Int levelNormal, Player player)
+    handleFalling(Int levelNormal, Player player, Block[] cheatList)
+    calculate100(Player player)
     handleAfter(Int levelNumber, Boolean stylePresent, Block[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
-    pcStats(Int pcSelect, Player user)
-    resetBlocks(Player player)
+    ensureBlockSelection(Int level, Player player)
+    setLevel(Int levelToBeSetTo, Player player)
+    pcStats(Int pcSelect, Player user, Player player)
+    pcTeleport(String destination, Player player)
+    resetBlocks(Player player, Int giveNumber)
+    fallTracker(Player player)
     handleStylePoints(Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
     styleViewer(Player player, Int level)
     swagTitle(Int points, Player player)
+    startSignSoulLinkFunction(Player player, Player[] partnersREAL)
+    secretFound(Player player, Int secretNumber)
+    secretCompleted(Player player, Int secretNumber)
+    stupidClicker(Player player, Block thisBlock)
+    stupidClicker2(Player player, Block thisBlock)
+    # stupidClicker3(Player player, Block thisBlock)
+    
 
-    generalTarget(Block block, Int level, Int height, Player player)
+    top100Function(Player player, Int varSelected)
+    leaderboardSelection(Int variation, Int page, Player player)
+    leaderboardExecute(String[] topPlayersRank, String[] topPlayers, String[] topPlayersStat, String[] topPlayersColor, Int variation)
+    String formatNumber(String numberToFormat)
+
+    generalTarget(Block block, Int[] directions, Int level, Int height, Player player)
     generalTargetEnd(Block block, Int[] directions, Int level, Player player)
 
     cosmeticCopper(Player player)
@@ -550,6 +714,7 @@
     handlePlacementHeight5Slow(Block block, Player player)
 
     anticheat(Block block, Player player)
+    anticheatEnd(Block block, Player player)
     delay(Int seconds)
     splits(Int stage, Player player)
 

@@ -1,69 +1,1008 @@
 @using Harha
 @fast
-# pcStat(Int pcSelect, Player user)
+# pcStat(Int pcSelect, Player user, Player player)
+# .      .
+@define Int secretsFound
+@define Int secretsCompleted
+@define Double noteInt
+@var secretsFound = secretsFoundList[user].sum()
+@var secretsCompleted = secretsCompletedList[user].sum()
+@var calculate100(user)
+
+@define Int bestHardestHatRun = 0
+@for Int i in list::range(0, 69)
+    @if sectionFallsUMM[user][i] > 0
+        @var bestHardestHatRun = i
+    @fi
+@done
+
 
 # 0 = Main Screen
-@if pcSelect == 0
-    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(math::random(0.0D, 24.0D))]}}
+@if pcSelect == 0 
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
     @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
     @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
     @player
-    @chatscript 20s group1 pcStats(1, user)
-    @player &#D3D6E0Times completed map: &#8596A6&l{{numberCompletions[(user)]}} &#D3D6E0&n(click)
-    @chatscript 20s group2 pcStats(2, user)
-    @player &#D3D6E0Cosmetics Unlocked: &#8596A6&l{{numberCompletions[(user)]}} &#D3D6E0&n(click)
+
+
+
+    @chatscript 180s group12 pcStats(7, user, player)
+    @player &#917E9C*&#D3D6E0 Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @chatscript 180s group1 pcStats(1, user, player)
+    @player &#917E9C*&#D3D6E0 Times completed map: &#8596A6&l{{numberCompletions[user]}}
+    @chatscript 180s group2 pcStats(2, user, player)
+    @player &#917E9C*&#D3D6E0 Cosmetics unlocked: &#8596A6&l{{cosmeticsUnlocked[user].sum()}}/12
+    @chatscript 180s group3 pcStats(3, user, player)
+    @player &#917E9C*&#D3D6E0 Style Points: &#8596A6&l{{swagPoints[user]}}/3500
+    @player &#D3D6E0 &#D3D6E0 Secrets completed: &#8596A6&l{{secretsCompleted}}/25 
     @player 
-    @player &#D3D6E0PB Blocks placed: &#8596A6&lxx
-    @player &#D3D6E0Total Blocks Placed: &#8596A6&l{{totalBlocks[(user)]}}
-    @player &#D3D6E0PB Falls: &#8596A6&lxx
+    @chatscript 180s group4 pcStats(4, user, player)
+    @player &#917E9C*&#D3D6E0 Total Falls: &#8596A6&l{{totalFalls[user]}}
     
-    @player &#D3D6E0Total Falls: &#8596A6&l{{totalFalls[(user)]}}  &#D3D6E0&n(click)
-    
-    @chatscript 20s group3 pcStats(3, user)
-    @player xxx
-    
-    @chatscript 20s group4 pcStats(4, user)
-    @player xxx
-    
-    @chatscript 20s group5 pcStats(5, user)
-    @player xxx
-    
-    @chatscript 20s group6 pcStats(6, user)
-    @player xxx
-    
-    @chatscript 20s group7 pcStats(7, user)
-    @player xxx
-    
-    @chatscript 20s group8 pcStats(8, user)
-    @player xxx
 
-    @chatscript 20s group9 pcStats(9, user)
-    @player xxx
+    @if pbFalls[user] != 1000000000
+        @chatscript 180s group1238 pcStats(8, user, player)
+        @player &#917E9C*&#D3D6E0 PB Falls: &#8596A6&l{{pbFalls[user]}}
+    @fi
 
-    @chatscript 20s group10 pcStats(10, user)
-    @player xxx
+    @chatscript 180s group1012332 pcStats(9, user, player)
+    @player &#917E9C*&#D3D6E0 Total Blocks placed: &#8596A6&l{{totalBlocks[user]}}
+
+    @if pbBlocks[user] != 1000000000
+        @player &#D3D6E0 &#D3D6E0 PB Blocks placed: &#8596A6&l{{pbBlocks[user]}}
+    @fi
+
+    @player 
+    @chatscript 180s group5 pcStats(5, user, player)
+    @player &#917E9C*&#D3D6E0 Fastest Times:
+    @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: {{allLevels[bestHardestHatRun]}}
+    @player
+    @player &d&l!!! &#D3D6E0&nClick&#D3D6E0 on * items to see more
     
-    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    # @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
     
-    
+# Times Completed Map
 @elseif pcSelect == 1
-    @player Hm! I've heard &c&lApples&7 can usually be found &f&lin the leaves of a tree&7!
+    
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+
+    @player &#D3D6E0&lTotal Map &#D3D6E0completions: &#8596A6&l{{numberCompletions[user]}}
+    @player &a&lHarder Hat &#D3D6E0completions: &#8596A6&l{{numberCompletionsNormal[user]}}
+    @player &6&lEven Harder Hat &#D3D6E0completions: &#8596A6&l{{numberCompletionsMaster[user]}}
+    @player &c&lHardest Hat &#D3D6E0completions: &#8596A6&l{{numberCompletionsUMM[user]}}
+    @player &b&lHarder Hats &#D3D6E0completions: &#8596A6&l{{numberCompletionsSoulLink[user]}}
+    @player &5&lEven Harder Hats &#D3D6E0completions: &#8596A6&l{{numberCompletionsMasterSoulLink[user]}}
+    @player
+    @chatscript 180s group6 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+    # @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    
+
 @elseif pcSelect == 2
-    @player In my experience, I've always found &5&lGrapes &f&lnext to a tree&7!
+
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @if cosmeticsUnlocked[user][0] == 0
+        @player &#7C5AC9&lA&#8A5CCF&lm&#985ED5&le&#A661DB&lt&#B463E1&lh&#C265E7&ly&#D067ED&ls&#DE6AF3&lt&#FA6EFF&l: &c{{numberCompletions[user]}}/1 Map completions. ✕
+    @else
+        @player &#7C5AC9&lA&#8A5CCF&lm&#985ED5&le&#A661DB&lt&#B463E1&lh&#C265E7&ly&#D067ED&ls&#DE6AF3&lt&#FA6EFF&l: &a{{numberCompletions[user]}}/1 Map completions. ✔
+    @fi
+
+    @if cosmeticsUnlocked[user][1] == 0
+        @player &#96B345&lA&#99AD50&lz&#9CA75B&la&#9FA165&ll&#A29A70&le&#A5947B&la &#A88E86&lL&#AB8890&le&#AE829B&la&#B17CA6&lv&#B475B1&le&#B76FBB&ls&#BD63D1&l: &c{{numberCompletions[user]}}/3 Map completions. ✕
+    @else
+        @player &#96B345&lA&#99AD50&lz&#9CA75B&la&#9FA165&ll&#A29A70&le&#A5947B&la &#A88E86&lL&#AB8890&le&#AE829B&la&#B17CA6&lv&#B475B1&le&#B76FBB&ls&#BD63D1&l: &a{{numberCompletions[user]}}/3 Map completions. ✔
+    @fi
+    
+    @if cosmeticsUnlocked[user][2] == 0
+        @player &#D4D4D4&lO&#D1C8A5&lr&#CEBD76&le &#CBB147&lB&#B2B150&ll&#8DB875&lo&#68BE9A&lc&#4ABEA7&lk&#37B381&ls&#129C36&l: &c{{numberCompletions[user]}}/10 Map completions. ✕
+    @else
+        @player &#D4D4D4&lO&#D1C8A5&lr&#CEBD76&le &#CBB147&lB&#B2B150&ll&#8DB875&lo&#68BE9A&lc&#4ABEA7&lk&#37B381&ls&#129C36&l: &a{{numberCompletions[user]}}/10 Map completions. ✔
+    @fi
+
+    @player 
+
+    @if cosmeticsUnlocked[user][3] == 0
+        @player &#CDCF4A&lS&#C7CF4B&lp&#C1D04C&lo&#BBD04C&ln&#B5D04D&lg&#AFD14E&le &#A9D14F&lB&#9EC759&ll&#8DB46D&lo&#7DA181&lc&#6C8E95&lk&#5C7AA9&ls&#3B54D1&l: &c{{swagPoints[user]}}/500 Style Points. ✕
+    @else
+        @player &#CDCF4A&lS&#C7CF4B&lp&#C1D04C&lo&#BBD04C&ln&#B5D04D&lg&#AFD14E&le &#A9D14F&lB&#9EC759&ll&#8DB46D&lo&#7DA181&lc&#6C8E95&lk&#5C7AA9&ls&#3B54D1&l: &a{{swagPoints[user]}}/500 Style Points. ✔
+    @fi
+    
+    @if cosmeticsUnlocked[user][4] == 0
+        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &c{{swagPoints[user]}}/1000 Style Points. ✕
+    @else
+        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &a{{swagPoints[user]}}/1000 Style Points. ✔
+    @fi
+    
+    @if cosmeticsUnlocked[user][5] == 0
+        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &c{{swagPoints[user]}}/2000 Style Points. ✕
+    @else
+        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &a{{swagPoints[user]}}/2000 Style Points. ✔
+    @fi
+    
+    @player
+
+    @if cosmeticsUnlocked[user][6] == 0
+        @player &#A8201F&l&nN&#9C1817&l&ne&#8F1010&l&nt&#830808&l&nh&#760000&l&ne&#5E1F21&l&nr &#463D41&l&nB&#2E5C62&l&nl&#167A82&l&no&#158282&l&nc&#148982&l&nk&#119882&l&ns: &c{{secretsCompleted}}/1 Secrets completed. ✕
+    @else
+        @player &#A8201F&l&nN&#9C1817&l&ne&#8F1010&l&nt&#830808&l&nh&#760000&l&ne&#5E1F21&l&nr &#463D41&l&nB&#2E5C62&l&nl&#167A82&l&no&#158282&l&nc&#148982&l&nk&#119882&l&ns: &a{{secretsCompleted}}/1 Secrets completed. ✔
+    @fi
+
+    @if cosmeticsUnlocked[user][7] == 0
+        @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &c{{secretsCompleted}}/3 Secrets completed. ✕
+    @else
+        @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &a{{secretsCompleted}}/3 Secrets completed. ✔
+    @fi
+
+    @if cosmeticsUnlocked[user][8] == 0
+        @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &c{{secretsCompleted}}/10 Secrets completed. ✕
+    @else
+        @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &a{{secretsCompleted}}/10 Secrets completed. ✔
+    @fi
+
+    @player
+
+    @if cosmeticsUnlocked[user][9] == 0
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &c{{totalFalls[user]}}/10,000 Total falls. ✕
+    @else
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &a{{totalFalls[user]}}/10,000 Total falls. ✔
+    @fi
+
+    @if cosmeticsUnlocked[user][10] == 0
+        @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &cEven Harder Hat not completed. ✕
+    @else
+        @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &aEven Harder Hat completed. ✔
+    @fi
+
+    @if cosmeticsUnlocked[user][10] == 0
+        @if pbFalls[user] == 1000000000
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = null). ✕
+        @else
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = {{pbFalls[user]}}). ✕
+        @fi
+    @else
+        @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 25 falls. (best = {{pbFalls[user]}}). ✔
+    @fi
+
+    @player 
+    @chatscript 180s group12 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
 @elseif pcSelect == 3
-    @player &6&lOranges&7 always grow &f&linside a tree&7, don't you know?
-@elseif pcSelect == 4
-    @player Ah, &d&lDragonfruit&7! A rare one. You can find these &f&lin hay stacks&7, if you keep a keen eye.
-@elseif pcSelect == 5
-    @player &c&lTomatos&7 are my favorite! So juicy, so tasty. You can find them &f&lin hay stacks&7.
-@elseif pcSelect == 6
-    @player &7Everybody loves &3&lBlueberries&7! They're in high demand this time of year - I thought I saw the &f&ltractor pulling some&7.
-@elseif pcSelect == 7
-    @player If you're looking for a &c&lStrawberry&7, I suggest &f&lchecking the hay stacks&7!
-@elseif pcSelect == 8
-    @player The elusive &c&lElderberry&7 commonly grows alongside &f&la patch of flowers&7!
+
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    
+    @define Int[] tempEarned = Int[]
+    @define Int[] tempTotal = Int[]
+
+    @for Int level in list::range(0,70)
+
+        @define Int[] thresholds = Int[]
+        @define Int[] rewards = Int[]
+        @define Int startIndex = 0
+        @define Int pointsToEarn = 0
+        @define Int totalPoints = 0
+
+        @if level == 0
+            @var thresholds = l101Thresholds
+            @var rewards = l101Rewards
+            @var startIndex = l101StartIndex
+        @elseif level == 1
+            @var thresholds = l102Thresholds
+            @var rewards = l102Rewards
+            @var startIndex = l102StartIndex
+        @elseif level == 2
+            @var thresholds = l103Thresholds
+            @var rewards = l103Rewards
+            @var startIndex = l103StartIndex
+        @elseif level == 3
+            @var thresholds = l104Thresholds
+            @var rewards = l104Rewards
+            @var startIndex = l104StartIndex
+        @elseif level == 4
+            @var thresholds = l105Thresholds
+            @var rewards = l105Rewards
+            @var startIndex = l105StartIndex
+        @elseif level == 5
+            @var thresholds = l106Thresholds
+            @var rewards = l106Rewards
+            @var startIndex = l106StartIndex
+        @elseif level == 6
+            @var thresholds = l107Thresholds
+            @var rewards = l107Rewards
+            @var startIndex = l107StartIndex
+        @elseif level == 7
+            @var thresholds = l108Thresholds
+            @var rewards = l108Rewards
+            @var startIndex = l108StartIndex
+        @elseif level == 8
+            @var thresholds = l109Thresholds
+            @var rewards = l109Rewards
+            @var startIndex = l109StartIndex
+        @elseif level == 9
+            @var thresholds = l110Thresholds
+            @var rewards = l110Rewards
+            @var startIndex = l110StartIndex
+        @elseif level == 10
+            @var thresholds = l201Thresholds
+            @var rewards = l201Rewards
+            @var startIndex = l201StartIndex
+        @elseif level == 11
+            @var thresholds = l202Thresholds
+            @var rewards = l202Rewards
+            @var startIndex = l202StartIndex
+        @elseif level == 12
+            @var thresholds = l203Thresholds
+            @var rewards = l203Rewards
+            @var startIndex = l203StartIndex
+        @elseif level == 13
+            @var thresholds = l204Thresholds
+            @var rewards = l204Rewards
+            @var startIndex = l204StartIndex
+        @elseif level == 14
+            @var thresholds = l205Thresholds
+            @var rewards = l205Rewards
+            @var startIndex = l205StartIndex
+        @elseif level == 15
+            @var thresholds = l206Thresholds
+            @var rewards = l206Rewards
+            @var startIndex = l206StartIndex
+        @elseif level == 16
+            @var thresholds = l207Thresholds
+            @var rewards = l207Rewards
+            @var startIndex = l207StartIndex
+        @elseif level == 17
+            @var thresholds = l208Thresholds
+            @var rewards = l208Rewards
+            @var startIndex = l208StartIndex
+        @elseif level == 18
+            @var thresholds = l209Thresholds
+            @var rewards = l209Rewards
+            @var startIndex = l209StartIndex
+        @elseif level == 19
+            @var thresholds = l210Thresholds
+            @var rewards = l210Rewards
+            @var startIndex = l210StartIndex
+        @elseif level == 20
+            @var thresholds = l301Thresholds
+            @var rewards = l301Rewards
+            @var startIndex = l301StartIndex
+        @elseif level == 21
+            @var thresholds = l302Thresholds
+            @var rewards = l302Rewards
+            @var startIndex = l302StartIndex
+        @elseif level == 22
+            @var thresholds = l303Thresholds
+            @var rewards = l303Rewards
+            @var startIndex = l303StartIndex
+        @elseif level == 23
+            @var thresholds = l304Thresholds
+            @var rewards = l304Rewards
+            @var startIndex = l304StartIndex
+        @elseif level == 24
+            @var thresholds = l305Thresholds
+            @var rewards = l305Rewards
+            @var startIndex = l305StartIndex
+        @elseif level == 25
+            @var thresholds = l306Thresholds
+            @var rewards = l306Rewards
+            @var startIndex = l306StartIndex
+        @elseif level == 26
+            @var thresholds = l307Thresholds
+            @var rewards = l307Rewards
+            @var startIndex = l307StartIndex
+        @elseif level == 27
+            @var thresholds = l308Thresholds
+            @var rewards = l308Rewards
+            @var startIndex = l308StartIndex
+        @elseif level == 28
+            @var thresholds = l309Thresholds
+            @var rewards = l309Rewards
+            @var startIndex = l309StartIndex
+        @elseif level == 29
+            @var thresholds = l310Thresholds
+            @var rewards = l310Rewards
+            @var startIndex = l310StartIndex
+        @elseif level == 30
+            @var thresholds = l401Thresholds
+            @var rewards = l401Rewards
+            @var startIndex = l401StartIndex
+        @elseif level == 31
+            @var thresholds = l402Thresholds
+            @var rewards = l402Rewards
+            @var startIndex = l402StartIndex
+        @elseif level == 32
+            @var thresholds = l403Thresholds
+            @var rewards = l403Rewards
+            @var startIndex = l403StartIndex
+        @elseif level == 33
+            @var thresholds = l404Thresholds
+            @var rewards = l404Rewards
+            @var startIndex = l404StartIndex
+        @elseif level == 34
+            @var thresholds = l405Thresholds
+            @var rewards = l405Rewards
+            @var startIndex = l405StartIndex
+        @elseif level == 35
+            @var thresholds = l406Thresholds
+            @var rewards = l406Rewards
+            @var startIndex = l406StartIndex
+        @elseif level == 36
+            @var thresholds = l407Thresholds
+            @var rewards = l407Rewards
+            @var startIndex = l407StartIndex
+        @elseif level == 37
+            @var thresholds = l408Thresholds
+            @var rewards = l408Rewards
+            @var startIndex = l408StartIndex
+        @elseif level == 38
+            @var thresholds = l409Thresholds
+            @var rewards = l409Rewards
+            @var startIndex = l409StartIndex
+        @elseif level == 39
+            @var thresholds = l410Thresholds
+            @var rewards = l410Rewards
+            @var startIndex = l410StartIndex
+        @elseif level == 40
+            @var thresholds = l501Thresholds
+            @var rewards = l501Rewards
+            @var startIndex = l501StartIndex
+        @elseif level == 41
+            @var thresholds = l502Thresholds
+            @var rewards = l502Rewards
+            @var startIndex = l502StartIndex
+        @elseif level == 42
+            @var thresholds = l503Thresholds
+            @var rewards = l503Rewards
+            @var startIndex = l503StartIndex
+        @elseif level == 43
+            @var thresholds = l504Thresholds
+            @var rewards = l504Rewards
+            @var startIndex = l504StartIndex
+        @elseif level == 44
+            @var thresholds = l505Thresholds
+            @var rewards = l505Rewards
+            @var startIndex = l505StartIndex
+        @elseif level == 45
+            @var thresholds = l506Thresholds
+            @var rewards = l506Rewards
+            @var startIndex = l506StartIndex
+        @elseif level == 46
+            @var thresholds = l507Thresholds
+            @var rewards = l507Rewards
+            @var startIndex = l507StartIndex
+        @elseif level == 47
+            @var thresholds = l508Thresholds
+            @var rewards = l508Rewards
+            @var startIndex = l508StartIndex
+        @elseif level == 48
+            @var thresholds = l509Thresholds
+            @var rewards = l509Rewards
+            @var startIndex = l509StartIndex
+        @elseif level == 49
+            @var thresholds = l510Thresholds
+            @var rewards = l510Rewards
+            @var startIndex = l510StartIndex
+        @elseif level == 50
+            @var thresholds = l601Thresholds
+            @var rewards = l601Rewards
+            @var startIndex = l601StartIndex
+        @elseif level == 51
+            @var thresholds = l602Thresholds
+            @var rewards = l602Rewards
+            @var startIndex = l602StartIndex
+        @elseif level == 52
+            @var thresholds = l603Thresholds
+            @var rewards = l603Rewards
+            @var startIndex = l603StartIndex
+        @elseif level == 53
+            @var thresholds = l604Thresholds
+            @var rewards = l604Rewards
+            @var startIndex = l604StartIndex
+        @elseif level == 54
+            @var thresholds = l605Thresholds
+            @var rewards = l605Rewards
+            @var startIndex = l605StartIndex
+        @elseif level == 55
+            @var thresholds = l606Thresholds
+            @var rewards = l606Rewards
+            @var startIndex = l606StartIndex
+        @elseif level == 56
+            @var thresholds = l607Thresholds
+            @var rewards = l607Rewards
+            @var startIndex = l607StartIndex
+        @elseif level == 57
+            @var thresholds = l608Thresholds
+            @var rewards = l608Rewards
+            @var startIndex = l608StartIndex
+        @elseif level == 58
+            @var thresholds = l609Thresholds
+            @var rewards = l609Rewards
+            @var startIndex = l609StartIndex
+        @elseif level == 59
+            @var thresholds = l610Thresholds
+            @var rewards = l610Rewards
+            @var startIndex = l610StartIndex
+        @elseif level == 60
+            @var thresholds = l701Thresholds
+            @var rewards = l701Rewards
+            @var startIndex = l701StartIndex
+        @elseif level == 61
+            @var thresholds = l702Thresholds
+            @var rewards = l702Rewards
+            @var startIndex = l702StartIndex
+        @elseif level == 62
+            @var thresholds = l703Thresholds
+            @var rewards = l703Rewards
+            @var startIndex = l703StartIndex
+        @elseif level == 63
+            @var thresholds = l704Thresholds
+            @var rewards = l704Rewards
+            @var startIndex = l704StartIndex
+        @elseif level == 64
+            @var thresholds = l705Thresholds
+            @var rewards = l705Rewards
+            @var startIndex = l705StartIndex
+        @elseif level == 65
+            @var thresholds = l706Thresholds
+            @var rewards = l706Rewards
+            @var startIndex = l706StartIndex
+        @elseif level == 66
+            @var thresholds = l707Thresholds
+            @var rewards = l707Rewards
+            @var startIndex = l707StartIndex
+        @elseif level == 67
+            @var thresholds = l708Thresholds
+            @var rewards = l708Rewards
+            @var startIndex = l708StartIndex
+        @elseif level == 68
+            @var thresholds = l709Thresholds
+            @var rewards = l709Rewards
+            @var startIndex = l709StartIndex
+        @elseif level == 69
+            @var thresholds = l710Thresholds
+            @var rewards = l710Rewards
+            @var startIndex = l710StartIndex
+        @fi
+
+        @for Int i in list::range(0, thresholds.length())
+            @if claimedStylePoints[user][startIndex + rewards.length() - i - 1] == true
+                @var totalPoints += rewards[rewards.length() - 1 - i]
+                @var pointsToEarn += rewards[rewards.length() - 1 - i]
+            @else
+                @var totalPoints += rewards[rewards.length() - 1 - i]
+            @fi
+            
+        @done
+        @var tempEarned.append(pointsToEarn)
+        @var tempTotal.append(totalPoints)
+    @done
+
+    @chatscript 180s pctp1 pcTeleport(allLevels[0], player)
+    @if tempTotal[0] == tempEarned[0]
+        @player &#917E9C*&#D3D6E0 {{allLevels[0]}}: &a({{tempEarned[0]}}/{{tempTotal[0]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[0]}}: &{{colorList[Int((Float(tempEarned[0]) / Float(tempTotal[0])) * 12)]}}({{tempEarned[0]}}/{{tempTotal[0]}}) ✕
+    @fi
+
+    @chatscript 180s pctp2 pcTeleport(allLevels[3], player)
+    @if tempTotal[3] == tempEarned[3]
+        @player &#917E9C*&#D3D6E0 {{allLevels[3]}}: &a({{tempEarned[3]}}/{{tempTotal[3]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[3]}}: &{{colorList[Int((Float(tempEarned[3]) / Float(tempTotal[3])) * 12)]}}({{tempEarned[3]}}/{{tempTotal[3]}}) ✕
+    @fi
+    
+    @chatscript 180s pctp3 pcTeleport(allLevels[4], player)
+    @if tempTotal[4] == tempEarned[4]
+        @player &#917E9C*&#D3D6E0 {{allLevels[4]}}: &a({{tempEarned[4]}}/{{tempTotal[4]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[4]}}: &{{colorList[Int((Float(tempEarned[4]) / Float(tempTotal[4])) * 12)]}}({{tempEarned[4]}}/{{tempTotal[4]}}) ✕
+    @fi
+
+    @chatscript 180s pctp4 pcTeleport(allLevels[4], player)
+    @if tempTotal[8] == tempEarned[8]
+        @player &#917E9C*&#D3D6E0 {{allLevels[8]}}: &a({{tempEarned[8]}}/{{tempTotal[8]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[8]}}: &{{colorList[Int((Float(tempEarned[8]) / Float(tempTotal[8])) * 12)]}}({{tempEarned[8]}}/{{tempTotal[8]}}) ✕
+    @fi
+
+    @player
+
+    @chatscript 180s pctp5 pcTeleport(allLevels[10], player)
+    @if tempTotal[10] == tempEarned[10]
+        @player &#917E9C*&#D3D6E0 {{allLevels[10]}}: &a({{tempEarned[10]}}/{{tempTotal[10]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[10]}}: &{{colorList[Int((Float(tempEarned[10]) / Float(tempTotal[10])) * 12)]}}({{tempEarned[10]}}/{{tempTotal[10]}}) ✕
+    @fi
+
+    @chatscript 180s pctp6 pcTeleport(allLevels[12], player)
+    @if tempTotal[12] == tempEarned[12]
+        @player &#917E9C*&#D3D6E0 {{allLevels[12]}}: &a({{tempEarned[12]}}/{{tempTotal[12]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[12]}}: &{{colorList[Int((Float(tempEarned[12]) / Float(tempTotal[12])) * 12)]}}({{tempEarned[12]}}/{{tempTotal[12]}}) ✕
+    @fi
+
+    @chatscript 180s pctp7 pcTeleport(allLevels[13], player)
+    @if tempTotal[13] == tempEarned[13]
+        @player &#917E9C*&#D3D6E0 {{allLevels[13]}}: &a({{tempEarned[13]}}/{{tempTotal[13]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[13]}}: &{{colorList[Int((Float(tempEarned[13]) / Float(tempTotal[13])) * 12)]}}({{tempEarned[13]}}/{{tempTotal[13]}}) ✕
+    @fi
+
+    @chatscript 180s pctp8 pcTeleport(allLevels[14], player)
+    @if tempTotal[14] == tempEarned[14]
+        @player &#917E9C*&#D3D6E0 {{allLevels[14]}}: &a({{tempEarned[14]}}/{{tempTotal[14]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[14]}}: &{{colorList[Int((Float(tempEarned[14]) / Float(tempTotal[14])) * 12)]}}({{tempEarned[14]}}/{{tempTotal[14]}}) ✕
+    @fi
+
+    @chatscript 180s pctp9 pcTeleport(allLevels[15], player)
+    @if tempTotal[15] == tempEarned[15]
+        @player &#917E9C*&#D3D6E0 {{allLevels[15]}}: &a({{tempEarned[15]}}/{{tempTotal[15]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[15]}}: &{{colorList[Int((Float(tempEarned[15]) / Float(tempTotal[15])) * 12)]}}({{tempEarned[15]}}/{{tempTotal[15]}}) ✕
+    @fi
+
+    @chatscript 180s pctp10 pcTeleport(allLevels[16], player)
+    @if tempTotal[16] == tempEarned[16]
+        @player &#917E9C*&#D3D6E0 {{allLevels[16]}}: &a({{tempEarned[16]}}/{{tempTotal[16]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[16]}}: &{{colorList[Int((Float(tempEarned[16]) / Float(tempTotal[16])) * 12)]}}({{tempEarned[16]}}/{{tempTotal[16]}}) ✕
+    @fi
+
+    @chatscript 180s pctp11 pcTeleport(allLevels[18], player)
+    @if tempTotal[18] == tempEarned[18]
+        @player &#917E9C*&#D3D6E0 {{allLevels[18]}}: &a({{tempEarned[18]}}/{{tempTotal[18]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[18]}}: &{{colorList[Int((Float(tempEarned[18]) / Float(tempTotal[18])) * 12)]}}({{tempEarned[18]}}/{{tempTotal[18]}}) ✕
+    @fi
+
+    @player
+
+    @chatscript 180s pctp12 pcTeleport(allLevels[22], player)
+    @if tempTotal[22] == tempEarned[22]
+        @player &#917E9C*&#D3D6E0 {{allLevels[22]}}: &a({{tempEarned[22]}}/{{tempTotal[22]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[22]}}: &{{colorList[Int((Float(tempEarned[22]) / Float(tempTotal[22])) * 12)]}}({{tempEarned[22]}}/{{tempTotal[22]}}) ✕
+    @fi
+
+    @chatscript 180s pctp13 pcTeleport(allLevels[24], player)
+    @if tempTotal[24] == tempEarned[24]
+        @player &#917E9C*&#D3D6E0 {{allLevels[24]}}: &a({{tempEarned[24]}}/{{tempTotal[24]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[24]}}: &{{colorList[Int((Float(tempEarned[24]) / Float(tempTotal[24])) * 12)]}}({{tempEarned[24]}}/{{tempTotal[24]}}) ✕
+    @fi
+
+    @chatscript 180s pctp14 pcTeleport(allLevels[29], player)
+    @if tempTotal[29] == tempEarned[29]
+        @player &#917E9C*&#D3D6E0 {{allLevels[29]}}: &a({{tempEarned[29]}}/{{tempTotal[29]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[29]}}: &{{colorList[Int((Float(tempEarned[29]) / Float(tempTotal[29])) * 12)]}}({{tempEarned[29]}}/{{tempTotal[29]}}) ✕
+    @fi
+
+    @player 
+    
+    @chatscript 180s pctp15 pcTeleport(allLevels[32], player)
+    @if tempTotal[32] == tempEarned[32]
+        @player &#917E9C*&#D3D6E0 {{allLevels[32]}}: &a({{tempEarned[32]}}/{{tempTotal[32]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[32]}}: &{{colorList[Int((Float(tempEarned[32]) / Float(tempTotal[32])) * 12)]}}({{tempEarned[32]}}/{{tempTotal[32]}}) ✕
+    @fi
+
+    @chatscript 180s pctp16 pcTeleport(allLevels[37], player)
+    @if tempTotal[37] == tempEarned[37]
+        @player &#917E9C*&#D3D6E0 {{allLevels[37]}}: &a({{tempEarned[37]}}/{{tempTotal[37]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[37]}}: &{{colorList[Int((Float(tempEarned[37]) / Float(tempTotal[37])) * 12)]}}({{tempEarned[37]}}/{{tempTotal[37]}}) ✕
+    @fi
+
+    @player 
+    
+    @chatscript 180s pctp17 pcTeleport(allLevels[42], player)
+    @if tempTotal[42] == tempEarned[42]
+        @player &#917E9C*&#D3D6E0 {{allLevels[42]}}: &a({{tempEarned[42]}}/{{tempTotal[42]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[42]}}: &{{colorList[Int((Float(tempEarned[42]) / Float(tempTotal[42])) * 12)]}}({{tempEarned[42]}}/{{tempTotal[42]}}) ✕
+    @fi
+
+    @chatscript 180s pctp18 pcTeleport(allLevels[43], player)
+    @if tempTotal[43] == tempEarned[43]
+        @player &#917E9C*&#D3D6E0 {{allLevels[43]}}: &a({{tempEarned[43]}}/{{tempTotal[43]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[43]}}: &{{colorList[Int((Float(tempEarned[43]) / Float(tempTotal[43])) * 12)]}}({{tempEarned[43]}}/{{tempTotal[43]}}) ✕
+    @fi
+
+    @chatscript 180s pctp19 pcTeleport(allLevels[44], player)
+    @if tempTotal[44] == tempEarned[44]
+        @player &#917E9C*&#D3D6E0 {{allLevels[44]}}: &a({{tempEarned[44]}}/{{tempTotal[44]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[44]}}: &{{colorList[Int((Float(tempEarned[44]) / Float(tempTotal[44])) * 12)]}}({{tempEarned[44]}}/{{tempTotal[44]}}) ✕
+    @fi
+
+    @chatscript 180s pctp20 pcTeleport(allLevels[45], player)
+    @if tempTotal[45] == tempEarned[45]
+        @player &#917E9C*&#D3D6E0 {{allLevels[45]}}: &a({{tempEarned[45]}}/{{tempTotal[45]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[45]}}: &{{colorList[Int((Float(tempEarned[45]) / Float(tempTotal[45])) * 12)]}}({{tempEarned[45]}}/{{tempTotal[45]}}) ✕
+    @fi
+
+    @chatscript 180s pctp21 pcTeleport(allLevels[49], player)
+    @if tempTotal[49] == tempEarned[49]
+        @player &#917E9C*&#D3D6E0 {{allLevels[49]}}: &a({{tempEarned[49]}}/{{tempTotal[49]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[49]}}: &{{colorList[Int((Float(tempEarned[49]) / Float(tempTotal[49])) * 12)]}}({{tempEarned[49]}}/{{tempTotal[49]}}) ✕
+    @fi
+
+    @player
+
+    @chatscript 180s pctp22 pcTeleport(allLevels[53], player)
+    @if tempTotal[53] == tempEarned[53]
+        @player &#917E9C*&#D3D6E0 {{allLevels[53]}}: &a({{tempEarned[53]}}/{{tempTotal[53]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[53]}}: &{{colorList[Int((Float(tempEarned[53]) / Float(tempTotal[53])) * 12)]}}({{tempEarned[53]}}/{{tempTotal[53]}}) ✕
+    @fi
+
+    @chatscript 180s pctp23 pcTeleport(allLevels[55], player)
+    @if tempTotal[55] == tempEarned[55]
+        @player &#917E9C*&#D3D6E0 {{allLevels[55]}}: &a({{tempEarned[55]}}/{{tempTotal[55]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[55]}}: &{{colorList[Int((Float(tempEarned[55]) / Float(tempTotal[55])) * 12)]}}({{tempEarned[55]}}/{{tempTotal[55]}}) ✕
+    @fi
+
+    @player 
+
+    @chatscript 180s pctp24 pcTeleport(allLevels[60], player)
+    @if tempTotal[60] == tempEarned[60]
+        @player &#917E9C*&#D3D6E0 {{allLevels[60]}}: &a({{tempEarned[60]}}/{{tempTotal[60]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[60]}}: &{{colorList[Int((Float(tempEarned[60]) / Float(tempTotal[60])) * 12)]}}({{tempEarned[60]}}/{{tempTotal[60]}}) ✕
+    @fi
+
+    @chatscript 180s pctp25 pcTeleport(allLevels[61], player)
+    @if tempTotal[61] == tempEarned[61]
+        @player &#917E9C*&#D3D6E0 {{allLevels[61]}}: &a({{tempEarned[61]}}/{{tempTotal[61]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[61]}}: &{{colorList[Int((Float(tempEarned[61]) / Float(tempTotal[61])) * 12)]}}({{tempEarned[61]}}/{{tempTotal[61]}}) ✕
+    @fi
+
+    @chatscript 180s pctp26 pcTeleport(allLevels[67], player)
+    @if tempTotal[67] == tempEarned[67]
+        @player &#917E9C*&#D3D6E0 {{allLevels[67]}}: &a({{tempEarned[67]}}/{{tempTotal[67]}}) ✔
+    @else
+        @player &#917E9C*&#D3D6E0 {{allLevels[67]}}: &{{colorList[Int((Float(tempEarned[67]) / Float(tempTotal[67])) * 12)]}}({{tempEarned[67]}}/{{tempTotal[67]}}) ✕
+    @fi
+
+    @player
+
+    @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 any level to teleport
+    @chatscript 180s group7 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+    
+    
 @elseif pcSelect == 9
-    @player &c&lRaspberries &7usually hang out &f&lnear ponds&7!
+    
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @player &aHarder Hat, &6Even Harder Hat, &cHardest Hat,
+    @player &bHarder Hats, &5Even Harder Hats
+    @player 
+    @player &#D3D6E0Total: &r   &1 &#D3D6E0 (&a{{sectionBlocksPlacedNormal[user].sum()}}, &6{{sectionBlocksPlacedMaster[user].sum()}}, &c{{sectionBlocksPlacedUMM[user].sum()}}, &b{{sectionBlocksPlacedSoulLink[user].sum()}}, &5{{sectionBlocksPlacedMasterSoulLink[user].sum()}}&#D3D6E0)
+    @player
+    @player &#D3D6E0Section 1: (&a{{sectionBlocksPlacedNormal[user][0] + sectionBlocksPlacedNormal[user][1] + sectionBlocksPlacedNormal[user][2] + sectionBlocksPlacedNormal[user][3] + sectionBlocksPlacedNormal[user][4] + sectionBlocksPlacedNormal[user][5] + sectionBlocksPlacedNormal[user][6] + sectionBlocksPlacedNormal[user][7] + sectionBlocksPlacedNormal[user][8] + sectionBlocksPlacedNormal[user][9]}}, &6{{sectionBlocksPlacedMaster[user][0] + sectionBlocksPlacedMaster[user][1] + sectionBlocksPlacedMaster[user][2] + sectionBlocksPlacedMaster[user][3] + sectionBlocksPlacedMaster[user][4] + sectionBlocksPlacedMaster[user][5] + sectionBlocksPlacedMaster[user][6] + sectionBlocksPlacedMaster[user][7] + sectionBlocksPlacedMaster[user][8] + sectionBlocksPlacedMaster[user][9]}}, &c{{sectionBlocksPlacedUMM[user][0] + sectionBlocksPlacedUMM[user][1] + sectionBlocksPlacedUMM[user][2] + sectionBlocksPlacedUMM[user][3] + sectionBlocksPlacedUMM[user][4] + sectionBlocksPlacedUMM[user][5] + sectionBlocksPlacedUMM[user][6] + sectionBlocksPlacedUMM[user][7] + sectionBlocksPlacedUMM[user][8] + sectionBlocksPlacedUMM[user][9]}}, &b{{sectionBlocksPlacedSoulLink[user][0] + sectionBlocksPlacedSoulLink[user][1] + sectionBlocksPlacedSoulLink[user][2] + sectionBlocksPlacedSoulLink[user][3] + sectionBlocksPlacedSoulLink[user][4] + sectionBlocksPlacedSoulLink[user][5] + sectionBlocksPlacedSoulLink[user][6] + sectionBlocksPlacedSoulLink[user][7] + sectionBlocksPlacedSoulLink[user][8] + sectionBlocksPlacedSoulLink[user][9]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][0] + sectionBlocksPlacedMasterSoulLink[user][1] + sectionBlocksPlacedMasterSoulLink[user][2] + sectionBlocksPlacedMasterSoulLink[user][3] + sectionBlocksPlacedMasterSoulLink[user][4] + sectionBlocksPlacedMasterSoulLink[user][5] + sectionBlocksPlacedMasterSoulLink[user][6] + sectionBlocksPlacedMasterSoulLink[user][7] + sectionBlocksPlacedMasterSoulLink[user][8] + sectionBlocksPlacedMasterSoulLink[user][9]}}&#D3D6E0)
+    @player &#D3D6E0Section 2: (&a{{sectionBlocksPlacedNormal[user][10] + sectionBlocksPlacedNormal[user][11] + sectionBlocksPlacedNormal[user][12] + sectionBlocksPlacedNormal[user][13] + sectionBlocksPlacedNormal[user][14] + sectionBlocksPlacedNormal[user][15] + sectionBlocksPlacedNormal[user][16] + sectionBlocksPlacedNormal[user][17] + sectionBlocksPlacedNormal[user][18] + sectionBlocksPlacedNormal[user][19]}}, &6{{sectionBlocksPlacedMaster[user][10] + sectionBlocksPlacedMaster[user][11] + sectionBlocksPlacedMaster[user][12] + sectionBlocksPlacedMaster[user][13] + sectionBlocksPlacedMaster[user][14] + sectionBlocksPlacedMaster[user][15] + sectionBlocksPlacedMaster[user][16] + sectionBlocksPlacedMaster[user][17] + sectionBlocksPlacedMaster[user][18] + sectionBlocksPlacedMaster[user][19]}}, &c{{sectionBlocksPlacedUMM[user][10] + sectionBlocksPlacedUMM[user][11] + sectionBlocksPlacedUMM[user][12] + sectionBlocksPlacedUMM[user][13] + sectionBlocksPlacedUMM[user][14] + sectionBlocksPlacedUMM[user][15] + sectionBlocksPlacedUMM[user][16] + sectionBlocksPlacedUMM[user][17] + sectionBlocksPlacedUMM[user][18] + sectionBlocksPlacedUMM[user][19]}}, &b{{sectionBlocksPlacedSoulLink[user][10] + sectionBlocksPlacedSoulLink[user][11] + sectionBlocksPlacedSoulLink[user][12] + sectionBlocksPlacedSoulLink[user][13] + sectionBlocksPlacedSoulLink[user][14] + sectionBlocksPlacedSoulLink[user][15] + sectionBlocksPlacedSoulLink[user][16] + sectionBlocksPlacedSoulLink[user][17] + sectionBlocksPlacedSoulLink[user][18] + sectionBlocksPlacedSoulLink[user][19]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][10] + sectionBlocksPlacedMasterSoulLink[user][11] + sectionBlocksPlacedMasterSoulLink[user][12] + sectionBlocksPlacedMasterSoulLink[user][13] + sectionBlocksPlacedMasterSoulLink[user][14] + sectionBlocksPlacedMasterSoulLink[user][15] + sectionBlocksPlacedMasterSoulLink[user][16] + sectionBlocksPlacedMasterSoulLink[user][17] + sectionBlocksPlacedMasterSoulLink[user][18] + sectionBlocksPlacedMasterSoulLink[user][19]}}&#D3D6E0)
+    @player &#D3D6E0Section 3: (&a{{sectionBlocksPlacedNormal[user][20] + sectionBlocksPlacedNormal[user][21] + sectionBlocksPlacedNormal[user][22] + sectionBlocksPlacedNormal[user][23] + sectionBlocksPlacedNormal[user][24] + sectionBlocksPlacedNormal[user][25] + sectionBlocksPlacedNormal[user][26] + sectionBlocksPlacedNormal[user][27] + sectionBlocksPlacedNormal[user][28] + sectionBlocksPlacedNormal[user][29]}}, &6{{sectionBlocksPlacedMaster[user][20] + sectionBlocksPlacedMaster[user][21] + sectionBlocksPlacedMaster[user][22] + sectionBlocksPlacedMaster[user][23] + sectionBlocksPlacedMaster[user][24] + sectionBlocksPlacedMaster[user][25] + sectionBlocksPlacedMaster[user][26] + sectionBlocksPlacedMaster[user][27] + sectionBlocksPlacedMaster[user][28] + sectionBlocksPlacedMaster[user][29]}}, &c{{sectionBlocksPlacedUMM[user][20] + sectionBlocksPlacedUMM[user][21] + sectionBlocksPlacedUMM[user][22] + sectionBlocksPlacedUMM[user][23] + sectionBlocksPlacedUMM[user][24] + sectionBlocksPlacedUMM[user][25] + sectionBlocksPlacedUMM[user][26] + sectionBlocksPlacedUMM[user][27] + sectionBlocksPlacedUMM[user][28] + sectionBlocksPlacedUMM[user][29]}}, &b{{sectionBlocksPlacedSoulLink[user][20] + sectionBlocksPlacedSoulLink[user][21] + sectionBlocksPlacedSoulLink[user][22] + sectionBlocksPlacedSoulLink[user][23] + sectionBlocksPlacedSoulLink[user][24] + sectionBlocksPlacedSoulLink[user][25] + sectionBlocksPlacedSoulLink[user][26] + sectionBlocksPlacedSoulLink[user][27] + sectionBlocksPlacedSoulLink[user][28] + sectionBlocksPlacedSoulLink[user][29]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][20] + sectionBlocksPlacedMasterSoulLink[user][21] + sectionBlocksPlacedMasterSoulLink[user][22] + sectionBlocksPlacedMasterSoulLink[user][23] + sectionBlocksPlacedMasterSoulLink[user][24] + sectionBlocksPlacedMasterSoulLink[user][25] + sectionBlocksPlacedMasterSoulLink[user][26] + sectionBlocksPlacedMasterSoulLink[user][27] + sectionBlocksPlacedMasterSoulLink[user][28] + sectionBlocksPlacedMasterSoulLink[user][29]}}&#D3D6E0)
+    @player &#D3D6E0Section 4: (&a{{sectionBlocksPlacedNormal[user][30] + sectionBlocksPlacedNormal[user][31] + sectionBlocksPlacedNormal[user][32] + sectionBlocksPlacedNormal[user][33] + sectionBlocksPlacedNormal[user][34] + sectionBlocksPlacedNormal[user][35] + sectionBlocksPlacedNormal[user][36] + sectionBlocksPlacedNormal[user][37] + sectionBlocksPlacedNormal[user][38] + sectionBlocksPlacedNormal[user][39]}}, &6{{sectionBlocksPlacedMaster[user][30] + sectionBlocksPlacedMaster[user][31] + sectionBlocksPlacedMaster[user][32] + sectionBlocksPlacedMaster[user][33] + sectionBlocksPlacedMaster[user][34] + sectionBlocksPlacedMaster[user][35] + sectionBlocksPlacedMaster[user][36] + sectionBlocksPlacedMaster[user][37] + sectionBlocksPlacedMaster[user][38] + sectionBlocksPlacedMaster[user][39]}}, &c{{sectionBlocksPlacedUMM[user][30] + sectionBlocksPlacedUMM[user][31] + sectionBlocksPlacedUMM[user][32] + sectionBlocksPlacedUMM[user][33] + sectionBlocksPlacedUMM[user][34] + sectionBlocksPlacedUMM[user][35] + sectionBlocksPlacedUMM[user][36] + sectionBlocksPlacedUMM[user][37] + sectionBlocksPlacedUMM[user][38] + sectionBlocksPlacedUMM[user][39]}}, &b{{sectionBlocksPlacedSoulLink[user][30] + sectionBlocksPlacedSoulLink[user][31] + sectionBlocksPlacedSoulLink[user][32] + sectionBlocksPlacedSoulLink[user][33] + sectionBlocksPlacedSoulLink[user][34] + sectionBlocksPlacedSoulLink[user][35] + sectionBlocksPlacedSoulLink[user][36] + sectionBlocksPlacedSoulLink[user][37] + sectionBlocksPlacedSoulLink[user][38] + sectionBlocksPlacedSoulLink[user][39]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][30] + sectionBlocksPlacedMasterSoulLink[user][31] + sectionBlocksPlacedMasterSoulLink[user][32] + sectionBlocksPlacedMasterSoulLink[user][33] + sectionBlocksPlacedMasterSoulLink[user][34] + sectionBlocksPlacedMasterSoulLink[user][35] + sectionBlocksPlacedMasterSoulLink[user][36] + sectionBlocksPlacedMasterSoulLink[user][37] + sectionBlocksPlacedMasterSoulLink[user][38] + sectionBlocksPlacedMasterSoulLink[user][39]}}&#D3D6E0)
+    @player &#D3D6E0Section 5: (&a{{sectionBlocksPlacedNormal[user][40] + sectionBlocksPlacedNormal[user][41] + sectionBlocksPlacedNormal[user][42] + sectionBlocksPlacedNormal[user][43] + sectionBlocksPlacedNormal[user][44] + sectionBlocksPlacedNormal[user][45] + sectionBlocksPlacedNormal[user][46] + sectionBlocksPlacedNormal[user][47] + sectionBlocksPlacedNormal[user][48] + sectionBlocksPlacedNormal[user][49]}}, &6{{sectionBlocksPlacedMaster[user][40] + sectionBlocksPlacedMaster[user][41] + sectionBlocksPlacedMaster[user][42] + sectionBlocksPlacedMaster[user][43] + sectionBlocksPlacedMaster[user][44] + sectionBlocksPlacedMaster[user][45] + sectionBlocksPlacedMaster[user][46] + sectionBlocksPlacedMaster[user][47] + sectionBlocksPlacedMaster[user][48] + sectionBlocksPlacedMaster[user][49]}}, &c{{sectionBlocksPlacedUMM[user][40] + sectionBlocksPlacedUMM[user][41] + sectionBlocksPlacedUMM[user][42] + sectionBlocksPlacedUMM[user][43] + sectionBlocksPlacedUMM[user][44] + sectionBlocksPlacedUMM[user][45] + sectionBlocksPlacedUMM[user][46] + sectionBlocksPlacedUMM[user][47] + sectionBlocksPlacedUMM[user][48] + sectionBlocksPlacedUMM[user][49]}}, &b{{sectionBlocksPlacedSoulLink[user][40] + sectionBlocksPlacedSoulLink[user][41] + sectionBlocksPlacedSoulLink[user][42] + sectionBlocksPlacedSoulLink[user][43] + sectionBlocksPlacedSoulLink[user][44] + sectionBlocksPlacedSoulLink[user][45] + sectionBlocksPlacedSoulLink[user][46] + sectionBlocksPlacedSoulLink[user][47] + sectionBlocksPlacedSoulLink[user][48] + sectionBlocksPlacedSoulLink[user][49]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][40] + sectionBlocksPlacedMasterSoulLink[user][41] + sectionBlocksPlacedMasterSoulLink[user][42] + sectionBlocksPlacedMasterSoulLink[user][43] + sectionBlocksPlacedMasterSoulLink[user][44] + sectionBlocksPlacedMasterSoulLink[user][45] + sectionBlocksPlacedMasterSoulLink[user][46] + sectionBlocksPlacedMasterSoulLink[user][47] + sectionBlocksPlacedMasterSoulLink[user][48] + sectionBlocksPlacedMasterSoulLink[user][49]}}&#D3D6E0)
+    @player &#D3D6E0Section 6: (&a{{sectionBlocksPlacedNormal[user][50] + sectionBlocksPlacedNormal[user][51] + sectionBlocksPlacedNormal[user][52] + sectionBlocksPlacedNormal[user][53] + sectionBlocksPlacedNormal[user][54] + sectionBlocksPlacedNormal[user][55] + sectionBlocksPlacedNormal[user][56] + sectionBlocksPlacedNormal[user][57] + sectionBlocksPlacedNormal[user][58] + sectionBlocksPlacedNormal[user][59]}}, &6{{sectionBlocksPlacedMaster[user][50] + sectionBlocksPlacedMaster[user][51] + sectionBlocksPlacedMaster[user][52] + sectionBlocksPlacedMaster[user][53] + sectionBlocksPlacedMaster[user][54] + sectionBlocksPlacedMaster[user][55] + sectionBlocksPlacedMaster[user][56] + sectionBlocksPlacedMaster[user][57] + sectionBlocksPlacedMaster[user][58] + sectionBlocksPlacedMaster[user][59]}}, &c{{sectionBlocksPlacedUMM[user][50] + sectionBlocksPlacedUMM[user][51] + sectionBlocksPlacedUMM[user][52] + sectionBlocksPlacedUMM[user][53] + sectionBlocksPlacedUMM[user][54] + sectionBlocksPlacedUMM[user][55] + sectionBlocksPlacedUMM[user][56] + sectionBlocksPlacedUMM[user][57] + sectionBlocksPlacedUMM[user][58] + sectionBlocksPlacedUMM[user][59]}}, &b{{sectionBlocksPlacedSoulLink[user][50] + sectionBlocksPlacedSoulLink[user][51] + sectionBlocksPlacedSoulLink[user][52] + sectionBlocksPlacedSoulLink[user][53] + sectionBlocksPlacedSoulLink[user][54] + sectionBlocksPlacedSoulLink[user][55] + sectionBlocksPlacedSoulLink[user][56] + sectionBlocksPlacedSoulLink[user][57] + sectionBlocksPlacedSoulLink[user][58] + sectionBlocksPlacedSoulLink[user][59]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][50] + sectionBlocksPlacedMasterSoulLink[user][51] + sectionBlocksPlacedMasterSoulLink[user][52] + sectionBlocksPlacedMasterSoulLink[user][53] + sectionBlocksPlacedMasterSoulLink[user][54] + sectionBlocksPlacedMasterSoulLink[user][55] + sectionBlocksPlacedMasterSoulLink[user][56] + sectionBlocksPlacedMasterSoulLink[user][57] + sectionBlocksPlacedMasterSoulLink[user][58] + sectionBlocksPlacedMasterSoulLink[user][59]}}&#D3D6E0)
+    @player &#D3D6E0Section 7: (&a{{sectionBlocksPlacedNormal[user][60] + sectionBlocksPlacedNormal[user][61] + sectionBlocksPlacedNormal[user][62] + sectionBlocksPlacedNormal[user][63] + sectionBlocksPlacedNormal[user][64] + sectionBlocksPlacedNormal[user][65] + sectionBlocksPlacedNormal[user][66] + sectionBlocksPlacedNormal[user][67] + sectionBlocksPlacedNormal[user][68] + sectionBlocksPlacedNormal[user][69]}}, &6{{sectionBlocksPlacedMaster[user][60] + sectionBlocksPlacedMaster[user][61] + sectionBlocksPlacedMaster[user][62] + sectionBlocksPlacedMaster[user][63] + sectionBlocksPlacedMaster[user][64] + sectionBlocksPlacedMaster[user][65] + sectionBlocksPlacedMaster[user][66] + sectionBlocksPlacedMaster[user][67] + sectionBlocksPlacedMaster[user][68] + sectionBlocksPlacedMaster[user][69]}}, &c{{sectionBlocksPlacedUMM[user][60] + sectionBlocksPlacedUMM[user][61] + sectionBlocksPlacedUMM[user][62] + sectionBlocksPlacedUMM[user][63] + sectionBlocksPlacedUMM[user][64] + sectionBlocksPlacedUMM[user][65] + sectionBlocksPlacedUMM[user][66] + sectionBlocksPlacedUMM[user][67] + sectionBlocksPlacedUMM[user][68] + sectionBlocksPlacedUMM[user][69]}}, &b{{sectionBlocksPlacedSoulLink[user][60] + sectionBlocksPlacedSoulLink[user][61] + sectionBlocksPlacedSoulLink[user][62] + sectionBlocksPlacedSoulLink[user][63] + sectionBlocksPlacedSoulLink[user][64] + sectionBlocksPlacedSoulLink[user][65] + sectionBlocksPlacedSoulLink[user][66] + sectionBlocksPlacedSoulLink[user][67] + sectionBlocksPlacedSoulLink[user][68] + sectionBlocksPlacedSoulLink[user][69]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][60] + sectionBlocksPlacedMasterSoulLink[user][61] + sectionBlocksPlacedMasterSoulLink[user][62] + sectionBlocksPlacedMasterSoulLink[user][63] + sectionBlocksPlacedMasterSoulLink[user][64] + sectionBlocksPlacedMasterSoulLink[user][65] + sectionBlocksPlacedMasterSoulLink[user][66] + sectionBlocksPlacedMasterSoulLink[user][67] + sectionBlocksPlacedMasterSoulLink[user][68] + sectionBlocksPlacedMasterSoulLink[user][69]}}&#D3D6E0)
+    @player
+    @chatscript 180s group8123 pcStats(10, user, player)
+    @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 to break down stats
+    @chatscript 180s group9321 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
+@elseif pcSelect == 4
+    
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @player &aHarder Hat, &6Even Harder Hat, &cHardest Hat,
+    @player &bHarder Hats, &5Even Harder Hats
+    @player 
+    @player &#D3D6E0Total: &r   &1 &#D3D6E0 (&a{{sectionFallsNormal[user].sum()}}, &6{{sectionFallsMaster[user].sum()}}, &c{{sectionFallsUMM[user].sum()}}, &b{{sectionFallsSoulLink[user].sum()}}, &5{{sectionFallsMasterSoulLink[user].sum()}}&#D3D6E0)
+    @player
+    @player &#D3D6E0Section 1: (&a{{sectionFallsNormal[user][0] + sectionFallsNormal[user][1] + sectionFallsNormal[user][2] + sectionFallsNormal[user][3] + sectionFallsNormal[user][4] + sectionFallsNormal[user][5] + sectionFallsNormal[user][6] + sectionFallsNormal[user][7] + sectionFallsNormal[user][8] + sectionFallsNormal[user][9]}}, &6{{sectionFallsMaster[user][0] + sectionFallsMaster[user][1] + sectionFallsMaster[user][2] + sectionFallsMaster[user][3] + sectionFallsMaster[user][4] + sectionFallsMaster[user][5] + sectionFallsMaster[user][6] + sectionFallsMaster[user][7] + sectionFallsMaster[user][8] + sectionFallsMaster[user][9]}}, &c{{sectionFallsUMM[user][0] + sectionFallsUMM[user][1] + sectionFallsUMM[user][2] + sectionFallsUMM[user][3] + sectionFallsUMM[user][4] + sectionFallsUMM[user][5] + sectionFallsUMM[user][6] + sectionFallsUMM[user][7] + sectionFallsUMM[user][8] + sectionFallsUMM[user][9]}}, &b{{sectionFallsSoulLink[user][0] + sectionFallsSoulLink[user][1] + sectionFallsSoulLink[user][2] + sectionFallsSoulLink[user][3] + sectionFallsSoulLink[user][4] + sectionFallsSoulLink[user][5] + sectionFallsSoulLink[user][6] + sectionFallsSoulLink[user][7] + sectionFallsSoulLink[user][8] + sectionFallsSoulLink[user][9]}}, &5{{sectionFallsMasterSoulLink[user][0] + sectionFallsMasterSoulLink[user][1] + sectionFallsMasterSoulLink[user][2] + sectionFallsMasterSoulLink[user][3] + sectionFallsMasterSoulLink[user][4] + sectionFallsMasterSoulLink[user][5] + sectionFallsMasterSoulLink[user][6] + sectionFallsMasterSoulLink[user][7] + sectionFallsMasterSoulLink[user][8] + sectionFallsMasterSoulLink[user][9]}}&#D3D6E0)
+    @player &#D3D6E0Section 2: (&a{{sectionFallsNormal[user][10] + sectionFallsNormal[user][11] + sectionFallsNormal[user][12] + sectionFallsNormal[user][13] + sectionFallsNormal[user][14] + sectionFallsNormal[user][15] + sectionFallsNormal[user][16] + sectionFallsNormal[user][17] + sectionFallsNormal[user][18] + sectionFallsNormal[user][19]}}, &6{{sectionFallsMaster[user][10] + sectionFallsMaster[user][11] + sectionFallsMaster[user][12] + sectionFallsMaster[user][13] + sectionFallsMaster[user][14] + sectionFallsMaster[user][15] + sectionFallsMaster[user][16] + sectionFallsMaster[user][17] + sectionFallsMaster[user][18] + sectionFallsMaster[user][19]}}, &c{{sectionFallsUMM[user][10] + sectionFallsUMM[user][11] + sectionFallsUMM[user][12] + sectionFallsUMM[user][13] + sectionFallsUMM[user][14] + sectionFallsUMM[user][15] + sectionFallsUMM[user][16] + sectionFallsUMM[user][17] + sectionFallsUMM[user][18] + sectionFallsUMM[user][19]}}, &b{{sectionFallsSoulLink[user][10] + sectionFallsSoulLink[user][11] + sectionFallsSoulLink[user][12] + sectionFallsSoulLink[user][13] + sectionFallsSoulLink[user][14] + sectionFallsSoulLink[user][15] + sectionFallsSoulLink[user][16] + sectionFallsSoulLink[user][17] + sectionFallsSoulLink[user][18] + sectionFallsSoulLink[user][19]}}, &5{{sectionFallsMasterSoulLink[user][10] + sectionFallsMasterSoulLink[user][11] + sectionFallsMasterSoulLink[user][12] + sectionFallsMasterSoulLink[user][13] + sectionFallsMasterSoulLink[user][14] + sectionFallsMasterSoulLink[user][15] + sectionFallsMasterSoulLink[user][16] + sectionFallsMasterSoulLink[user][17] + sectionFallsMasterSoulLink[user][18] + sectionFallsMasterSoulLink[user][19]}}&#D3D6E0)
+    @player &#D3D6E0Section 3: (&a{{sectionFallsNormal[user][20] + sectionFallsNormal[user][21] + sectionFallsNormal[user][22] + sectionFallsNormal[user][23] + sectionFallsNormal[user][24] + sectionFallsNormal[user][25] + sectionFallsNormal[user][26] + sectionFallsNormal[user][27] + sectionFallsNormal[user][28] + sectionFallsNormal[user][29]}}, &6{{sectionFallsMaster[user][20] + sectionFallsMaster[user][21] + sectionFallsMaster[user][22] + sectionFallsMaster[user][23] + sectionFallsMaster[user][24] + sectionFallsMaster[user][25] + sectionFallsMaster[user][26] + sectionFallsMaster[user][27] + sectionFallsMaster[user][28] + sectionFallsMaster[user][29]}}, &c{{sectionFallsUMM[user][20] + sectionFallsUMM[user][21] + sectionFallsUMM[user][22] + sectionFallsUMM[user][23] + sectionFallsUMM[user][24] + sectionFallsUMM[user][25] + sectionFallsUMM[user][26] + sectionFallsUMM[user][27] + sectionFallsUMM[user][28] + sectionFallsUMM[user][29]}}, &b{{sectionFallsSoulLink[user][20] + sectionFallsSoulLink[user][21] + sectionFallsSoulLink[user][22] + sectionFallsSoulLink[user][23] + sectionFallsSoulLink[user][24] + sectionFallsSoulLink[user][25] + sectionFallsSoulLink[user][26] + sectionFallsSoulLink[user][27] + sectionFallsSoulLink[user][28] + sectionFallsSoulLink[user][29]}}, &5{{sectionFallsMasterSoulLink[user][20] + sectionFallsMasterSoulLink[user][21] + sectionFallsMasterSoulLink[user][22] + sectionFallsMasterSoulLink[user][23] + sectionFallsMasterSoulLink[user][24] + sectionFallsMasterSoulLink[user][25] + sectionFallsMasterSoulLink[user][26] + sectionFallsMasterSoulLink[user][27] + sectionFallsMasterSoulLink[user][28] + sectionFallsMasterSoulLink[user][29]}}&#D3D6E0)
+    @player &#D3D6E0Section 4: (&a{{sectionFallsNormal[user][30] + sectionFallsNormal[user][31] + sectionFallsNormal[user][32] + sectionFallsNormal[user][33] + sectionFallsNormal[user][34] + sectionFallsNormal[user][35] + sectionFallsNormal[user][36] + sectionFallsNormal[user][37] + sectionFallsNormal[user][38] + sectionFallsNormal[user][39]}}, &6{{sectionFallsMaster[user][30] + sectionFallsMaster[user][31] + sectionFallsMaster[user][32] + sectionFallsMaster[user][33] + sectionFallsMaster[user][34] + sectionFallsMaster[user][35] + sectionFallsMaster[user][36] + sectionFallsMaster[user][37] + sectionFallsMaster[user][38] + sectionFallsMaster[user][39]}}, &c{{sectionFallsUMM[user][30] + sectionFallsUMM[user][31] + sectionFallsUMM[user][32] + sectionFallsUMM[user][33] + sectionFallsUMM[user][34] + sectionFallsUMM[user][35] + sectionFallsUMM[user][36] + sectionFallsUMM[user][37] + sectionFallsUMM[user][38] + sectionFallsUMM[user][39]}}, &b{{sectionFallsSoulLink[user][30] + sectionFallsSoulLink[user][31] + sectionFallsSoulLink[user][32] + sectionFallsSoulLink[user][33] + sectionFallsSoulLink[user][34] + sectionFallsSoulLink[user][35] + sectionFallsSoulLink[user][36] + sectionFallsSoulLink[user][37] + sectionFallsSoulLink[user][38] + sectionFallsSoulLink[user][39]}}, &5{{sectionFallsMasterSoulLink[user][30] + sectionFallsMasterSoulLink[user][31] + sectionFallsMasterSoulLink[user][32] + sectionFallsMasterSoulLink[user][33] + sectionFallsMasterSoulLink[user][34] + sectionFallsMasterSoulLink[user][35] + sectionFallsMasterSoulLink[user][36] + sectionFallsMasterSoulLink[user][37] + sectionFallsMasterSoulLink[user][38] + sectionFallsMasterSoulLink[user][39]}}&#D3D6E0)
+    @player &#D3D6E0Section 5: (&a{{sectionFallsNormal[user][40] + sectionFallsNormal[user][41] + sectionFallsNormal[user][42] + sectionFallsNormal[user][43] + sectionFallsNormal[user][44] + sectionFallsNormal[user][45] + sectionFallsNormal[user][46] + sectionFallsNormal[user][47] + sectionFallsNormal[user][48] + sectionFallsNormal[user][49]}}, &6{{sectionFallsMaster[user][40] + sectionFallsMaster[user][41] + sectionFallsMaster[user][42] + sectionFallsMaster[user][43] + sectionFallsMaster[user][44] + sectionFallsMaster[user][45] + sectionFallsMaster[user][46] + sectionFallsMaster[user][47] + sectionFallsMaster[user][48] + sectionFallsMaster[user][49]}}, &c{{sectionFallsUMM[user][40] + sectionFallsUMM[user][41] + sectionFallsUMM[user][42] + sectionFallsUMM[user][43] + sectionFallsUMM[user][44] + sectionFallsUMM[user][45] + sectionFallsUMM[user][46] + sectionFallsUMM[user][47] + sectionFallsUMM[user][48] + sectionFallsUMM[user][49]}}, &b{{sectionFallsSoulLink[user][40] + sectionFallsSoulLink[user][41] + sectionFallsSoulLink[user][42] + sectionFallsSoulLink[user][43] + sectionFallsSoulLink[user][44] + sectionFallsSoulLink[user][45] + sectionFallsSoulLink[user][46] + sectionFallsSoulLink[user][47] + sectionFallsSoulLink[user][48] + sectionFallsSoulLink[user][49]}}, &5{{sectionFallsMasterSoulLink[user][40] + sectionFallsMasterSoulLink[user][41] + sectionFallsMasterSoulLink[user][42] + sectionFallsMasterSoulLink[user][43] + sectionFallsMasterSoulLink[user][44] + sectionFallsMasterSoulLink[user][45] + sectionFallsMasterSoulLink[user][46] + sectionFallsMasterSoulLink[user][47] + sectionFallsMasterSoulLink[user][48] + sectionFallsMasterSoulLink[user][49]}}&#D3D6E0)
+    @player &#D3D6E0Section 6: (&a{{sectionFallsNormal[user][50] + sectionFallsNormal[user][51] + sectionFallsNormal[user][52] + sectionFallsNormal[user][53] + sectionFallsNormal[user][54] + sectionFallsNormal[user][55] + sectionFallsNormal[user][56] + sectionFallsNormal[user][57] + sectionFallsNormal[user][58] + sectionFallsNormal[user][59]}}, &6{{sectionFallsMaster[user][50] + sectionFallsMaster[user][51] + sectionFallsMaster[user][52] + sectionFallsMaster[user][53] + sectionFallsMaster[user][54] + sectionFallsMaster[user][55] + sectionFallsMaster[user][56] + sectionFallsMaster[user][57] + sectionFallsMaster[user][58] + sectionFallsMaster[user][59]}}, &c{{sectionFallsUMM[user][50] + sectionFallsUMM[user][51] + sectionFallsUMM[user][52] + sectionFallsUMM[user][53] + sectionFallsUMM[user][54] + sectionFallsUMM[user][55] + sectionFallsUMM[user][56] + sectionFallsUMM[user][57] + sectionFallsUMM[user][58] + sectionFallsUMM[user][59]}}, &b{{sectionFallsSoulLink[user][50] + sectionFallsSoulLink[user][51] + sectionFallsSoulLink[user][52] + sectionFallsSoulLink[user][53] + sectionFallsSoulLink[user][54] + sectionFallsSoulLink[user][55] + sectionFallsSoulLink[user][56] + sectionFallsSoulLink[user][57] + sectionFallsSoulLink[user][58] + sectionFallsSoulLink[user][59]}}, &5{{sectionFallsMasterSoulLink[user][50] + sectionFallsMasterSoulLink[user][51] + sectionFallsMasterSoulLink[user][52] + sectionFallsMasterSoulLink[user][53] + sectionFallsMasterSoulLink[user][54] + sectionFallsMasterSoulLink[user][55] + sectionFallsMasterSoulLink[user][56] + sectionFallsMasterSoulLink[user][57] + sectionFallsMasterSoulLink[user][58] + sectionFallsMasterSoulLink[user][59]}}&#D3D6E0)
+    @player &#D3D6E0Section 7: (&a{{sectionFallsNormal[user][60] + sectionFallsNormal[user][61] + sectionFallsNormal[user][62] + sectionFallsNormal[user][63] + sectionFallsNormal[user][64] + sectionFallsNormal[user][65] + sectionFallsNormal[user][66] + sectionFallsNormal[user][67] + sectionFallsNormal[user][68] + sectionFallsNormal[user][69]}}, &6{{sectionFallsMaster[user][60] + sectionFallsMaster[user][61] + sectionFallsMaster[user][62] + sectionFallsMaster[user][63] + sectionFallsMaster[user][64] + sectionFallsMaster[user][65] + sectionFallsMaster[user][66] + sectionFallsMaster[user][67] + sectionFallsMaster[user][68] + sectionFallsMaster[user][69]}}, &c{{sectionFallsUMM[user][60] + sectionFallsUMM[user][61] + sectionFallsUMM[user][62] + sectionFallsUMM[user][63] + sectionFallsUMM[user][64] + sectionFallsUMM[user][65] + sectionFallsUMM[user][66] + sectionFallsUMM[user][67] + sectionFallsUMM[user][68] + sectionFallsUMM[user][69]}}, &b{{sectionFallsSoulLink[user][60] + sectionFallsSoulLink[user][61] + sectionFallsSoulLink[user][62] + sectionFallsSoulLink[user][63] + sectionFallsSoulLink[user][64] + sectionFallsSoulLink[user][65] + sectionFallsSoulLink[user][66] + sectionFallsSoulLink[user][67] + sectionFallsSoulLink[user][68] + sectionFallsSoulLink[user][69]}}, &5{{sectionFallsMasterSoulLink[user][60] + sectionFallsMasterSoulLink[user][61] + sectionFallsMasterSoulLink[user][62] + sectionFallsMasterSoulLink[user][63] + sectionFallsMasterSoulLink[user][64] + sectionFallsMasterSoulLink[user][65] + sectionFallsMasterSoulLink[user][66] + sectionFallsMasterSoulLink[user][67] + sectionFallsMasterSoulLink[user][68] + sectionFallsMasterSoulLink[user][69]}}&#D3D6E0)
+    @player
+    @chatscript 180s group8 pcStats(6, user, player)
+    @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 to break down stats
+    @chatscript 180s group9 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
+@elseif pcSelect == 5
+    
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @if stage1PB[user] == 0
+        @player &#D3D6E0Section 1: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 1: {{timer::formatTime(stage1PB[user])}}
+    @fi
+    @if stage2PB[user] == 0
+        @player &#D3D6E0Section 2: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 2: {{timer::formatTime(stage2PB[user])}}
+    @fi
+    @if stage3PB[user] == 0
+        @player &#D3D6E0Section 3: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 3: {{timer::formatTime(stage3PB[user])}}
+    @fi
+    @if stage4PB[user] == 0
+        @player &#D3D6E0Section 4: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 4: {{timer::formatTime(stage4PB[user])}}
+    @fi
+    @if stage5PB[user] == 0
+        @player &#D3D6E0Section 5: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 5: {{timer::formatTime(stage5PB[user])}}
+    @fi
+    @if stage6PB[user] == 0
+        @player &#D3D6E0Section 6: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 6: {{timer::formatTime(stage6PB[user])}}
+    @fi
+    @if stage7PB[user] == 0
+        @player &#D3D6E0Section 7: Not beaten yet.
+    @else
+        @player &#D3D6E0Section 7: {{timer::formatTime(stage7PB[user])}}
+    @fi
+    @player
+    @if stage8PB[user] == 0
+        @player &#D3D6E0Sum of Best: N/A
+    @else
+        @player &#D3D6E0Sum of Best: {{timer::formatTime(stage8PB[user])}}
+    @fi
+    @player
+    @chatscript 180s group10 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
 @elseif pcSelect == 10
-    @player If you're looking for a &5&lBlackberry&7, you'll want to check &f&lon the hillside&7! They often grow &f&lin the dirt&7.
+
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @player &5Even Harder Hats:
+    @player &#D3D6E0Section 1: [&5{{sectionBlocksPlacedMasterSoulLink[user][0]}}, {{sectionBlocksPlacedMasterSoulLink[user][1]}}, {{sectionBlocksPlacedMasterSoulLink[user][2]}}, {{sectionBlocksPlacedMasterSoulLink[user][3]}}, {{sectionBlocksPlacedMasterSoulLink[user][4]}},   {{sectionBlocksPlacedMasterSoulLink[user][5]}}, {{sectionBlocksPlacedMasterSoulLink[user][6]}}, {{sectionBlocksPlacedMasterSoulLink[user][7]}}, {{sectionBlocksPlacedMasterSoulLink[user][8]}}, {{sectionBlocksPlacedMasterSoulLink[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&5{{sectionBlocksPlacedMasterSoulLink[user][10]}}, {{sectionBlocksPlacedMasterSoulLink[user][11]}}, {{sectionBlocksPlacedMasterSoulLink[user][12]}}, {{sectionBlocksPlacedMasterSoulLink[user][13]}}, {{sectionBlocksPlacedMasterSoulLink[user][14]}},   {{sectionBlocksPlacedMasterSoulLink[user][15]}}, {{sectionBlocksPlacedMasterSoulLink[user][16]}}, {{sectionBlocksPlacedMasterSoulLink[user][17]}}, {{sectionBlocksPlacedMasterSoulLink[user][18]}}, {{sectionBlocksPlacedMasterSoulLink[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&5{{sectionBlocksPlacedMasterSoulLink[user][20]}}, {{sectionBlocksPlacedMasterSoulLink[user][21]}}, {{sectionBlocksPlacedMasterSoulLink[user][22]}}, {{sectionBlocksPlacedMasterSoulLink[user][23]}}, {{sectionBlocksPlacedMasterSoulLink[user][24]}},   {{sectionBlocksPlacedMasterSoulLink[user][25]}}, {{sectionBlocksPlacedMasterSoulLink[user][26]}}, {{sectionBlocksPlacedMasterSoulLink[user][27]}}, {{sectionBlocksPlacedMasterSoulLink[user][28]}}, {{sectionBlocksPlacedMasterSoulLink[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&5{{sectionBlocksPlacedMasterSoulLink[user][30]}}, {{sectionBlocksPlacedMasterSoulLink[user][31]}}, {{sectionBlocksPlacedMasterSoulLink[user][32]}}, {{sectionBlocksPlacedMasterSoulLink[user][33]}}, {{sectionBlocksPlacedMasterSoulLink[user][34]}},   {{sectionBlocksPlacedMasterSoulLink[user][35]}}, {{sectionBlocksPlacedMasterSoulLink[user][36]}}, {{sectionBlocksPlacedMasterSoulLink[user][37]}}, {{sectionBlocksPlacedMasterSoulLink[user][38]}}, {{sectionBlocksPlacedMasterSoulLink[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&5{{sectionBlocksPlacedMasterSoulLink[user][40]}}, {{sectionBlocksPlacedMasterSoulLink[user][41]}}, {{sectionBlocksPlacedMasterSoulLink[user][42]}}, {{sectionBlocksPlacedMasterSoulLink[user][43]}}, {{sectionBlocksPlacedMasterSoulLink[user][44]}},   {{sectionBlocksPlacedMasterSoulLink[user][45]}}, {{sectionBlocksPlacedMasterSoulLink[user][46]}}, {{sectionBlocksPlacedMasterSoulLink[user][47]}}, {{sectionBlocksPlacedMasterSoulLink[user][48]}}, {{sectionBlocksPlacedMasterSoulLink[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&5{{sectionBlocksPlacedMasterSoulLink[user][50]}}, {{sectionBlocksPlacedMasterSoulLink[user][51]}}, {{sectionBlocksPlacedMasterSoulLink[user][52]}}, {{sectionBlocksPlacedMasterSoulLink[user][53]}}, {{sectionBlocksPlacedMasterSoulLink[user][54]}},   {{sectionBlocksPlacedMasterSoulLink[user][55]}}, {{sectionBlocksPlacedMasterSoulLink[user][56]}}, {{sectionBlocksPlacedMasterSoulLink[user][57]}}, {{sectionBlocksPlacedMasterSoulLink[user][58]}}, {{sectionBlocksPlacedMasterSoulLink[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&5{{sectionBlocksPlacedMasterSoulLink[user][60]}}, {{sectionBlocksPlacedMasterSoulLink[user][61]}}, {{sectionBlocksPlacedMasterSoulLink[user][62]}}, {{sectionBlocksPlacedMasterSoulLink[user][63]}}, {{sectionBlocksPlacedMasterSoulLink[user][64]}},   {{sectionBlocksPlacedMasterSoulLink[user][65]}}, {{sectionBlocksPlacedMasterSoulLink[user][66]}}, {{sectionBlocksPlacedMasterSoulLink[user][67]}}, {{sectionBlocksPlacedMasterSoulLink[user][68]}}, {{sectionBlocksPlacedMasterSoulLink[user][69]}}&#D3D6E0]
+    @player
+    @player &bHarder Hats:
+    @player &#D3D6E0Section 1: [&b{{sectionBlocksPlacedSoulLink[user][0]}}, {{sectionBlocksPlacedSoulLink[user][1]}}, {{sectionBlocksPlacedSoulLink[user][2]}}, {{sectionBlocksPlacedSoulLink[user][3]}}, {{sectionBlocksPlacedSoulLink[user][4]}},   {{sectionBlocksPlacedSoulLink[user][5]}}, {{sectionBlocksPlacedSoulLink[user][6]}}, {{sectionBlocksPlacedSoulLink[user][7]}}, {{sectionBlocksPlacedSoulLink[user][8]}}, {{sectionBlocksPlacedSoulLink[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&b{{sectionBlocksPlacedSoulLink[user][10]}}, {{sectionBlocksPlacedSoulLink[user][11]}}, {{sectionBlocksPlacedSoulLink[user][12]}}, {{sectionBlocksPlacedSoulLink[user][13]}}, {{sectionBlocksPlacedSoulLink[user][14]}},   {{sectionBlocksPlacedSoulLink[user][15]}}, {{sectionBlocksPlacedSoulLink[user][16]}}, {{sectionBlocksPlacedSoulLink[user][17]}}, {{sectionBlocksPlacedSoulLink[user][18]}}, {{sectionBlocksPlacedSoulLink[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&b{{sectionBlocksPlacedSoulLink[user][20]}}, {{sectionBlocksPlacedSoulLink[user][21]}}, {{sectionBlocksPlacedSoulLink[user][22]}}, {{sectionBlocksPlacedSoulLink[user][23]}}, {{sectionBlocksPlacedSoulLink[user][24]}},   {{sectionBlocksPlacedSoulLink[user][25]}}, {{sectionBlocksPlacedSoulLink[user][26]}}, {{sectionBlocksPlacedSoulLink[user][27]}}, {{sectionBlocksPlacedSoulLink[user][28]}}, {{sectionBlocksPlacedSoulLink[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&b{{sectionBlocksPlacedSoulLink[user][30]}}, {{sectionBlocksPlacedSoulLink[user][31]}}, {{sectionBlocksPlacedSoulLink[user][32]}}, {{sectionBlocksPlacedSoulLink[user][33]}}, {{sectionBlocksPlacedSoulLink[user][34]}},   {{sectionBlocksPlacedSoulLink[user][35]}}, {{sectionBlocksPlacedSoulLink[user][36]}}, {{sectionBlocksPlacedSoulLink[user][37]}}, {{sectionBlocksPlacedSoulLink[user][38]}}, {{sectionBlocksPlacedSoulLink[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&b{{sectionBlocksPlacedSoulLink[user][40]}}, {{sectionBlocksPlacedSoulLink[user][41]}}, {{sectionBlocksPlacedSoulLink[user][42]}}, {{sectionBlocksPlacedSoulLink[user][43]}}, {{sectionBlocksPlacedSoulLink[user][44]}},   {{sectionBlocksPlacedSoulLink[user][45]}}, {{sectionBlocksPlacedSoulLink[user][46]}}, {{sectionBlocksPlacedSoulLink[user][47]}}, {{sectionBlocksPlacedSoulLink[user][48]}}, {{sectionBlocksPlacedSoulLink[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&b{{sectionBlocksPlacedSoulLink[user][50]}}, {{sectionBlocksPlacedSoulLink[user][51]}}, {{sectionBlocksPlacedSoulLink[user][52]}}, {{sectionBlocksPlacedSoulLink[user][53]}}, {{sectionBlocksPlacedSoulLink[user][54]}},   {{sectionBlocksPlacedSoulLink[user][55]}}, {{sectionBlocksPlacedSoulLink[user][56]}}, {{sectionBlocksPlacedSoulLink[user][57]}}, {{sectionBlocksPlacedSoulLink[user][58]}}, {{sectionBlocksPlacedSoulLink[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&b{{sectionBlocksPlacedSoulLink[user][60]}}, {{sectionBlocksPlacedSoulLink[user][61]}}, {{sectionBlocksPlacedSoulLink[user][62]}}, {{sectionBlocksPlacedSoulLink[user][63]}}, {{sectionBlocksPlacedSoulLink[user][64]}},   {{sectionBlocksPlacedSoulLink[user][65]}}, {{sectionBlocksPlacedSoulLink[user][66]}}, {{sectionBlocksPlacedSoulLink[user][67]}}, {{sectionBlocksPlacedSoulLink[user][68]}}, {{sectionBlocksPlacedSoulLink[user][69]}}&#D3D6E0]
+    @player
+    @player &cHardest Hat:
+    @player &#D3D6E0Section 1: [&c{{sectionBlocksPlacedUMM[user][0]}}, {{sectionBlocksPlacedUMM[user][1]}}, {{sectionBlocksPlacedUMM[user][2]}}, {{sectionBlocksPlacedUMM[user][3]}}, {{sectionBlocksPlacedUMM[user][4]}},   {{sectionBlocksPlacedUMM[user][5]}}, {{sectionBlocksPlacedUMM[user][6]}}, {{sectionBlocksPlacedUMM[user][7]}}, {{sectionBlocksPlacedUMM[user][8]}}, {{sectionBlocksPlacedUMM[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&c{{sectionBlocksPlacedUMM[user][10]}}, {{sectionBlocksPlacedUMM[user][11]}}, {{sectionBlocksPlacedUMM[user][12]}}, {{sectionBlocksPlacedUMM[user][13]}}, {{sectionBlocksPlacedUMM[user][14]}},   {{sectionBlocksPlacedUMM[user][15]}}, {{sectionBlocksPlacedUMM[user][16]}}, {{sectionBlocksPlacedUMM[user][17]}}, {{sectionBlocksPlacedUMM[user][18]}}, {{sectionBlocksPlacedUMM[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&c{{sectionBlocksPlacedUMM[user][20]}}, {{sectionBlocksPlacedUMM[user][21]}}, {{sectionBlocksPlacedUMM[user][22]}}, {{sectionBlocksPlacedUMM[user][23]}}, {{sectionBlocksPlacedUMM[user][24]}},   {{sectionBlocksPlacedUMM[user][25]}}, {{sectionBlocksPlacedUMM[user][26]}}, {{sectionBlocksPlacedUMM[user][27]}}, {{sectionBlocksPlacedUMM[user][28]}}, {{sectionBlocksPlacedUMM[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&c{{sectionBlocksPlacedUMM[user][30]}}, {{sectionBlocksPlacedUMM[user][31]}}, {{sectionBlocksPlacedUMM[user][32]}}, {{sectionBlocksPlacedUMM[user][33]}}, {{sectionBlocksPlacedUMM[user][34]}},   {{sectionBlocksPlacedUMM[user][35]}}, {{sectionBlocksPlacedUMM[user][36]}}, {{sectionBlocksPlacedUMM[user][37]}}, {{sectionBlocksPlacedUMM[user][38]}}, {{sectionBlocksPlacedUMM[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&c{{sectionBlocksPlacedUMM[user][40]}}, {{sectionBlocksPlacedUMM[user][41]}}, {{sectionBlocksPlacedUMM[user][42]}}, {{sectionBlocksPlacedUMM[user][43]}}, {{sectionBlocksPlacedUMM[user][44]}},   {{sectionBlocksPlacedUMM[user][45]}}, {{sectionBlocksPlacedUMM[user][46]}}, {{sectionBlocksPlacedUMM[user][47]}}, {{sectionBlocksPlacedUMM[user][48]}}, {{sectionBlocksPlacedUMM[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&c{{sectionBlocksPlacedUMM[user][50]}}, {{sectionBlocksPlacedUMM[user][51]}}, {{sectionBlocksPlacedUMM[user][52]}}, {{sectionBlocksPlacedUMM[user][53]}}, {{sectionBlocksPlacedUMM[user][54]}},   {{sectionBlocksPlacedUMM[user][55]}}, {{sectionBlocksPlacedUMM[user][56]}}, {{sectionBlocksPlacedUMM[user][57]}}, {{sectionBlocksPlacedUMM[user][58]}}, {{sectionBlocksPlacedUMM[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&c{{sectionBlocksPlacedUMM[user][60]}}, {{sectionBlocksPlacedUMM[user][61]}}, {{sectionBlocksPlacedUMM[user][62]}}, {{sectionBlocksPlacedUMM[user][63]}}, {{sectionBlocksPlacedUMM[user][64]}},   {{sectionBlocksPlacedUMM[user][65]}}, {{sectionBlocksPlacedUMM[user][66]}}, {{sectionBlocksPlacedUMM[user][67]}}, {{sectionBlocksPlacedUMM[user][68]}}, {{sectionBlocksPlacedUMM[user][69]}}&#D3D6E0]
+    @player
+    @player &6Even Harder Hat:
+    @player &#D3D6E0Section 1: [&6{{sectionBlocksPlacedMaster[user][0]}}, {{sectionBlocksPlacedMaster[user][1]}}, {{sectionBlocksPlacedMaster[user][2]}}, {{sectionBlocksPlacedMaster[user][3]}}, {{sectionBlocksPlacedMaster[user][4]}},   {{sectionBlocksPlacedMaster[user][5]}}, {{sectionBlocksPlacedMaster[user][6]}}, {{sectionBlocksPlacedMaster[user][7]}}, {{sectionBlocksPlacedMaster[user][8]}}, {{sectionBlocksPlacedMaster[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&6{{sectionBlocksPlacedMaster[user][10]}}, {{sectionBlocksPlacedMaster[user][11]}}, {{sectionBlocksPlacedMaster[user][12]}}, {{sectionBlocksPlacedMaster[user][13]}}, {{sectionBlocksPlacedMaster[user][14]}},   {{sectionBlocksPlacedMaster[user][15]}}, {{sectionBlocksPlacedMaster[user][16]}}, {{sectionBlocksPlacedMaster[user][17]}}, {{sectionBlocksPlacedMaster[user][18]}}, {{sectionBlocksPlacedMaster[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&6{{sectionBlocksPlacedMaster[user][20]}}, {{sectionBlocksPlacedMaster[user][21]}}, {{sectionBlocksPlacedMaster[user][22]}}, {{sectionBlocksPlacedMaster[user][23]}}, {{sectionBlocksPlacedMaster[user][24]}},   {{sectionBlocksPlacedMaster[user][25]}}, {{sectionBlocksPlacedMaster[user][26]}}, {{sectionBlocksPlacedMaster[user][27]}}, {{sectionBlocksPlacedMaster[user][28]}}, {{sectionBlocksPlacedMaster[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&6{{sectionBlocksPlacedMaster[user][30]}}, {{sectionBlocksPlacedMaster[user][31]}}, {{sectionBlocksPlacedMaster[user][32]}}, {{sectionBlocksPlacedMaster[user][33]}}, {{sectionBlocksPlacedMaster[user][34]}},   {{sectionBlocksPlacedMaster[user][35]}}, {{sectionBlocksPlacedMaster[user][36]}}, {{sectionBlocksPlacedMaster[user][37]}}, {{sectionBlocksPlacedMaster[user][38]}}, {{sectionBlocksPlacedMaster[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&6{{sectionBlocksPlacedMaster[user][40]}}, {{sectionBlocksPlacedMaster[user][41]}}, {{sectionBlocksPlacedMaster[user][42]}}, {{sectionBlocksPlacedMaster[user][43]}}, {{sectionBlocksPlacedMaster[user][44]}},   {{sectionBlocksPlacedMaster[user][45]}}, {{sectionBlocksPlacedMaster[user][46]}}, {{sectionBlocksPlacedMaster[user][47]}}, {{sectionBlocksPlacedMaster[user][48]}}, {{sectionBlocksPlacedMaster[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&6{{sectionBlocksPlacedMaster[user][50]}}, {{sectionBlocksPlacedMaster[user][51]}}, {{sectionBlocksPlacedMaster[user][52]}}, {{sectionBlocksPlacedMaster[user][53]}}, {{sectionBlocksPlacedMaster[user][54]}},   {{sectionBlocksPlacedMaster[user][55]}}, {{sectionBlocksPlacedMaster[user][56]}}, {{sectionBlocksPlacedMaster[user][57]}}, {{sectionBlocksPlacedMaster[user][58]}}, {{sectionBlocksPlacedMaster[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&6{{sectionBlocksPlacedMaster[user][60]}}, {{sectionBlocksPlacedMaster[user][61]}}, {{sectionBlocksPlacedMaster[user][62]}}, {{sectionBlocksPlacedMaster[user][63]}}, {{sectionBlocksPlacedMaster[user][64]}},   {{sectionBlocksPlacedMaster[user][65]}}, {{sectionBlocksPlacedMaster[user][66]}}, {{sectionBlocksPlacedMaster[user][67]}}, {{sectionBlocksPlacedMaster[user][68]}}, {{sectionBlocksPlacedMaster[user][69]}}&#D3D6E0]
+    @player 
+    @player &aHarder Hat:
+    @player &#D3D6E0Section 1: [&a{{sectionBlocksPlacedNormal[user][0]}}, {{sectionBlocksPlacedNormal[user][1]}}, {{sectionBlocksPlacedNormal[user][2]}}, {{sectionBlocksPlacedNormal[user][3]}}, {{sectionBlocksPlacedNormal[user][4]}},   {{sectionBlocksPlacedNormal[user][5]}}, {{sectionBlocksPlacedNormal[user][6]}}, {{sectionBlocksPlacedNormal[user][7]}}, {{sectionBlocksPlacedNormal[user][8]}}, {{sectionBlocksPlacedNormal[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&a{{sectionBlocksPlacedNormal[user][10]}}, {{sectionBlocksPlacedNormal[user][11]}}, {{sectionBlocksPlacedNormal[user][12]}}, {{sectionBlocksPlacedNormal[user][13]}}, {{sectionBlocksPlacedNormal[user][14]}},   {{sectionBlocksPlacedNormal[user][15]}}, {{sectionBlocksPlacedNormal[user][16]}}, {{sectionBlocksPlacedNormal[user][17]}}, {{sectionBlocksPlacedNormal[user][18]}}, {{sectionBlocksPlacedNormal[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&a{{sectionBlocksPlacedNormal[user][20]}}, {{sectionBlocksPlacedNormal[user][21]}}, {{sectionBlocksPlacedNormal[user][22]}}, {{sectionBlocksPlacedNormal[user][23]}}, {{sectionBlocksPlacedNormal[user][24]}},   {{sectionBlocksPlacedNormal[user][25]}}, {{sectionBlocksPlacedNormal[user][26]}}, {{sectionBlocksPlacedNormal[user][27]}}, {{sectionBlocksPlacedNormal[user][28]}}, {{sectionBlocksPlacedNormal[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&a{{sectionBlocksPlacedNormal[user][30]}}, {{sectionBlocksPlacedNormal[user][31]}}, {{sectionBlocksPlacedNormal[user][32]}}, {{sectionBlocksPlacedNormal[user][33]}}, {{sectionBlocksPlacedNormal[user][34]}},   {{sectionBlocksPlacedNormal[user][35]}}, {{sectionBlocksPlacedNormal[user][36]}}, {{sectionBlocksPlacedNormal[user][37]}}, {{sectionBlocksPlacedNormal[user][38]}}, {{sectionBlocksPlacedNormal[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&a{{sectionBlocksPlacedNormal[user][40]}}, {{sectionBlocksPlacedNormal[user][41]}}, {{sectionBlocksPlacedNormal[user][42]}}, {{sectionBlocksPlacedNormal[user][43]}}, {{sectionBlocksPlacedNormal[user][44]}},   {{sectionBlocksPlacedNormal[user][45]}}, {{sectionBlocksPlacedNormal[user][46]}}, {{sectionBlocksPlacedNormal[user][47]}}, {{sectionBlocksPlacedNormal[user][48]}}, {{sectionBlocksPlacedNormal[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&a{{sectionBlocksPlacedNormal[user][50]}}, {{sectionBlocksPlacedNormal[user][51]}}, {{sectionBlocksPlacedNormal[user][52]}}, {{sectionBlocksPlacedNormal[user][53]}}, {{sectionBlocksPlacedNormal[user][54]}},   {{sectionBlocksPlacedNormal[user][55]}}, {{sectionBlocksPlacedNormal[user][56]}}, {{sectionBlocksPlacedNormal[user][57]}}, {{sectionBlocksPlacedNormal[user][58]}}, {{sectionBlocksPlacedNormal[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&a{{sectionBlocksPlacedNormal[user][60]}}, {{sectionBlocksPlacedNormal[user][61]}}, {{sectionBlocksPlacedNormal[user][62]}}, {{sectionBlocksPlacedNormal[user][63]}}, {{sectionBlocksPlacedNormal[user][64]}},   {{sectionBlocksPlacedNormal[user][65]}}, {{sectionBlocksPlacedNormal[user][66]}}, {{sectionBlocksPlacedNormal[user][67]}}, {{sectionBlocksPlacedNormal[user][68]}}, {{sectionBlocksPlacedNormal[user][69]}}&#D3D6E0]
+    @player
+    @player &#D3D6E0Section X: [X-01, X-02, X-03, …, X-10]
+    @player
+    @chatscript 180s group11321 pcStats(9, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
+@elseif pcSelect == 6
+
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @player &5Even Harder Hats:
+    @player &#D3D6E0Section 1: [&5{{sectionFallsMasterSoulLink[user][0]}}, {{sectionFallsMasterSoulLink[user][1]}}, {{sectionFallsMasterSoulLink[user][2]}}, {{sectionFallsMasterSoulLink[user][3]}}, {{sectionFallsMasterSoulLink[user][4]}},   {{sectionFallsMasterSoulLink[user][5]}}, {{sectionFallsMasterSoulLink[user][6]}}, {{sectionFallsMasterSoulLink[user][7]}}, {{sectionFallsMasterSoulLink[user][8]}}, {{sectionFallsMasterSoulLink[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&5{{sectionFallsMasterSoulLink[user][10]}}, {{sectionFallsMasterSoulLink[user][11]}}, {{sectionFallsMasterSoulLink[user][12]}}, {{sectionFallsMasterSoulLink[user][13]}}, {{sectionFallsMasterSoulLink[user][14]}},   {{sectionFallsMasterSoulLink[user][15]}}, {{sectionFallsMasterSoulLink[user][16]}}, {{sectionFallsMasterSoulLink[user][17]}}, {{sectionFallsMasterSoulLink[user][18]}}, {{sectionFallsMasterSoulLink[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&5{{sectionFallsMasterSoulLink[user][20]}}, {{sectionFallsMasterSoulLink[user][21]}}, {{sectionFallsMasterSoulLink[user][22]}}, {{sectionFallsMasterSoulLink[user][23]}}, {{sectionFallsMasterSoulLink[user][24]}},   {{sectionFallsMasterSoulLink[user][25]}}, {{sectionFallsMasterSoulLink[user][26]}}, {{sectionFallsMasterSoulLink[user][27]}}, {{sectionFallsMasterSoulLink[user][28]}}, {{sectionFallsMasterSoulLink[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&5{{sectionFallsMasterSoulLink[user][30]}}, {{sectionFallsMasterSoulLink[user][31]}}, {{sectionFallsMasterSoulLink[user][32]}}, {{sectionFallsMasterSoulLink[user][33]}}, {{sectionFallsMasterSoulLink[user][34]}},   {{sectionFallsMasterSoulLink[user][35]}}, {{sectionFallsMasterSoulLink[user][36]}}, {{sectionFallsMasterSoulLink[user][37]}}, {{sectionFallsMasterSoulLink[user][38]}}, {{sectionFallsMasterSoulLink[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&5{{sectionFallsMasterSoulLink[user][40]}}, {{sectionFallsMasterSoulLink[user][41]}}, {{sectionFallsMasterSoulLink[user][42]}}, {{sectionFallsMasterSoulLink[user][43]}}, {{sectionFallsMasterSoulLink[user][44]}},   {{sectionFallsMasterSoulLink[user][45]}}, {{sectionFallsMasterSoulLink[user][46]}}, {{sectionFallsMasterSoulLink[user][47]}}, {{sectionFallsMasterSoulLink[user][48]}}, {{sectionFallsMasterSoulLink[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&5{{sectionFallsMasterSoulLink[user][50]}}, {{sectionFallsMasterSoulLink[user][51]}}, {{sectionFallsMasterSoulLink[user][52]}}, {{sectionFallsMasterSoulLink[user][53]}}, {{sectionFallsMasterSoulLink[user][54]}},   {{sectionFallsMasterSoulLink[user][55]}}, {{sectionFallsMasterSoulLink[user][56]}}, {{sectionFallsMasterSoulLink[user][57]}}, {{sectionFallsMasterSoulLink[user][58]}}, {{sectionFallsMasterSoulLink[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&5{{sectionFallsMasterSoulLink[user][60]}}, {{sectionFallsMasterSoulLink[user][61]}}, {{sectionFallsMasterSoulLink[user][62]}}, {{sectionFallsMasterSoulLink[user][63]}}, {{sectionFallsMasterSoulLink[user][64]}},   {{sectionFallsMasterSoulLink[user][65]}}, {{sectionFallsMasterSoulLink[user][66]}}, {{sectionFallsMasterSoulLink[user][67]}}, {{sectionFallsMasterSoulLink[user][68]}}, {{sectionFallsMasterSoulLink[user][69]}}&#D3D6E0]
+    @player
+    @player &bHarder Hats:
+    @player &#D3D6E0Section 1: [&b{{sectionFallsSoulLink[user][0]}}, {{sectionFallsSoulLink[user][1]}}, {{sectionFallsSoulLink[user][2]}}, {{sectionFallsSoulLink[user][3]}}, {{sectionFallsSoulLink[user][4]}},   {{sectionFallsSoulLink[user][5]}}, {{sectionFallsSoulLink[user][6]}}, {{sectionFallsSoulLink[user][7]}}, {{sectionFallsSoulLink[user][8]}}, {{sectionFallsSoulLink[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&b{{sectionFallsSoulLink[user][10]}}, {{sectionFallsSoulLink[user][11]}}, {{sectionFallsSoulLink[user][12]}}, {{sectionFallsSoulLink[user][13]}}, {{sectionFallsSoulLink[user][14]}},   {{sectionFallsSoulLink[user][15]}}, {{sectionFallsSoulLink[user][16]}}, {{sectionFallsSoulLink[user][17]}}, {{sectionFallsSoulLink[user][18]}}, {{sectionFallsSoulLink[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&b{{sectionFallsSoulLink[user][20]}}, {{sectionFallsSoulLink[user][21]}}, {{sectionFallsSoulLink[user][22]}}, {{sectionFallsSoulLink[user][23]}}, {{sectionFallsSoulLink[user][24]}},   {{sectionFallsSoulLink[user][25]}}, {{sectionFallsSoulLink[user][26]}}, {{sectionFallsSoulLink[user][27]}}, {{sectionFallsSoulLink[user][28]}}, {{sectionFallsSoulLink[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&b{{sectionFallsSoulLink[user][30]}}, {{sectionFallsSoulLink[user][31]}}, {{sectionFallsSoulLink[user][32]}}, {{sectionFallsSoulLink[user][33]}}, {{sectionFallsSoulLink[user][34]}},   {{sectionFallsSoulLink[user][35]}}, {{sectionFallsSoulLink[user][36]}}, {{sectionFallsSoulLink[user][37]}}, {{sectionFallsSoulLink[user][38]}}, {{sectionFallsSoulLink[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&b{{sectionFallsSoulLink[user][40]}}, {{sectionFallsSoulLink[user][41]}}, {{sectionFallsSoulLink[user][42]}}, {{sectionFallsSoulLink[user][43]}}, {{sectionFallsSoulLink[user][44]}},   {{sectionFallsSoulLink[user][45]}}, {{sectionFallsSoulLink[user][46]}}, {{sectionFallsSoulLink[user][47]}}, {{sectionFallsSoulLink[user][48]}}, {{sectionFallsSoulLink[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&b{{sectionFallsSoulLink[user][50]}}, {{sectionFallsSoulLink[user][51]}}, {{sectionFallsSoulLink[user][52]}}, {{sectionFallsSoulLink[user][53]}}, {{sectionFallsSoulLink[user][54]}},   {{sectionFallsSoulLink[user][55]}}, {{sectionFallsSoulLink[user][56]}}, {{sectionFallsSoulLink[user][57]}}, {{sectionFallsSoulLink[user][58]}}, {{sectionFallsSoulLink[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&b{{sectionFallsSoulLink[user][60]}}, {{sectionFallsSoulLink[user][61]}}, {{sectionFallsSoulLink[user][62]}}, {{sectionFallsSoulLink[user][63]}}, {{sectionFallsSoulLink[user][64]}},   {{sectionFallsSoulLink[user][65]}}, {{sectionFallsSoulLink[user][66]}}, {{sectionFallsSoulLink[user][67]}}, {{sectionFallsSoulLink[user][68]}}, {{sectionFallsSoulLink[user][69]}}&#D3D6E0]
+    @player
+    @player &cHardest Hat:
+    @player &#D3D6E0Section 1: [&c{{sectionFallsUMM[user][0]}}, {{sectionFallsUMM[user][1]}}, {{sectionFallsUMM[user][2]}}, {{sectionFallsUMM[user][3]}}, {{sectionFallsUMM[user][4]}},   {{sectionFallsUMM[user][5]}}, {{sectionFallsUMM[user][6]}}, {{sectionFallsUMM[user][7]}}, {{sectionFallsUMM[user][8]}}, {{sectionFallsUMM[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&c{{sectionFallsUMM[user][10]}}, {{sectionFallsUMM[user][11]}}, {{sectionFallsUMM[user][12]}}, {{sectionFallsUMM[user][13]}}, {{sectionFallsUMM[user][14]}},   {{sectionFallsUMM[user][15]}}, {{sectionFallsUMM[user][16]}}, {{sectionFallsUMM[user][17]}}, {{sectionFallsUMM[user][18]}}, {{sectionFallsUMM[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&c{{sectionFallsUMM[user][20]}}, {{sectionFallsUMM[user][21]}}, {{sectionFallsUMM[user][22]}}, {{sectionFallsUMM[user][23]}}, {{sectionFallsUMM[user][24]}},   {{sectionFallsUMM[user][25]}}, {{sectionFallsUMM[user][26]}}, {{sectionFallsUMM[user][27]}}, {{sectionFallsUMM[user][28]}}, {{sectionFallsUMM[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&c{{sectionFallsUMM[user][30]}}, {{sectionFallsUMM[user][31]}}, {{sectionFallsUMM[user][32]}}, {{sectionFallsUMM[user][33]}}, {{sectionFallsUMM[user][34]}},   {{sectionFallsUMM[user][35]}}, {{sectionFallsUMM[user][36]}}, {{sectionFallsUMM[user][37]}}, {{sectionFallsUMM[user][38]}}, {{sectionFallsUMM[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&c{{sectionFallsUMM[user][40]}}, {{sectionFallsUMM[user][41]}}, {{sectionFallsUMM[user][42]}}, {{sectionFallsUMM[user][43]}}, {{sectionFallsUMM[user][44]}},   {{sectionFallsUMM[user][45]}}, {{sectionFallsUMM[user][46]}}, {{sectionFallsUMM[user][47]}}, {{sectionFallsUMM[user][48]}}, {{sectionFallsUMM[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&c{{sectionFallsUMM[user][50]}}, {{sectionFallsUMM[user][51]}}, {{sectionFallsUMM[user][52]}}, {{sectionFallsUMM[user][53]}}, {{sectionFallsUMM[user][54]}},   {{sectionFallsUMM[user][55]}}, {{sectionFallsUMM[user][56]}}, {{sectionFallsUMM[user][57]}}, {{sectionFallsUMM[user][58]}}, {{sectionFallsUMM[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&c{{sectionFallsUMM[user][60]}}, {{sectionFallsUMM[user][61]}}, {{sectionFallsUMM[user][62]}}, {{sectionFallsUMM[user][63]}}, {{sectionFallsUMM[user][64]}},   {{sectionFallsUMM[user][65]}}, {{sectionFallsUMM[user][66]}}, {{sectionFallsUMM[user][67]}}, {{sectionFallsUMM[user][68]}}, {{sectionFallsUMM[user][69]}}&#D3D6E0]
+    @player
+    @player &6Even Harder Hat:
+    @player &#D3D6E0Section 1: [&6{{sectionFallsMaster[user][0]}}, {{sectionFallsMaster[user][1]}}, {{sectionFallsMaster[user][2]}}, {{sectionFallsMaster[user][3]}}, {{sectionFallsMaster[user][4]}},   {{sectionFallsMaster[user][5]}}, {{sectionFallsMaster[user][6]}}, {{sectionFallsMaster[user][7]}}, {{sectionFallsMaster[user][8]}}, {{sectionFallsMaster[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&6{{sectionFallsMaster[user][10]}}, {{sectionFallsMaster[user][11]}}, {{sectionFallsMaster[user][12]}}, {{sectionFallsMaster[user][13]}}, {{sectionFallsMaster[user][14]}},   {{sectionFallsMaster[user][15]}}, {{sectionFallsMaster[user][16]}}, {{sectionFallsMaster[user][17]}}, {{sectionFallsMaster[user][18]}}, {{sectionFallsMaster[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&6{{sectionFallsMaster[user][20]}}, {{sectionFallsMaster[user][21]}}, {{sectionFallsMaster[user][22]}}, {{sectionFallsMaster[user][23]}}, {{sectionFallsMaster[user][24]}},   {{sectionFallsMaster[user][25]}}, {{sectionFallsMaster[user][26]}}, {{sectionFallsMaster[user][27]}}, {{sectionFallsMaster[user][28]}}, {{sectionFallsMaster[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&6{{sectionFallsMaster[user][30]}}, {{sectionFallsMaster[user][31]}}, {{sectionFallsMaster[user][32]}}, {{sectionFallsMaster[user][33]}}, {{sectionFallsMaster[user][34]}},   {{sectionFallsMaster[user][35]}}, {{sectionFallsMaster[user][36]}}, {{sectionFallsMaster[user][37]}}, {{sectionFallsMaster[user][38]}}, {{sectionFallsMaster[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&6{{sectionFallsMaster[user][40]}}, {{sectionFallsMaster[user][41]}}, {{sectionFallsMaster[user][42]}}, {{sectionFallsMaster[user][43]}}, {{sectionFallsMaster[user][44]}},   {{sectionFallsMaster[user][45]}}, {{sectionFallsMaster[user][46]}}, {{sectionFallsMaster[user][47]}}, {{sectionFallsMaster[user][48]}}, {{sectionFallsMaster[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&6{{sectionFallsMaster[user][50]}}, {{sectionFallsMaster[user][51]}}, {{sectionFallsMaster[user][52]}}, {{sectionFallsMaster[user][53]}}, {{sectionFallsMaster[user][54]}},   {{sectionFallsMaster[user][55]}}, {{sectionFallsMaster[user][56]}}, {{sectionFallsMaster[user][57]}}, {{sectionFallsMaster[user][58]}}, {{sectionFallsMaster[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&6{{sectionFallsMaster[user][60]}}, {{sectionFallsMaster[user][61]}}, {{sectionFallsMaster[user][62]}}, {{sectionFallsMaster[user][63]}}, {{sectionFallsMaster[user][64]}},   {{sectionFallsMaster[user][65]}}, {{sectionFallsMaster[user][66]}}, {{sectionFallsMaster[user][67]}}, {{sectionFallsMaster[user][68]}}, {{sectionFallsMaster[user][69]}}&#D3D6E0]
+    @player 
+    @player &aHarder Hat:
+    @player &#D3D6E0Section 1: [&a{{sectionFallsNormal[user][0]}}, {{sectionFallsNormal[user][1]}}, {{sectionFallsNormal[user][2]}}, {{sectionFallsNormal[user][3]}}, {{sectionFallsNormal[user][4]}},   {{sectionFallsNormal[user][5]}}, {{sectionFallsNormal[user][6]}}, {{sectionFallsNormal[user][7]}}, {{sectionFallsNormal[user][8]}}, {{sectionFallsNormal[user][9]}}&#D3D6E0]
+    @player &#D3D6E0Section 2: [&a{{sectionFallsNormal[user][10]}}, {{sectionFallsNormal[user][11]}}, {{sectionFallsNormal[user][12]}}, {{sectionFallsNormal[user][13]}}, {{sectionFallsNormal[user][14]}},   {{sectionFallsNormal[user][15]}}, {{sectionFallsNormal[user][16]}}, {{sectionFallsNormal[user][17]}}, {{sectionFallsNormal[user][18]}}, {{sectionFallsNormal[user][19]}}&#D3D6E0]
+    @player &#D3D6E0Section 3: [&a{{sectionFallsNormal[user][20]}}, {{sectionFallsNormal[user][21]}}, {{sectionFallsNormal[user][22]}}, {{sectionFallsNormal[user][23]}}, {{sectionFallsNormal[user][24]}},   {{sectionFallsNormal[user][25]}}, {{sectionFallsNormal[user][26]}}, {{sectionFallsNormal[user][27]}}, {{sectionFallsNormal[user][28]}}, {{sectionFallsNormal[user][29]}}&#D3D6E0]
+    @player &#D3D6E0Section 4: [&a{{sectionFallsNormal[user][30]}}, {{sectionFallsNormal[user][31]}}, {{sectionFallsNormal[user][32]}}, {{sectionFallsNormal[user][33]}}, {{sectionFallsNormal[user][34]}},   {{sectionFallsNormal[user][35]}}, {{sectionFallsNormal[user][36]}}, {{sectionFallsNormal[user][37]}}, {{sectionFallsNormal[user][38]}}, {{sectionFallsNormal[user][39]}}&#D3D6E0]
+    @player &#D3D6E0Section 5: [&a{{sectionFallsNormal[user][40]}}, {{sectionFallsNormal[user][41]}}, {{sectionFallsNormal[user][42]}}, {{sectionFallsNormal[user][43]}}, {{sectionFallsNormal[user][44]}},   {{sectionFallsNormal[user][45]}}, {{sectionFallsNormal[user][46]}}, {{sectionFallsNormal[user][47]}}, {{sectionFallsNormal[user][48]}}, {{sectionFallsNormal[user][49]}}&#D3D6E0]
+    @player &#D3D6E0Section 6: [&a{{sectionFallsNormal[user][50]}}, {{sectionFallsNormal[user][51]}}, {{sectionFallsNormal[user][52]}}, {{sectionFallsNormal[user][53]}}, {{sectionFallsNormal[user][54]}},   {{sectionFallsNormal[user][55]}}, {{sectionFallsNormal[user][56]}}, {{sectionFallsNormal[user][57]}}, {{sectionFallsNormal[user][58]}}, {{sectionFallsNormal[user][59]}}&#D3D6E0]
+    @player &#D3D6E0Section 7: [&a{{sectionFallsNormal[user][60]}}, {{sectionFallsNormal[user][61]}}, {{sectionFallsNormal[user][62]}}, {{sectionFallsNormal[user][63]}}, {{sectionFallsNormal[user][64]}},   {{sectionFallsNormal[user][65]}}, {{sectionFallsNormal[user][66]}}, {{sectionFallsNormal[user][67]}}, {{sectionFallsNormal[user][68]}}, {{sectionFallsNormal[user][69]}}&#D3D6E0]
+    @player
+    @player &#D3D6E0Section X: [X-01, X-02, X-03, …, X-10]
+    @player
+    @chatscript 180s group11 pcStats(4, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
+@elseif pcSelect == 7
+    @var noteInt = math::random(0.0D, 20.0D)
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
+    @player
+    @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
+    @player &#D3D6E0Displaying stats for &#917E9C&l{{user}}
+    @if certifiedTrackpad[user] == true
+        @player &#ffc71d✯ Certified Trackpad Victor!
+    @fi
+    @player
+    @player &#D3D6E0Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @player
+    # (20%) Even Harder Hat Completion: Not Completed
+    # (20%) Cosmetics Unlocked: xx/12
+    # (20%) Secrets Found: xx/24
+    # (20%) Secrets Completed: xx/24
+    # (20%) Style Points Unlocked: xxx/3500
+    
+    @if numberCompletionsMaster >= 1
+        @player &#D3D6E020/20% Even Harder Hat: &aCompleted ✔
+    @else
+        @player &#D3D6E00.0/20% Even Harder Hat: &cNot Completed ✕
+    @fi
+
+    @if cosmeticsUnlocked[user].sum() == 12
+        @player &#D3D6E020/20% Cosmetics Unlocked: &a12/12 ✔
+    @else
+        @player &#D3D6E0{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) / 10}}.{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) % 10}}/20% Cosmetics Unlocked: &{{colorList[Int(cosmeticsUnlocked[user].sum())]}}{{cosmeticsUnlocked[user].sum()}}/12  ✕
+    @fi
+
+    @if secretsFoundList[user].sum() == 25
+        @player &#D3D6E020/20% Secrets Found: &a25/25 ✔
+    @else
+        @player &#D3D6E0{{Int(((Float(secretsFoundList[user].sum()) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsFoundList[user].sum()) / Float(25)) * 20) * 10) % 10}}/20% Secrets Found: &{{colorList[math::floor(Double(Float(secretsFoundList[user].sum() * 11) / 25))]}}{{secretsFoundList[user].sum()}}/25  ✕
+    @fi
+
+    @if secretsCompletedList[user].sum() == 25
+        @player &#D3D6E020/20% Secrets Completed: &a25/25 ✔
+    @else
+        @player &#D3D6E0{{Int(((Float(secretsCompletedList[user].sum()) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsCompletedList[user].sum()) / Float(25)) * 20) * 10) % 10}}/20% Secrets Completed: &{{colorList[math::floor(Double(Float(secretsCompletedList[user].sum() * 11) / 25))]}}{{secretsCompletedList[user].sum()}}/25  ✕
+    @fi
+
+    @if swagPoints[user] == 3500
+        @player &#D3D6E020/20% Style Points: &a3500/3500 ✔
+    @else
+        @player &#D3D6E0{{Int(((Float(swagPoints[user]) / Float(3500)) * 20) * 10) / 10}}.{{Int(((Float(swagPoints[user]) / Float(3500)) * 20) * 10) % 10}}/20% Style Points: &{{colorList[Int((Float(swagPoints[user]) / Float(3500)) * 12)]}}{{swagPoints[user]}}/3500  ✕
+    @fi
+    @player
+    @chatscript 180s group110 pcStats(0, user, player)
+    @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
+
+
 @fi

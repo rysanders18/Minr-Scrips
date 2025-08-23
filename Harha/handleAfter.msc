@@ -8,28 +8,43 @@
 
 # if the players level is correct then check for style points
 # DEBUG @player {{level[player]}} = {{levelNumber - 1}} && {{stylePresent}}
+# @player DEBUG ACTIVE: {{level[player]}} = {{levelNumber - 1}}, {{stylePresent}}
 @if level[player] == (levelNumber - 1) && stylePresent == true
+    # @player DEBUG ACTIVE: Style points Ran (blocks = {{blocksThisStage}})
     @var handleStylePoints(thresholds, rewards, claimedIndexStart, blocksThisStage, player)
 @fi
 
-# set the players level
-@var level[player] = levelNumber
-@bypass /xp set {{player}} 22 levels
-@if levelNumber == 0
-    @bypass /xp set {{player}} 0 points
-@else
-    @bypass /xp set {{player}} {{levelNumber + 1}} points
+# master mode soft cp notification 
+@if (difficultySelection == "master" || player.getCurrentChallenge() == "hahahaha") && level[player] == (levelNumber - 1)
+    @if (levelNumber % 5) == 0 && masterSoftCP[player][Int(math::floor(Double(levelNumber) / 5))] == 0
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[13]}}
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[20]}}
+        @bypass title {{player}} actionbar ["",{"text":"New ","bold":true,"color":"#ff6b48"},{"text":"Checkpoint ","bold":true,"color":"#ff7f37"},{"text":"Reached!","bold":true,"color":"#ff9523"}] 
+        @var masterSoftCP[player][Int(math::floor(Double(levelNumber) / 5)) - 1] = 1
+    @fi
 @fi
-@bypass /xp set {{player}} {{levelNumber + 1}} levels 
+
+@var ensureBlockSelection(levelNumber, player)
+@var setLevel(levelNumber, player)
+# @player DEBUG ACTIVE: XP Update Ran (level = {{levelNumber + 1}})
 
 # reset blocksThisStage
 @var blocksThisStage = 0
+# @var blocksThisStageGlobal[] TODO TODO
 @var numberOfBlocksToGive[player] = 63
 
 # clear blocks at end because cooldown
-@var resetBlocks(player)
+@var resetBlocks(player, 64)
+# @player DEBUG ACTIVE: Reset Blocks Ran
 
 # anticheat
-@for Int i in list::range(0, cheatList.length())
-    @var anticheat(cheatList[i], player)
-@done
+@if levelNumber <= 60
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheat(cheatList[i], player)
+    @done
+@else 
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheatEnd(cheatList[i], player)
+    @done
+@fi
+

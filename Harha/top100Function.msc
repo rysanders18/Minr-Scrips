@@ -1,0 +1,1091 @@
+# top100Function(Player player, Int varSelected)
+
+@fast
+@using Harha
+
+# # # Variation ints list
+# # # -=-=-=-=-=-=-=-=-=-
+# # # top100BlocksTotal = 0 
+# # @var totalBlocks
+# # # top100FallsTotal = 1
+# # @var totalFalls
+# # 
+# # # top100FallsPBNormal = 2
+# # @var pbFalls
+# # # top100FallsPBMaster = 3
+# # @var pbFallsMaster
+# # # top100FallsPBUMM = 4
+# # @var pbFallsUMM
+# # # top100FallsPBSoulLink = 5
+# # @var pbFallsSoulLink
+# # # top100FallsPBMasterSoulLink = 6
+# # @var pbFallsMasterSoulLink
+# # 
+# # # top100BlocksPBNormal = 7
+# # @var pbBlocks
+# # # top100BlocksPBMaster = 8
+# # @var pbBlocksMaster
+# # # top100BlocksPBUMM = 9
+# # @var pbBlocksUMM
+# # # top100BlocksPBSoulLink = 10
+# # @var pbBlocksSoulLink
+# # # top100BlocksPBMasterSoulLink = 11
+# # @var pbBlocksMasterSoulLink
+# # 
+# # # top100MapCompletionsTotal = 12
+# # @var numberCompletions
+# # # top100MapCompletionsNormal = 13
+# # @var numberCompletionsNormal
+# # # top100MapCompletionsMaster = 14
+# # @var numberCompletionsMaster
+# # # top100MapCompletionsUMM = 15
+# # @var numberCompletionsUMM
+# # # top100MapCompletionsSoulLink = 16
+# # @var numberCompletionsSoulLink
+# # # top100MapCompletionsMasterSoulLink = 17
+# # @var numberCompletionsMasterSoulLink
+# # 
+# # # top100Section1PB = 18
+# # @var stage1PB
+# # # top100Section2PB = 19
+# # @var stage2PB
+# # # top100Section3PB = 20
+# # @var stage3PB
+# # # top100Section4PB = 21
+# # @var stage4PB
+# # # top100Section5PB = 22
+# # @var stage5PB
+# # # top100Section6PB = 23
+# # @var stage6PB
+# # # top100Section7PB = 24
+# # @var stage7PB
+# # 
+# # # top100Anomalies = 25
+# # @var anomaliesExperienced
+
+
+@define Int index
+@define Int length
+@define Int oldPosition
+@if varSelected == 0
+# top100BlocksTotal = 0               ========================================================== 
+
+    @var length = top100BlocksTotal.length()
+    @if !top100BlocksTotal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksTotal.find(player.getUniqueId())
+    @fi
+
+    # check if player should actually be on the list
+    # @if totalBlocks[player] < totalBlocks[Player(top100BlocksTotal[length - 1])] && player.getUniqueId() != top100BlocksTotal[length - 1]
+    #     @return
+    # @fi
+
+
+    # index = their current position in the list, if theyre in the list to start.
+    @for Int insertIndex in list::range(0, length)
+        # @var insertIndex = length - insertIndex
+
+        # @player DEGUB: checking if {{totalBlocks[player]}} > {{totalBlocks[Player(top100BlocksTotal[insertIndex])]}}, result: {{totalBlocks[player] > totalBlocks[Player(top100BlocksTotal[insertIndex])]}}
+        @if (totalBlocks[player] > totalBlocks[Player(top100BlocksTotal[insertIndex])])
+
+            # insertIndex = index where the player should go
+
+            #  @for Int j in list::range(0, length - i)
+            #      @var j = (length - 1) - j
+            #      @player j = {{j}}, insertIndex = {{i}}, length = {{length}}
+            
+            #      # @if (j + 1 == top100BlocksTotal.length() && (top100BlocksTotal.contains(player.getUniqueId()))) || j < top100BlocksTotal.length()
+            #          # @player before: {{j+1}} = {{Player(top100BlocksTotal[j+1]).getName()}}, {{j}} = {{Player(top100BlocksTotal[j]).getName()}}
+            #          @var top100BlocksTotal[j+1] = top100BlocksTotal[j]
+            #          @player after: {{j+1}} = {{Player(top100BlocksTotal[j+1]).getName()}}, {{j}} = {{Player(top100BlocksTotal[j]).getName()}}
+            #      # @fi
+            #  @done
+
+
+            
+            @if top100BlocksTotal.contains(player.getUniqueId())
+            
+                # @player DEBUG: insertIndex = {{insertIndex}}, current position = {{top100BlocksTotal.find(player.getUniqueId()) + 1}}
+            
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksTotal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+
+                # @player Leaderboard before removal:
+                # @for Int i in list::range(0, top100BlocksTotal.length())
+                #     @player #{{i}} {{Player(top100BlocksTotal[i]).getName()}} = {{totalBlocks[Player(top100BlocksTotal[i])]}}
+                # @done
+
+                @var oldPosition = top100BlocksTotal.find(player.getUniqueId())
+                @var top100BlocksTotal.remove(oldPosition)
+
+                # @player Leaderboard after removal:
+                # @for Int i in list::range(0, top100BlocksTotal.length())
+                #     @player #{{i}} {{Player(top100BlocksTotal[i]).getName()}} = {{totalBlocks[Player(top100BlocksTotal[i])]}}
+                # @done
+
+            @fi
+
+            # @player insertIndex = {{insertIndex}}
+            @var top100BlocksTotal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksTotal.contains(player.getUniqueId())
+        # @player Player had less than everyone on the list, adding them to the end
+        @var top100BlocksTotal.add(player.getUniqueId(), top100BlocksTotal.length())
+    @fi
+
+# # @fi
+# # 
+# #     @player is this running at all
+# #     @if top100BlocksTotal.length() == 0
+# #         # @var top100BlocksTotal.append(player.getUniqueId())
+# #         @player very first append ran
+# #     @elseif top100BlocksTotal.length() <= 100
+# #         # lets say 1 person in list currently, and we have more than them
+# #         @var index = top100BlocksTotal.length()
+# # 
+# #         # index = 1, this runs once
+# #         # This is the for loop that runs through the entire uuid list backwards and checks if the player is < than
+# #         # every single person.
+# #         @for Int i in list::range(0, index)
+# #             @var i = index - i
+# #             # i = 1
+# # 
+# #             # if we have less than uuid[0] (we dont, this runs)
+# #             @player checks for i = {{i}}, result: {{totalBlocks[player]}} < {{totalBlocks[Player(top100BlocksTotal[i-1])]}} = {{totalBlocks[player] < totalBlocks[Player(top100BlocksTotal[i-1])]}}
+# #             @if totalBlocks[player] < totalBlocks[Player(top100BlocksTotal[i-1])]
+# #                 # if you have less than the last player in the list, get added to the end and @return
+# #                 # edge case where the player should be in last place.
+# #                 @if i == index
+# #                     # @var top100BlocksTotal.append(player.getUniqueId())
+# #                     @player oh wait this first append ran???
+# #                     @return
+# #                 @fi
+# # 
+# #                 # duplicade the last player if we are inserting a new player to the list
+# #                 @if !top100BlocksTotal.contains(player.getUniqueId())
+# #                     # @var top100BlocksTotal.append(top100BlocksTotal[index - 1])
+# #                     @player the first append ran!!!!!!!!!!!!!!!!!!!!!!
+# #                 @fi
+# # 
+# #                 # iterate from the back of the list and shift everyone down.
+# #                 @for Int j in list::range(0, index - i)
+# #                     @var j = (index - i) - j
+# # 
+# #                     @var top100BlocksTotal[j+1] = top100BlocksTotal[j]
+# #                 @done
+# #                 
+# #                 @var top100BlocksTotal[i] = player.getUniqueId()
+# #                 @return
+# #             @fi
+# #         @done
+# # 
+# #         # if the IF statement never ran, and the script is still running, we need to set player to first place
+# #         # Index = length
+# # 
+# #         # duplicade the last player if we are inserting a new player to the list
+# #         @player {{!(top100BlocksTotal.contains(player.getUniqueId()))}}
+# #         @if !(top100BlocksTotal.contains(player.getUniqueId()))
+# #             # @var top100BlocksTotal.append(top100BlocksTotal[index - 1])
+# #             @player THE APPEND RAN!!!!!!!!
+# #         @fi
+# # 
+# #         @for Int j in list::range(0, index - 2)
+# #             @var j = (index - 2) - j
+# #             @player First place running: j = {{j}}, List length: {{index}}, Running from 0 to {{index - 2}}
+# #             @var top100BlocksTotal[j+1] = top100BlocksTotal[j]
+# #         @done
+# #         @var top100BlocksTotal[0] = player.getUniqueId()
+# # 
+# #     @elseif !top100BlocksTotal.contains(player.getUniqueId())
+# #         @var index = 100
+# #     @else
+# #         @var index = top100BlocksTotal.find(player.getUniqueId())
+# #     @fi
+# # 
+# #     @for Int i in list::range(0, index)
+# #         @var i = index - i
+# # 
+# # 
+# #         @if totalBlocks[player] < totalBlocks[Player(top100BlocksTotal[i-1])]
+# #             # if player shouldn't be in list, return
+# #             @if i >= 100
+# #                 @return
+# #             @fi
+# # 
+# #             @for Int j in list::range(0, 100 - i)
+# #                 @var j = 98 - j
+# # 
+# #                 @var top100BlocksTotal[j+1] = top100BlocksTotal[j]
+# #             @done
+# #             
+# #             @var top100BlocksTotal[i] = player.getUniqueId()
+# #             @return
+# #         @fi
+# #     @done
+
+@elseif varSelected == 1
+# top100FallsTotal = 1               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsTotal.length()
+    @if !top100FallsTotal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsTotal.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (totalFalls[player] > totalFalls[Player(top100FallsTotal[insertIndex])])
+            @if top100FallsTotal.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsTotal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsTotal.find(player.getUniqueId())
+                @var top100FallsTotal.remove(oldPosition)
+            @fi
+            @var top100FallsTotal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsTotal.contains(player.getUniqueId())
+        @var top100FallsTotal.add(player.getUniqueId(), top100FallsTotal.length())
+    @fi
+
+@elseif varSelected == 2
+# top100FallsPBNormal = 2               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsPBNormal.length()
+    @if !top100FallsPBNormal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsPBNormal.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbFalls[player] < pbFalls[Player(top100FallsPBNormal[insertIndex])])
+            @if top100FallsPBNormal.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsPBNormal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsPBNormal.find(player.getUniqueId())
+                @var top100FallsPBNormal.remove(oldPosition)
+            @fi
+            @var top100FallsPBNormal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsPBNormal.contains(player.getUniqueId())
+        @var top100FallsPBNormal.add(player.getUniqueId(), top100FallsPBNormal.length())
+    @fi
+
+@elseif varSelected == 3
+# top100FallsPBMaster = 3               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsPBMaster.length()
+    @if !top100FallsPBMaster.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsPBMaster.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbFallsMaster[player] < pbFallsMaster[Player(top100FallsPBMaster[insertIndex])])
+            @if top100FallsPBMaster.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsPBMaster.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsPBMaster.find(player.getUniqueId())
+                @var top100FallsPBMaster.remove(oldPosition)
+            @fi
+            @var top100FallsPBMaster.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsPBMaster.contains(player.getUniqueId())
+        @var top100FallsPBMaster.add(player.getUniqueId(), top100FallsPBMaster.length())
+    @fi
+
+@elseif varSelected == 4
+# top100FallsPBUMM = 4               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsPBUMM.length()
+    @if !top100FallsPBUMM.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsPBUMM.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbFallsUMM[player] < pbFallsUMM[Player(top100FallsPBUMM[insertIndex])])
+            @if top100FallsPBUMM.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsPBUMM.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsPBUMM.find(player.getUniqueId())
+                @var top100FallsPBUMM.remove(oldPosition)
+            @fi
+            @var top100FallsPBUMM.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsPBUMM.contains(player.getUniqueId())
+        @var top100FallsPBUMM.add(player.getUniqueId(), top100FallsPBUMM.length())
+    @fi
+
+@elseif varSelected == 5
+# top100FallsPBSoulLink = 5               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsPBSoulLink.length()
+    @if !top100FallsPBSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsPBSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbFallsSoulLink[player] < pbFallsSoulLink[Player(top100FallsPBSoulLink[insertIndex])])
+            @if top100FallsPBSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsPBSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsPBSoulLink.find(player.getUniqueId())
+                @var top100FallsPBSoulLink.remove(oldPosition)
+            @fi
+            @var top100FallsPBSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsPBSoulLink.contains(player.getUniqueId())
+        @var top100FallsPBSoulLink.add(player.getUniqueId(), top100FallsPBSoulLink.length())
+    @fi
+
+@elseif varSelected == 6
+# top100FallsPBMasterSoulLink = 6               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100FallsPBMasterSoulLink.length()
+    @if !top100FallsPBMasterSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100FallsPBMasterSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbFallsMasterSoulLink[player] < pbFallsMasterSoulLink[Player(top100FallsPBMasterSoulLink[insertIndex])])
+            @if top100FallsPBMasterSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100FallsPBMasterSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100FallsPBMasterSoulLink.find(player.getUniqueId())
+                @var top100FallsPBMasterSoulLink.remove(oldPosition)
+            @fi
+            @var top100FallsPBMasterSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100FallsPBMasterSoulLink.contains(player.getUniqueId())
+        @var top100FallsPBMasterSoulLink.add(player.getUniqueId(), top100FallsPBMasterSoulLink.length())
+    @fi
+
+@elseif varSelected == 7
+# top100BlocksPBNormal = 7               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100BlocksPBNormal.length()
+    @if !top100BlocksPBNormal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksPBNormal.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbBlocks[player] < pbBlocks[Player(top100BlocksPBNormal[insertIndex])])
+            @if top100BlocksPBNormal.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksPBNormal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100BlocksPBNormal.find(player.getUniqueId())
+                @var top100BlocksPBNormal.remove(oldPosition)
+            @fi
+            @var top100BlocksPBNormal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksPBNormal.contains(player.getUniqueId())
+        @var top100BlocksPBNormal.add(player.getUniqueId(), top100BlocksPBNormal.length())
+    @fi
+
+@elseif varSelected == 8
+# top100BlocksPBMaster = 8               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100BlocksPBMaster.length()
+    @if !top100BlocksPBMaster.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksPBMaster.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbBlocksMaster[player] < pbBlocksMaster[Player(top100BlocksPBMaster[insertIndex])])
+            @if top100BlocksPBMaster.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksPBMaster.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100BlocksPBMaster.find(player.getUniqueId())
+                @var top100BlocksPBMaster.remove(oldPosition)
+            @fi
+            @var top100BlocksPBMaster.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksPBMaster.contains(player.getUniqueId())
+        @var top100BlocksPBMaster.add(player.getUniqueId(), top100BlocksPBMaster.length())
+    @fi
+
+@elseif varSelected == 9
+# top100BlocksPBUMM = 9               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100BlocksPBUMM.length()
+    @if !top100BlocksPBUMM.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksPBUMM.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbBlocksUMM[player] < pbBlocksUMM[Player(top100BlocksPBUMM[insertIndex])])
+            @if top100BlocksPBUMM.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksPBUMM.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100BlocksPBUMM.find(player.getUniqueId())
+                @var top100BlocksPBUMM.remove(oldPosition)
+            @fi
+            @var top100BlocksPBUMM.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksPBUMM.contains(player.getUniqueId())
+        @var top100BlocksPBUMM.add(player.getUniqueId(), top100BlocksPBUMM.length())
+    @fi
+
+@elseif varSelected == 10
+# top100BlocksPBSoulLink = 10               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100BlocksPBSoulLink.length()
+    @if !top100BlocksPBSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksPBSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbBlocksSoulLink[player] < pbBlocksSoulLink[Player(top100BlocksPBSoulLink[insertIndex])])
+            @if top100BlocksPBSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksPBSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100BlocksPBSoulLink.find(player.getUniqueId())
+                @var top100BlocksPBSoulLink.remove(oldPosition)
+            @fi
+            @var top100BlocksPBSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksPBSoulLink.contains(player.getUniqueId())
+        @var top100BlocksPBSoulLink.add(player.getUniqueId(), top100BlocksPBSoulLink.length())
+    @fi
+
+@elseif varSelected == 11
+# top100BlocksPBMasterSoulLink = 11               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100BlocksPBMasterSoulLink.length()
+    @if !top100BlocksPBMasterSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100BlocksPBMasterSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (pbBlocksMasterSoulLink[player] < pbBlocksMasterSoulLink[Player(top100BlocksPBMasterSoulLink[insertIndex])])
+            @if top100BlocksPBMasterSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100BlocksPBMasterSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100BlocksPBMasterSoulLink.find(player.getUniqueId())
+                @var top100BlocksPBMasterSoulLink.remove(oldPosition)
+            @fi
+            @var top100BlocksPBMasterSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100BlocksPBMasterSoulLink.contains(player.getUniqueId())
+        @var top100BlocksPBMasterSoulLink.add(player.getUniqueId(), top100BlocksPBMasterSoulLink.length())
+    @fi
+
+@elseif varSelected == 12
+# top100MapCompletionsTotal = 12               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsTotal.length()
+    @if !top100MapCompletionsTotal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsTotal.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletions[player] > numberCompletions[Player(top100MapCompletionsTotal[insertIndex])])
+            @if top100MapCompletionsTotal.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsTotal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsTotal.find(player.getUniqueId())
+                @var top100MapCompletionsTotal.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsTotal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsTotal.contains(player.getUniqueId())
+        @var top100MapCompletionsTotal.add(player.getUniqueId(), top100MapCompletionsTotal.length())
+    @fi
+
+@elseif varSelected == 13
+# top100MapCompletionsNormal = 13               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsNormal.length()
+    @if !top100MapCompletionsNormal.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsNormal.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletionsNormal[player] > numberCompletionsNormal[Player(top100MapCompletionsNormal[insertIndex])])
+            @if top100MapCompletionsNormal.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsNormal.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsNormal.find(player.getUniqueId())
+                @var top100MapCompletionsNormal.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsNormal.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsNormal.contains(player.getUniqueId())
+        @var top100MapCompletionsNormal.add(player.getUniqueId(), top100MapCompletionsNormal.length())
+    @fi
+
+@elseif varSelected == 14
+# top100MapCompletionsMaster = 14               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsMaster.length()
+    @if !top100MapCompletionsMaster.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsMaster.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletionsMaster[player] > numberCompletionsMaster[Player(top100MapCompletionsMaster[insertIndex])])
+            @if top100MapCompletionsMaster.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsMaster.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsMaster.find(player.getUniqueId())
+                @var top100MapCompletionsMaster.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsMaster.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsMaster.contains(player.getUniqueId())
+        @var top100MapCompletionsMaster.add(player.getUniqueId(), top100MapCompletionsMaster.length())
+    @fi
+
+@elseif varSelected == 15
+# top100MapCompletionsUMM = 15               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsUMM.length()
+    @if !top100MapCompletionsUMM.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsUMM.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletionsUMM[player] > numberCompletionsUMM[Player(top100MapCompletionsUMM[insertIndex])])
+            @if top100MapCompletionsUMM.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsUMM.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsUMM.find(player.getUniqueId())
+                @var top100MapCompletionsUMM.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsUMM.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsUMM.contains(player.getUniqueId())
+        @var top100MapCompletionsUMM.add(player.getUniqueId(), top100MapCompletionsUMM.length())
+    @fi
+
+@elseif varSelected == 16
+# top100MapCompletionsSoulLink = 16               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsSoulLink.length()
+    @if !top100MapCompletionsSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletionsSoulLink[player] > numberCompletionsSoulLink[Player(top100MapCompletionsSoulLink[insertIndex])])
+            @if top100MapCompletionsSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsSoulLink.find(player.getUniqueId())
+                @var top100MapCompletionsSoulLink.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsSoulLink.contains(player.getUniqueId())
+        @var top100MapCompletionsSoulLink.add(player.getUniqueId(), top100MapCompletionsSoulLink.length())
+    @fi
+
+@elseif varSelected == 17
+# top100MapCompletionsMasterSoulLink = 17               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100MapCompletionsMasterSoulLink.length()
+    @if !top100MapCompletionsMasterSoulLink.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100MapCompletionsMasterSoulLink.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (numberCompletionsMasterSoulLink[player] > numberCompletionsMasterSoulLink[Player(top100MapCompletionsMasterSoulLink[insertIndex])])
+            @if top100MapCompletionsMasterSoulLink.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100MapCompletionsMasterSoulLink.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100MapCompletionsMasterSoulLink.find(player.getUniqueId())
+                @var top100MapCompletionsMasterSoulLink.remove(oldPosition)
+            @fi
+            @var top100MapCompletionsMasterSoulLink.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100MapCompletionsMasterSoulLink.contains(player.getUniqueId())
+        @var top100MapCompletionsMasterSoulLink.add(player.getUniqueId(), top100MapCompletionsMasterSoulLink.length())
+    @fi
+
+@elseif varSelected == 18
+# top100Section1PB = 18               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section1PB.length()
+    @if !top100Section1PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section1PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage1PB[player] < stage1PB[Player(top100Section1PB[insertIndex])])
+            @if top100Section1PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section1PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section1PB.find(player.getUniqueId())
+                @var top100Section1PB.remove(oldPosition)
+            @fi
+            @var top100Section1PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has more than everyone else on the list, run this.
+    @if !top100Section1PB.contains(player.getUniqueId())
+        @var top100Section1PB.add(player.getUniqueId(), top100Section1PB.length())
+    @fi
+
+@elseif varSelected == 19
+# top100Section2PB = 19               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section2PB.length()
+    @if !top100Section2PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section2PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage2PB[player] < stage2PB[Player(top100Section2PB[insertIndex])])
+            @if top100Section2PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section2PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section2PB.find(player.getUniqueId())
+                @var top100Section2PB.remove(oldPosition)
+            @fi
+            @var top100Section2PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section2PB.contains(player.getUniqueId())
+        @var top100Section2PB.add(player.getUniqueId(), top100Section2PB.length())
+    @fi
+
+@elseif varSelected == 20
+# top100Section3PB = 20               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section3PB.length()
+    @if !top100Section3PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section3PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage3PB[player] < stage3PB[Player(top100Section3PB[insertIndex])])
+            @if top100Section3PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section3PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section3PB.find(player.getUniqueId())
+                @var top100Section3PB.remove(oldPosition)
+            @fi
+            @var top100Section3PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section3PB.contains(player.getUniqueId())
+        @var top100Section3PB.add(player.getUniqueId(), top100Section3PB.length())
+    @fi
+
+@elseif varSelected == 21
+# top100Section4PB = 21               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section4PB.length()
+    @if !top100Section4PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section4PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage4PB[player] < stage4PB[Player(top100Section4PB[insertIndex])])
+            @if top100Section4PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section4PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section4PB.find(player.getUniqueId())
+                @var top100Section4PB.remove(oldPosition)
+            @fi
+            @var top100Section4PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section4PB.contains(player.getUniqueId())
+        @var top100Section4PB.add(player.getUniqueId(), top100Section4PB.length())
+    @fi
+
+@elseif varSelected == 22
+# top100Section5PB = 22               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section5PB.length()
+    @if !top100Section5PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section5PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage5PB[player] < stage5PB[Player(top100Section5PB[insertIndex])])
+            @if top100Section5PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section5PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section5PB.find(player.getUniqueId())
+                @var top100Section5PB.remove(oldPosition)
+            @fi
+            @var top100Section5PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section5PB.contains(player.getUniqueId())
+        @var top100Section5PB.add(player.getUniqueId(), top100Section5PB.length())
+    @fi
+
+@elseif varSelected == 23
+# top100Section6PB = 23               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section6PB.length()
+    @if !top100Section6PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section6PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage6PB[player] < stage6PB[Player(top100Section6PB[insertIndex])])
+            @if top100Section6PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section6PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section6PB.find(player.getUniqueId())
+                @var top100Section6PB.remove(oldPosition)
+            @fi
+            @var top100Section6PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section6PB.contains(player.getUniqueId())
+        @var top100Section6PB.add(player.getUniqueId(), top100Section6PB.length())
+    @fi
+
+@elseif varSelected == 24
+# top100Section7PB = 24               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section7PB.length()
+    @if !top100Section7PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section7PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage7PB[player] < stage7PB[Player(top100Section7PB[insertIndex])])
+            @if top100Section7PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section7PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section7PB.find(player.getUniqueId())
+                @var top100Section7PB.remove(oldPosition)
+            @fi
+            @var top100Section7PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section7PB.contains(player.getUniqueId())
+        @var top100Section7PB.add(player.getUniqueId(), top100Section7PB.length())
+    @fi
+
+@elseif varSelected == 25
+# top100Section8PB = 25               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Section8PB.length()
+    @if !top100Section8PB.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Section8PB.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (stage8PB[player] < stage8PB[Player(top100Section8PB[insertIndex])])
+            @if top100Section8PB.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Section8PB.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Section8PB.find(player.getUniqueId())
+                @var top100Section8PB.remove(oldPosition)
+            @fi
+            @var top100Section8PB.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Section8PB.contains(player.getUniqueId())
+        @var top100Section8PB.add(player.getUniqueId(), top100Section8PB.length())
+    @fi
+
+@elseif varSelected == 26
+# top100Anomalies = 25               ========================================================== 
+
+    # index = their current position in the list, if theyre in the list to start.
+    @var length = top100Anomalies.length()
+    @if !top100Anomalies.contains(player.getUniqueId())
+        @var index = 1000
+    @else
+        @var index = top100Anomalies.find(player.getUniqueId())
+    @fi
+
+    # Scan every item in list from front to back
+    @for Int insertIndex in list::range(0, length)
+        # Checking if 
+        @if (anomaliesExperienced[player] > anomaliesExperienced[Player(top100Anomalies[insertIndex])])
+            @if top100Anomalies.contains(player.getUniqueId())
+            # if player is in the right spot, do nothing/return
+                @if insertIndex == top100Anomalies.find(player.getUniqueId()) + 1
+                    @return
+                @fi
+                @var oldPosition = top100Anomalies.find(player.getUniqueId())
+                @var top100Anomalies.remove(oldPosition)
+            @fi
+            @var top100Anomalies.add(player.getUniqueId(), insertIndex)
+            @return
+        @fi
+    @done
+
+    # if the player has less than everyone else on the list, run this.
+    @if !top100Anomalies.contains(player.getUniqueId())
+        @var top100Anomalies.add(player.getUniqueId(), top100Anomalies.length())
+    @fi
+@fi

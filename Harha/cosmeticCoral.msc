@@ -2,26 +2,16 @@
 
 @fast
 @using Harha
-@define Int randomNumber = Int(math::random(1.0D, 6.0D))
 
-@if randomNumber == 1
-    @var coralNumber[player] = 0
-@elseif randomNumber == 2
-    @var coralNumber[player] = 1
-@elseif randomNumber == 3
-    @var coralNumber[player] = 2
-@elseif randomNumber == 4
-    @var coralNumber[player] = 3
-@elseif randomNumber == 5
-    @var coralNumber[player] = 4
+@var coralNumber[player] = Int(math::random(0.0D, 5.0D))
+
+@if Int(math::random(0.0D, 15.0D)) == 1
+    @var coralNumber[player] += 5
 @fi
 
 @var blockSelection[player] = coralList[coralNumber]
-@if coralNumber[player] != lastCoralNumber[player]
-    @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640
-@fi
 @if numberOfBlocksToGive[player] >= 1
-    @bypass item replace entity {{player}} container.0 with {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] {{numberOfBlocksToGive[player]}}
+    @var resetBlocks(player, numberOfBlocksToGive[player])
     @var numberOfBlocksToGive[player] -= 1
     @var lastCoralNumber[player] = coralNumber[player]
 @fi    

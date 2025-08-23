@@ -14,9 +14,17 @@
 @var level[player] = 0
 @var iceSwapped[player] = false
 @var slimeSwapped[player] = false
+@var trapdoorSwapped[player] = false
+@var targetSwapped[player] = false
 @var ummFalls[player] = 5
+@var hasTeleported[player] = false
+@var partners[player] = Player[]
+@var masterSoftCP = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+@var top100Function(player, 26)
 
-
+@define String username = player.getName()
+@define String uuid = player.getUniqueId()
+@define Boolean isUsernameListed = false
 
 
 # handles difficulty selection
@@ -24,64 +32,120 @@
     @var difficultySelection[player] = "master"
 @elseif player.getCurrentChallenge() == "hahahahaha"
     @var difficultySelection[player] = "ultraMaster"
+@elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink" || player.getCurrentChallenge() == "hahahahas" || difficultySelection[player] == "masterSoulLink"
+    @define Player[] playersInStart = Region("harhaStartRoom", "Theta").getPlayersInside()
+    @for Int i in list::range(0, playersInStart.length())
+        @if playersInStart[i].getCurrentChallenge() == "hahahas" || difficultySelection[playersInStart[i]] == "soulLink"
+            @var partners[player].append(playersInStart[i])
+        @fi
+    @done
+    # @player {{playersInStart}}
+    # @player DEBUG: Partners = {{partners[player]}}
+    @if partners.length() <= 1
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 2 0.5
+        @player &cThere is nobody else in the start room with the soul link activated! You can not start alone!
+        @return
+    @fi
+
+    @if player.getCurrentChallenge() == "hahahas"
+        @var difficultySelection[player] = "soulLink"
+    @else
+        @var difficultySelection[player] = "masterSoulLink"
+    @fi
+
+    # Runs start sign function for all partners
+    @for Int i in list::range(0, partners.length())
+        @if playersInStart[i].getCurrentChallenge() == "hahahas" || difficultySelection[playersInStart[i]] == "soulLink"
+            # @var startSignSoulLinkFunction(partners[i], partners)
+            # @console function execute Harha::startSignSoulLinkFunction(Player(partners[i]), partners[player])
+            @if String(partners[player][i]) != player.getName()
+                @define String partnerString = "Player(\"{{partners[player][i]}}\")"
+                # DEBUG @player {{partnerString}}
+                @for Int j in list::range(0, partners.length())
+                    @if i != j
+                        @var partnerString += ", Player(\"{{partners[player][j]}}\")"
+                        # DEBUG @player {{partnerString}}
+                    @fi
+                @done
+                @console /function execute Harha::startSignSoulLinkFunction(Player("{{partners[player][i]}}"), Player[{{partnerString}}])
+            @fi
+        @fi
+    @done
+
+    @for Player partner in partners[player]
+        @var partners[partner] = partners[player]
+    @done
 @fi
 
 
 
-
-@bypass /effect give {{player}} minecraft:darkness 2 10 true
-@bypass /playsound minecraft:ui.button.click master @s 
-
-@delay 1s
+@bypass /playsound minecraft:ui.button.click master @a[distance=..20]
 
 @bypass /xp set {{player}} 0 points
 @bypass /xp set {{player}} 1 levels
 
 @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
-@if player.getCurrentChallenge() == "hahahahaha" 
-    @bypass /playsound minecraft:entity.ender_dragon.growl master @s ~ ~ ~ 1 {{math::random(1.1D, 1.4D)}}
-    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
-    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+@if player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
+    @bypass /playsound minecraft:entity.ender_dragon.growl master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.1D, 1.4D)}}
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.2D, 1.35D)}}
     @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
     @bypass /particle minecraft:flame -9199.5 92.5 9733.5 0 0 0 00.25 250
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
     @bypass /particle minecraft:dust_color_transition{from_color:[0.549,0.000,0.000],scale:1,to_color:[1.000,0.000,0.000]} -9199.5 93.5 9731.5 1.5 1 1.5 22.25 250
     @bypass /attribute @s minecraft:max_health base set 10
-@elseif player.getCurrentChallenge() == "hahahaha"
-    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
-    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+@elseif player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.2D, 1.35D)}}
     @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
     @bypass /particle minecraft:flame -9199.5 92.5 9733.5 0 0 0 00.25 250
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
     @bypass /attribute @s minecraft:max_health base set 20
-@else
-    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 2 0
-    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+@elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}    
     @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
     @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
-    @bypass /effect clear @s
+    @bypass /particle minecraft:scrape -9199.5 93.5 9732.5 2 2 2 00.25 100
+    @bypass /particle minecraft:wax_on -9199.5 93.5 9732.5 2 2 2 00.25 100
+    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @var difficultySelection[player] = "soulLink"
+@else
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
+    @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
     @bypass /attribute @s minecraft:max_health base set 20
     @var difficultySelection[player] = "normal"
-@fi 
-@bypass clear {{player}}
-@bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+@fi
 
-# TODO: hat stuff
+@var ensureBlockSelection(1, player)
+@var resetBlocks(player, 64)
+
+# hat stuff
 @if numberCompletions == 0
-    @bypass /item replace entity @s armor.head with leather_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=false,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:2,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+    @bypass item replace entity @s armor.head with leather_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=false,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]]] 1
 @elseif numberCompletions == 1
-    @bypass /item replace entity @s armor.head with chainmail_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:4,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+    @bypass item replace entity @s armor.head with chainmail_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]]] 1
 @elseif numberCompletions == 2
-    @bypass /item replace entity @s armor.head with iron_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:6,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+    @bypass item replace entity @s armor.head with iron_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]]] 1
 @elseif numberCompletions == 3
-    @bypass /item replace entity @s armor.head with golden_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:8,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+    @bypass item replace entity @s armor.head with golden_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]]] 1
 @elseif numberCompletions == 4
-    @bypass /item replace entity @s armor.head with diamond_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:10,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
-@elseif 5 <= numberCompletions <= 99
-    @bypass /item replace entity @s armor.head with netherite_helmet[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:20,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
-@elseif numberCompletions >= 100
-    @bypass /item replace entity @s armor.head with white_stained_glass[custom_name='[{"bold":true,"color":"#55FFFF","italic":false,"text":"H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"r "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}]',enchantment_glint_override=true,enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:"armor",type:"armor",amount:20,operation:"add_value"}],show_in_tooltip:false},lore=['{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}','" "','[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"]','[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]']] 1
+    @bypass item replace entity @s armor.head with diamond_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]]] 1
+@elseif numberCompletions >= 5 && numberCompletions <= 99
+    @bypass item replace entity @s armor.head with netherite_helmet[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]," ",[{"color":"gray","text":"Perhaps "},{"bold":false,"text":"something special "},"is unlocked at 100 completions..."]]] 1
+@elseif numberCompletions >= 100 && numberCompletions <= 499
+    @if glassList[player].concat() == "red_stained_glassorange_stained_glassyellow_stained_glasslime_stained_glasslight_blue_stained_glasscyan_stained_glassblue_stained_glasspurple_stained_glassmagenta_stained_glasspink_stained_glassred_stained_glassorange_stained_glassyellow_stained_glasslime_stained_glass"
+        @bypass item replace entity @s armor.head with white_stained_glass[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]," ",[{"color":"gray","text":"Good job unlocking the "},{"bold":true,"text":"Space Helmet! "}],{"color":"gray","text":"You can change the color of this glass!"},{"color":"gray","text":"It's equal to the first color you input in the Custom Glass cosmetic."}," ",[{"color":"gray","text":"Perhaps "},{"bold":true,"text":"something remarkable "},"is unlocked at 500 completions..."]]] 1
+    @else
+        @bypass item replace entity @s armor.head with {{glassList[player][0]}}[custom_name=[{"bold":true,"color":"#47D4D4","italic":false,"shadow_color":-14534341,"text":"H"},{"color":"#50D8D9","shadow_color":-14534341,"text":"a"},{"color":"#58DCDE","shadow_color":-14534341,"text":"r"},{"color":"#61E0E2","shadow_color":-14534341,"text":"d"},{"color":"#69E4E7","shadow_color":-14534341,"text":"e"},{"color":"#72E8EC","shadow_color":-14534341,"text":"r "},{"color":"#7AECF1","shadow_color":-14534341,"text":"H"},{"color":"#83F0F5","shadow_color":-14534341,"text":"a"},{"color":"#94F8FF","shadow_color":-14534341,"text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]," ",[{"color":"gray","text":"Good job unlocking the "},{"bold":true,"text":"Space Helmet! "}],{"color":"gray","text":"You can change the color of this glass!"},{"color":"gray","text":"It's equal to the first color you input in the Custom Glass cosmetic."}," ",[{"color":"gray","text":"Perhaps "},{"bold":true,"text":"something remarkable "},"is unlocked at 500 completions..."]]] 1
+    @fi
+@elseif numberCompletions >= 500
+    @bypass /item replace entity @s armor.head with end_rod[custom_name=[{"bold":true,"color":"#55FFFF","italic":false,"text":"Even H"},{"color":"#5AFEFF","text":"a"},{"color":"#60FDFF","text":"r"},{"color":"#65FCFF","text":"d"},{"color":"#6AFBFF","text":"e"},{"color":"#70FBFF","text":"rest "},{"color":"#75FAFF","text":"H"},{"color":"#7AF9FF","text":"a"},{"color":"#85F7FF","text":"t"}],enchantment_glint_override=true,enchantments={"minecraft:respiration":3,"minecraft:binding_curse":1,"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments","attribute_modifiers"]},attribute_modifiers=[{id:"armor",type:"armor",amount:{{numberCompletions[player] + 1}},operation:"add_value"}],lore=[{"color":"gray","italic":false,"text":"Unbreaking {{numberCompletions[player]}}"}," ",[{"color":"gray","text":"Each "},{"bold":false,"text":"map completion "},"will upgrade the"],[{"color":"gray","text":"hardness "},"of this hat! Good luck!"]," ",[{"bold":true,"color":"light_purple","text":"Congratulations! You are now a "},{"bold":true,"text":"Unicorn!"},{"bold":true,"color":"light_purple","text":" Good job!"}]]] 1
 @fi
 
 # only runs once due to codeGenerated
@@ -98,3 +162,310 @@
     
     @var totalCode = (code[0] + code[1] + code[2] + code[3] + code[4] + code[5] + code[6] + code[7] + code[8] + code[9] + code[10] + code[11] + code[12])
 @fi
+
+
+# Fancy Titles
+@if player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
+
+    @bypass /title @s times 0 100 40
+    @bypass /title @s subtitle [{"bold":true,"color":"#FF5555","text":"5 "},{"bold":true,"color":"#FA5050","text":"T"},{"bold":true,"color":"#F64C4C","text":"o"},{"bold":true,"color":"#F14747","text":"t"},{"bold":true,"color":"#EC4242","text":"a"},{"bold":true,"color":"#E73D3D","text":"l "},{"bold":true,"color":"#E33939","text":"L"},{"bold":true,"color":"#DE3434","text":"i"},{"bold":true,"color":"#D92F2F","text":"v"},{"bold":true,"color":"#D52B2B","text":"e"},{"bold":true,"color":"#D02626","text":"s "},{"color":"#CB2121","text":"❤"}]
+    # @bypass /title @s subtitle ["",{"text":"5 ","bold":true,"color":"red"},{"text":"Total ","bold":true,"color":"#d4332d"},{"text":"Lives","bold":true,"color":"dark_red"}]
+    @bypass /title @s times 0 60 20
+    @bypass /title {{player}} title ["",{"text":"Hardest Hat","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9202 87 9716
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#ff7f37"},{"text":"a","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"white"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9196 87 9718
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"#d4332d"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"#ff7f37"},{"text":"e","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"white"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"#d4332d"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"#ff7f37"},{"text":"s","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"white"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9202 87 9720
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"#d4332d"},{"text":"s","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff7f37"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"#d4332d"},{"text":"t","bold":true,"color":"red"},{"text":" ","bold":true,"color":"#ff7f37"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"white"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9196 87 9722
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#ff7f37"},{"text":"a","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"white"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"#d4332d"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"t","bold":true,"color":"gold"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"#d4332d"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff7f37"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9202 87 9724
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"#d4332d"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"#ff7f37"},{"text":"e","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"white"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"#d4332d"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"#d4332d"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"#ff7f37"},{"text":"s","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"white"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9196 87 9726
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"#d4332d"},{"text":"s","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff7f37"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"#d4332d"},{"text":"t","bold":true,"color":"red"},{"text":" ","bold":true,"color":"#ff7f37"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"white"},{"text":"t","bold":true,"color":"dark_red"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9202 87 9728
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"#d4332d"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"t","bold":true,"color":"gold"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"#d4332d"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff7f37"}]
+    @delay 1
+    @bypass summon minecraft:lightning_bolt -9202 87 9730
+    @bypass summon minecraft:lightning_bolt -9196 87 9730
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"r","bold":true,"color":"dark_red"},{"text":"d","bold":true,"color":"dark_red"},{"text":"e","bold":true,"color":"dark_red"},{"text":"s","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"dark_red"},{"text":" ","bold":true,"color":"dark_red"},{"text":"H","bold":true,"color":"dark_red"},{"text":"a","bold":true,"color":"dark_red"},{"text":"t","bold":true,"color":"#d4332d"}]
+    @delay 1
+    @bypass stopsound @a[distance=..100] * minecraft:entity.lightning_bolt.thunder
+    @bypass playsound minecraft:entity.lightning_bolt.thunder master @a[distance=..15] ~ ~ ~ 1 {{math::random(1.2D, 1.35D)}}
+    @bypass /title {{player}} times 0 4 60
+    @bypass /title {{player}} title ["",{"text":"Hardest Hat","bold":true,"color":"dark_red"}]
+
+@elseif player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
+
+    @bypass /title @s times 0 100 40
+    @bypass /title @s subtitle ["",{"text":"CPs every 5 levels","bold":true,"color":"red"}]
+    @bypass /title @s times 0 60 20
+    @bypass /title {{player}} title ["",{"text":"Even Harder Hat","bold":true,"color":"red"}]
+    @delay 4
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"white"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"#ff9523"},{"text":"v","bold":true,"color":"gold"},{"text":"e","bold":true,"color":"white"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"#ff6b48"},{"text":"v","bold":true,"color":"#ff7f37"},{"text":"e","bold":true,"color":"#ff9523"},{"text":"n","bold":true,"color":"gold"},{"text":" ","bold":true,"color":"white"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"#ff6b48"},{"text":"n","bold":true,"color":"#ff7f37"},{"text":" ","bold":true,"color":"#ff9523"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"white"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"#ff6b48"},{"text":"H","bold":true,"color":"#ff7f37"},{"text":"a","bold":true,"color":"#ff9523"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"white"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff6b48"},{"text":"r","bold":true,"color":"#ff7f37"},{"text":"d","bold":true,"color":"#ff9523"},{"text":"e","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"white"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"#ff9523"},{"text":"v","bold":true,"color":"gold"},{"text":"e","bold":true,"color":"white"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"#ff6b48"},{"text":"e","bold":true,"color":"#ff7f37"},{"text":"r","bold":true,"color":"#ff9523"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"#ff6b48"},{"text":"v","bold":true,"color":"#ff7f37"},{"text":"e","bold":true,"color":"#ff9523"},{"text":"n","bold":true,"color":"gold"},{"text":" ","bold":true,"color":"white"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"#ff6b48"},{"text":" ","bold":true,"color":"#ff7f37"},{"text":"H","bold":true,"color":"#ff9523"},{"text":"a","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"white"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"#ff6b48"},{"text":"n","bold":true,"color":"#ff7f37"},{"text":" ","bold":true,"color":"#ff9523"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"white"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"#ff6b48"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"t","bold":true,"color":"#ff9523"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"#ff6b48"},{"text":"H","bold":true,"color":"#ff7f37"},{"text":"a","bold":true,"color":"#ff9523"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff6b48"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"#ff6b48"},{"text":"r","bold":true,"color":"#ff7f37"},{"text":"d","bold":true,"color":"#ff9523"},{"text":"e","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"white"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"#ff6b48"},{"text":"e","bold":true,"color":"#ff7f37"},{"text":"r","bold":true,"color":"#ff9523"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"red"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"#ff6b48"},{"text":" ","bold":true,"color":"#ff7f37"},{"text":"H","bold":true,"color":"#ff9523"},{"text":"a","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"white"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"#ff6b48"},{"text":"a","bold":true,"color":"#ff7f37"},{"text":"t","bold":true,"color":"#ff9523"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"E","bold":true,"color":"red"},{"text":"v","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"n","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":"d","bold":true,"color":"red"},{"text":"e","bold":true,"color":"red"},{"text":"r","bold":true,"color":"red"},{"text":" ","bold":true,"color":"red"},{"text":"H","bold":true,"color":"red"},{"text":"a","bold":true,"color":"red"},{"text":"t","bold":true,"color":"#ff6b48"}]
+    @delay 1
+    @bypass /title @s times 0 4 60
+    @bypass /title {{player}} title ["",{"text":"Even Harder Hat","bold":true,"color":"red"}]
+
+@elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
+
+    @bypass /title @s times 0 100 40
+    @bypass /title @s subtitle ["",{"text":"Soul Link! ","bold":true,"color":"aqua"},{"text":"({{partners.length()}} Players)","bold":true,"color":"aqua"}]
+    @bypass /title @s times 0 60 20
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[6]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"yellow"},{"text":"a","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[10]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"yellow"},{"text":"r","bold":true,"color":"white"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#6aed12"},{"text":"a","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"yellow"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[13]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#24db86"},{"text":"a","bold":true,"color":"#6aed12"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"yellow"},{"text":"e","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[18]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#24db86"},{"text":"r","bold":true,"color":"#6aed12"},{"text":"d","bold":true,"color":"gold"},{"text":"e","bold":true,"color":"yellow"},{"text":"r","bold":true,"color":"white"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#24db86"},{"text":"d","bold":true,"color":"#6aed12"},{"text":"e","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"yellow"},{"text":" ","bold":true,"color":"white"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[8]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#24db86"},{"text":"e","bold":true,"color":"#6aed12"},{"text":"r","bold":true,"color":"gold"},{"text":" ","bold":true,"color":"yellow"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[12]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#24db86"},{"text":"r","bold":true,"color":"#6aed12"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"yellow"},{"text":"a","bold":true,"color":"white"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#24db86"},{"text":" ","bold":true,"color":"#6aed12"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[15]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#24db86"},{"text":"H","bold":true,"color":"#6aed12"},{"text":"a","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"yellow"},{"text":"s","bold":true,"color":"white"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[20]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"yellow"},{"text":"a","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#24db86"},{"text":"a","bold":true,"color":"#6aed12"},{"text":"t","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"yellow"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"yellow"},{"text":"r","bold":true,"color":"white"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#24db86"},{"text":"t","bold":true,"color":"#6aed12"},{"text":"s","bold":true,"color":"gold"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[10]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#6aed12"},{"text":"a","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"yellow"},{"text":"d","bold":true,"color":"white"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#24db86"},{"text":"s","bold":true,"color":"#6aed12"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[14]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#24db86"},{"text":"a","bold":true,"color":"#6aed12"},{"text":"r","bold":true,"color":"gold"},{"text":"d","bold":true,"color":"yellow"},{"text":"e","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#24db86"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#24db86"},{"text":"r","bold":true,"color":"#6aed12"},{"text":"d","bold":true,"color":"gold"},{"text":"e","bold":true,"color":"yellow"},{"text":"r","bold":true,"color":"white"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[17]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#24db86"},{"text":"d","bold":true,"color":"#6aed12"},{"text":"e","bold":true,"color":"gold"},{"text":"r","bold":true,"color":"yellow"},{"text":" ","bold":true,"color":"white"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[22]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#24db86"},{"text":"e","bold":true,"color":"#6aed12"},{"text":"r","bold":true,"color":"gold"},{"text":" ","bold":true,"color":"yellow"},{"text":"H","bold":true,"color":"white"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#24db86"},{"text":"r","bold":true,"color":"#6aed12"},{"text":" ","bold":true,"color":"gold"},{"text":"H","bold":true,"color":"yellow"},{"text":"a","bold":true,"color":"white"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[17]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#24db86"},{"text":" ","bold":true,"color":"#6aed12"},{"text":"H","bold":true,"color":"gold"},{"text":"a","bold":true,"color":"yellow"},{"text":"t","bold":true,"color":"white"},{"text":"s","bold":true,"color":"#2DD2D2"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[14]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#24db86"},{"text":"H","bold":true,"color":"#6aed12"},{"text":"a","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"yellow"},{"text":"s","bold":true,"color":"white"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#24db86"},{"text":"a","bold":true,"color":"#6aed12"},{"text":"t","bold":true,"color":"gold"},{"text":"s","bold":true,"color":"yellow"}]
+    @bypass /playsound minecraft:block.note_block.iron_xylophone master {{player}} -9199.5 92.5 9733.5 1 {{musicNotes[10]}}
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#24db86"},{"text":"t","bold":true,"color":"#6aed12"},{"text":"s","bold":true,"color":"gold"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#24db86"},{"text":"s","bold":true,"color":"#6aed12"}]
+    @delay 0
+    @bypass /title {{player}} title ["",{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":"d","bold":true,"color":"#2DD2D2"},{"text":"e","bold":true,"color":"#2DD2D2"},{"text":"r","bold":true,"color":"#2DD2D2"},{"text":" ","bold":true,"color":"#2DD2D2"},{"text":"H","bold":true,"color":"#2DD2D2"},{"text":"a","bold":true,"color":"#2DD2D2"},{"text":"t","bold":true,"color":"#2DD2D2"},{"text":"s","bold":true,"color":"#24db86"}]
+    @delay 1
+    @bypass /title {{player}} times 0 40 20
+    @bypass /title {{player}} title ["",{"text":"Harder Hats","bold":true,"color":"#2DD2D2"}]
+
+@fi
+
+
+# If username is already logged, return
+@if usernameList1.contains(username.toLowerCase()) || usernameList2.contains(username.toLowerCase()) || usernameList3.contains(username.toLowerCase()) || usernameList4.contains(username.toLowerCase()) || usernameList5.contains(username.toLowerCase()) || usernameList6.contains(username.toLowerCase()) || usernameList7.contains(username.toLowerCase()) || usernameList8.contains(username.toLowerCase()) || usernameList9.contains(username.toLowerCase()) || usernameList10.contains(username.toLowerCase()) || usernameList11.contains(username.toLowerCase()) || usernameList12.contains(username.toLowerCase()) || usernameList13.contains(username.toLowerCase()) || usernameList14.contains(username.toLowerCase()) || usernameList15.contains(username.toLowerCase()) || usernameList16.contains(username.toLowerCase()) || usernameList17.contains(username.toLowerCase()) || usernameList18.contains(username.toLowerCase()) || usernameList19.contains(username.toLowerCase()) || usernameList20.contains(username.toLowerCase())
+     @return 
+@fi
+
+# Finds the first lists that arent length 1000 and adds "username" and "uuid"
+@if usernameList1.length() != 1000
+    @var usernameList1.append(username.toLowerCase())
+    @var uuidList1.append(uuid)
+    @return
+@fi
+
+@if usernameList2.length() != 1000
+    @var usernameList2.append(username.toLowerCase())
+    @var uuidList2.append(uuid)
+    @return
+@fi
+
+@if usernameList3.length() != 1000
+    @var usernameList3.append(username.toLowerCase())
+    @var uuidList3.append(uuid)
+    @return
+@fi
+
+@if usernameList4.length() != 1000
+    @var usernameList4.append(username.toLowerCase())
+    @var uuidList4.append(uuid)
+    @return
+@fi
+
+@if usernameList5.length() != 1000
+    @var usernameList5.append(username.toLowerCase())
+    @var uuidList5.append(uuid)
+    @return
+@fi
+
+@if usernameList6.length() != 1000
+    @var usernameList6.append(username.toLowerCase())
+    @var uuidList6.append(uuid)
+    @return
+@fi
+
+@if usernameList7.length() != 1000
+    @var usernameList7.append(username.toLowerCase())
+    @var uuidList7.append(uuid)
+    @return
+@fi
+
+@if usernameList8.length() != 1000
+    @var usernameList8.append(username.toLowerCase())
+    @var uuidList8.append(uuid)
+    @return
+@fi
+
+@if usernameList9.length() != 1000
+    @var usernameList9.append(username.toLowerCase())
+    @var uuidList9.append(uuid)
+    @return
+@fi
+
+@if usernameList10.length() != 1000
+    @var usernameList10.append(username.toLowerCase())
+    @var uuidList10.append(uuid)
+    @return
+@fi
+
+@if usernameList11.length() != 1000
+    @var usernameList11.append(username.toLowerCase())
+    @var uuidList11.append(uuid)
+    @return
+@fi
+
+@if usernameList12.length() != 1000
+    @var usernameList12.append(username.toLowerCase())
+    @var uuidList12.append(uuid)
+    @return
+@fi
+
+@if usernameList13.length() != 1000
+    @var usernameList13.append(username.toLowerCase())
+    @var uuidList13.append(uuid)
+    @return
+@fi
+
+@if usernameList14.length() != 1000
+    @var usernameList14.append(username.toLowerCase())
+    @var uuidList14.append(uuid)
+    @return
+@fi
+
+@if usernameList15.length() != 1000
+    @var usernameList15.append(username.toLowerCase())
+    @var uuidList15.append(uuid)
+    @return
+@fi
+
+@if usernameList16.length() != 1000
+    @var usernameList16.append(username.toLowerCase())
+    @var uuidList16.append(uuid)
+    @return
+@fi
+
+@if usernameList17.length() != 1000
+    @var usernameList17.append(username.toLowerCase())
+    @var uuidList17.append(uuid)
+    @return
+@fi
+
+@if usernameList18.length() != 1000
+    @var usernameList18.append(username.toLowerCase())
+    @var uuidList18.append(uuid)
+    @return
+@fi
+
+@if usernameList19.length() != 1000
+    @var usernameList19.append(username.toLowerCase())
+    @var uuidList19.append(uuid)
+    @return
+@fi
+
+@if usernameList20.length() != 1000
+    @var usernameList20.append(username.toLowerCase())
+    @var uuidList20.append(uuid)
+    @return
+@fi
+
+

@@ -10,27 +10,29 @@
 @delay 1
 
 # Handles cosmetics
-@if cosmeticSwap == true
-    @if (grateList.contains(blockSelection))
-        @var cosmeticCopper(player)
-    @elseif (coralList.contains(blockSelection))
-        @var cosmeticCoral(player)
-    @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
-        @var cosmeticCoolGlass(player)
-    @elseif (woolList.contains(blockSelection))
-        @var cosmeticWool(player)
-    @elseif (glassList.contains(blockSelection)) && coolGlass == false
-        @var cosmeticGlass(player)
-    @elseif (spongeList.contains(blockSelection))
-        @var cosmeticSponge(player)
-    @elseif (leafList.contains(blockSelection))
-        @var cosmeticLeaf(player)
-    @elseif (obsidianList.contains(blockSelection))
-        @var cosmeticObsidian(player)
-    @elseif (oreList.contains(blockSelection))
-        @var cosmeticOre(player)
-    @elseif (pumpkinList.contains(blockSelection))
-        @var cosmeticPumpkin(player)
+@if level != 62
+    @if cosmeticSwap == true
+        @if (grateList.contains(blockSelection))
+            @var cosmeticCopper(player)
+        @elseif (coralList.contains(blockSelection))
+            @var cosmeticCoral(player)
+        @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
+            @var cosmeticCoolGlass(player)
+        @elseif (woolList.contains(blockSelection))
+            @var cosmeticWool(player)
+        @elseif (glassList.contains(blockSelection)) && coolGlass == false
+            @var cosmeticGlass(player)
+        @elseif (spongeList.contains(blockSelection))
+            @var cosmeticSponge(player)
+        @elseif (leafList.contains(blockSelection))
+            @var cosmeticLeaf(player)
+        @elseif (obsidianList.contains(blockSelection))
+            @var cosmeticObsidian(player)
+        @elseif (oreList.contains(blockSelection))
+            @var cosmeticOre(player)
+        @elseif (pumpkinList.contains(blockSelection))
+            @var cosmeticPumpkin(player)
+        @fi
     @fi
 @fi
 
@@ -83,18 +85,27 @@
     # get current adjacent block
     @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
     
-    # if adjacentBlock = a block that can be selected
-    @if (adjacentBlock.getBlockType().toLowerCase() == blockSelection) || (allBlockSelections.contains(adjacentBlock.getBlockType().toLowerCase()))
-        
-        @define Int x = block.getX()
-        @define Int y = block.getY()
-        @define Int z = block.getZ()
+    # if adjacentBlock is not air
+    # @if (adjacentBlock.getBlockType().toLowerCase() == blockSelection) || (allBlockSelections.contains(adjacentBlock.getBlockType().toLowerCase())) || (adjacentBlock.getBlockType().toLowerCase() == "target") 
+    @if adjacentBlock.getBlockType().toLowerCase() != "air"
         
         @var totalBlocks[player] += 1
+        @var top100Function(player, 0)
         @var sessionBlocks[player] += 1
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
         @var blocksThisStageGlobal[level] += 1
+        @if player.getCurrentChallenge() == "hahahaha"
+            @var sectionBlocksPlacedMaster[player][level] += 1
+        @elseif player.getCurrentChallenge() == "hahahahaha"
+            @var sectionBlocksPlacedUMM[player][level] += 1
+        @elseif player.getCurrentChallenge() == "hahahas"
+            @var sectionBlocksPlacedSoulLink[player][level] += 1
+        @elseif player.getCurrentChallenge() == "hahahahas"
+            @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
+        @else
+            @var sectionBlocksPlacedNormal[player][level] += 1
+        @fi
         
         @if totalBlocks % 4 == 0
             @var temporaryBlockSelection1 = adjacentBlock.getBlockType().toLowerCase()
@@ -106,7 +117,20 @@
             @var temporaryBlockSelection4 = adjacentBlock.getBlockType().toLowerCase()
         @fi
         
-
-        @var handlePlacementEnd(adjacentBlock, player)
+        # @console /function execute Harha::handlePlacement(Block({{block.getX()+offsetX}}, {{block.getY()+offsetY}}, {{block.getZ()+offsetZ}}, "{{block.getWorld()}}"), Player("{{player}}"))
+        @var handlePlacement(adjacentBlock, 16, player)
     @fi
+@done
+
+# Run loop again for anticheat
+@for Int i in list::range(0, endDirectionsX.length())
+    # get current offset positions
+    @define Int offsetX = endDirectionsX[i]
+    @define Int offsetY = endDirectionsY[i]
+    @define Int offsetZ = endDirectionsZ[i]
+    
+    # get current adjacent block
+    @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
+
+    @var anticheatEnd(adjacentBlock, player)
 @done
