@@ -57,8 +57,8 @@
         @bypass clear {{player}} leather_boots
         @var bootsObtained[player] = false
         @var blockSelection[player] = blockSelectionStored[player]
-        @bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
-        @bypass minecraft:teleport {{player}} -9199.5 96.0 9704.5 180 10 
+        @bypass item replace entity {{player}} container.0 with {{blockSelection[player]}}[custom_name={"italic":false,"text":"‌"},can_place_on=[{blocks:"target"}],enchantments={"minecraft:vanishing_curse":1},tooltip_display={hide_tooltip:false,hidden_components:["enchantments","can_place_on"]},enchantment_glint_override=false,custom_data={clear:true},lore=[[{"bold":true,"color":"#58B4B8","italic":false,"text":"C"},{"color":"#5FBABE","text":"u"},{"color":"#65C1C4","text":"s"},{"color":"#6CC7CA","text":"t"},{"color":"#72CDD0","text":"o"},{"color":"#79D3D6","text":"m "},{"color":"#7FDADC","text":"B"},{"color":"#86E0E1","text":"l"},{"color":"#8CE6E7","text":"o"},{"color":"#93ECED","text":"c"},{"color":"#99F3F3","text":"k"},{"color":"#A6FFFF","text":"s"}],{"bold":false,"color":"gray","italic":false,"text":"You can choose your block selection"},{"bold":false,"color":"gray","italic":false,"text":"at the start of the map! Enjoy!"}," ",{"bold":true,"color":"gray","italic":false,"text":"{{cosmeticsUnlocked[player].sum()}}/12 Cosmetics unlocked."}," "],block_state={bloom:"true"}] 64
+        @var player.teleport(Position(-9199.5, 96.0, 9704.5, 180.0, 10.0, "Theta"))
 
         @var sectionFallsUMM[levelNormal] += 1
         @var level[player] = 0
@@ -213,10 +213,10 @@
     @bypass /playsound minecraft:entity.chicken.egg master @s
     @if totalFalls == 10000
         @var cosmeticsUnlocked[player][6] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @fi

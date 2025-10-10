@@ -1,0 +1,18 @@
+# getName(Player player)
+
+@fast
+@using Harha
+
+@define String name = ""
+@var getname[player] = "No answer"
+@bypass /playsound minecraft:entity.elder_guardian.curse master {{player}} ~ ~ ~ 1 1
+@player &e !!! Type name in chat !!! &cYou have 15 seconds!!!
+
+@prompt 15s name &cYou took too long!
+
+@var getname[player] = name
+
+@bypass /playsound minecraft:entity.villager.trade master {{player}} ~ ~ ~ 1 1.8
+@player &#CCDFED&k&lget&#CCDFED: Hmm...
+
+@return

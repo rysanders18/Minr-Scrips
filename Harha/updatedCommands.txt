@@ -22,7 +22,8 @@ NEW:
 tooltip_display={hidden_components:["enchantments"]}
 
 
-
+Sponge
+&#CDCF4A&l&nS&#C7CF4B&l&np&#C1D04C&l&no&#BBD04C&l&nn&#B5D04D&l&ng&#AFD14E&l&ne &#A9D14F&l&nB&#9EC759&l&nl&#8DB46D&l&no&#7DA181&l&nc&#6C8E95&l&nk&#5C7AA9&l&ns&#3B54D1&l&n:
 
 
 /item replace entity @n container.0 with sculk_catalyst[custom_name={"italic":false,"text":"ITEM_NAME"},block_state={bloom:"true"},can_place_on=[{blocks:"target"}],enchantments={"minecraft:vanishing_curse":1},tooltip_display={hidden_components:["enchantments"]},enchantment_glint_override=false,custom_data={clear:true}] 63

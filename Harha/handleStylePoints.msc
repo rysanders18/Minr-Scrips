@@ -25,26 +25,26 @@
     # if the player is going from less than X to more than Y style points, give cosmetic
     @if oldSwagPoints < 500 && swagPoints[player] >= 500
         @var cosmeticsUnlocked[player][3] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
-        @player &#CDCF4A&l&nS&#C7CF4B&l&np&#C1D04C&l&no&#BBD04C&l&nn&#B5D04D&l&ng&#AFD14E&l&ne &#A9D14F&l&nB&#9EC759&l&nl&#8DB46D&l&no&#7DA181&l&nc&#6C8E95&l&nk&#5C7AA9&l&ns&#3B54D1&l&n
-        @player &#d4d4d4--------------------------------------
+        @player &#9209FF&l&nO&#8D0BF8&l&nb&#880DF1&l&ns&#830FEB&l&ni&#7E11E4&l&nd&#7913DD&l&ni&#7415D6&l&na&#6F17CF&l&nn &#6D17CE&l&nB&#7015D1&l&nl&#7313D4&l&no&#7611D7&l&nc&#790EDA&l&nk&#7C0CDD&l&ns&#8208E3&l&n
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif oldSwagPoints < 1000 && swagPoints[player] >= 1000
         @var cosmeticsUnlocked[player][4] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
-        @player &#9209FF&l&nO&#8D0BF8&l&nb&#880DF1&l&ns&#830FEB&l&ni&#7E11E4&l&nd&#7913DD&l&ni&#7415D6&l&na&#6F17CF&l&nn &#6D17CE&l&nB&#7015D1&l&nl&#7313D4&l&no&#7611D7&l&nc&#790EDA&l&nk&#7C0CDD&l&ns&#8208E3&l&n
-        @player &#d4d4d4--------------------------------------
+        @player &#304CD6&l&nC&#613CD0&l&no&#932DCA&l&nr&#C41DC4&l&na&#CB34B9&l&nl &#D24AAE&l&nB&#D961A3&l&nl&#DC567F&l&no&#E04A5A&l&nc&#E33F36&l&nk&#E0733B&l&ns&#DBDB46&l&n
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif oldSwagPoints < 2000 && swagPoints[player] >= 2000
         @var cosmeticsUnlocked[player][5] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
-        @player &#304CD6&l&nC&#613CD0&l&no&#932DCA&l&nr&#C41DC4&l&na&#CB34B9&l&nl &#D24AAE&l&nB&#D961A3&l&nl&#DC567F&l&no&#E04A5A&l&nc&#E33F36&l&nk&#E0733B&l&ns&#DBDB46&l&n
-        @player &#d4d4d4--------------------------------------
+        @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @fi

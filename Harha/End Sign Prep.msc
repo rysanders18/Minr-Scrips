@@ -77,42 +77,42 @@
     # cosmetics
     @if sessionFalls[player] <= 25 && cosmeticsUnlocked[player][8] == 0
         @var cosmeticsUnlocked[player][8] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&l&nG&#0AA7B8&l&nl&#1397E3&l&na&#4C76D5&l&ns&#865CCD&l&ns
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif numberCompletionsMaster[player] == 1 && cosmeticsUnlocked[player][7] == 0
         @var cosmeticsUnlocked[player][7] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#DB7A52&l&nC&#D57F5D&l&no&#CF8567&l&np&#C88A72&l&np&#C28F7C&l&ne&#B0A082&l&nr &#9DB088&l&nG&#8BC18D&l&nr&#78D193&l&na&#73CC98&l&nt&#6EC79C&l&ne
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif numberCompletions[player] == 1 && cosmeticsUnlocked[player][0] == 0
         @var cosmeticsUnlocked[player][0] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#7C5AC9&l&nA&#8A5CCF&l&nm&#985ED5&l&ne&#A661DB&l&nt&#B463E1&l&nh&#C265E7&l&ny&#D067ED&l&ns&#DE6AF3&l&nt
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif numberCompletions[player] == 3 && cosmeticsUnlocked[player][1] == 0
         @var cosmeticsUnlocked[player][1] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#96B345&l&nA&#99AD50&l&nz&#9CA75B&l&na&#9FA165&l&nl&#A29A70&l&ne&#A5947B&l&na &#A88E86&l&nL&#AB8890&l&ne&#AE829B&l&na&#B17CA6&l&nv&#B475B1&l&ne&#B76FBB&l&ns
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @elseif numberCompletions[player] == 10 && cosmeticsUnlocked[player][2] == 0
         @var cosmeticsUnlocked[player][2] = 1
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!
         @player &#D4D4D4&l&nO&#D1C8A5&l&nr&#CEBD76&l&ne &#CBB147&l&nB&#B2B150&l&nl&#8DB875&l&no&#68BE9A&l&nc&#4ABEA7&l&nk&#37B381&l&ns&#129C36&l&n:
-        @player &#d4d4d4--------------------------------------
+        @player &#d4d4d4----------------------------
         @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
         @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
     @fi

@@ -1,0 +1,89 @@
+# Orb of Wisdom 
+@using Harha
+@fast
+
+@cooldown 10s
+
+
+@if numberCompletions[player] >= 5
+
+    @bypass /particle minecraft:witch -9222 97.25 9708 0.0 0.0 0.0 10 15
+    @bypass playsound minecraft:block.enchantment_table.use master @s -9222 97 9708 0.5 {{math::random(1.0D, 1.7D)}}
+
+
+    @define Player[] playersInMap = Region("hh", "Theta").getPlayersInside()
+    @define Player[] playersInMap2 = Player[]
+    @define Player[] combinedPlayers = Player[]
+    @define Player[] sortedPlayers = Player[]
+
+    @define String[] colorList3 = String["&#1FFB14", "&#FE984E", "&#00a800", "&#CE4426", "&#A3D0F2", "&#85C68B", "&#ff67c5"]
+
+    @if Region("hh2", "Theta_the_end").getPlayersInside().length() != 0
+        @var playersInMap2 = Region("hh2", "Theta_the_end").getPlayersInside()
+        # @player {{playersInMap}}
+        # @player {{playersInMap2}}
+    @fi
+
+        @var combinedPlayers = playersInMap
+        # Append players from playersInMap2 to combinedPlayers
+        @for Player playerIterating1 in playersInMap2
+            @if combinedPlayers.contains(playerIterating1) == false && player.getGameMode() == "ADVENTURE"
+                @var combinedPlayers.append(playerIterating1)
+            @fi
+        @done
+
+        # Iterate through the combined players and insert them into the sorted list
+        @for Player playerIterating2 in combinedPlayers
+            @define Boolean inserted = false
+
+            # Find the correct position in the sorted list
+            @for Int i in list::range(0, sortedPlayers.length())
+                @if playerIterating2.getLevel() > level[sortedPlayers[i]]
+                    # @player sorted before insert: {{sortedPlayers}}
+                    @if sortedPlayers.contains(playerIterating2) == false
+                        @var sortedPlayers.add(playerIterating2, i)
+                    @fi
+                    # @player sorted after insert: {{sortedPlayers}}
+                    @var inserted = true
+                @fi
+            @done
+
+            # If the player was not inserted, add them to the end of the sorted list
+            @if !inserted
+                @var sortedPlayers.append(playerIterating2)
+            @fi
+        @done
+
+        # Return the sorted list
+        # @player sortedPlayers = {{sortedPlayers}}
+
+
+    @player
+    @for Int stageIterating in list::range(0, 7)
+        @var combinedPlayers.clear()
+        @for Player playerIterating3 in sortedPlayers
+            @if level[playerIterating3] == 0 + (stageIterating * 10) || level[playerIterating3] == 1 + (stageIterating * 10) || level[playerIterating3] == 2 + (stageIterating * 10) || level[playerIterating3] == 3 + (stageIterating * 10) || level[playerIterating3] == 4 + (stageIterating * 10) || level[playerIterating3] == 5 + (stageIterating * 10) || level[playerIterating3] == 6 + (stageIterating * 10) || level[playerIterating3] == 7 + (stageIterating * 10) || level[playerIterating3] == 8 + (stageIterating * 10) || level[playerIterating3] == 9 + (stageIterating * 10)
+                @var combinedPlayers.append(playerIterating3)
+            @fi
+        @done
+
+        @if combinedPlayers.length() != 0
+            @player {{colorList3[stageIterating]}}Stage {{stageIterating + 1}}:
+            @for Player playerIterating4 in combinedPlayers
+                @chatscript 180s pctp1 pcTeleport(allLevels[level[playerIterating4]], player)
+                @player &e{{allLevels[level[playerIterating4]]}} &7- &a{{playerIterating4.getName()}}
+            @done
+            @player
+        @fi
+        
+    @done
+    @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 any level to teleport
+@else
+    @bypass playsound minecraft:block.enchantment_table.use master @s -9222 97 9708 0.5 {{math::random(1.0D, 1.7D)}}
+    @bypass /particle minecraft:witch -9222 97.25 9708 0.0 0.0 0.0 10 15
+
+    @player 
+    @player &#C228FAYou need to complete the map at least 5 times to use the &#DE28FA&lOrb of Wisdom!
+    @player
+
+@fi

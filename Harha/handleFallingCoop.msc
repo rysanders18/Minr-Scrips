@@ -1,0 +1,35 @@
+# handleFallingCoop(Player player, Int level)
+
+@using Harha
+@fast
+
+@define Position[] coopPositionList = Position[Position(-9124.5, 73.0, 9669.5, 360.0, 10.0, "Theta"), Position(-9126.5, 73.0, 9669.5, 360.0, 10.0, "Theta"), Position(-9133.5, 73.0, 9690.5, 450.0, 10.0, "Theta"), Position(-9133.5, 73.0, 9688.5, 450.0, 10.0, "Theta"), Position(-9158.5, 74.0, 9679.5, 540.0, 10.0, "Theta"), Position(-9156.5, 74.0, 9679.5, 540.0, 10.0, "Theta"), Position(-9155.5, 68.0, 9650.5, 450.0, 10.0, "Theta"), Position(-9155.5, 68.0, 9648.5, 450.0, 10.0, "Theta"), Position(-9177.5, 70.0, 9660.5, 360.0, 10.0, "Theta"), Position(-9179.5, 70.0, 9660.5, 360.0, 10.0, "Theta"), Position(-9175.5, 73.0, 9697.5, 360.0, 10.0, "Theta"), Position(-9185.5, 73.0, 9689.5, 360.0, 10.0, "Theta"), Position(-9175.5, 77.0, 9722.5, 450.0, 10.0, "Theta"), Position(-9185.5, 77.0, 9722.5, 270.0, 10.0, "Theta"), Position(-9169.5, 77.0, 9742.5, 180.0, 10.0, "Theta"), Position(-9167.5, 77.0, 9742.5, 180.0, 10.0, "Theta"), Position(-9155.0, 76.0, 9720.5, 360.0, 10.0, "Theta"), Position(-9156.0, 76.0, 9720.5, 360.0, 10.0, "Theta"), Position(-9128.5, 75.0, 9738.5, 270.0, 10.0, "Theta"), Position(-9128.5, 75.0, 9740.5, 270.0, 10.0, "Theta"), Position(-9104.5, 74.0, 9751.5, 360.0, 10.0, "Theta"), Position(-9106.5, 74.0, 9751.5, 360.0, 10.0, "Theta"), Position(-9125.5, 72.0, 9761.5, 450.0, 10.0, "Theta"), Position(-9125.5, 72.0, 9759.5, 450.0, 10.0, "Theta"), Position(-9152.0, 70.0, 9766.5, 360.0, 10.0, "Theta"), Position(-9153.0, 70.0, 9766.5, 360.0, 10.0, "Theta"), Position(-9175.5, 72.0, 9790.5, 360.0, 10.0, "Theta"), Position(-9181.5, 72.0, 9790.5, 360.0, 10.0, "Theta"), Position(-9186.5, -36.0, 9827.5, 270.0, 10.0, "Theta"), Position(-9170.5, -49.0, 9827.5, 450.0, 10.0, "Theta")]
+
+@if player.getGameMode() == "ADVENTURE"
+    
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+    @if (isOrange[player] == true) && (isBlue[player] == false)
+        @player {{coopPositionList[level * 2]}}
+        @bypass minecraft:teleport {{player}} {{coopPositionList[level * 2]}}
+        @bypass item replace entity {{player}} container.0 with {{coopBlockSelection}}[custom_name={"italic":false,"text":"‌"},can_place_on=[{blocks:"target"}],enchantments={"minecraft:vanishing_curse":1},tooltip_display={hide_tooltip:false,hidden_components:["enchantments","can_place_on"]},enchantment_glint_override=false,custom_data={clear:true},lore=[[{"bold":true,"color":"#58B4B8","italic":false,"text":"C"},{"color":"#5FBABE","text":"u"},{"color":"#65C1C4","text":"s"},{"color":"#6CC7CA","text":"t"},{"color":"#72CDD0","text":"o"},{"color":"#79D3D6","text":"m "},{"color":"#7FDADC","text":"B"},{"color":"#86E0E1","text":"l"},{"color":"#8CE6E7","text":"o"},{"color":"#93ECED","text":"c"},{"color":"#99F3F3","text":"k"},{"color":"#A6FFFF","text":"s"}],{"bold":false,"color":"gray","italic":false,"text":"You can choose your block selection"},{"bold":false,"color":"gray","italic":false,"text":"at the start of the map! Enjoy!"}," ",{"bold":true,"color":"gray","italic":false,"text":"{{cosmeticsUnlocked[player].sum()}}/12 Cosmetics unlocked."}," "],block_state={bloom:"true"}] 64
+    @elseif isBlue[player] == true && isOrange[player] == false
+        @bypass minecraft:teleport {{player}} {{coopPositionList[level * 2 + 1]}}
+        @bypass item replace entity {{player}} container.0 with {{coopBlockSelection}}[custom_name={"italic":false,"text":"‌"},can_place_on=[{blocks:"target"}],enchantments={"minecraft:vanishing_curse":1},tooltip_display={hide_tooltip:false,hidden_components:["enchantments","can_place_on"]},enchantment_glint_override=false,custom_data={clear:true},lore=[[{"bold":true,"color":"#58B4B8","italic":false,"text":"C"},{"color":"#5FBABE","text":"u"},{"color":"#65C1C4","text":"s"},{"color":"#6CC7CA","text":"t"},{"color":"#72CDD0","text":"o"},{"color":"#79D3D6","text":"m "},{"color":"#7FDADC","text":"B"},{"color":"#86E0E1","text":"l"},{"color":"#8CE6E7","text":"o"},{"color":"#93ECED","text":"c"},{"color":"#99F3F3","text":"k"},{"color":"#A6FFFF","text":"s"}],{"bold":false,"color":"gray","italic":false,"text":"You can choose your block selection"},{"bold":false,"color":"gray","italic":false,"text":"at the start of the map! Enjoy!"}," ",{"bold":true,"color":"gray","italic":false,"text":"{{cosmeticsUnlocked[player].sum()}}/12 Cosmetics unlocked."}," "],block_state={bloom:"true"}] 64
+    @fi
+    
+    
+    
+    @var sessionFalls[player] += 1
+    @var totalFalls[player] += 1
+    @var numberOfBlocksToGive[player] = 63
+    @var blocksThisStage[player] = 0
+    @var globalFalls += 1
+    
+    # Handles Fail Milestones
+    @for Int x in failMilestones
+        @if totalFalls == x
+            @player &lYou have fallen a total of &6&l{{x}} &r&ltimes!
+        @fi
+    @done
+    
+@fi
