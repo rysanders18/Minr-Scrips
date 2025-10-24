@@ -1,0 +1,55 @@
+# Stage 1 enter
+# Title, Sound effects, and Splits
+
+@using Harha
+@fast
+
+@var speedrunTeleportedRecently[player] = false
+
+@if stage[player] == 0
+    @var stage[player] += 1
+    @var startTime[player] = system::currentTimeMillis()
+    # @var Harha::splits(0, player)
+    # @bypass /title @s actionbar ["Stage 2 in time     PB = pb"]
+    @bypass /title @s times 0 30 20
+    
+    @bypass /title @s subtitle ["",{"text":"G","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"}]
+    @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
+
+    @delay 1
+    @bypass /title @s subtitle ["",{"text":"Go","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.122
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"},{"text":"t","bold":true,"color":"#41FC37"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Good","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.26
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"},{"text":"t","bold":true,"color":"#41FC37"},{"text":"a","bold":true,"color":"#62FD5A"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Good Lu","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.498
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"},{"text":"t","bold":true,"color":"#41FC37"},{"text":"a","bold":true,"color":"#62FD5A"},{"text":"g","bold":true,"color":"#84FD7E"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Good Luck","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.682
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"},{"text":"t","bold":true,"color":"#41FC37"},{"text":"a","bold":true,"color":"#62FD5A"},{"text":"g","bold":true,"color":"#84FD7E"},{"text":"e ","bold":true,"color":"#A5FEA1"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Good Luck!","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 2
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"},{"text":"t","bold":true,"color":"#41FC37"},{"text":"a","bold":true,"color":"#62FD5A"},{"text":"g","bold":true,"color":"#84FD7E"},{"text":"e ","bold":true,"color":"#A5FEA1"},{"text":"1","bold":true,"color":"#C7FFC4"},{"text":":","bold":true,"color":"#CEFFD2"}]
+    
+    @delay 15
+    @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
+
+    @delay 20
+    @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
+
+    @delay 20
+    @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
+
+@fi

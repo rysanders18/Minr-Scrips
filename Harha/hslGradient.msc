@@ -1,0 +1,267 @@
+# hslGradient(String color1, String color2, Int steps, String hueMethod)
+# Generates a gradient between two colors using HSL color space
+# color1: Starting hex color (e.g., "#FF0000")
+# color2: Ending hex color (e.g., "#0000FF")
+# steps: Total number of colors to generate (including start and end)
+# hueMethod: "shorter" or "longer" for hue interpolation
+# Returns: String[] array of hex color codes
+
+@fast
+
+@define String[] gradient = String[]
+@define String hexChars = "0123456789ABCDEF"
+
+# Convert hex to RGB for color1
+@define String hex1 = color1.substring(1, 7).toUpperCase()
+
+# Parse R1
+@define String r1_char1 = hex1.substring(0, 1)
+@define String r1_char2 = hex1.substring(1, 2)
+@define Int r1 = hexChars.indexOf(r1_char1) * 16 + hexChars.indexOf(r1_char2)
+
+# Parse G1
+@define String g1_char1 = hex1.substring(2, 3)
+@define String g1_char2 = hex1.substring(3, 4)
+@define Int g1 = hexChars.indexOf(g1_char1) * 16 + hexChars.indexOf(g1_char2)
+
+# Parse B1
+@define String b1_char1 = hex1.substring(4, 5)
+@define String b1_char2 = hex1.substring(5, 6)
+@define Int b1 = hexChars.indexOf(b1_char1) * 16 + hexChars.indexOf(b1_char2)
+
+# Convert hex to RGB for color2
+@define String hex2 = color2.substring(1, 7).toUpperCase()
+
+# Parse R2
+@define String r2_char1 = hex2.substring(0, 1)
+@define String r2_char2 = hex2.substring(1, 2)
+@define Int r2 = hexChars.indexOf(r2_char1) * 16 + hexChars.indexOf(r2_char2)
+
+# Parse G2
+@define String g2_char1 = hex2.substring(2, 3)
+@define String g2_char2 = hex2.substring(3, 4)
+@define Int g2 = hexChars.indexOf(g2_char1) * 16 + hexChars.indexOf(g2_char2)
+
+# Parse B2
+@define String b2_char1 = hex2.substring(4, 5)
+@define String b2_char2 = hex2.substring(5, 6)
+@define Int b2 = hexChars.indexOf(b2_char1) * 16 + hexChars.indexOf(b2_char2)
+
+# Convert RGB to HSL for color1
+@define Double r1_norm = Double(r1) / 255.0
+@define Double g1_norm = Double(g1) / 255.0
+@define Double b1_norm = Double(b1) / 255.0
+
+@define Double max1 = r1_norm
+@if g1_norm > max1
+    @var max1 = g1_norm
+@fi
+@if b1_norm > max1
+    @var max1 = b1_norm
+@fi
+
+@define Double min1 = r1_norm
+@if g1_norm < min1
+    @var min1 = g1_norm
+@fi
+@if b1_norm < min1
+    @var min1 = b1_norm
+@fi
+
+@define Double l1 = (max1 + min1) / 2.0
+@define Double delta1 = max1 - min1
+
+@define Double s1 = 0.0D
+@if delta1 > 0.0
+    @if l1 < 0.5
+        @var s1 = delta1 / (max1 + min1)
+    @else
+        @var s1 = delta1 / (2.0 - max1 - min1)
+    @fi
+@fi
+
+@define Double h1 = 0.0D
+@if delta1 > 0.0
+    @if max1 == r1_norm
+        @var h1 = ((g1_norm - b1_norm) / delta1) % 6.0
+    @else
+        @if max1 == g1_norm
+            @var h1 = (b1_norm - r1_norm) / delta1 + 2.0
+        @else
+            @var h1 = (r1_norm - g1_norm) / delta1 + 4.0
+        @fi
+    @fi
+    @var h1 = h1 * 60.0
+    @if h1 < 0.0
+        @var h1 += 360.0D
+    @fi
+@fi
+
+# Convert RGB to HSL for color2
+@define Double r2_norm = Double(r2) / 255.0
+@define Double g2_norm = Double(g2) / 255.0
+@define Double b2_norm = Double(b2) / 255.0
+
+@define Double max2 = r2_norm
+@if g2_norm > max2
+    @var max2 = g2_norm
+@fi
+@if b2_norm > max2
+    @var max2 = b2_norm
+@fi
+
+@define Double min2 = r2_norm
+@if g2_norm < min2
+    @var min2 = g2_norm
+@fi
+@if b2_norm < min2
+    @var min2 = b2_norm
+@fi
+
+@define Double l2 = (max2 + min2) / 2.0
+@define Double delta2 = max2 - min2
+
+@define Double s2 = 0.0D
+@if delta2 > 0.0
+    @if l2 < 0.5
+        @var s2 = delta2 / (max2 + min2)
+    @else
+        @var s2 = delta2 / (2.0 - max2 - min2)
+    @fi
+@fi
+
+@define Double h2 = 0.0D
+@if delta2 > 0.0
+    @if max2 == r2_norm
+        @var h2 = ((g2_norm - b2_norm) / delta2) % 6.0
+    @else
+        @if max2 == g2_norm
+            @var h2 = (b2_norm - r2_norm) / delta2 + 2.0
+        @else
+            @var h2 = (r2_norm - g2_norm) / delta2 + 4.0
+        @fi
+    @fi
+    @var h2 = h2 * 60.0
+    @if h2 < 0.0
+        @var h2 += 360.0D
+    @fi
+@fi
+
+# Adjust hue interpolation based on method
+@define Double hueDiff = h2 - h1
+@if hueMethod == "shorter"
+    @if hueDiff > 180.0
+        @var h1 += 360.0D
+    @else
+        @if hueDiff < -180.0
+            @var h2 += 360.0D
+        @fi
+    @fi
+@else
+    # longer
+    @if hueDiff > 0.0 && hueDiff < 180.0
+        @var h1 += 360.0D
+    @else
+        @if hueDiff < 0.0 && hueDiff > -180.0
+            @var h2 += 360.0D
+        @fi
+    @fi
+@fi
+
+# Generate gradient steps
+@for Int i in list::range(0, steps)
+    @define Double t = Double(i) / Double(steps - 1)
+    
+    # Interpolate in HSL space
+    @define Double h = h1 + (h2 - h1) * t
+    @define Double s = s1 + (s2 - s1) * t
+    @define Double l = l1 + (l2 - l1) * t
+    
+    # Normalize hue to 0-360
+    @var h = h % 360.0
+    @if h < 0.0
+        @var h += 360.0D
+    @fi
+    
+    # Convert HSL back to RGB
+    @define Double c = (1.0 - math::abs(2.0 * l - 1.0)) * s
+    @define Double x = c * (1.0 - math::abs((h / 60.0) % 2.0 - 1.0))
+    @define Double m = l - c / 2.0
+    
+    @define Double r_prime = 0.0D
+    @define Double g_prime = 0.0D
+    @define Double b_prime = 0.0D
+    
+    @if h >= 0.0 && h < 60.0
+        @var r_prime = c
+        @var g_prime = x
+        @var b_prime = 0.0D
+    @else
+        @if h >= 60.0 && h < 120.0
+            @var r_prime = x
+            @var g_prime = c
+            @var b_prime = 0.0D
+        @else
+            @if h >= 120.0 && h < 180.0
+                @var r_prime = 0.0D
+                @var g_prime = c
+                @var b_prime = x
+            @else
+                @if h >= 180.0 && h < 240.0
+                    @var r_prime = 0.0D
+                    @var g_prime = x
+                    @var b_prime = c
+                @else
+                    @if h >= 240.0 && h < 300.0
+                        @var r_prime = x
+                        @var g_prime = 0.0D
+                        @var b_prime = c
+                    @else
+                        @var r_prime = c
+                        @var g_prime = 0.0D
+                        @var b_prime = x
+                    @fi
+                @fi
+            @fi
+        @fi
+    @fi
+    
+    @define Int r = Int((r_prime + m) * 255.0 + 0.5)
+    @define Int g = Int((g_prime + m) * 255.0 + 0.5)
+    @define Int b = Int((b_prime + m) * 255.0 + 0.5)
+    
+    # Clamp values
+    @if r < 0
+        @var r = 0
+    @else
+        @if r > 255
+            @var r = 255
+        @fi
+    @fi
+    @if g < 0
+        @var g = 0
+    @else
+        @if g > 255
+            @var g = 255
+        @fi
+    @fi
+    @if b < 0
+        @var b = 0
+    @else
+        @if b > 255
+            @var b = 255
+        @fi
+    @fi
+    
+    # Convert to hex manually
+    @define String r_hex1 = hexChars.substring(r / 16, r / 16 + 1)
+    @define String r_hex2 = hexChars.substring(r % 16, r % 16 + 1)
+    @define String g_hex1 = hexChars.substring(g / 16, g / 16 + 1)
+    @define String g_hex2 = hexChars.substring(g % 16, g % 16 + 1)
+    @define String b_hex1 = hexChars.substring(b / 16, b / 16 + 1)
+    @define String b_hex2 = hexChars.substring(b % 16, b % 16 + 1)
+    @define String hex = "#" + r_hex1 + r_hex2 + g_hex1 + g_hex2 + b_hex1 + b_hex2
+    @var gradient.append(hex)
+@done
+
+@return gradient

@@ -1,0 +1,24 @@
+@fast
+@using Harha
+@bypass /gamemode adventure {{player}}
+@bypass clear {{player}}
+@bypass give {{player}} {{blockSelection}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"target"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+@var bootsObtained[player] = false
+@var sessionFalls[player] = 0
+@var sessionBlocks[player] = 0
+@var stage[player] = 0
+
+
+@if codeGenerated[player] == false
+    @var codeGenerated[player] = true
+    @var code = String[]
+    @for Int i in list::range(0,13)
+        @var randomCodeNumber = (math::randomInt() % 62)
+        @if randomCodeNumber < 0
+            @var randomCodeNumber += 62
+        @fi
+        @var code.append(codeList[randomCodeNumber])
+    @done
+
+    @var totalCode = (code[0] + code[1] + code[2] + code[3] + code[4] + code[5] + code[6] + code[7] + code[8] + code[9] + code[10] + code[11] + code[12])
+@fi

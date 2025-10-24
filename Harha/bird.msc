@@ -1,0 +1,48 @@
+@fast
+@using Harha
+
+@define String[] chirpList = String["chirp", "chirrp", "chirrrp", "chirrup", "chirrip", "chirr", "chrp", "chirp?", "chirp!", "CHIRP", "chirps", "chirp chirp", "chirp-chirp", "chirpchirp", "cheep", "cheeep", "cheeeep", "cheep?", "cheep!", "CHEEP", "cheep cheep", "cheep-cheep", "cheeps", "tweet", "tweeet", "tweeeet", "tweep", "tweeps", "tweet?", "tweet!", "TWEET", "tweet tweet", "tweet-tweet", "tweettweet", "peep", "peeep", "peeeep", "peep?", "peep!", "PEEP", "peep peep", "pip", "piip", "pips", "tsip", "tsit", "tsiip", "tsee", "tseet", "tsit-tsit", "trill", "trrrill", "trrrrr", "trill?", "trill!", "TRILL", "warble", "warbles", "warble?", "warble!", "whistle", "whistles", "whistle?", "whistle!", "whist", "whirr", "whir", "whrrr", "whirr?", "whirr!", "WHIRR", "skree", "skreee", "skreeee", "skree?", "skree!", "SCREE", "scree", "screech", "screeech", "screech?", "screech!", "SCREECH", "squawk", "squaawk", "squaaawk", "squawk?", "squawk!", "SQUAWK", "sqwawk", "skwawk", "skrawk", "rawk", "raawk", "raaawk", "rawwk", "caw", "caww", "cawww", "caw?", "caw!", "CAW", "caw caw", "caw-caw", "kaw", "kaa", "kaa!", "kaa-kaa", "coo", "cooo", "coooo", "coo?", "coo!", "COO", "coo coo", "coo-coo", "coos", "hoot", "hoo", "hooo", "hooot", "hoot?", "hoot!", "HOOT", "whoo", "whooo", "whoo!", "honk", "hoonk", "hooonk", "honk?", "honk!", "HONK", "honk honk", "quack", "quaack", "quaaack", "quack?", "quack!", "QUACK", "quack quack", "cluck", "cluck?", "cluck!", "cluck cluck", "bok", "bok bok", "bawk", "bawk bawk", "twit", "twoo", "twit-twoo", "tu-whit", "tu-whoo", "coo-roo", "coo-roo!", "kurr", "krrr", "brrr", "brrrt", "click", "click-click", "beak click", "tock-tock", "peep-squeak", "scree-awk", "chirp-squeak", "cheep-squawk", "flap", "flapflap", "flap flap", "flutter", "flutter!", "wingbeat", "wing-beat"]
+
+@if canTalkToBird[player] == true
+@if birdCount[player] == 0
+    @player &#ffb834&lBird&r: chirp
+    @bypass /playsound minecraft:entity.parrot.ambient master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+    @var birdCount[player] += 1
+    @var canTalkToBird[player] = false
+    @delay 30
+    @player &7It seems like this bird has a lot to say!
+    @player &7Maybe I should talk to it more...
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    @delay 10
+    @var canTalkToBird[player] = true
+@elseif birdCount[player] % 1000 == 0 && birdCount[player] != 0
+    @var canTalkToBird[player] = false
+    @player &#ffb834&lBird&r: &r Hmm... One second please... &7({{formatNumber(String(birdCount[player]))}}/100,000) 
+    @delay 2s
+    @bypass /particle minecraft:explosion_emitter -9138.36 104.48 9683.25 0 0 0 1 1
+    @bypass /playsound minecraft:entity.generic.explode master @s -9138.43 104.50 9683.66 2 1
+    @delay 10
+    @var player.teleport(allPositions[13])
+    @bypass /playsound minecraft:entity.parrot.ambient master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{Float(birdCount[player]) / Float(100000) * 1.5 + 0.5}}
+    @var birdCount[player] += 1
+    @var canTalkToBird[player] = true
+@elseif birdCount[player] == 100000
+    @var canTalkToBird[player] = false
+    @player
+    @player &#aaaaaa*The bird is silent... It seems to have nothing more to say...*
+    @player 
+    @for Int i in list::range(0, 1000)
+        @bypass /playsound minecraft:block.dry_grass.ambient master @s ~ ~ ~ 2 1
+        @delay 1
+    @done 
+    @player &#aaaaaa...
+    @delay 100s
+    @var canTalkToBird[player] = true
+@else
+    @player &#ffb834&lBird&r: {{chirpList[Int(math::random(0.0D, 175.0D))]}} &7({{formatNumber(String(birdCount[player]))}}/100,000) 
+    @bypass /playsound minecraft:entity.parrot.ambient master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{Float(birdCount[player]) / Float(100000) * 1.5 + 0.5}}
+    @var birdCount[player] += 1
+@fi
+@fi

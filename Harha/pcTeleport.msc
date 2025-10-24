@@ -4,6 +4,8 @@
 @cooldown 3s
 
 @bypass playsound minecraft:ui.button.click master @s
+@if numberCompletions >= 1
+@if difficultySelection == "normal" || difficultySelection == "master"
 @player 
 @player &c&lWARNING: &cTeleporting will invalidate your timer.
 
@@ -39,12 +41,23 @@
 
             # invalidates timer
             @define timer::Timer timer = timer::getMapTimer(player, "harha")
-            @if timer != null
+            @if timer.isNullified() == false
                 @var timer.nullify()
+                @player &cTimer Invalidated!
             @fi
-            @player &cTimer Invalidated!
+
 
             @var hasTeleported[player] = true
         @fi
     @done
+@fi
+
+@else
+    @player &cYou cannot use this feature while in this challenge!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+@fi
+
+@else
+    @player &cThis feature is unlocked after &l1&c completion!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
 @fi

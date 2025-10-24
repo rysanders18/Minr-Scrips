@@ -18,7 +18,7 @@
         @var trapdoorSwapped[player] = false
         @var targetSwapped[player] = false
     @fi
-@elseif level >= 50 && level <= 59
+@elseif (level >= 50 && level <= 59 && slimeSwapped == true)
     @if blockSelection[player] != "slime_block"
         @var blockSelection[player] = "slime_block"
         @var iceSwapped[player] = false

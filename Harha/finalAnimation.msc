@@ -94,19 +94,25 @@
 
 @delay 20
 
-@define Float multiplier = Float(0.99)
+@define Float multiplier = Float(1.0)
+@define Int kOld = 0
+@define Float icoCoordsR3XBefore = icoCoordsR3X[0]
+@define Float icoCoordsR3YBefore = icoCoordsR3Y[0]
+@define Float icoCoordsR3ZBefore = icoCoordsR3Z[0]
 
-@for Int k in list::range(0, 30)
-    @var k = Int(math::random(0.0D, 24.0D))
-    # @var k = k * 5
+@define Int[] coolKValues = Int[3, 5, 8, 13, 17, 20, 22]
+@define Int numberParticles = 6
 
-        
-
-        
-        @for Int i in list::range(0, icoCoordsR3X.length())
-            @var headNumber = i
-
-            @for Int j in list::range(0, 5)
+@for Int k in list::range(1, 75)
+    @var k = coolKValues[Int(k * 0.125) % coolKValues.length()] * k 
+    # @var k = Int(math::random(0.0D, 24.0D))
+    # @var k = k * 7
+    # @var k = Int(k * 0.2) * k
+    # @player DEBUG: {{k - kOld}} k = {{k}}, kOld = {{kOld}}
+    
+    @for Int i in list::range(0, icoCoordsR3X.length())
+        @var headNumber = i
+        @for Int j in list::range(0, 5)
             @if j == 0
                 @var icoCoordsR3X = Float[0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, -2.551952F, 2.551952F, 2.551952F, -0.622882F, 1.007845F, -1.007845F, 0.622882F, -1.170636F, -1.793518F, 1.793518F, 1.170636F, -2.901973F, -1.894129F, 1.894129F, 2.901973F]
                 @var icoCoordsR3Y = Float[-1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, 2.551952F, -2.551952F, 2.551952F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.616383F, -1.513782F, 1.513782F, 1.616383F, -2.724839F, 2.339876F, -2.339876F, 2.724839F, -0.343147F, -0.279736F, 0.279736F, 0.343147F]
@@ -133,15 +139,29 @@
                 @var icoCoordsR3Z = Float[3.000000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F]
             @fi
             @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[0.0f, 0.0f, 0.0f, 1.0f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColorList[Int(i % 2)]}}"}]}}}}
-            @bypass /particle minecraft:trial_spawner_detection {{centerX + j * 10 + (icoCoordsR3X[(i + k) % icoCoordsR3X.length()])}} {{centerY + (icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()])}} {{centerZ + (icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()])}} 0 0 0 00.1 25 normal
-            @bypass /particle minecraft:trial_spawner_detection_ominous {{centerX + j * 10 + (icoCoordsR3X[(i + k) % icoCoordsR3X.length()])}} {{centerY + (icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()])}} {{centerZ + (icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()])}} 0 0 0 00.1 25 normal
+            # @bypass /particle minecraft:trial_spawner_detection {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
+            # @bypass /particle minecraft:trial_spawner_detection_ominous {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
+
+            
+            @for Int l in list::range(0, numberParticles)
+                @if i % 2 == 1
+                    @bypass /particle minecraft:flame {{(centerX + (j * 10)) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+                @else
+                    @bypass /particle minecraft:soul_fire_flame {{(centerX + (j * 10)) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+                @fi
             @done
-            # line with randomized rotations
-            # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[{{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
-            
-            
-        @delay 1
+
         @done
+        # line with randomized rotations
+        # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[{{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
+        # @player DEBUG: Before: {{icoCoordsR3XBefore}}
+        # @player DEBUG: After: {{icoCoordsR3X[(i + k) % icoCoordsR3X.length()]}}
+        # @player 
+        @var multiplier -= 0.0001
+        @delay 1
+    @done
+    @delay 0
+    @var kOld = k
 @done
 
 # @delay 15s

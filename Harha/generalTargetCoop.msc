@@ -1,4 +1,4 @@
-# generalTarget(Block block, Int[] directions, Int level, Int height, Player player)
+# generalTargetCoop(Block block, Int[] directions, Int height, Player player)
 @using Harha
 @fast
 
@@ -9,31 +9,6 @@
 
 # Necessary 1t delay because dumb stupid complicated minecraft mechanics
 @delay 1
-
-# Handles cosmetics
-@if cosmeticSwap == true
-    @if (grateList.contains(blockSelection))
-        @var cosmeticCopper(player)
-    @elseif (coralList.contains(blockSelection))
-        @var cosmeticCoral(player)
-    @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
-        @var cosmeticCoolGlass(player)
-    @elseif (woolList.contains(blockSelection))
-        @var cosmeticWool(player)
-    @elseif (glassList.contains(blockSelection)) && coolGlass == false
-        @var cosmeticGlass(player)
-    @elseif (spongeList.contains(blockSelection))
-        @var cosmeticSponge(player)
-    @elseif (leafList.contains(blockSelection))
-        @var cosmeticLeaf(player)
-    @elseif (obsidianList.contains(blockSelection))
-        @var cosmeticObsidian(player)
-    @elseif (oreList.contains(blockSelection))
-        @var cosmeticOre(player)
-    @elseif (pumpkinList.contains(blockSelection))
-        @var cosmeticPumpkin(player)
-    @fi
-@fi
 
 @define Int[] directionsX = Int[]
 @define Int[] directionsY = Int[]
@@ -90,20 +65,8 @@
         @var sessionBlocks[player] += 1
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
-        @var blocksThisStageGlobal[level] += 1
-        @if player.getCurrentChallenge() == "hahahaha"
-            @var sectionBlocksPlacedMaster[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahaha"
-            @var sectionBlocksPlacedUMM[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahas"
-            @var sectionBlocksPlacedSoulLink[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahas"
-            @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
-        @else
-            @var sectionBlocksPlacedNormal[player][level] += 1
-        @fi
         
-        @var handlePlacement(adjacentBlock, height, player)
+        @var handlePlacementCoop(adjacentBlock, height, player)
     @fi
 @done
 

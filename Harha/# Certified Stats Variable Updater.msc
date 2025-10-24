@@ -3,9 +3,9 @@
 @using Harha
 @fast
 
-@if player.getName() == "RYgamer1" || player.getName() == "Crowenza"
+@if player.getName() == "RYgamer1" || player.getName() == "Crowenza" || player.getRank() == "admin"
     @define String name
-    @player &#D3D6E0&lEnter a UUID for VARIABLE UPDATE:
+    @player &#D3D6E0&lEnter a username for VARIABLE UPDATE:
     @prompt 20s name
     @define Player user = Player(name)
     
@@ -57,12 +57,9 @@
         @fi
     @fi
     
-    @player &aPlayer Found!
-    @player &aEnter the VARIABLE NUMBER to update (0-26):
+
     
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
-
-    @delay 40
 
     @player &b0 = totalBlocks
     @player &b1 = totalFalls
@@ -91,8 +88,9 @@
     @player &b24 = stage7PB
     @player &b25 = stage8PB
     @player &b26 = anomaliesExperienced
-
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    @player &aPlayer Found!
+    @player &aEnter the VARIABLE NUMBER to update (0-26):
 
     @define String varSelected
     @player &#D3D6E0&lEnter a Variable Number for VARIABLE UPDATE:

@@ -9,6 +9,10 @@
 # This action is not reversable
 # Type yes in chat to confirm
 
+
+
+@if numberCompletions >= 1
+@if difficultySelection == "normal" || difficultySelection == "master" 
 @bypass playsound minecraft:ui.button.click master @s
 @player 
 @player &c&lWARNING: &cTeleporting will invalidate your timer.
@@ -51,10 +55,11 @@
         # invalidates timer
         @define timer::Timer timer = timer::getMapTimer(player, "harha")
         @if timer != null
-            @var timer.nullify()
+            @var timer.invalidate()
+            @player &cTimer Invalidated!
         @fi
         @bypass playsound minecraft:entity.enderman.teleport master @s 
-        @player &cTimer Invalidated!
+
 
         @var hasTeleported[player] = true
         @var validFormat = true
@@ -62,5 +67,14 @@
 @done
 
 @if validFormat == false
-    @player Invalid Format
+    @player &cInvalid Format!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+@fi
+@else
+    @player &cYou cannot use this feature while in this challenge!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+@fi
+@else
+    @player &cThis feature is unlocked after &l1&c completion!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
 @fi

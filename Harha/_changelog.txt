@@ -79,4 +79,33 @@ Backend:
 
 8/19
 
+* !!! Replaced sponge cosmetic with custom TNT block cosmetic
+* !!! Leaderboard is now completely 100% finished, now with lb selection and page selection
+* !!! Secret 1 is now completely 100% finished
+* !!! Added awesome secret collectible animation (includes cosmetic unlock messages)
+* !!! Fully scripted 2 player Co-op secret!!!
+* !!! Added awesome new "Secret Found" message
+  * Now displays information in chat about secret like Builders, Difficulty, and Map Types
+
+* Changed Netherite helmet to be unlocked at 10 completions instead of 5
+* Added scripts onto alienout attribute button
+* Scripted Jasmines secret (now 100% completed!)
+* Added two player cheese prevention for secret 24
+* Leaderboard now supports tied positions
+
 * Fixed bug where Stats Nether Star is off by 1 for session falls
+* Fixed targets in Poekie's secret, secret is now 100% completed
+* Fixed the astrisk next to PB Falls in pc stats
+* Fixed bug where placing blocks in challenges wouldnt increment blocksPlacedInChallengeX variable
+* Fixed bug where dying in Hardest Hat wouldn't give you blocks 
+* Fixed bug where dying in Hardest Hat in stage 7 would send you to the hub
+* Fixed bug where there would be a sign on the ground in secret 1 (iykyk)
+* Fixed and nerfed verms secret
+* Fixed particles not working in stage 7
+* Fixed bugs in swifph/tetration secret 
+* Fixed "Secret Found!" for secret 24
+* Nerfed the parkour for secret 20
+* Fixed anticheat not working on 7-09 and 7-10
+* Fixed bug where region didnt extend all the way on 7-10
+
+

@@ -1,0 +1,166 @@
+# Admin Leaderboard Variable Updater.msc
+@cooldown 3s
+@using Harha
+@fast
+
+@if player.getName() == "RYgamer1" || player.getName() == "Crowenza"
+    @define String name
+    @player &#D3D6E0&lEnter a UUID for VARIABLE UPDATE:
+    @prompt 20s name
+    @define Player user = Player(name)
+    
+    @if user == null
+        @if usernameList1.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList1.find(name.toLowerCase())])
+        @elseif usernameList2.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList2.find(name.toLowerCase())])
+        @elseif usernameList3.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList3.find(name.toLowerCase())])
+        @elseif usernameList4.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList4.find(name.toLowerCase())])
+        @elseif usernameList5.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList5.find(name.toLowerCase())])
+        @elseif usernameList6.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList6.find(name.toLowerCase())])
+        @elseif usernameList7.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList7.find(name.toLowerCase())])
+        @elseif usernameList8.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList8.find(name.toLowerCase())])
+        @elseif usernameList9.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList9.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList10.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList11.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList12.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList13.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList14.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList15.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList16.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList17.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList18.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList19.find(name.toLowerCase())])
+        @elseif usernameList10.contains(name.toLowerCase())
+            @var user = Player(uuidList1[usernameList20.find(name.toLowerCase())])
+        @else
+            @player &c{{name}} has not joined the map yet!
+            @bypass playsound minecraft:block.note_block.didgeridoo master @s
+            @return
+        @fi
+    @fi
+    
+    @player &aPlayer Found!
+    @player &aEnter the VARIABLE NUMBER to update (0-26):
+    
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+    
+    @delay 40
+    
+    @player &b0 = totalBlocks
+    @player &b1 = totalFalls
+    @player &b2 = pbFalls
+    @player &b3 = pbFallsMaster
+    @player &b4 = pbFallsUMM
+    @player &b5 = pbFallsSoulLink
+    @player &b6 = pbFallsMasterSoulLink
+    @player &b7 = pbBlocks
+    @player &b8 = pbBlocksMaster
+    @player &b9 = pbBlocksUMM
+    @player &b10 = pbBlocksSoulLink
+    @player &b11 = pbBlocksMasterSoulLink
+    @player &b12 = numberCompletions
+    @player &b13 = numberCompletionsNormal
+    @player &b14 = numberCompletionsMaster
+    @player &b15 = numberCompletionsUMM
+    @player &b16 = numberCompletionsSoulLink
+    @player &b17 = numberCompletionsMasterSoulLink
+    @player &b18 = stage1PB
+    @player &b19 = stage2PB
+    @player &b20 = stage3PB
+    @player &b21 = stage4PB
+    @player &b22 = stage5PB
+    @player &b23 = stage6PB
+    @player &b24 = stage7PB
+    @player &b25 = stage8PB
+    @player &b26 = anomaliesExperienced
+    
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    
+    @define String varSelected
+    @player &#D3D6E0&lEnter a Variable Number for VARIABLE UPDATE:
+    @prompt 60s varSelected
+    
+    @define String newValue
+    @player &#D3D6E0&lEnter the value to set the VARIABLE to:
+    @prompt 60s newValue
+    
+    @bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 1 1
+    
+    @if varSelected == "0"
+        @var totalBlocks[user] = Int(newValue)
+    @elseif varSelected == "1"
+        @var totalFalls[user] = Int(newValue)
+    @elseif varSelected == "2"
+        @var pbFalls[user] = Int(newValue)
+    @elseif varSelected == "3"
+        @var pbFallsMaster[user] = Int(newValue)
+    @elseif varSelected == "4"
+        @var pbFallsUMM[user] = Int(newValue)
+    @elseif varSelected == "5"
+        @var pbFallsSoulLink[user] = Int(newValue)
+    @elseif varSelected == "6"
+        @var pbFallsMasterSoulLink[user] = Int(newValue)
+    @elseif varSelected == "7"
+        @var pbBlocks[user] = Int(newValue)
+    @elseif varSelected == "8"
+        @var pbBlocksMaster[user] = Int(newValue)
+    @elseif varSelected == "9"
+        @var pbBlocksUMM[user] = Int(newValue)
+    @elseif varSelected == "10"
+        @var pbBlocksSoulLink[user] = Int(newValue)
+    @elseif varSelected == "11"
+        @var pbBlocksMasterSoulLink[user] = Int(newValue)
+    @elseif varSelected == "12"
+        @var numberCompletions[user] = Int(newValue)
+    @elseif varSelected == "13"
+        @var numberCompletionsNormal[user] = Int(newValue)
+    @elseif varSelected == "14"
+        @var numberCompletionsMaster[user] = Int(newValue)
+    @elseif varSelected == "15"
+        @var numberCompletionsUMM[user] = Int(newValue)
+    @elseif varSelected == "16"
+        @var numberCompletionsSoulLink[user] = Int(newValue)
+    @elseif varSelected == "17"
+        @var numberCompletionsMasterSoulLink[user] = Int(newValue)
+    @elseif varSelected == "18"
+        @var stage1PB[user] = Long(newValue)
+    @elseif varSelected == "19"
+        @var stage2PB[user] = Long(newValue)
+    @elseif varSelected == "20"
+        @var stage3PB[user] = Long(newValue)
+    @elseif varSelected == "21"
+        @var stage4PB[user] = Long(newValue)
+    @elseif varSelected == "22"
+        @var stage5PB[user] = Long(newValue)
+    @elseif varSelected == "23"
+        @var stage6PB[user] = Long(newValue)
+    @elseif varSelected == "24"
+        @var stage7PB[user] = Long(newValue)
+    @elseif varSelected == "25"
+        @var stage8PB[user] = Long(newValue)
+    @elseif varSelected == "26"
+        @var anomaliesExperienced[user] = Int(newValue)
+    @fi
+    
+    @var top100FunctionRemove(user, Int(varSelected))
+    
+    @player &aSuccessfully updated &b{{user.getName()}}&a's variable &b{{varSelected}}&a to &b{{newValue}}&a!
+@fi

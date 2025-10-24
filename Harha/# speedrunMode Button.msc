@@ -1,0 +1,49 @@
+# speedrunMode Button
+@using Harha
+@fast
+
+@cooldown 10
+
+@if numberCompletions[player] <= 3
+    @player &cSpeedrun Mode is unlocked after &l3 &ccompletions!
+    @bypass /playsound minecraft:block.note_block.bass master @s ~ ~ ~ 0.75 0.5
+    @return
+@fi
+
+@if speedrunMode[player] == 8
+    @var speedrunMode[player] = 0
+    @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+    @player &#d4d4d4Speedrun Mode &c&lDisabled
+@elseif speedrunMode[player] == 0
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[7]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 1
+@elseif speedrunMode[player] == 1
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[9]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 2
+@elseif speedrunMode[player] == 2
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[11]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 3
+@elseif speedrunMode[player] == 3
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[12]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 4
+@elseif speedrunMode[player] == 4
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[14]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 5
+@elseif speedrunMode[player] == 5
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[16]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 6
+@elseif speedrunMode[player] == 6
+    @var speedrunMode[player] += 1
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[18]}}
+    @player &#d4d4d4Speedrun Mode set to: &a&lStage 7
+@elseif speedrunMode[player] == 7
+    @var speedrunMode[player] += 1
+    @player &#d4d4d4Speedrun Mode set to: &a&lEntire Map
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[19]}}
+@fi

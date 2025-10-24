@@ -95,13 +95,14 @@
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
         @var blocksThisStageGlobal[level] += 1
-        @if player.getCurrentChallenge() == "hahahaha"
+
+        @if player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
             @var sectionBlocksPlacedMaster[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahaha"
+        @elseif player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
             @var sectionBlocksPlacedUMM[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahas"
+        @elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
             @var sectionBlocksPlacedSoulLink[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahas"
+        @elseif player.getCurrentChallenge() == "hahahahas" || difficultySelection[player] == "masterSoulLink"
             @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
         @else
             @var sectionBlocksPlacedNormal[player][level] += 1

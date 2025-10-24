@@ -24,12 +24,15 @@
     @fi
 @fi
 
+# reset blocksThisStage
+@var blocksThisStage = 0
+
 @var ensureBlockSelection(levelNumber, player)
 @var setLevel(levelNumber, player)
 # @player DEBUG ACTIVE: XP Update Ran (level = {{levelNumber + 1}})
 
-# reset blocksThisStage
-@var blocksThisStage = 0
+
+
 # @var blocksThisStageGlobal[] TODO TODO
 @var numberOfBlocksToGive[player] = 63
 
@@ -42,7 +45,7 @@
     @for Int i in list::range(0, cheatList.length())
         @var anticheat(cheatList[i], player)
     @done
-@else 
+@elseif levelNumber <= 69
     @for Int i in list::range(0, cheatList.length())
         @var anticheatEnd(cheatList[i], player)
     @done

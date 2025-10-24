@@ -91,16 +91,108 @@
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
         @var blocksThisStageGlobal[level] += 1
-        @if player.getCurrentChallenge() == "hahahaha"
-            @var sectionBlocksPlacedMaster[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahaha"
-            @var sectionBlocksPlacedUMM[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahas"
-            @var sectionBlocksPlacedSoulLink[player][level] += 1
-        @elseif player.getCurrentChallenge() == "hahahahas"
-            @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
+
+
+        @if player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
+            @if level >= 30 && level <= 39
+                @if bootsObtained == true
+                    @if level == 30
+                        @var sectionBlocksPlacedMaster[player][39] += 1
+                    @elseif level == 31
+                        @var sectionBlocksPlacedMaster[player][38] += 1
+                    @elseif level == 32
+                        @var sectionBlocksPlacedMaster[player][37] += 1
+                    @elseif level == 33
+                        @var sectionBlocksPlacedMaster[player][36] += 1
+                    @elseif level == 34
+                        @var sectionBlocksPlacedMaster[player][35] += 1
+                    @fi
+                @else
+                    @var sectionBlocksPlacedMaster[player][level] += 1
+                @fi
+            @else
+                @var sectionBlocksPlacedMaster[player][level] += 1
+            @fi
+        @elseif player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
+            @if level >= 30 && level <= 39
+                @if bootsObtained == true
+                    @if level == 30
+                        @var sectionBlocksPlacedUMM[player][39] += 1
+                    @elseif level == 31
+                        @var sectionBlocksPlacedUMM[player][38] += 1
+                    @elseif level == 32
+                        @var sectionBlocksPlacedUMM[player][37] += 1
+                    @elseif level == 33
+                        @var sectionBlocksPlacedUMM[player][36] += 1
+                    @elseif level == 34
+                        @var sectionBlocksPlacedUMM[player][35] += 1
+                    @fi
+                @else
+                    @var sectionBlocksPlacedUMM[player][level] += 1
+                @fi
+            @else
+                @var sectionBlocksPlacedUMM[player][level] += 1
+            @fi
+        @elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
+            @if level >= 30 && level <= 39
+                @if bootsObtained == true
+                    @if level == 30
+                        @var sectionBlocksPlacedSoulLink[player][39] += 1
+                    @elseif level == 31
+                        @var sectionBlocksPlacedSoulLink[player][38] += 1
+                    @elseif level == 32
+                        @var sectionBlocksPlacedSoulLink[player][37] += 1
+                    @elseif level == 33
+                        @var sectionBlocksPlacedSoulLink[player][36] += 1
+                    @elseif level == 34
+                        @var sectionBlocksPlacedSoulLink[player][35] += 1
+                    @fi
+                @else
+                    @var sectionBlocksPlacedSoulLink[player][level] += 1
+                @fi
+            @else
+                @var sectionBlocksPlacedSoulLink[player][level] += 1
+            @fi
+        @elseif player.getCurrentChallenge() == "hahahahas" || difficultySelection[player] == "masterSoulLink"
+            @if level >= 30 && level <= 39
+                @if bootsObtained == true
+                    @if level == 30
+                        @var sectionBlocksPlacedMasterSoulLink[player][39] += 1
+                    @elseif level == 31
+                        @var sectionBlocksPlacedMasterSoulLink[player][38] += 1
+                    @elseif level == 32
+                        @var sectionBlocksPlacedMasterSoulLink[player][37] += 1
+                    @elseif level == 33
+                        @var sectionBlocksPlacedMasterSoulLink[player][36] += 1
+                    @elseif level == 34
+                        @var sectionBlocksPlacedMasterSoulLink[player][35] += 1
+                    @fi
+                @else
+                    @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
+                @fi
+            @else
+                @var sectionBlocksPlacedMasterSoulLink[player][level] += 1
+            @fi
         @else
-            @var sectionBlocksPlacedNormal[player][level] += 1
+            @if level >= 30 && level <= 39
+                @if bootsObtained == true
+                    @if level == 30
+                        @var sectionBlocksPlacedNormal[player][39] += 1
+                    @elseif level == 31
+                        @var sectionBlocksPlacedNormal[player][38] += 1
+                    @elseif level == 32
+                        @var sectionBlocksPlacedNormal[player][37] += 1
+                    @elseif level == 33
+                        @var sectionBlocksPlacedNormal[player][36] += 1
+                    @elseif level == 34
+                        @var sectionBlocksPlacedNormal[player][35] += 1
+                    @fi
+                @else
+                    @var sectionBlocksPlacedNormal[player][level] += 1
+                @fi
+            @else
+                @var sectionBlocksPlacedNormal[player][level] += 1
+            @fi
         @fi
         
         @var handlePlacement(adjacentBlock, height, player)

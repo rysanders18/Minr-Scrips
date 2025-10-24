@@ -1,0 +1,357 @@
+# lchGradient(String color1, String color2, Int steps, String hueMethod)
+# Generates a gradient between two colors using LCH color space
+# color1: Starting hex color (e.g., "#FF0000")
+# color2: Ending hex color (e.g., "#0000FF")
+# steps: Total number of colors to generate (including start and end)
+# hueMethod: "shorter" or "longer" for hue interpolation
+# Returns: String[] array of hex color codes
+
+@fast
+
+@define String[] gradient = String[]
+@define String hexChars = "0123456789ABCDEF"
+
+# Convert hex to RGB for color1
+@define String hex1 = color1.substring(1, 7).toUpperCase()
+
+# Parse R1
+@define String r1_char1 = hex1.substring(0, 1)
+@define String r1_char2 = hex1.substring(1, 2)
+@define Int r1 = hexChars.indexOf(r1_char1) * 16 + hexChars.indexOf(r1_char2)
+
+# Parse G1
+@define String g1_char1 = hex1.substring(2, 3)
+@define String g1_char2 = hex1.substring(3, 4)
+@define Int g1 = hexChars.indexOf(g1_char1) * 16 + hexChars.indexOf(g1_char2)
+
+# Parse B1
+@define String b1_char1 = hex1.substring(4, 5)
+@define String b1_char2 = hex1.substring(5, 6)
+@define Int b1 = hexChars.indexOf(b1_char1) * 16 + hexChars.indexOf(b1_char2)
+
+# Convert hex to RGB for color2
+@define String hex2 = color2.substring(1, 7).toUpperCase()
+
+# Parse R2
+@define String r2_char1 = hex2.substring(0, 1)
+@define String r2_char2 = hex2.substring(1, 2)
+@define Int r2 = hexChars.indexOf(r2_char1) * 16 + hexChars.indexOf(r2_char2)
+
+# Parse G2
+@define String g2_char1 = hex2.substring(2, 3)
+@define String g2_char2 = hex2.substring(3, 4)
+@define Int g2 = hexChars.indexOf(g2_char1) * 16 + hexChars.indexOf(g2_char2)
+
+# Parse B2
+@define String b2_char1 = hex2.substring(4, 5)
+@define String b2_char2 = hex2.substring(5, 6)
+@define Int b2 = hexChars.indexOf(b2_char1) * 16 + hexChars.indexOf(b2_char2)
+
+# Convert RGB to Linear RGB (gamma correction) for color 1
+@define Double c1_temp = Double(r1) / 255.0
+@define Double lr1
+@if c1_temp <= 0.04045
+    @var lr1 = c1_temp / 12.92
+@else
+    @var lr1 = math::pow((c1_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+@var c1_temp = Double(g1) / 255.0
+@define Double lg1
+@if c1_temp <= 0.04045
+    @var lg1 = c1_temp / 12.92
+@else
+    @var lg1 = math::pow((c1_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+@var c1_temp = Double(b1) / 255.0
+@define Double lb1
+@if c1_temp <= 0.04045
+    @var lb1 = c1_temp / 12.92
+@else
+    @var lb1 = math::pow((c1_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+# Convert RGB to Linear RGB (gamma correction) for color 2
+@define Double c2_temp = Double(r2) / 255.0
+@define Double lr2
+@if c2_temp <= 0.04045
+    @var lr2 = c2_temp / 12.92
+@else
+    @var lr2 = math::pow((c2_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+@var c2_temp = Double(g2) / 255.0
+@define Double lg2
+@if c2_temp <= 0.04045
+    @var lg2 = c2_temp / 12.92
+@else
+    @var lg2 = math::pow((c2_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+@var c2_temp = Double(b2) / 255.0
+@define Double lb2
+@if c2_temp <= 0.04045
+    @var lb2 = c2_temp / 12.92
+@else
+    @var lb2 = math::pow((c2_temp + 0.055) / 1.055, Double(2.4))
+@fi
+
+# Convert Linear RGB to XYZ
+@define Double x1 = lr1 * 0.4124564 + lg1 * 0.3575761 + lb1 * 0.1804375
+@define Double y1 = lr1 * 0.2126729 + lg1 * 0.7151522 + lb1 * 0.0721750
+@define Double z1 = lr1 * 0.0193339 + lg1 * 0.1191920 + lb1 * 0.9503041
+
+@define Double x2 = lr2 * 0.4124564 + lg2 * 0.3575761 + lb2 * 0.1804375
+@define Double y2 = lr2 * 0.2126729 + lg2 * 0.7151522 + lb2 * 0.0721750
+@define Double z2 = lr2 * 0.0193339 + lg2 * 0.1191920 + lb2 * 0.9503041
+
+# Convert XYZ to LAB (using D65 white point) - color 1
+# labF for y1 / 1.0
+@define Double temp_y1 = y1 / 1.0
+@define Double fy1
+@if temp_y1 > 0.008856
+    @var fy1 = math::pow(temp_y1, Double(1.0 / 3.0))
+@else
+    @var fy1 = 7.787 * temp_y1 + 16.0 / 116.0
+@fi
+
+# labF for x1 / 0.95047
+@define Double temp_x1 = x1 / 0.95047
+@define Double fx1
+@if temp_x1 > 0.008856
+    @var fx1 = math::pow(temp_x1, Double(1.0 / 3.0))
+@else
+    @var fx1 = 7.787 * temp_x1 + 16.0 / 116.0
+@fi
+
+# labF for z1 / 1.08883
+@define Double temp_z1 = z1 / 1.08883
+@define Double fz1
+@if temp_z1 > 0.008856
+    @var fz1 = math::pow(temp_z1, Double(1.0 / 3.0))
+@else
+    @var fz1 = 7.787 * temp_z1 + 16.0 / 116.0
+@fi
+
+@define Double l1 = 116.0 * fy1 - 16.0
+@define Double a1 = 500.0 * (fx1 - fy1)
+@define Double b1lab = 200.0 * (fy1 - fz1)
+
+# Convert XYZ to LAB (using D65 white point) - color 2
+# labF for y2 / 1.0
+@define Double temp_y2 = y2 / 1.0
+@define Double fy2
+@if temp_y2 > 0.008856
+    @var fy2 = math::pow(temp_y2, Double(1.0 / 3.0))
+@else
+    @var fy2 = 7.787 * temp_y2 + 16.0 / 116.0
+@fi
+
+# labF for x2 / 0.95047
+@define Double temp_x2 = x2 / 0.95047
+@define Double fx2
+@if temp_x2 > 0.008856
+    @var fx2 = math::pow(temp_x2, Double(1.0 / 3.0))
+@else
+    @var fx2 = 7.787 * temp_x2 + 16.0 / 116.0
+@fi
+
+# labF for z2 / 1.08883
+@define Double temp_z2 = z2 / 1.08883
+@define Double fz2
+@if temp_z2 > 0.008856
+    @var fz2 = math::pow(temp_z2, Double(1.0 / 3.0))
+@else
+    @var fz2 = 7.787 * temp_z2 + 16.0 / 116.0
+@fi
+
+@define Double l2 = 116.0 * fy2 - 16.0
+@define Double a2 = 500.0 * (fx2 - fy2)
+@define Double b2lab = 200.0 * (fy2 - fz2)
+
+# Convert LAB to LCH
+@define Double c1 = math::sqrt(a1 * a1 + b1lab * b1lab)
+
+# Manual atan2 implementation for h1
+@define Double h1 = 0.0D
+@if a1 > 0.0
+    @var h1 = math::arctan(b1lab / a1)
+@else
+    @if a1 < 0.0
+        @if b1lab >= 0.0
+            @var h1 = math::arctan(b1lab / a1) + 180.0
+        @else
+            @var h1 = math::arctan(b1lab / a1) - 180.0
+        @fi
+    @else
+        @if b1lab > 0.0
+            @var h1 = 90.0D
+        @else
+            @if b1lab < 0.0
+                @var h1 = -90.0D
+            @fi
+        @fi
+    @fi
+@fi
+@if h1 < 0.0
+    @var h1 += 360.0D
+@fi
+
+@define Double c2 = math::sqrt(a2 * a2 + b2lab * b2lab)
+
+# Manual atan2 implementation for h2
+@define Double h2 = 0.0D
+@if a2 > 0.0
+    @var h2 = math::arctan(b2lab / a2)
+@else
+    @if a2 < 0.0
+        @if b2lab >= 0.0
+            @var h2 = math::arctan(b2lab / a2) + 180.0
+        @else
+            @var h2 = math::arctan(b2lab / a2) - 180.0
+        @fi
+    @else
+        @if b2lab > 0.0
+            @var h2 = 90.0D
+        @else
+            @if b2lab < 0.0
+                @var h2 = -90.0D
+            @fi
+        @fi
+    @fi
+@fi
+@if h2 < 0.0
+    @var h2 += 360.0D
+@fi
+
+# Adjust hue interpolation based on method
+@define Double hueDiff = h2 - h1
+@if hueMethod == "shorter"
+    @if hueDiff > 180.0
+        @var h1 += 360.0D
+    @elseif hueDiff < -180.0
+        @var h2 += 360.0D
+    @fi
+@else
+    # longer
+    @if hueDiff > 0.0 && hueDiff < 180.0
+        @var h1 += 360.0D
+    @elseif hueDiff < 0.0 && hueDiff > -180.0
+        @var h2 += 360.0D
+    @fi
+@fi
+
+# Generate gradient steps
+@for Int i in list::range(0, steps)
+    @define Double t = Double(i) / Double(steps - 1)
+    
+    # Interpolate in LCH space
+    @define Double l = l1 + (l2 - l1) * t
+    @define Double c = c1 + (c2 - c1) * t
+    @define Double h = h1 + (h2 - h1) * t
+    
+    # Normalize hue
+    @var h = h % 360.0
+    @if h < 0.0
+        @var h += 360.0D
+    @fi
+    
+    # Convert LCH back to LAB
+    # h is already in degrees, and math::cos/sin expect degrees
+    @define Double a = c * math::cos(h)
+    @define Double blab = c * math::sin(h)
+    
+    # Convert LAB back to XYZ
+    @define Double fy = (l + 16.0) / 116.0
+    @define Double fx = a / 500.0 + fy
+    @define Double fz = fy - blab / 200.0
+    
+    # labFInv for fx
+    @define Double x_val
+    @if fx > 0.206897
+        @var x_val = math::pow(fx, Double(3.0))
+    @else
+        @var x_val = (fx - 16.0 / 116.0) / 7.787
+    @fi
+    @define Double x = 0.95047 * x_val
+    
+    # labFInv for fy
+    @define Double y_val
+    @if fy > 0.206897
+        @var y_val = math::pow(fy, Double(3.0))
+    @else
+        @var y_val = (fy - 16.0 / 116.0) / 7.787
+    @fi
+    @define Double y = 1.0 * y_val
+    
+    # labFInv for fz
+    @define Double z_val
+    @if fz > 0.206897
+        @var z_val = math::pow(fz, Double(3.0))
+    @else
+        @var z_val = (fz - 16.0 / 116.0) / 7.787
+    @fi
+    @define Double z = 1.08883 * z_val
+    
+    # Convert XYZ to Linear RGB
+    @define Double lr = x * 3.2404542 + y * -1.5371385 + z * -0.4985314
+    @define Double lg = x * -0.9692660 + y * 1.8760108 + z * 0.0415560
+    @define Double lb = x * 0.0556434 + y * -0.2040259 + z * 1.0572252
+    
+    # Convert Linear RGB to RGB (gamma correction) - for r
+    @define Double rgb_r
+    @if lr <= 0.0031308
+        @var rgb_r = lr * 12.92
+    @else
+        @var rgb_r = 1.055 * math::pow(lr, Double(1.0 / 2.4)) - 0.055
+    @fi
+    @define Int r = Int(rgb_r * 255.0 + 0.5)
+    
+    # Convert Linear RGB to RGB (gamma correction) - for g
+    @define Double rgb_g
+    @if lg <= 0.0031308
+        @var rgb_g = lg * 12.92
+    @else
+        @var rgb_g = 1.055 * math::pow(lg, Double(1.0 / 2.4)) - 0.055
+    @fi
+    @define Int g = Int(rgb_g * 255.0 + 0.5)
+    
+    # Convert Linear RGB to RGB (gamma correction) - for b
+    @define Double rgb_b
+    @if lb <= 0.0031308
+        @var rgb_b = lb * 12.92
+    @else
+        @var rgb_b = 1.055 * math::pow(lb, Double(1.0 / 2.4)) - 0.055
+    @fi
+    @define Int b = Int(rgb_b * 255.0 + 0.5)
+    
+    # Clamp values
+    @if r < 0
+        @var r = 0
+    @elseif r > 255
+        @var r = 255
+    @fi
+    @if g < 0
+        @var g = 0
+    @elseif g > 255
+        @var g = 255
+    @fi
+    @if b < 0
+        @var b = 0
+    @elseif b > 255
+        @var b = 255
+    @fi
+    
+    # Convert to hex manually
+    @define String r_hex1 = hexChars.substring(r / 16, r / 16 + 1)
+    @define String r_hex2 = hexChars.substring(r % 16, r % 16 + 1)
+    @define String g_hex1 = hexChars.substring(g / 16, g / 16 + 1)
+    @define String g_hex2 = hexChars.substring(g % 16, g % 16 + 1)
+    @define String b_hex1 = hexChars.substring(b / 16, b / 16 + 1)
+    @define String b_hex2 = hexChars.substring(b % 16, b % 16 + 1)
+    @define String hex = "#" + r_hex1 + r_hex2 + g_hex1 + g_hex2 + b_hex1 + b_hex2
+    @var gradient.append(hex)
+@done
+
+@return gradient

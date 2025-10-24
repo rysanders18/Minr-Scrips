@@ -1,6 +1,6 @@
 @using Harha
 @fast
-# pcStat(Int pcSelect, Player user, Player player)
+# pcStats(Int pcSelect, Player user, Player player)
 # .      .
 @define Int secretsFound
 @define Int secretsCompleted
@@ -48,7 +48,7 @@
 
     @if pbFalls[user] != 1000000000
         @chatscript 180s group1238 pcStats(8, user, player)
-        @player &#917E9C*&#D3D6E0 PB Falls: &#8596A6&l{{pbFalls[user]}}
+        @player &#D3D6E0 &#D3D6E0 PB Falls: &#8596A6&l{{pbFalls[user]}}
     @fi
 
     @chatscript 180s group1012332 pcStats(9, user, player)
@@ -105,19 +105,19 @@
         @player &#ffc71d✯ Certified Trackpad Victor!
     @fi
     @player
-    @if cosmeticsUnlocked[user][0] == 0
+    @if numberCompletions[user] == 0
         @player &#7C5AC9&lA&#8A5CCF&lm&#985ED5&le&#A661DB&lt&#B463E1&lh&#C265E7&ly&#D067ED&ls&#DE6AF3&lt&#FA6EFF&l: &c{{numberCompletions[user]}}/1 Map completions. ✕
     @else
         @player &#7C5AC9&lA&#8A5CCF&lm&#985ED5&le&#A661DB&lt&#B463E1&lh&#C265E7&ly&#D067ED&ls&#DE6AF3&lt&#FA6EFF&l: &a{{numberCompletions[user]}}/1 Map completions. ✔
     @fi
 
-    @if cosmeticsUnlocked[user][1] == 0
+    @if numberCompletions[user] <= 2
         @player &#96B345&lA&#99AD50&lz&#9CA75B&la&#9FA165&ll&#A29A70&le&#A5947B&la &#A88E86&lL&#AB8890&le&#AE829B&la&#B17CA6&lv&#B475B1&le&#B76FBB&ls&#BD63D1&l: &c{{numberCompletions[user]}}/3 Map completions. ✕
     @else
         @player &#96B345&lA&#99AD50&lz&#9CA75B&la&#9FA165&ll&#A29A70&le&#A5947B&la &#A88E86&lL&#AB8890&le&#AE829B&la&#B17CA6&lv&#B475B1&le&#B76FBB&ls&#BD63D1&l: &a{{numberCompletions[user]}}/3 Map completions. ✔
     @fi
     
-    @if cosmeticsUnlocked[user][2] == 0
+    @if numberCompletions[user] <= 9
         @player &#D4D4D4&lO&#D1C8A5&lr&#CEBD76&le &#CBB147&lB&#B2B150&ll&#8DB875&lo&#68BE9A&lc&#4ABEA7&lk&#37B381&ls&#129C36&l: &c{{numberCompletions[user]}}/10 Map completions. ✕
     @else
         @player &#D4D4D4&lO&#D1C8A5&lr&#CEBD76&le &#CBB147&lB&#B2B150&ll&#8DB875&lo&#68BE9A&lc&#4ABEA7&lk&#37B381&ls&#129C36&l: &a{{numberCompletions[user]}}/10 Map completions. ✔
@@ -125,39 +125,39 @@
 
     @player 
 
-    @if cosmeticsUnlocked[user][3] == 0
-        @player &#CDCF4A&lS&#C7CF4B&lp&#C1D04C&lo&#BBD04C&ln&#B5D04D&lg&#AFD14E&le &#A9D14F&lB&#9EC759&ll&#8DB46D&lo&#7DA181&lc&#6C8E95&lk&#5C7AA9&ls&#3B54D1&l: &c{{swagPoints[user]}}/500 Style Points. ✕
+    @if swagPoints[user] <= 499
+        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &c{{formatNumber(String(swagPoints[user]))}}/500 Style Points. ✕
     @else
-        @player &#CDCF4A&lS&#C7CF4B&lp&#C1D04C&lo&#BBD04C&ln&#B5D04D&lg&#AFD14E&le &#A9D14F&lB&#9EC759&ll&#8DB46D&lo&#7DA181&lc&#6C8E95&lk&#5C7AA9&ls&#3B54D1&l: &a{{swagPoints[user]}}/500 Style Points. ✔
+        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &a{{formatNumber(String(swagPoints[user]))}}/500 Style Points. ✔
     @fi
     
-    @if cosmeticsUnlocked[user][4] == 0
-        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &c{{swagPoints[user]}}/1000 Style Points. ✕
+    @if swagPoints[user] <= 999
+        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &c{{formatNumber(String(swagPoints[user]))}}/1,000 Style Points. ✕
     @else
-        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &a{{swagPoints[user]}}/1000 Style Points. ✔
+        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &a{{formatNumber(String(swagPoints[user]))}}/1,000 Style Points. ✔
     @fi
     
-    @if cosmeticsUnlocked[user][5] == 0
-        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &c{{swagPoints[user]}}/2000 Style Points. ✕
+    @if swagPoints[user] <= 1999
+        @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk&#FFFFFF&l: &c{{formatNumber(String(swagPoints[user]))}}/2,000 Style Points. ✕
     @else
-        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &a{{swagPoints[user]}}/2000 Style Points. ✔
+        @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk&#FFFFFF&l: &a{{formatNumber(String(swagPoints[user]))}}/2,000 Style Points. ✔
     @fi
     
     @player
 
-    @if cosmeticsUnlocked[user][6] == 0
-        @player &#A8201F&l&nN&#9C1817&l&ne&#8F1010&l&nt&#830808&l&nh&#760000&l&ne&#5E1F21&l&nr &#463D41&l&nB&#2E5C62&l&nl&#167A82&l&no&#158282&l&nc&#148982&l&nk&#119882&l&ns: &c{{secretsCompleted}}/1 Secrets completed. ✕
+    @if secretsCompleted <= 0
+        @player &#A8201F&lN&#9C1817&le&#8F1010&lt&#830808&lh&#760000&le&#5E1F21&lr &#463D41&lB&#2E5C62&ll&#167A82&lo&#158282&lc&#148982&lk&#119882&ls: &c{{secretsCompleted}}/1 Secrets completed. ✕
     @else
-        @player &#A8201F&l&nN&#9C1817&l&ne&#8F1010&l&nt&#830808&l&nh&#760000&l&ne&#5E1F21&l&nr &#463D41&l&nB&#2E5C62&l&nl&#167A82&l&no&#158282&l&nc&#148982&l&nk&#119882&l&ns: &a{{secretsCompleted}}/1 Secrets completed. ✔
+        @player &#A8201F&lN&#9C1817&le&#8F1010&lt&#830808&lh&#760000&le&#5E1F21&lr &#463D41&lB&#2E5C62&ll&#167A82&lo&#158282&lc&#148982&lk&#119882&ls: &a{{secretsCompleted}}/1 Secrets completed. ✔
     @fi
 
-    @if cosmeticsUnlocked[user][7] == 0
+    @if secretsCompleted <= 2
         @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &c{{secretsCompleted}}/3 Secrets completed. ✕
     @else
         @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &a{{secretsCompleted}}/3 Secrets completed. ✔
     @fi
 
-    @if cosmeticsUnlocked[user][8] == 0
+    @if secretsCompleted <= 9
         @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &c{{secretsCompleted}}/10 Secrets completed. ✕
     @else
         @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &a{{secretsCompleted}}/10 Secrets completed. ✔
@@ -165,26 +165,26 @@
 
     @player
 
-    @if cosmeticsUnlocked[user][9] == 0
-        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &c{{totalFalls[user]}}/10,000 Total falls. ✕
+    @if totalFalls[user] <= 9999
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &c{{formatNumber(String(totalFalls[user]))}}/10,000 Total falls. ✕
     @else
-        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &a{{totalFalls[user]}}/10,000 Total falls. ✔
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &a{{formatNumber(String(totalFalls[user]))}}/10,000 Total falls. ✔
     @fi
 
-    @if cosmeticsUnlocked[user][10] == 0
+    @if numberCompletionsMaster[user] == 0
         @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &cEven Harder Hat not completed. ✕
     @else
         @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &aEven Harder Hat completed. ✔
     @fi
 
-    @if cosmeticsUnlocked[user][10] == 0
+    @if pbFalls[user] <= 25
         @if pbFalls[user] == 1000000000
-            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = null). ✕
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = null). ✕
         @else
-            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = {{pbFalls[user]}}). ✕
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = {{formatNumber(String(pbFalls[user]))}}). ✕
         @fi
     @else
-        @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 25 falls. (best = {{pbFalls[user]}}). ✔
+        @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 25 falls. (best = {{formatNumber(String(pbFalls[user]))}}). ✔
     @fi
 
     @player 

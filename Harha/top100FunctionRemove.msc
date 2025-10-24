@@ -1,121 +1,117 @@
-# top100FunctionRemove(player, varSelected)
+# top100FunctionRemove(Player player, Int varSelected) https://paste.minr.org/nisutugiko
     # Determine which leaderboard to modify based on varSelected
-    @switch varSelected
-        @if varSelected = 1
-            @var leaderboard = top100Section1PB
-            @var stagePB = stage1PB
-        @if varSelected = 2
-            @var leaderboard = top100Section2PB
-            @var stagePB = stage2PB
-        @if varSelected = 3
-            @var leaderboard = top100Section3PB
-            @var stagePB = stage3PB
-        @if varSelected = 4
-            @var leaderboard = top100Section4PB
-            @var stagePB = stage4PB
-        @if varSelected = 5
-            @var leaderboard = top100Section5PB
-            @var stagePB = stage5PB
-        @if varSelected = 6
-            @var leaderboard = top100Section6PB
-            @var stagePB = stage6PB
-        @if varSelected = 7
-            @var leaderboard = top100Section7PB
-            @var stagePB = stage7PB
-        @if varSelected = 8
-            @var leaderboard = top100Section8PB
-            @var stagePB = stage8PB
-        @if varSelected = 9
-            @var leaderboard = top100Section9PB
-            @var stagePB = stage9PB
-        @if varSelected = 10
-            @var leaderboard = top100Section10PB
-            @var stagePB = stage10PB
-        @if varSelected = 11
-            @var leaderboard = top100Section11PB
-            @var stagePB = stage11PB
-        @if varSelected = 12
-            @var leaderboard = top100Section12PB
-            @var stagePB = stage12PB
-        @if varSelected = 13
-            @var leaderboard = top100Section13PB
-            @var stagePB = stage13PB
-        @if varSelected = 14
-            @var leaderboard = top100Section14PB
-            @var stagePB = stage14PB
-        @if varSelected = 15
-            @var leaderboard = top100Section15PB
-            @var stagePB = stage15PB
-        @if varSelected = 16
-            @var leaderboard = top100Section16PB
-            @var stagePB = stage16PB
-        @if varSelected = 17
-            @var leaderboard = top100Section17PB
-            @var stagePB = stage17PB
-        @if varSelected = 18
-            @var leaderboard = top100Section18PB
-            @var stagePB = stage18PB
-        @if varSelected = 19
-            @var leaderboard = top100Section19PB
-            @var stagePB = stage19PB
-        @if varSelected = 20
-            @var leaderboard = top100Section20PB
-            @var stagePB = stage20PB
-        @if varSelected = 21
-            @var leaderboard = top100Section21PB
-            @var stagePB = stage21PB
-        @if varSelected = 22
-            @var leaderboard = top100Section22PB
-            @var stagePB = stage22PB
-        @if varSelected = 23
-            @var leaderboard = top100Section23PB
-            @var stagePB = stage23PB
-        @if varSelected = 24
-            @var leaderboard = top100Section24PB
-            @var stagePB = stage24PB
-        @if varSelected = 25
-            @var leaderboard = top100Section25PB
-            @var stagePB = stage25PB
-        @if varSelected = 26
-            @var leaderboard = top100Section26PB
-            @var stagePB = stage26PB
-        @default
-            @return  # Exit if varSelected is invalid
-    @endswitch
 
-    # Check if the player exists in the leaderboard
-    @if leaderboard.contains(playerId)
-        # Remove the player's entry
-        @var playerIndex = leaderboard.find(playerId)
-        @var leaderboard.remove(playerIndex)
-    @else
-        # If the player does not exist, exit the function
-        @return
-    @fi
+@fast
+@using Harha
 
-    # Resort the leaderboard
-    @var length = leaderboard.length()
-    @var newLeaderboard = list::create()  # Temporary list to store sorted players
+@define Long stagePB
+@define String[] leaderboard
 
-    # Iterate through the remaining players and reinsert them in sorted order
-    @for Int i in list::range(0, length - 1)
-        @var currentPlayer = Player(leaderboard[i])
-        @var inserted = false
+@if varSelected == 0
+    @var leaderboard = top100BlocksTotal
+    @var stagePB = Long(totalBlocks[player])
+@elseif varSelected == 1
+    @var leaderboard = top100FallsTotal
+    @var stagePB = Long(totalFalls[player])
+@elseif varSelected == 2
+    @var leaderboard = top100FallsPBNormal
+    @var stagePB = Long(pbFalls[player])
+@elseif varSelected == 3
+    @var leaderboard = top100FallsPBMaster
+    @var stagePB = Long(pbFallsMaster[player])
+@elseif varSelected == 4
+    @var leaderboard = top100FallsPBUMM
+    @var stagePB = Long(pbFallsUMM[player])
+@elseif varSelected == 5
+    @var leaderboard = top100FallsPBSoulLink
+    @var stagePB = Long(pbFallsSoulLink[player])
+@elseif varSelected == 6
+    @var leaderboard = top100FallsPBMasterSoulLink
+    @var stagePB = Long(pbFallsMasterSoulLink[player])
+@elseif varSelected == 7
+    @var leaderboard = top100BlocksPBNormal
+    @var stagePB = Long(pbBlocks[player])
+@elseif varSelected == 8
+    @var leaderboard = top100BlocksPBMaster
+    @var stagePB = Long(pbBlocksMaster[player])
+@elseif varSelected == 9
+    @var leaderboard = top100BlocksPBUMM
+    @var stagePB = Long(pbBlocksUMM[player])
+@elseif varSelected == 10
+    @var leaderboard = top100BlocksPBSoulLink
+    @var stagePB = Long(pbBlocksSoulLink[player])
+@elseif varSelected == 11
+    @var leaderboard = top100BlocksPBMasterSoulLink
+    @var stagePB = Long(pbBlocksMasterSoulLink[player])
+@elseif varSelected == 12
+    @var leaderboard = top100MapCompletionsTotal
+    @var stagePB = Long(numberCompletions[player])
+@elseif varSelected == 13
+    @var leaderboard = top100MapCompletionsNormal
+    @var stagePB = Long(numberCompletionsNormal[player])
+@elseif varSelected == 14
+    @var leaderboard = top100MapCompletionsMaster
+    @var stagePB = Long(numberCompletionsMaster[player])
+@elseif varSelected == 15
+    @var leaderboard = top100MapCompletionsUMM
+    @var stagePB = Long(numberCompletionsUMM[player])
+@elseif varSelected == 16
+    @var leaderboard = top100MapCompletionsSoulLink
+    @var stagePB = Long(numberCompletionsSoulLink[player])
+@elseif varSelected == 17
+    @var leaderboard = top100MapCompletionsMasterSoulLink
+    @var stagePB = Long(numberCompletionsMasterSoulLink[player])
+@elseif varSelected == 18
+    @var leaderboard = top100Section1PB
+    @var stagePB = stage1PB[player]
+@elseif varSelected == 19
+    @var leaderboard = top100Section2PB
+    @var stagePB = stage2PB[player]
+@elseif varSelected == 20
+    @var leaderboard = top100Section3PB
+    @var stagePB = stage3PB[player]
+@elseif varSelected == 21
+    @var leaderboard = top100Section4PB
+    @var stagePB = stage4PB[player]
+@elseif varSelected == 22
+    @var leaderboard = top100Section5PB
+    @var stagePB = stage5PB[player]
+@elseif varSelected == 23
+    @var leaderboard = top100Section6PB
+    @var stagePB = stage6PB[player]
+@elseif varSelected == 24
+    @var leaderboard = top100Section7PB
+    @var stagePB = stage7PB[player]
+@elseif varSelected == 25
+    @var leaderboard = top100Section8PB
+    @var stagePB = stage8PB[player]
+@elseif varSelected == 26
+    @var leaderboard = top100Anomalies
+    @var stagePB = Long(anomaliesExperienced[player])
+@elseif varSelected == 27
+    @var leaderboard = top100SoulLinkPlayers
+    @var statistic = Long(soulLinkPlayersPB[player])
+@elseif varSelected == 28
+    @var leaderboard = top100HarderSoulLinkPlayers
+    @var statistic = Long(harderSoulLinkPlayersPB[player])
+@elseif varSelected == 29
+    @var leaderboard = top100StylePointPrestiges
+    @var statistic = Long(stylePointPrestiges[player])
+@fi
 
-        # Insert the current player into the correct position in the new leaderboard
-        @for Int j in list::range(0, newLeaderboard.length())
-            @if stagePB[currentPlayer] < stagePB[Player(newLeaderboard[j])]
-                @var newLeaderboard.add(currentPlayer.getUniqueId(), j)
-                @var inserted = true
-                @break
-            @fi
-        @done
+ 
+# Check if the player exists in the leaderboard
+@if leaderboard.contains(player.getUniqueId())
+    # Remove the player's entry
+    @define Int playerIndex = leaderboard.find(player.getUniqueId())
+    
+    @var leaderboard.remove(playerIndex)
+    @var top100Function(player, varSelected)
+    @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
+    @var top100Function(player, 25)
+@else
+    # If the player does not exist, exit the function
+    @return
+@fi
 
-        # If the player was not inserted, add them to the end of the new leaderboard
-        @if !inserted
-            @var newLeaderboard.add(currentPlayer.getUniqueId(), newLeaderboard.length())
-        @fi
-    @done
 
-    # Replace the old leaderboard with the new sorted leaderboard
-    @var leaderboard = newLeaderboard
