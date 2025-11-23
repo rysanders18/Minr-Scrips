@@ -19,9 +19,28 @@
 @var ummFalls[player] = 5
 @var hasTeleported[player] = false
 @var partners[player] = Player[]
-@var masterSoftCP = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+@var masterSoftCP[player] = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+@var masterSLSoftCP[player] = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 @var top100Function(player, 26)
 @var enteredEndThisRun[player] = false
+
+@var grateNumber[player] = 0
+@var woolNumber[player] = 0
+@var glassNumber[player] = 0
+@var spongeNumber[player] = 0
+@var lastSpongeNumber[player] = 0
+@var leafNumber[player] = 0
+@var lastLeafNumber[player] = 0
+@var obsidianNumber[player] = 0
+@var lastObsidianNumber[player] = 0
+@var oreNumber[player] = 0
+@var lastOreNumber[player] = 0
+@var pumpkinNumber[player] = 0
+@var lastPumpkinNumber[player] = 0
+@var coolGlassNumber[player] = 0
+@var lastCoolGlassNumber[player] = 0
+@var coralNumber[player] = 0
+@var lastCoralNumber[player] = 0
 
 @bypass /attribute {{player}} minecraft:entity_interaction_range base set 8
 
@@ -57,11 +76,13 @@
     # @player DEBUG: Partners = {{partners[player]}}
     # checks if there is at least one other partner
     @if partners.length() <= 1
-        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 2 0.5
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 0.5
         @if player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
         @player &cThere is nobody else in the start room with the soul link activated! You can not start alone!
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 0.5
         @else
-        @player &cThere is nobody else in the start room with the master soul link activated! You can not start alone!
+        @player &cThere is nobody else in the start room with the even harder soul link activated! You can not start alone!
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 0.5
         @fi
         @return
     @fi
@@ -97,10 +118,11 @@
 @bypass /xp set {{player}} 0 points
 @bypass /xp set {{player}} 1 levels
 
-@bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+# Particles and Teleport 
 @if player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
-    @bypass /playsound minecraft:entity.ender_dragon.growl master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.1D, 1.4D)}}
-    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+    @bypass /playsound minecraft:entity.ender_dragon.growl master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 0.75 0
     @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
     @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.2D, 1.35D)}}
     @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
@@ -109,7 +131,8 @@
     @bypass /particle minecraft:dust_color_transition{from_color:[0.549,0.000,0.000],scale:1,to_color:[1.000,0.000,0.000]} -9199.5 93.5 9731.5 1.5 1 1.5 22.25 250
     @bypass /attribute @s minecraft:max_health base set 10
 @elseif player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
-    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 0.75 0
     @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
     @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 1 {{math::random(1.2D, 1.35D)}}
     @bypass /particle minecraft:smoke -9199.5 92.5 9733.5 0 0 0 00.25 250
@@ -117,7 +140,8 @@
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
     @bypass /attribute @s minecraft:max_health base set 20
 @elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
-    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 0.75 0
     @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}    
     @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
     @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
@@ -126,30 +150,119 @@
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
     @var difficultySelection[player] = "soulLink"
 @elseif player.getCurrentChallenge() == "hahahahas" || difficultySelection[player] == "masterSoulLink"
-    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
+    @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 0.75 0
     @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}    
     @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
     @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
     @bypass /particle minecraft:scrape -9199.5 93.5 9732.5 2 2 2 00.25 100
     @bypass /particle minecraft:wax_on -9199.5 93.5 9732.5 2 2 2 00.25 100
     @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
-    @for Int iii in list::range(0, 1000)
-        @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 0.3 {{(Float(iii) / Float(1000)) * 1.5 + 0.5}}
+    @for Int iii in list::range(0, 250)
+        @bypass /playsound minecraft:block.end_portal.spawn master @a[distance=..20] ~ ~ ~ 0.3 {{(Float(iii) / Float(250)) * 1.5 + 0.5}}
     @done
 @else
-    @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 2 0
-    @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
-    @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
-    @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
-    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
-    @bypass /attribute @s minecraft:max_health base set 20
-    @var difficultySelection[player] = "normal"
+    @if speedrunMode[player] != 0
+        @var speedrunTeleportedRecently[player] = true
+        @var hasTeleported[player] = true
+        @if speedrunMode[player] == 1
+            @var player.teleport(Position(-9199.5, 96.0, 9715.5, 180.0, 10.0, "Theta"))
+            @var setLevel(0, player)
+            @var stage[player] = 0
+            @var ensureBlockSelection(0, player)
+            @var resetBlocks(player, 64)
+            @bypass clear {{player}} leather_boots
+            @if bootsObtained[player] == true
+                @var bootsObtained[player] = false
+            @fi
+        @elseif speedrunMode[player] == 2
+            @var player.teleport(Position(-9160.5, 101.0, 9680.5, 270.0, 10.0, "Theta"))
+            @var setLevel(10, player)
+            @var stage[player] = 1
+            @var ensureBlockSelection(10, player)
+            @var resetBlocks(player, 64)
+            @bypass clear {{player}} leather_boots
+            @if bootsObtained[player] == true
+                @var bootsObtained[player] = false
+            @fi
+        @elseif speedrunMode[player] == 3
+            @var player.teleport(Position(-9132.5, 101.0, 9641.5, 180.0, 10.0, "Theta"))
+            @var setLevel(20, player)
+            @var stage[player] = 2
+            @var ensureBlockSelection(20, player)
+            @var resetBlocks(player, 64)
+            @bypass clear {{player}} leather_boots
+            @if bootsObtained[player] == true
+                @var bootsObtained[player] = false
+            @fi
+        @elseif speedrunMode[player] == 4
+            @var player.teleport(Position(-9189.5, 100.13, 9582.5, 287.0, 10.0, "Theta"))
+            @var setLevel(30, player)
+            @var stage[player] = 3
+            @var ensureBlockSelection(30, player)
+            @var resetBlocks(player, 64)
+            @bypass clear {{player}} leather_boots
+            @if bootsObtained[player] == true
+                @var bootsObtained[player] = false
+            @fi
+        @elseif speedrunMode[player] == 5
+            @var player.teleport(Position(-9182.5, 101.0, 9563.5, 180.0, 10.0, "Theta"))
+            @var setLevel(40, player)
+            @var stage[player] = 4
+            @var ensureBlockSelection(40, player)
+            @var resetBlocks(player, 64)
+            @var bootsObtained = true
+            @var bootsFunction(player)
+        @elseif speedrunMode[player] == 6
+            @var player.teleport(Position(-9067.5, 102.0, 9509.0, 0.0, 10.0, "Theta"))
+            @var setLevel(50, player)
+            @var stage[player] = 5
+            @var ensureBlockSelection(50, player)
+            @var resetBlocks(player, 64)
+            @var bootsObtained = true
+            @var bootsFunction(player)
+        @elseif speedrunMode[player] == 7
+            @var player.teleport(Position(-4600.5, 91.0, 5201.5, -180.0, 10.0, "Theta_the_end"))
+            @var setLevel(60, player)
+            @var stage[player] = 6
+            @var ensureBlockSelection(60, player)
+            @var resetBlocks(player, 64)
+            @var bootsObtained = true
+            @var bootsFunction(player)
+        @elseif speedrunMode[player] == 8
+            @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+            @var setLevel(0, player)
+            @var stage[player] = 0
+            @var ensureBlockSelection(0, player)
+            @var bootsObtained = false
+            @bypass clear {{player}}
+        @fi
+        
+        @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 0.75 0
+        @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+        @for Int iiii in list::range(0, 1000)
+            @bypass /playsound minecraft:entity.illusioner.prepare_mirror master @a[distance=..20] ~ ~ ~ 0.5 {{(Float(iiii) / Float(1000)) * 1.5 + 0.5}}
+        @done
+        @bypass /particle minecraft:totem_of_undying ~ ~ ~ 2 1 2 0.1 50
+        @bypass /particle minecraft:firework ~ ~0.5 ~ 0 0 0 0.25 50
+        @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @else
+
+        # No speedrun mode and no challenge
+        @bypass minecraft:teleport {{player}} -9199.5 92.0 9733.5 -180 -10
+        @bypass /playsound minecraft:entity.creaking.death master @a[distance=..20] ~ ~ ~ 0.75 0
+        @bypass /playsound minecraft:item.totem.use master @a[distance=..20] ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+        @bypass /particle minecraft:trial_spawner_detection_ominous -9199.5 92.5 9733.5 0 0 0 00.25 50
+        @bypass /particle minecraft:trial_spawner_detection -9199.5 92.5 9733.5 0 0 0 00.25 50
+        @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+        @bypass /attribute @s minecraft:max_health base set 20
+        @var difficultySelection[player] = "normal"
+    @fi
 @fi
+
 
 @var ensureBlockSelection(1, player)
 @var resetBlocks(player, 64)
-
-# hat stuff
 @var hatFunction(player)
 
 # only runs once due to codeGenerated
@@ -169,6 +282,7 @@
 
 
 # Fancy Titles
+
 @if player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
 
     @bypass /title @s times 0 100 40
@@ -342,7 +456,42 @@
     @delay 1
     @bypass /title {{player}} times 0 40 20
     @bypass /title {{player}} title ["",{"text":"Harder Hats","bold":true,"color":"#2DD2D2"}]
-
+@elseif speedrunMode[player] != 0
+    @bypass /title @s times 0 100 40
+    @bypass /title @s subtitle ["",{"text":"Click any level sign!","bold":true,"color":"#a2ff55"}]
+    @bypass /title @s times 0 60 20
+    @bypass /title {{player}} title ["",{"text":"Speedrun Mode","bold":true,"color":"#a2ff55"}]
+    @delay 4
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"white"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#deffbf"},{"text":"p","bold":true,"color":"#efffdf"},{"text":"e","bold":true,"color":"white"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#b8ff7c"},{"text":"p","bold":true,"color":"#ccff9e"},{"text":"e","bold":true,"color":"#deffbf"},{"text":"e","bold":true,"color":"#efffdf"},{"text":"d","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#b8ff7c"},{"text":"e","bold":true,"color":"#ccff9e"},{"text":"d","bold":true,"color":"#deffbf"},{"text":"r","bold":true,"color":"#efffdf"},{"text":"u","bold":true,"color":"white"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#b8ff7c"},{"text":"r","bold":true,"color":"#ccff9e"},{"text":"u","bold":true,"color":"#deffbf"},{"text":"n","bold":true,"color":"#efffdf"},{"text":" ","bold":true,"color":"white"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"white"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#b8ff7c"},{"text":"n","bold":true,"color":"#ccff9e"},{"text":" ","bold":true,"color":"#deffbf"},{"text":"M","bold":true,"color":"#efffdf"},{"text":"o","bold":true,"color":"white"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#deffbf"},{"text":"p","bold":true,"color":"#efffdf"},{"text":"e","bold":true,"color":"white"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#b8ff7c"},{"text":"M","bold":true,"color":"#ccff9e"},{"text":"o","bold":true,"color":"#deffbf"},{"text":"d","bold":true,"color":"#efffdf"},{"text":"e","bold":true,"color":"white"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#b8ff7c"},{"text":"p","bold":true,"color":"#ccff9e"},{"text":"e","bold":true,"color":"#deffbf"},{"text":"e","bold":true,"color":"#efffdf"},{"text":"d","bold":true,"color":"white"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#b8ff7c"},{"text":"d","bold":true,"color":"#ccff9e"},{"text":"e","bold":true,"color":"#deffbf"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#b8ff7c"},{"text":"e","bold":true,"color":"#ccff9e"},{"text":"d","bold":true,"color":"#deffbf"},{"text":"r","bold":true,"color":"#efffdf"},{"text":"u","bold":true,"color":"white"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#b8ff7c"},{"text":"e","bold":true,"color":"#ccff9e"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#b8ff7c"},{"text":"r","bold":true,"color":"#ccff9e"},{"text":"u","bold":true,"color":"#deffbf"},{"text":"n","bold":true,"color":"#efffdf"},{"text":" ","bold":true,"color":"white"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#b8ff7c"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#b8ff7c"},{"text":"n","bold":true,"color":"#ccff9e"},{"text":" ","bold":true,"color":"#deffbf"},{"text":"M","bold":true,"color":"#efffdf"},{"text":"o","bold":true,"color":"white"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#b8ff7c"},{"text":"M","bold":true,"color":"#ccff9e"},{"text":"o","bold":true,"color":"#deffbf"},{"text":"d","bold":true,"color":"#efffdf"},{"text":"e","bold":true,"color":"white"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#b8ff7c"},{"text":"d","bold":true,"color":"#ccff9e"},{"text":"e","bold":true,"color":"#deffbf"}]
+    @delay 1
+    @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"#a2ff55"},{"text":"p","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"r","bold":true,"color":"#a2ff55"},{"text":"u","bold":true,"color":"#a2ff55"},{"text":"n","bold":true,"color":"#a2ff55"},{"text":" ","bold":true,"color":"#a2ff55"},{"text":"M","bold":true,"color":"#a2ff55"},{"text":"o","bold":true,"color":"#a2ff55"},{"text":"d","bold":true,"color":"#a2ff55"},{"text":"e","bold":true,"color":"#b8ff7c"}]
+    @delay 1
+    @bypass /title @s times 0 4 20
+    @bypass /title {{player}} title ["",{"text":"Speedrun Mode","bold":true,"color":"#a2ff55"}]
 @fi
 
 

@@ -1,10 +1,40 @@
 @using Harha
 @fast
 
+@var stopAnimation = false
+@define Int secretNumber = 25
 
-@define Float centerX = -9176.5
-@define Float centerY = 115.5
-@define Float centerZ = 9719.5
+@define Block secretBlock = Block(-9061, 77, 9571, "Theta")
+
+@define String[] colorList4 = String["#c375ff", "#ae80ff", "#9789ff", "#8091ff", "#6798ff", "#4d9eff", "#30a3ff", "#00a7fa"]
+
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 2.125 0 2.125 0.1 100
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 2.125 0 2.125 0.1 100
+@bypass particle minecraft:trial_spawner_detection_ominous -9061 77.3 9571 0 0 0 0.75 100
+@bypass particle minecraft:trial_spawner_detection -9061 77.3 9571 0 0 0 0.75 100
+
+# @for Int j in list::range(0, 1)
+@for Int i in list::range(0, 200)
+    # @bypass /playsound minecraft:item.goat_horn.sound.1 master {{player}} ~ ~ ~ 0.5 {{(Float(i) / Float(200)) * 1.5 + 0.5}}
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{(Float(i) / Float(200)) * 1.5 + 0.5}}
+@done
+
+@for Int i in list::range(0, 50)
+    @bypass /playsound minecraft:item.totem.use master {{player}} ~ ~ ~ 0.5 {{(Float(i) / Float(50)) * 1.5 + 0.5}}
+    # @bypass /playsound minecraft:entity.warden.sonic_boom master {{player}} ~ ~ ~ 1 {{(Float(i) / Float(200)) * 1.5 + 0.5}}
+@done
+
+@console /function execute Harha::finalAnimationWave2()
+@delay 5
+@console /function execute Harha::finalAnimationWave()
+
+@define Float height = Float(-2.0)
+@define Float multiplier = Float(0.1)
+@define Int kOld = 0
+
+@define Float centerX = -9060.5
+@define Float centerY = 79.5
+@define Float centerZ = 9571.5
 
 @define Location[] coordinateList = Location[]
 @define Int headNumber = 0
@@ -49,124 +79,811 @@
 
 
 
+@bypass /summon item_display {{secretBlock.getX()}} {{secretBlock.getY() - 0.5}} {{secretBlock.getZ()}} {Tags:["secretHeadEntityLoading{{secretNumber}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.25f,0f],scale:[1f,1f,1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor00}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor1}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor2}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor3}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor4}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor5}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor6}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor7}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor8}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor9}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor10}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor11}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor12}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor13}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor14}}"}]}}}}
+@delay 1
+@bypass /data merge entity @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1] {item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor15}}"}]}}}}
+@delay 1
+@bypass /minecraft:kill @e[tag=secretHeadEntityLoading{{secretNumber}},limit=1]
+
+
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 0.5
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.1 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.1 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 10
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(9) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.07 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.07 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(12) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.06 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.06 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 7
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(15) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.05 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.05 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 3
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(17) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.04 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.04 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(19) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.03 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.03 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(20) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.02 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.02 5
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{redGold}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@delay 1
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} {{diamondBlock}} strict
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} diamond_block strict
+@bypass /playsound minecraft:block.note_block.hat master {{player}} ~ ~ ~ 2 {{Float(20) / Float(20) + 0.5}}
+@bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.01 5
+@bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.01 5
+@delay 1
+@bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+@bypass /summon item_display {{secretBlock.getX()}} {{secretBlock.getY() + 0.25}} {{secretBlock.getZ()}} {Tags:["secretHeadEntity{{secretNumber}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.25f,0f],scale:[1f,1f,1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjRlOGQ4MDAzNmUwM2FmZTNmNDI1NGFhYjY1MWI0NmZlZmYxMDkxNzlhNmUxZmQzMzEzZDFhNDMwNGE2NzdkNCJ9fX0="}]}}}}
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY() - 1}} {{secretBlock.getZ()}} lodestone strict
+@for Int i in list::range(0, 10)
+    @bypass /playsound minecraft:block.end_portal.spawn master {{player}} ~ ~ ~ 0.5 {{(Float(i) / Float(10)) * 1.5 + 0.5}}
+@done
+
 @define Float[] icoCoordsR3X
 @define Float[] icoCoordsR3Y
 @define Float[] icoCoordsR3Z
 
-# Coordinates, radius 3
-@for Int j in list::range(0,5)
-    @if j == 0
-        @var icoCoordsR3X = Float[0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, -2.551952F, 2.551952F, 2.551952F, -0.622882F, 1.007845F, -1.007845F, 0.622882F, -1.170636F, -1.793518F, 1.793518F, 1.170636F, -2.901973F, -1.894129F, 1.894129F, 2.901973F]
-        @var icoCoordsR3Y = Float[-1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, 2.551952F, -2.551952F, 2.551952F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.616383F, -1.513782F, 1.513782F, 1.616383F, -2.724839F, 2.339876F, -2.339876F, 2.724839F, -0.343147F, -0.279736F, 0.279736F, 0.343147F]
-        @var icoCoordsR3Z = Float[-2.551952F, 2.551952F, -2.551952F, 2.551952F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.577193F, 1.577193F, -1.577193F, 1.577193F, -2.449351F, 2.385940F, -2.385940F, 2.449351F, 0.452622F, 0.555223F, -0.555223F, -0.452622F, -0.678824F, 2.309551F, -2.309551F, 0.678824F]
-    @elseif j == 1
-        @var icoCoordsR3X = Float[0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F, 1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F]
-        @var icoCoordsR3Y = Float[1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F]
-        @var icoCoordsR3Z = Float[2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F, 2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F]
-    @elseif j == 2
-        @var icoCoordsR3X = Float[1.658312F, 0.000000F, -1.658312F, -0.000000F, 1.837117F, -1.837117F, -1.837117F, 1.837117F, 2.958040F, 0.000000F, -2.958040F, -0.000000F, 2.091650F, -2.091650F, -2.091650F, 2.091650F, 2.598076F, 0.000000F, -2.598076F, -0.000000F, 1.172604F, -1.172604F, -1.172604F, 1.172604F]
-        @var icoCoordsR3Y = Float[0.000000F, 1.658312F, 0.000000F, -1.658312F, 1.837117F, 1.837117F, -1.837117F, -1.837117F, 0.000000F, 2.958040F, 0.000000F, -2.958040F, 2.091650F, 2.091650F, -2.091650F, -2.091650F, 0.000000F, 2.598076F, 0.000000F, -2.598076F, 1.172604F, 1.172604F, -1.172604F, -1.172604F]
-        @var icoCoordsR3Z = Float[2.500000F, 2.500000F, 2.500000F, 2.500000F, 1.500000F, 1.500000F, 1.500000F, 1.500000F, 0.500000F, 0.500000F, 0.500000F, 0.500000F, -0.500000F, -0.500000F, -0.500000F, -0.500000F, -1.500000F, -1.500000F, -1.500000F, -1.500000F, -2.500000F, -2.500000F, -2.500000F, -2.500000F]
-    @elseif j == 3
-        @var icoCoordsR3X = Float[0.840000F, -1.050692F, 0.157366F, 1.266722F, -2.269887F, 2.097135F, -0.683228F, -1.267285F, 2.669788F, -2.691989F, 1.255157F, 0.894974F, -2.595634F, 2.920636F, -1.703160F, -0.374264F, 2.173326F, -2.747197F, 1.865501F, -0.114808F, -1.476914F, 2.063329F, -1.477545F, 0.312744F, 0.417632F]
-        @var icoCoordsR3Y = Float[0.000000F, 0.962520F, -1.793108F, 1.652215F, -0.401511F, -1.334026F, 2.541574F, -2.440080F, 0.975002F, 1.111214F, -2.682197F, 2.853318F, -1.504223F, -0.642094F, 2.422570F, -2.888170F, 1.831681F, 0.113605F, -1.856423F, 2.482825F, -1.769837F, 0.277618F, 1.028037F, -1.390177F, 0.728823F]
-        @var icoCoordsR3Z = Float[2.880000F, 2.640000F, 2.400000F, 2.160000F, 1.920000F, 1.680000F, 1.440000F, 1.200000F, 0.960000F, 0.720000F, 0.480000F, 0.240000F, 0.000000F, -0.240000F, -0.480000F, -0.720000F, -0.960000F, -1.200000F, -1.440000F, -1.680000F, -1.920000F, -2.160000F, -2.400000F, -2.640000F, -2.880000F]
-    @elseif j == 4
-        @var icoCoordsR3X = Float[0.000000F, 2.400000F, 1.697056F, 0.000000F, -1.697056F, -2.400000F, -1.697056F, -0.000000F, 1.697056F, 2.769420F, 1.147131F, -1.147131F, -2.769420F, -2.769420F, -1.147131F, 1.147131F, 2.769420F, 2.199636F, 1.555378F, 0.000000F, -1.555378F, -2.199636F, -1.555378F, -0.000000F, 1.555378F]
-        @var icoCoordsR3Y = Float[0.000000F, 0.000000F, 1.697056F, 2.400000F, 1.697056F, 0.000000F, -1.697056F, -2.400000F, -1.697056F, 1.147131F, 2.769420F, 2.769420F, 1.147131F, -1.147131F, -2.769420F, -2.769420F, -1.147131F, 0.000000F, 1.555378F, 2.199636F, 1.555378F, 0.000000F, -1.555378F, -2.199636F, -1.555378F]
-        @var icoCoordsR3Z = Float[3.000000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F]
-    @elseif j == 5
-        @var icoCoordsR3X = Float[0.000000F, 2.305125F, 1.437222F, -0.512939F, -2.076846F, -2.076846F, -0.512939F, 1.437222F, 2.850886F, 1.761945F, 0.000000F, -1.761945F, -2.850886F, -2.850886F, -1.761945F, -0.000000F, 1.761945F, 2.850886F, 2.081922F, 1.298057F, -0.463271F, -1.875747F, -1.875747F, -0.463271F, 1.298057F]
-        @var icoCoordsR3Y = Float[0.000000F, 0.000000F, 1.802219F, 2.247330F, 1.000156F, -1.000156F, -2.247330F, -1.802219F, 0.926309F, 2.425109F, 2.997599F, 2.425109F, 0.926309F, -0.926309F, -2.425109F, -2.997599F, -2.425109F, -0.926309F, 0.000000F, 1.627712F, 2.029724F, 0.903312F, -0.903312F, -2.029724F, -1.627712F]
-        @var icoCoordsR3Z = Float[3.000000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F]
+
+@var icoCoordsR3Z = Float[0.840000F, -1.050692F, 0.157366F, 1.266722F, -2.269887F, 2.097135F, -0.683228F, -1.267285F, 2.669788F, -2.691989F, 1.255157F, 0.894974F, -2.595634F, 2.920636F, -1.703160F, -0.374264F, 2.173326F, -2.747197F, 1.865501F, -0.114808F, -1.476914F, 2.063329F, -1.477545F, 0.312744F, 0.417632F]
+@var icoCoordsR3Y = Float[0.000000F, 0.962520F, -1.793108F, 1.652215F, -0.401511F, -1.334026F, 2.541574F, -2.440080F, 0.975002F, 1.111214F, -2.682197F, 2.853318F, -1.504223F, -0.642094F, 2.422570F, -2.888170F, 1.831681F, 0.113605F, -1.856423F, 2.482825F, -1.769837F, 0.277618F, 1.028037F, -1.390177F, 0.728823F]
+@var icoCoordsR3X = Float[2.880000F, 2.640000F, 2.400000F, 2.160000F, 1.920000F, 1.680000F, 1.440000F, 1.200000F, 0.960000F, 0.720000F, 0.480000F, 0.240000F, 0.000000F, -0.240000F, -0.480000F, -0.720000F, -0.960000F, -1.200000F, -1.440000F, -1.680000F, -1.920000F, -2.160000F, -2.400000F, -2.640000F, -2.880000F]
+
+# Particles First
+@define Int[] coolKValues = Int[3, 5, 8, 13, 17, 20, 22]
+@define Int numberParticles = 30
+
+@console /function execute Harha::finalAnimationParticles(Player("{{player}}"))
+
+@define Float noteNumber = 0.5
+@define Float particleMovementNumber = 0.01
+
+@bypass /setblock {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} air strict
+
+@var height = 0.5
+@var multiplier = 1.0F
+
+@delay 1
+
+@for Int i in list::range(0, 16)
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
     @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor1}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor2}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor3}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor4}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor5}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor6}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor7}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor8}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor9}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor10}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor11}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor12}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor13}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor14}}"}]}}}}
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+    @bypass /data merge entity @e[tag=secretHeadEntity{{secretNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[-0.324f, 0f, 0.324f, 0.889f],translation:[{{-0.145 * multiplier}}f, {{height}}f, {{-0.145 * multiplier}}f],scale:[{{multiplier}}f, {{multiplier}}f, {{multiplier}}f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor15}}"}]}}}}
+    # @delay 1
+    # @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    # @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    # @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    # @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.125 0 0.125 0.01 5
+    @var noteNumber += 0.005
+    @if i <= 7
+        @var multiplier += 0.01
+    @else
+        @var multiplier -= 0.017353625
+    @fi
+    @var height += 0.01
+    @var particleMovementNumber += 0.0006
     
-    @for Int i in list::range(0, icoCoordsR3X.length())
-        @var headNumber = i
-        @bypass /summon item_display {{centerX + (j * 10)}} {{centerY}} {{centerZ}} {Tags:["harhaicosahedron{{headNumber}}{{j}}"],transformation:{left_rotation:[0.8f,0.7f,0.4f,0.4f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.01f,0.01f,0.01f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
-        # DEBUG: @player translation:[{{icoCoordsR3X[i]}}, {{icoCoordsR3Y[i]}}, {{icoCoordsR3Z[i]}}]
-        @delay 2
-        # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0f, 0f, 0f, 0f],translation:[0.0000F, -1.5771F, -2.5519F],scale:[2f, 1f, 1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
-        @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:50,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[i]}}, {{icoCoordsR3Y[i]}}, {{icoCoordsR3Z[i]}}],scale:[1.0f, 1.0f, 1.0f]}}
-        @delay 0
-    @done
+    @if i == 4
+        @bypass /effect give {{player}} minecraft:darkness 3.5 69 true
+        # @bypass /effect give {{player}} minecraft:nausea infinite 69 true
+    @fi
 @done
 
-@delay 20
+@for Int i2 in list::range(0, 32)
+    @delay 1
+    @bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{noteNumber}}
+    @bypass particle minecraft:trial_spawner_detection_ominous {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @bypass particle minecraft:trial_spawner_detection {{secretBlock.getX()}} {{secretBlock.getY()}} {{secretBlock.getZ()}} 0.225 0 0.225 {{particleMovementNumber}} 3
+    @var noteNumber += 0.005
+    @var height += 0.01
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 76 9571 2.125 0 2.125 0.1 10
+    @bypass particle minecraft:trial_spawner_detection -9061 76 9571 2.125 0 2.125 0.1 10
+    @var particleMovementNumber += 0.0006
+@done
 
-@define Float multiplier = Float(1.0)
-@define Int kOld = 0
+@bypass /minecraft:kill @e[tag=secretHeadEntity25]
+
+# beacon sounds
+@for Int k in list::range(1, 100)
+    @bypass playsound minecraft:block.beacon.ambient master {{player}} ~ ~ ~ 1 {{(Float(k) / 100.0) * 1.5 + 0.5}}
+@done
+
+
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ================================================Spinning Stuff below======================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+# ==========================================================================================================================================
+
+
+
+@var multiplier = 0.75
+@var height = 0.0
+@var centerY += 0.95
+@delay 4s
+
+
+@for Int i in list::range(0, icoCoordsR3X.length())
+    @var headNumber = i
+    @bypass /summon item_display {{centerX}} {{centerY}} {{centerZ}} {Tags:["harhaicosahedron{{headNumber}}"],transformation:{left_rotation:[0.8f,0.7f,0.4f,0.4f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.01f,0.01f,0.01f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
+    @bypass /playsound minecraft:item.trident.thunder master {{player}} ~ ~ ~ 0.5 {{math::random(1.8D, 2.0D)}}
+    @bypass /particle minecraft:end_rod {{centerX}} {{centerY}} {{centerZ}} 0 0 0 0.1 10
+    # DEBUG: @player translation:[{{icoCoordsR3X[i]}}, {{icoCoordsR3Y[i]}}, {{icoCoordsR3Z[i]}}]
+    @delay 2
+    # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0f, 0f, 0f, 0f],translation:[0.0000F, -1.5771F, -2.5519F],scale:[2f, 1f, 1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColor0}}"}]}}}}
+    @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:50,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[i] * multiplier}}, {{icoCoordsR3Y[i] * multiplier}}, {{icoCoordsR3Z[i] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
+@done
+
+@delay 2
+
+@for Int i in list::range(0, icoCoordsR3X.length())
+    @var headNumber = i
+    @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:80,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[i] * multiplier}}, {{icoCoordsR3Y[i] * multiplier}}, {{icoCoordsR3Z[i] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
+@done
+
+@delay 1
+
+@for Int i in list::range(0, icoCoordsR3X.length())
+    @var headNumber = i
+    @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:40,transformation:{left_rotation:[0f, 0f, 0f, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[i] * multiplier}}, {{icoCoordsR3Y[i] * multiplier}}, {{icoCoordsR3Z[i] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
+    @delay 1
+@done
+
+@delay 10
+
+@for Int i in list::range(0, 16)
+    @bypass /particle minecraft:explosion -9058 {{90 - i}} 9568 1 1 1 1 5
+    @bypass /particle minecraft:explosion -9058 {{90 - i}} 9574 1 1 1 1 5
+    @bypass /particle minecraft:explosion -9064 {{90 - i}} 9568 1 1 1 1 5
+    @bypass /particle minecraft:explosion -9064 {{90 - i}} 9574 1 1 1 1 5
+    @bypass /playsound minecraft:entity.generic.explode master @s -9058 {{90 - i}} 9568 1 1
+    @bypass /playsound minecraft:entity.generic.explode master @s -9058 {{90 - i}} 9574 1 1
+    @bypass /playsound minecraft:entity.generic.explode master @s -9064 {{90 - i}} 9568 1 1
+    @bypass /playsound minecraft:entity.generic.explode master @s -9064 {{90 - i}} 9574 1 1
+    @delay 1
+@done
+
+@delay 2
+@bypass /particle minecraft:gust_emitter_large -9061 81 9571 1 1 1 1 5
+@for Int i in list::range(0, 10)
+    @bypass /playsound minecraft:entity.generic.explode master @s -9061 80 9571 1 {{(Float(i) / 10.0) * 1.5 + 0.5}}
+@done
+
+
+
+
+@var kOld = 0
 @define Float icoCoordsR3XBefore = icoCoordsR3X[0]
 @define Float icoCoordsR3YBefore = icoCoordsR3Y[0]
 @define Float icoCoordsR3ZBefore = icoCoordsR3Z[0]
+@define Int k
 
-@define Int[] coolKValues = Int[3, 5, 8, 13, 17, 20, 22]
-@define Int numberParticles = 6
+@for Int theActualKIterationNumber in list::range(1, 30)
 
-@for Int k in list::range(1, 75)
-    @var k = coolKValues[Int(k * 0.125) % coolKValues.length()] * k 
+    @var k = coolKValues[Int(theActualKIterationNumber * 0.25) % coolKValues.length()] * theActualKIterationNumber
     # @var k = Int(math::random(0.0D, 24.0D))
     # @var k = k * 7
     # @var k = Int(k * 0.2) * k
     # @player DEBUG: {{k - kOld}} k = {{k}}, kOld = {{kOld}}
     
-    @for Int i in list::range(0, icoCoordsR3X.length())
+    @for Int i in list::range(0, 25)
         @var headNumber = i
-        @for Int j in list::range(0, 5)
-            @if j == 0
-                @var icoCoordsR3X = Float[0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, -2.551952F, 2.551952F, 2.551952F, -0.622882F, 1.007845F, -1.007845F, 0.622882F, -1.170636F, -1.793518F, 1.793518F, 1.170636F, -2.901973F, -1.894129F, 1.894129F, 2.901973F]
-                @var icoCoordsR3Y = Float[-1.577193F, -1.577193F, 1.577193F, 1.577193F, -2.551952F, 2.551952F, -2.551952F, 2.551952F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.616383F, -1.513782F, 1.513782F, 1.616383F, -2.724839F, 2.339876F, -2.339876F, 2.724839F, -0.343147F, -0.279736F, 0.279736F, 0.343147F]
-                @var icoCoordsR3Z = Float[-2.551952F, 2.551952F, -2.551952F, 2.551952F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, -1.577193F, 1.577193F, -1.577193F, 1.577193F, -2.449351F, 2.385940F, -2.385940F, 2.449351F, 0.452622F, 0.555223F, -0.555223F, -0.452622F, -0.678824F, 2.309551F, -2.309551F, 0.678824F]
-            @elseif j == 1
-                @var icoCoordsR3X = Float[0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F, 1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F]
-                @var icoCoordsR3Y = Float[1.341641F, 1.341641F, -1.341641F, -1.341641F, 2.683282F, 2.683282F, -2.683282F, -2.683282F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F]
-                @var icoCoordsR3Z = Float[2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F, 2.683282F, -2.683282F, 2.683282F, -2.683282F, 1.341641F, -1.341641F, 1.341641F, -1.341641F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F, 0.000000F]
-            @elseif j == 2
-                @var icoCoordsR3X = Float[1.658312F, 0.000000F, -1.658312F, -0.000000F, 1.837117F, -1.837117F, -1.837117F, 1.837117F, 2.958040F, 0.000000F, -2.958040F, -0.000000F, 2.091650F, -2.091650F, -2.091650F, 2.091650F, 2.598076F, 0.000000F, -2.598076F, -0.000000F, 1.172604F, -1.172604F, -1.172604F, 1.172604F]
-                @var icoCoordsR3Y = Float[0.000000F, 1.658312F, 0.000000F, -1.658312F, 1.837117F, 1.837117F, -1.837117F, -1.837117F, 0.000000F, 2.958040F, 0.000000F, -2.958040F, 2.091650F, 2.091650F, -2.091650F, -2.091650F, 0.000000F, 2.598076F, 0.000000F, -2.598076F, 1.172604F, 1.172604F, -1.172604F, -1.172604F]
-                @var icoCoordsR3Z = Float[2.500000F, 2.500000F, 2.500000F, 2.500000F, 1.500000F, 1.500000F, 1.500000F, 1.500000F, 0.500000F, 0.500000F, 0.500000F, 0.500000F, -0.500000F, -0.500000F, -0.500000F, -0.500000F, -1.500000F, -1.500000F, -1.500000F, -1.500000F, -2.500000F, -2.500000F, -2.500000F, -2.500000F]
-            @elseif j == 3
-                @var icoCoordsR3X = Float[0.840000F, -1.050692F, 0.157366F, 1.266722F, -2.269887F, 2.097135F, -0.683228F, -1.267285F, 2.669788F, -2.691989F, 1.255157F, 0.894974F, -2.595634F, 2.920636F, -1.703160F, -0.374264F, 2.173326F, -2.747197F, 1.865501F, -0.114808F, -1.476914F, 2.063329F, -1.477545F, 0.312744F, 0.417632F]
-                @var icoCoordsR3Y = Float[0.000000F, 0.962520F, -1.793108F, 1.652215F, -0.401511F, -1.334026F, 2.541574F, -2.440080F, 0.975002F, 1.111214F, -2.682197F, 2.853318F, -1.504223F, -0.642094F, 2.422570F, -2.888170F, 1.831681F, 0.113605F, -1.856423F, 2.482825F, -1.769837F, 0.277618F, 1.028037F, -1.390177F, 0.728823F]
-                @var icoCoordsR3Z = Float[2.880000F, 2.640000F, 2.400000F, 2.160000F, 1.920000F, 1.680000F, 1.440000F, 1.200000F, 0.960000F, 0.720000F, 0.480000F, 0.240000F, 0.000000F, -0.240000F, -0.480000F, -0.720000F, -0.960000F, -1.200000F, -1.440000F, -1.680000F, -1.920000F, -2.160000F, -2.400000F, -2.640000F, -2.880000F]
-            @elseif j == 4
-                @var icoCoordsR3X = Float[0.000000F, 2.400000F, 1.697056F, 0.000000F, -1.697056F, -2.400000F, -1.697056F, -0.000000F, 1.697056F, 2.769420F, 1.147131F, -1.147131F, -2.769420F, -2.769420F, -1.147131F, 1.147131F, 2.769420F, 2.199636F, 1.555378F, 0.000000F, -1.555378F, -2.199636F, -1.555378F, -0.000000F, 1.555378F]
-                @var icoCoordsR3Y = Float[0.000000F, 0.000000F, 1.697056F, 2.400000F, 1.697056F, 0.000000F, -1.697056F, -2.400000F, -1.697056F, 1.147131F, 2.769420F, 2.769420F, 1.147131F, -1.147131F, -2.769420F, -2.769420F, -1.147131F, 0.000000F, 1.555378F, 2.199636F, 1.555378F, 0.000000F, -1.555378F, -2.199636F, -1.555378F]
-                @var icoCoordsR3Z = Float[3.000000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, 1.800000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F, -2.040000F]
-            @elseif j == 5
-                @var icoCoordsR3X = Float[0.000000F, 2.305125F, 1.437222F, -0.512939F, -2.076846F, -2.076846F, -0.512939F, 1.437222F, 2.850886F, 1.761945F, 0.000000F, -1.761945F, -2.850886F, -2.850886F, -1.761945F, -0.000000F, 1.761945F, 2.850886F, 2.081922F, 1.298057F, -0.463271F, -1.875747F, -1.875747F, -0.463271F, 1.298057F]
-                @var icoCoordsR3Y = Float[0.000000F, 0.000000F, 1.802219F, 2.247330F, 1.000156F, -1.000156F, -2.247330F, -1.802219F, 0.926309F, 2.425109F, 2.997599F, 2.425109F, 0.926309F, -0.926309F, -2.425109F, -2.997599F, -2.425109F, -0.926309F, 0.000000F, 1.627712F, 2.029724F, 0.903312F, -0.903312F, -2.029724F, -1.627712F]
-                @var icoCoordsR3Z = Float[3.000000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, 1.920000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -0.120000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F, -2.160000F]
-            @fi
-            @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[0.0f, 0.0f, 0.0f, 1.0f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColorList[Int(i % 2)]}}"}]}}}}
-            # @bypass /particle minecraft:trial_spawner_detection {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
-            # @bypass /particle minecraft:trial_spawner_detection_ominous {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
-
-            
-            @for Int l in list::range(0, numberParticles)
-                @if i % 2 == 1
-                    @bypass /particle minecraft:flame {{(centerX + (j * 10)) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
-                @else
-                    @bypass /particle minecraft:soul_fire_flame {{(centerX + (j * 10)) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
-                @fi
-            @done
-
-        @done
+        @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[0.0f, 0.0f, 0.0f, 1.0f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier) + height}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{properties:[{name:"textures",value:"{{entityColorList[Int(i % 2)]}}"}]}}}}
+        # @bypass /particle minecraft:trial_spawner_detection {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
+        # @bypass /particle minecraft:trial_spawner_detection_ominous {{centerX + j * 10 + (icoCoordsR3X[i])}} {{centerY + (icoCoordsR3Y[i])}} {{centerZ + (icoCoordsR3Z[i])}} 0 0 0 00.1 25 normal
+        
+        # @for Int l in list::range(0, numberParticles)
+            # @if i % 2 == 1
+        @console /function execute Harha::finalAnimationParticles2({{i}}, {{k}}, {{kOld}}, {{height}}, {{multiplier}}, 6, {{centerY}})
+            # @bypass /particle minecraft:flame {{(centerX) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{(centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier) + height}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+            # @else
+            #     @bypass /particle minecraft:soul_fire_flame {{(centerX) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{(centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier) + height}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+            # @fi
+        # @done
         # line with randomized rotations
-        # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}}{{j}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[{{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
+        # @bypass /data merge entity @e[tag=harhaicosahedron{{headNumber}},limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[{{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, {{math::random(0D, 1000D) / Float(500) - 1}}, 1f],right_rotation:[0.0f, 0.0f, 0.0f, 1.0f],translation:[{{icoCoordsR3X[(i + k) % icoCoordsR3X.length()] * multiplier}}, {{icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] * multiplier}}, {{icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] * multiplier}}],scale:[1.0f, 1.0f, 1.0f]}}
         # @player DEBUG: Before: {{icoCoordsR3XBefore}}
         # @player DEBUG: After: {{icoCoordsR3X[(i + k) % icoCoordsR3X.length()]}}
-        # @player 
-        @var multiplier -= 0.0001
+        # @player
+        # particle line from kOld to centerY + height
+        @if math::random(Double(theActualKIterationNumber), 32.0D) > 29.0D
+            # @player dingus: DEBUG: Creating particles for i={{i}}, k={{k}}, kOld={{kOld}}, height={{height}}, multiplier={{multiplier}}
+            @for Int l in list::range(0, numberParticles)
+                @bypass /execute in minecraft:theta run particle minecraft:ominous_spawning {{(centerX) + (icoCoordsR3X[(i + k) % icoCoordsR3X.length()] + (((Double(0 - icoCoordsR3X[(i + k) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{(centerY - 0.25 + (icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] + (((Double(0 - icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier) + height}} {{centerZ + (icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()] + (((Double(0 - icoCoordsR3Z[(i + k) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+            @done
+            @bypass /execute in minecraft:theta run particle minecraft:gust {{centerX}} {{centerY + height}} {{centerZ}} 0.3 0.3 0.3 0 5
+            @bypass /playsound minecraft:entity.firework_rocket.blast master {{player}} ~ ~ ~ 1 {{math::random(0.8D, 1.0D)}}
+        @fi
+
+
+        @bypass /playsound minecraft:block.beacon.power_select master {{player}} ~ ~ ~ 0.25 {{((Float(theActualKIterationNumber) / 75.0) + (Float(i) / 1875.0)) * 1.5 + 0.5}}
+        @if theActualKIterationNumber <= 22
+            @var multiplier += 0.00025
+        @else
+            @var multiplier -= 0.00035
+        @fi
+        @var height += 0.00681818181 * 1.5
         @delay 1
     @done
-    @delay 0
+    
     @var kOld = k
 @done
 
-# @delay 15s
-# @player killing everything
-# @for Int i in list::range(0, 24)
-#     @var headNumber = i
-#     @bypass /minecraft:kill @e[type=item_display,tag=harhaicosahedron{{headNumber}}]
-# @done
+
+
+@for Int i in list::range(0, 25)
+    @var headNumber = i
+    @bypass /minecraft:kill @e[type=item_display,tag=harhaicosahedron{{headNumber}}]
+@done
+
+@bypass /particle minecraft:gust_emitter_large -9061 87 9571 1 1 1 1 5
+
+@for Int i in list::range(0, 10)
+    @bypass /playsound minecraft:entity.generic.explode master @s -9061 80 9571 1 {{(Float(i) / 10.0) * 1.5 + 0.5}}
+@done
+
+# DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK DUCK
+
+@define Float[] duckTranslationsX = Float[0.500385924f, 0.0346418802f, -0.0362113698f, 0.919720824f, -0.1391367677f, -0.4198251198f, 0.5360648802f, 0.6012253285f, -0.0849186759f, 0.6146903937f, 0.5098169248f, 0.9262406675f, -0.4315641198f, -0.3154318698f, 0.6005463905f]
+@define Float[] duckTranslationsY = Float[0.3202610212f, 0.4271701166f, 0.6781351166f, 0.4190073191f, 0.6717309559f, 0.5447161166f, 0.2731591166f, 0.2939008712f, 0.7175233496f, 0.28772154f, 0.3045292043f, 0.419774158f, 0.5571571166f, 0.5803231166f, -0.0023560722f]
+@define Float[] duckTranslationsZ = Float[0.500124936f, 0.5001713426f, 0.5019263426f, 0.5282359031f, 0.500124936f, 0.5001713426f, 0.7252500926f, 0.7232370668f, 0.5021328622f, 0.2698263868f, 0.2777315878f, 0.4880773788f, 0.5001713426f, 0.5001713426f, 0.4962399063f]
+
+@bypass /execute in minecraft:theta run summon block_display -9061.0 87.0 9571.0 {Passengers:[{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-443405472,-736049705,2009087267,-1546414336],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MDg4NzY4OCwKICAicHJvZmlsZUlkIiA6ICI3Mjc2ZThmYzVkNjE0ODNjYmMwN2IxYjIzNjI3MDA4ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJXYWJvV2ViaSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS84YTRjYzFiZGFlNGFmM2ViNzYzN2YwODNjOWEwYWYxZDU1NjAwOGJiZmE1MzAyNGVjNjIzOTNiNGM0ZjJhNDdhIgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[-0.0066613648f,-0.0839174638f,1.7580642112f,0.500385924f,0.0620388948f,0.7815435549f,0.1976525122f,0.3202610212f,-0.729588092f,0.0703510262f,-2e-10f,0.500124936f,0f,0f,0f,1f],Tags:["mrsDuck1"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;179308597,-1730337755,1414114956,-1030438628],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA1MDYzOCwKICAicHJvZmlsZUlkIiA6ICIxNzRjZmRiNGEzY2I0M2I1YmZjZGU0MjRjM2JiMmM2ZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJtYXJhZWwxOCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9kOWRmYTc3ZjE4YzIwNjQzMzE3Yjk2MzJkOTNhNjhkODk0NTUyMGIyZDY5NjU3MzMwMTA0NGY3Y2I4YzJjY2VmIgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[0f,0.0719336262f,0.3801141368f,0.0346418802f,0f,0.9097521688f,-0.0314696069f,0.4271701166f,-0.29390625f,0f,0f,0.5001713426f,0f,0f,0f,1f],Tags:["mrsDuck2"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1273171200,-646682492,-942497707,-965911887],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA1NTg0OCwKICAicHJvZmlsZUlkIiA6ICJmMTA0NzMxZjljYTU0NmI0OTkzNjM4NTlkZWY5N2NjNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJ6aWFkODciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzdiZmFkNTkxNjkwYWMyODMzYWY4M2RmNzEzNjBhOTc2MzRiY2ZmYmVmMWY2ZWJmMDgxZDQwYWQ4MjllYjQ4MiIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[0f,-0.1581598968f,0.3296993974f,-0.0362113698f,0f,0.5778135108f,0.094492051f,0.6781351166f,-0.2424375f,0f,0f,0.5019263426f,0f,0f,0f,1f],Tags:["mrsDuck3"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1772535656,-1133759923,1223259077,-1774602811],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA2MTc3MSwKICAicHJvZmlsZUlkIiA6ICIwNjY5Y2E1MGYyZWU0NTQxODhlYWQ3YTM3NTkzNDRlMCIsCiAgInByb2ZpbGVOYW1lIiA6ICJDcjR6eWNsb3duVFYiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2NmMTdiZGQ3NzI4MmRhZmUzNTBlNjI5NmM2NGQxMDRkNDhlOTFmY2FhMzA0YzgxMTQxYTI3MTYyNzdhN2Y1ZCIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[0.0117592175f,-0.1657882548f,0.7019681086f,0.919720824f,-0.0606874351f,0.4501007897f,0.2353957277f,0.4190073191f,-0.1043816926f,-0.2941731743f,-0.0565421291f,0.5282359031f,0f,0f,0f,1f],Tags:["mrsDuck4"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1849406931,-1249532405,1884547496,-1681940036],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTcyNTc4NDM5NjkxMSwKICAicHJvZmlsZUlkIiA6ICJiYWRkZjIxZTFmNWE0ZGYzOGVjZmNkOTYwY2E0YzA5YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJBbmRlckJUIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzk3ZDRhOGZjYjBjZTMyN2I3ZjgzNmZhZDE4NTBiOTk2YzU4YTVjOTg3YTRkNDliNDRmNzU1Mzk5MjE2OTA3ZTQiCiAgICB9CiAgfQp9"}]}}},item_display:"none",transformation:[0f,-0.0905107016f,-0.007884427f,-0.1391367677f,0f,-0.0106419432f,0.0702130077f,0.6717309559f,-0.4449375f,0f,0f,0.500124936f,0f,0f,0f,1f],Tags:["mrsDuck5"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1075242870,1092821626,-689815216,463107608],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA3MDk3MiwKICAicHJvZmlsZUlkIiA6ICJlYTdiMmRmZDZjNGU0NDU0YWQ2YWMwZDFjZWNjYjNhMSIsCiAgInByb2ZpbGVOYW1lIiA6ICJFbGV2ZW5DaGFycyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS84NTUwODA0OWNmZjAwMmRmOWY1YzIwYjlmNDA5NzEyZjViYjg3OTM0N2E5MThjYjAxOWE4YzdhMGZiYjJhN2M2IgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[0f,-0.4640322248f,-0.0111093008f,-0.4198251198f,0f,-0.0545773128f,0.0988988316f,0.5447161166f,-0.12515625f,0f,0f,0.5001713426f,0f,0f,0f,1f],Tags:["mrsDuck6"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;217650067,1854294625,-606087053,1577150166],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA3NjE5NCwKICAicHJvZmlsZUlkIiA6ICJlYTA4ZjhlZTdiOTg0YmFlYWM3N2JhYzk3ZWVkYzE4NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJXYXlkZXJUTSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hMWI0YjAzNTlkMzcxNjZhNGI3NTMyMDNmMmMwYWZmODA2N2YwY2E2Njk3ZWNmOGJhOGY1MWY0ZjI0Zjg0Y2Y1IgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[-0.037558364f,-0.8376143988f,-0.08745426f,0.5360648802f,-0.2977151895f,-0.0682597169f,0.2308392178f,0.2731591166f,-0.2442944222f,0.2280449876f,-0.279524928f,0.7252500926f,0f,0f,0f,1f],Tags:["mrsDuck7"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-422602023,-4659852,974827846,-1610279989],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA4MjEzMCwKICAicHJvZmlsZUlkIiA6ICJmOWQ0YzBkNDY2OWY0YTVkODg1MGZjYTNkMzQ0YjY2NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJQYWRhbmdHYXMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRjYzk0YThiMDFkMDM5MTlmY2I4N2QzNzZlODE2OWJkZGNiMzkwZWJlNTExMzg2NzRiM2RlNTE4N2QxMWE3YiIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[-0.0122554068f,1.0915296053f,-0.1317883753f,0.6012253285f,-0.2566536168f,0.2680571686f,0.3026934886f,0.2939008712f,0.3077881281f,0.2813981705f,0.2582617252f,0.7232370668f,0f,0f,0f,1f],Tags:["mrsDuck8"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-854870651,-548859756,165665278,1194575395],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA4NzUxNSwKICAicHJvZmlsZUlkIiA6ICJlZDUzZGQ4MTRmOWQ0YTNjYjRlYjY1MWRjYmE3N2U2NiIsCiAgInByb2ZpbGVOYW1lIiA6ICI0MTQxNDE0MWgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWEzYjIyYjkwYzFkZmRjOTY2MWM2MGMzM2JlNTZmOGJjOWM4ZmMxMzhlYTg2ZTk1MTA0ZDAxODcxZmQ5OWIzNCIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[0f,-0.0035878267f,0.5001152252f,-0.0849186759f,0f,0.3437303948f,0.0054657786f,0.7175233496f,-0.30684375f,0f,0f,0.5021328622f,0f,0f,0f,1f],Tags:["mrsDuck9"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;712550910,-426132109,1394068543,-1605228],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA5Mjc5NCwKICAicHJvZmlsZUlkIiA6ICIzMzU3MWJiY2UyMDE0MTRiYmNkMDYyMjEyZTI4MjBlMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGFkb21JbmF0b3I0NzgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWM5Nzk3NjVlNTdkNzIyYTRjNDJjNWUyOWM3ZjQ5OWRhOWQwNDdhYzQ3NGMyN2EyZTY2NzJjNjNiNTM1YTJlOCIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[-0.0150601732f,1.1256509487f,-0.1147818401f,0.6146903937f,0.3121459439f,0.2469102334f,0.2680634776f,0.28772154f,0.2770673491f,-0.2239490263f,-0.3227183971f,0.2698263868f,0f,0f,0f,1f],Tags:["mrsDuck10"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-842645583,982083174,260173041,598794029],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTA5Nzg5OCwKICAicHJvZmlsZUlkIiA6ICI3NmM4Y2ZlYjE1N2U0MGEwYmNlNjQ4NTgwZGEwNmQwNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTcGlrZWhpZGRlbiIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8xNTQ4MTlkZGRlMTcwM2I0NDcxYjUzN2ZlYmU5MjczYjEyMGEyODFiOWYwZDkzMmI4MzgwNWFiYjQxOWRkMGM1IgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[-0.1333209541f,-0.8990484399f,0.0352209383f,0.5098169248f,-0.269227483f,0.1748944967f,-0.261311855f,0.3045292043f,0.2608837417f,-0.3143938056f,-0.262353833f,0.2777315878f,0f,0f,0f,1f],Tags:["mrsDuck11"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1855694543,-844597271,2144980806,-77190254],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTEwMzc5OSwKICAicHJvZmlsZUlkIiA6ICJmZDlhMmNhNGNhMWM0YTkwYWEyODkyNThkYmM3MmFiNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJJRnJhbmtvWCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS82ODM1Y2VhMDZmNmI2ZDQ3MGEzNGJkMzk0YmI3ZGNhMDQ1ZjM0ZDdmOGI2MTZkMGQzOGJhNjEyYjc0NThiZTkwIgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[0.0000906093f,-0.1285652405f,0.7224474603f,0.9262406675f,0.0815788616f,0.3962813113f,0.1303836984f,0.419774158f,-0.08909653f,0.3793815685f,0.1256751405f,0.4880773788f,0f,0f,0f,1f],Tags:["mrsDuck12"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;45061269,-1928099974,-808651904,-1626498885],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTExMDEyOCwKICAicHJvZmlsZUlkIiA6ICI1NzI1YWJkMzY4MGI0MWVlOWJjMzhhNmUyM2M5OGNiMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJBYmVuZHJlZ2VuXyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lNTFlYjhjZTA4MjYzYmVkY2I1ZGQ5ZjQxZGIxZTQ3MWExYzQwZjllZWMyNzUyOWU3ODFlZDAwZmQ4YTI3NzM3IgogICAgfQogIH0KfQ=="}]}}},item_display:"none",transformation:[0f,-0.6443554924f,-0.0118854171f,-0.4315641198f,0f,-0.1035675174f,0.0774256463f,0.5571571166f,-0.1423125f,0f,0f,0.5001713426f,0f,0f,0f,1f],Tags:["mrsDuck13"]},{id:"minecraft:item_display",item:{id:"minecraft:player_head",Count:1,components:{"minecraft:profile":{id:[I;-1325745928,960664916,1379365559,325447664],properties:[{name:"textures",value:"ewogICJ0aW1lc3RhbXAiIDogMTc1MzI5MTExNTY0NCwKICAicHJvZmlsZUlkIiA6ICJmMzNlZGMyNTRmNDk0NWY2YTg5ZjFjM2JhZmNkZjIwNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJGVV9CYWJ5IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzM4NDk2MGM1ODAwMGUwMzUyYTYwYWZhYTdkMzI0OWYxMzc2OTVmZGIzM2ZlY2UxYTBhODA1OTI0MTZjNjZmMiIKICAgIH0KICB9Cn0="}]}}},item_display:"none",transformation:[0f,-0.2243624101f,-0.0226710104f,-0.3154318698f,0f,-0.071141279f,0.0748630893f,0.5803231166f,-0.09928125f,0f,0f,0.5001713426f,0f,0f,0f,1f],Tags:["mrsDuck14"]},{id:"minecraft:item_display",item:{id:"minecraft:acacia_fence",Count:1},item_display:"none",transformation:[2.6935690093f,-0.0600520343f,0.0136385766f,0.6005463905f,-1.1648356767f,-0.1453983937f,-0.0058980113f,-0.0023560722f,0.2161406534f,0f,-0.2193909791f,0.4962399063f,0f,0f,0f,1f],Tags:["mrsDuck15"]}]}
+@delay 2
+@for Int i in list::range(1, 16)
+    @bypass /data merge entity @e[tag=mrsDuck{{i}},limit=1] {start_interpolation:0,interpolation_duration:150,transformation:{translation:[{{duckTranslationsX[i - 1]}}, {{duckTranslationsY[i - 1] - 9.9}}, {{duckTranslationsZ[i - 1]}}]}}
+@done
+
+@for Int i in list::range(0, 150)
+    @bypass /execute in minecraft:theta run particle minecraft:totem_of_undying {{(-2.40 * math::cos(Double(i * 10 + 180)) - 9060.5)}} {{87.0 - ((Float(i) / 15))}} {{(-2.40 * math::sin(Double(i * 10 + 180))) + 9571.5}} 0 0 0 0 1
+    @bypass /execute in minecraft:theta run particle minecraft:totem_of_undying {{(-2.40 * math::cos(Double(i * 10)) - 9060.5)}} {{87.0 - ((Float(i) / 15))}} {{(-2.40 * math::sin(Double(i * 10))) + 9571.5}} 0 0 0 0 1
+    @bypass /execute in minecraft:theta run particle minecraft:firework {{((-2.40 * math::cos(Double(i * 3))) * math::cos(Double(i * 10 + 180)) - 9060.5)}} {{87.0 - ((Float(i) / 15))}} {{((-2.40 * math::sin(Double(i * 3))) * math::sin(Double(i * 10 + 180))) + 9571.5}} 0 0 0 0 1
+    @bypass /execute in minecraft:theta run particle minecraft:firework {{((-2.40 * math::cos(Double(i * 3))) * math::cos(Double(i * 10)) - 9060.5)}} {{87.0 - ((Float(i) / 15))}} {{((-2.40 * math::sin(Double(i * 3))) * math::sin(Double(i * 10))) + 9571.5}} 0 0 0 0 1
+    @bypass /playsound minecraft:block.amethyst_block.resonate master {{player}} ~ ~ ~ 0.4 {{(1 - Float(i) / 150.0) * 1.5 + 0.5}}
+    @delay 1
+@done
+
+@bypass /particle minecraft:firework -9061 77.2 9571 0 0 0 0.6 100
+@bypass /particle minecraft:egg_crack -9061 78 9571 2 2 2 1 150
+@bypass /playsound minecraft:entity.zombie_villager.cure master {{player}} ~ ~ ~ 1.0 1.0
+@console /function execute Harha::finalAnimationWave3()
+
+@bypass /particle minecraft:firework -9061 77.2 9571 0 0 0 0.6 100
+@bypass /particle minecraft:egg_crack -9061 78 9571 2 2 2 1 150
+@bypass /playsound minecraft:entity.zombie_villager.cure master {{player}} ~ ~ ~ 1.0 1.0
+@console /function execute Harha::finalAnimationWave3()
+
+@for Int i in list::range(0, 250)
+    @bypass particle minecraft:trial_spawner_detection -9061 77 9571 0.3 0 0.3 00.00 8 
+    @bypass particle minecraft:trial_spawner_detection_ominous -9061 77 9571 0.3 0 0.3 00.00 8
+    @delay 4
+
+    @if i == 20
+        @player
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}Hello there, &l{{player}}.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+
+    @if i == 37
+        @player
+        @player &7???????????????
+        @bypass /playsound minecraft:entity.chicken.egg master @s -9061 76 9571 1 1
+    @fi
+
+    @if i == 45
+        @player 
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}You have done well to reach me.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+
+    @if i == 55
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}I must thank &lMr. Duck &{{colorList4[0]}}for sending you to me.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 75
+        @player
+        @player &7Who... who are you???
+        @bypass /playsound minecraft:entity.chicken.egg master @s -9061 76 9571 1 1
+    @fi
+    
+    @if i == 90
+        @player
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}I am &lMrs. Duck&{{colorList4[0]}}, keeper of this realm.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 110
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}My husband has watched your progress with great interest.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 125
+        @player
+        @player &7I don't understand... What is this place?
+        @bypass /playsound minecraft:entity.chicken.egg master @s -9061 76 9571 1 1.1
+    @fi
+    
+    @if i == 145
+        @player
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}This place exists beyond the challenges you've faced.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 165
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}A sanctuary, if you will. A place for those who have proven themselves worthy.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 180
+        @player
+        @player &7Worthy of what?
+        @bypass /playsound minecraft:entity.chicken.egg master @s -9061 76 9571 1 1.2
+    @fi
+    
+    @if i == 200
+        @player
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}That, my friend &l{{player}}&{{colorList4[0]}}, is something you must discover for yourself.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 220
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}But know this... your journey is finally over.
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+    
+    @if i == 240
+        @player &{{colorList4[0]}}&lM&{{colorList4[1]}}&lr&{{colorList4[2]}}&ls. &{{colorList4[3]}}&lD&{{colorList4[4]}}&lu&{{colorList4[5]}}&lc&{{colorList4[6]}}&lk: &{{colorList4[0]}}Goodbye &l{{player}}...
+        @bypass /playsound minecraft:block.enchantment_table.use master @s -9061 77 9571 1 {{math::random(1.0D, 1.7D)}}
+        @bypass /playsound minecraft:entity.cat.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:entity.fox.ambient master @s -9061 77 9571 1 {{math::random(0.5D, 2.0D)}}
+    @fi
+@done
+
+@bypass /playsound minecraft:entity.bat.takeoff master @s -9061 77 9571 1 1.0
+@bypass /particle minecraft:large_smoke -9061 77 9571 0.5 0.5 0.5 0.01 50
+
+@for Int i in list::range(1, 16)
+    @bypass /data merge entity @e[tag=mrsDuck{{i}},limit=1] {start_interpolation:0,interpolation_duration:150,transformation:{translation:[{{duckTranslationsX[i - 1]}}, {{duckTranslationsY[i - 1] + 8.5}}, {{duckTranslationsZ[i - 1]}}]}}
+    @delay 3
+    @bypass /playsound minecraft:block.beacon.power_select master @s ~ ~ ~ 1 {{((Float(i) / 16) * 1.5 + 0.5)}}
+    @bypass /playsound minecraft:entity.bat.takeoff master @s -9061 77 9571 1 {{((Float(i) / 16) * 1.5 + 0.5)}}
+    @bypass /particle minecraft:firework -9061 79 9571 0.5 2.5 0.5 0.01 15
+@done
+
+@for Int i in list::range(1, 16)
+    @delay 3
+    @bypass /particle minecraft:firework -9061 81 9571 0.7 3.5 0.7 0.01 15
+@done
+
+@console /function execute Harha::finalAnimationWave()
+@delay 4s
+
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[2]}}
+@bypass /execute in minecraft:theta run setblock -9055 76 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9054 76 9572 minecraft:mushroom_stem[down=true,east=true,north=true,south=true,up=true,west=true] strict
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 76 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 76 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9055 77 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 76 9572 minecraft:mushroom_stem[down=true,east=true,north=true,south=true,up=true,west=true]
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[4]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 76 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9055 77 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9055 78 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9054 76 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 77 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 76 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9054 76 9570 minecraft:mushroom_stem[down=true,east=false,north=true,south=true,up=true,west=true]
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[6]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 77 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9055 78 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9055 79 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9054 76 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9054 77 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 78 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 76 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9053 77 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 76 9570 minecraft:mushroom_stem[down=true,east=true,north=true,south=true,up=true,west=true]
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[8]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 78 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9055 79 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9055 80 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9054 77 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9054 78 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 79 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 76 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9053 77 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9053 78 9572 air strict
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[10]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 79 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9055 80 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 78 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9054 79 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9054 80 9572 air strict
+@bypass /execute in minecraft:theta run setblock -9053 77 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9053 78 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9053 79 9572 air strict
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[12]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9055 80 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9055 81 9571 minecraft:smooth_quartz_stairs[facing=east,half=top,shape=straight,waterlogged=false]
+@bypass /execute in minecraft:theta run setblock -9054 79 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9054 80 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9053 78 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9053 79 9571 air strict
+@bypass /execute in minecraft:theta run setblock -9053 80 9572 air strict
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[14]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9054 80 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9053 79 9570 air strict
+@bypass /execute in minecraft:theta run setblock -9053 80 9571 air strict
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[16]}}
+@delay 1
+@bypass /execute in minecraft:theta run setblock -9053 80 9570 air strict
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 {{musicNotes[18]}}
+
+# kill everything
+@for Int i in list::range(0, 24)
+    @var headNumber = i
+    @bypass /minecraft:kill @e[type=item_display,tag=harhaicosahedron{{headNumber}}]
+@done
+@bypass /minecraft:kill @e[tag=secretHeadEntity25]
+@for Int i in list::range(1, 16)
+    @bypass /minecraft:kill @e[tag=mrsDuck{{i}}]
+@done
+

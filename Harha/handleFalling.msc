@@ -1,4 +1,4 @@
-# handleFalling(Int levelNormal, Player player, Int[] cheatList) https://paste.minr.org/egoqafujim
+# handleFalling(Int levelNormal, Player player, Int[] cheatList) https://paste.minr.org/ujazopesud
 @using Harha
 @fast
 
@@ -15,6 +15,18 @@
         @var setLevel(levelNormal, player)
     @fi
     @var resetBlocks(player, 64)
+
+    @if sectionFallsNormal[levelNormal] == 100 && numberCompletions <= 1 && ifYoureStuckOnAStage[player] == false
+        @var ifYoureStuckOnAStage[player] = true
+        @player 
+        @player &#d4d4d4&lIf you are stuck on a stage...
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.75 0.9
+        @delay 30
+        @player &#d4d4d4&lClick on a level sign for helpful advice!
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.75 1.1
+        @player
+    @fi
+
     
     # Anomaly
     @if Int(math::random(1.0D, 100000.0D)) == 69
@@ -198,45 +210,45 @@
                     # @player DEBUG: Positioning partner based on yaw {{allPositions[lowestLevel].getYaw()}}
                     @if allPositions[lowestLevel].getYaw() == 180.0
                         @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
-                            @if partner.getZ() < allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            @if partner.getZ() < allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position((allPositions[lowestLevel].getX() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @else
-                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
-                            @if partner.getZ() < allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
+                            @if partner.getZ() < allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position((allPositions[lowestLevel].getX() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @fi
                     @elseif allPositions[lowestLevel].getYaw() == 0.0
                         @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
-                            @if partner.getZ() > allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            @if partner.getZ() > allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position((allPositions[lowestLevel].getX() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @else
-                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
-                            @if partner.getZ() > allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
+                            @if partner.getZ() > allPositions[lowestLevel].getZ() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position((allPositions[lowestLevel].getX() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getY(), allPositions[lowestLevel].getZ(), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @fi
                     @elseif allPositions[lowestLevel].getYaw() == 90.0
                         @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
-                            @if partner.getX() < allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            @if partner.getX() < allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @else
-                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
-                            @if partner.getX() < allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
+                            @if partner.getX() < allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @fi
                     @else
                         @if lowestLevel == 14 || lowestLevel == 60 || lowestLevel == 63
-                            @if partner.getX() > allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            @if partner.getX() > allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 0.7) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 1.4), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @else
-                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
-                            @if partner.getX() > allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
+                            # @player DEBUG: {{partner}} {{math::abs(partner.getX() - allPositions[lowestLevel].getX())}} , {{math::abs(partner.getZ() - allPositions[lowestLevel].getZ())}} {{(math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)}}
+                            @if partner.getX() > allPositions[lowestLevel].getX() || (math::abs(partner.getX() - allPositions[lowestLevel].getX()) > 5.0 || math::abs(partner.getY() - allPositions[lowestLevel].getY()) > 5.0 || math::abs(partner.getZ() - allPositions[lowestLevel].getZ()) > 5.0)
                                 @var partner.teleport(Position(allPositions[lowestLevel].getX(), allPositions[lowestLevel].getY(), (allPositions[lowestLevel].getZ() - 1) + ((Float(partners[player].find(partner))) / (Float(partners[player].length()) - 1 ) * 2), allPositions[lowestLevel].getYaw(), allPositions[lowestLevel].getPitch(), allPositions[lowestLevel].getWorld()))
                             @fi
                         @fi
@@ -251,7 +263,11 @@
                     @var ensureBlockSelection(lowestLevel, partner)
                     
                     @if lowestLevel <= 70
-                        @var sectionFallsSoulLink[partner][lowestLevel] += 1
+                        @if difficultySelection == "soulLink" || player.getCurrentChallenge() == "hahahas"
+                            @var sectionFallsSoulLink[levelNormal] += 1
+                        @else
+                            @var sectionFallsMasterSoulLink[levelNormal] += 1
+                        @fi
                         @var setLevel(lowestLevel, partner)
                     @fi
                     @var resetBlocks(partner, 64)
@@ -265,7 +281,11 @@
             @var ensureBlockSelection(lowestLevel, player)
             @var player.teleport(allPositions[lowestLevel])
             @if lowestLevel <= 70
-                @var sectionFallsSoulLink[levelNormal] += 1
+                @if difficultySelection == "soulLink" || player.getCurrentChallenge() == "hahahas"
+                    @var sectionFallsSoulLink[levelNormal] += 1
+                @else
+                    @var sectionFallsMasterSoulLink[levelNormal] += 1
+                @fi
                 @var setLevel(lowestLevel, player)
             @fi
             @bypass /playsound minecraft:block.note_block.didgeridoo record {{player}} {{allPositions[lowestLevel].getX()}} {{allPositions[lowestLevel].getY()}} {{allPositions[lowestLevel].getZ()}} 0.5 {{musicNotes[partners[player].find(player) * 3]}}
@@ -285,7 +305,7 @@
 @var totalFalls[player] += 1
 
 # Update leaderboards every once and a while or if below 100
-@if totalFalls[player] <= 100 || sessionFalls[player] % math::random(5.0D, 8.0D) == 0
+@if totalFalls[player] <= 100 || sessionFalls[player] % Int(math::random(5.0D, 8.0D)) == 0
     @var top100Function(player, 1)
 @fi
 
@@ -307,9 +327,10 @@
 
 # Handles Fail Milestones
 @if failMilestones.contains(totalFalls)
-    @player &#d4d4d4&lYou have fallen a total of &6&l{{totalFalls}} &#d4d4d4&ltimes!
+    @player &#d4d4d4&lYou have fallen a total of &6&l{{formatNumber(String(totalFalls))}} &#d4d4d4&ltimes!
     @bypass /playsound minecraft:entity.chicken.egg master @s
     @if totalFalls == 10000
+        @delay 5
         @var cosmeticsUnlocked[player][6] = 1
         @player &#d4d4d4----------------------------
         @player &6&lCosmetic Unlocked!

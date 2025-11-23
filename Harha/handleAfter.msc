@@ -1,4 +1,4 @@
-# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player) https://paste.minr.org/ubunizusuy
 # Function for after stage area script
 # Clears blocks, sets level, checks for style points, and runs anticheat
 @using Harha
@@ -21,6 +21,35 @@
         @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[20]}}
         @bypass title {{player}} actionbar ["",{"text":"New ","bold":true,"color":"#ff6b48"},{"text":"Checkpoint ","bold":true,"color":"#ff7f37"},{"text":"Reached!","bold":true,"color":"#ff9523"}] 
         @var masterSoftCP[player][Int(math::floor(Double(levelNumber) / 5)) - 1] = 1
+    @fi
+@fi
+
+
+# master mode SL soft cp notification 
+@if (difficultySelection == "masterSoulLink" || player.getCurrentChallenge() == "hahahahas") && level[player] == (levelNumber - 1)
+    # @player DEBUG: Master SL soft CP check - levelNumber: {{levelNumber}}, level[player]: {{level[player]}}
+    @if (levelNumber % 5) == 0 && masterSLSoftCP[player][Int(math::floor(Double(levelNumber) / 5))] == 0
+        # @player DEBUG: Level {{levelNumber}} is divisible by 5, checking masterSLSoftCP status
+        @define Boolean allPartnersAhead = true
+        @for Player p in partners[player]
+            # @player DEBUG: partner {{p.getName()}} is at level {{level[p]}}, {{levelNumber}}
+            # @player DEBUG: @if (({{level[p]}}) < {{levelNumber}} || {{masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5))]}} == 1) && ({{p.getName()}} != {{player.getName()}})
+            @if ((level[p]) < levelNumber || masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5))] == 1) && (p.getName() != player.getName())
+                # @player DEBUG: Partner {{p}} is behind (level {{level[p]}}) < {{levelNumber}}
+                @var allPartnersAhead = false
+            @fi
+        @done
+        # @player DEBUG: allPartnersAhead = {{allPartnersAhead}}
+        @if allPartnersAhead == true
+            # @player DEBUG: All partners ahead, granting checkpoint to all
+            @for Player p in partners[player]
+                @bypass /playsound minecraft:block.note_block.pling master {{p}} ~ ~ ~ 1 {{musicNotes[14]}}
+                @bypass /playsound minecraft:block.note_block.pling master {{p}} ~ ~ ~ 1 {{musicNotes[21]}}
+                @bypass title {{p}} actionbar ["",{"text":"New ","bold":true,"color":"#a800a8"},{"text":"Checkpoint ","bold":true,"color":"#c045a3"},{"text":"Reached!","bold":true,"color":"#cf71a5"}]
+                @var masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5)) - 1] = 1
+                # @player DEBUG: Granted checkpoint to partner {{p}}
+            @done
+        @fi
     @fi
 @fi
 

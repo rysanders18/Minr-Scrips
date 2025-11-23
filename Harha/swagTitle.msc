@@ -1,14 +1,15 @@
-# swagTitle(Int points, Player player)
+# swagTitle(Int points, Player player) https://paste.minr.org/uragenilub
 @using Harha
 @fast
 
 # Even Harder Hat 
-@if player.getCurrentChallenge() == "hahahaha" || difficultySelection == "master"
+@if stylePointPrestiges[player] % 5 == 1
     @bypass /title @s times 0 20 20
     @bypass /title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#ff5b00"},{"text":"style ","bold":true,"color":"#ff7900"},{"text":"points: ","bold":true,"color":"#ff8600"},{"text":"{{swagPoints}}","bold":true,"underlined":true,"color":"gold"}]
     @bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#ff8600"}]
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"#ff5b00"}]
 
+    @console /function execute Harha::swagTitleParticles(Player("{{player}}"))
 
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
@@ -25,8 +26,6 @@
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 1.059
-
-    @delay 4
 
     @bypass /title {{player}} title ["",{"text":"S","bold":true,"color":"gold"},{"text":"t","bold":true,"color":"white"},{"text":"yle Points!","bold":true,"color":"#ff5b00"}]
     @delay 1
@@ -52,12 +51,13 @@
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"#ff5b00"}]
 
 # Hardest Hat
-@elseif player.getCurrentChallenge() == "hahahahaha" || difficultySelection == "ultraMaster"
+@elseif stylePointPrestiges[player] % 5 == 2
     @bypass /title @s times 0 20 20
     @bypass /title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#ff3838"},{"text":"style ","bold":true,"color":"#ff452c"},{"text":"points: ","bold":true,"color":"#ff452c"},{"text":"{{swagPoints}}","bold":true,"underlined":true,"color":"#ff5e00"}]
     @bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#ff5e00"}]
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"#ff3838"}]
 
+    @console /function execute Harha::swagTitleParticles(Player("{{player}}"))
 
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
@@ -102,12 +102,13 @@
 
 
 # Harder Hats
-@elseif player.getCurrentChallenge() == "hahahas" || difficultySelection == "soulLink"
+@elseif stylePointPrestiges[player] % 5 == 3
     @bypass /title @s times 0 20 20
     @bypass /title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#55FFFF"},{"text":"style ","bold":true,"color":"#3fffaa"},{"text":"points: ","bold":true,"color":"#b1ff50"},{"text":"{{swagPoints}}","bold":true,"underlined":true,"color":"#ffff57"}]
     @bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#3fffaa"}]
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"#55FFFF"}]
 
+    @console /function execute Harha::swagTitleParticles(Player("{{player}}"))
 
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
@@ -154,12 +155,13 @@
 
 
 # Even Harder Hats
-@elseif player.getCurrentChallenge() == "hahahahas" || difficultySelection == "masterSoulLink"
+@elseif stylePointPrestiges[player] % 5 == 4
     @bypass /title @s times 0 20 20
     @bypass /title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#a800a8"},{"text":"style ","bold":true,"color":"#bb399e"},{"text":"points: ","bold":true,"color":"#c555a0"},{"text":"{{swagPoints}}","bold":true,"underlined":true,"color":"#cf71a5"}]
     @bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#bb399e"}]
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"#a800a8"}]
 
+    @console /function execute Harha::swagTitleParticles(Player("{{player}}"))
 
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891
@@ -211,6 +213,7 @@
     @bypass /title {{player}} subtitle ["",{"text":"+{{points}} Points","bold":true,"color":"#ffc71d"}]
     @bypass /title {{player}} title ["",{"text":"Style Points!","bold":true,"color":"gold"}]
 
+    @console /function execute Harha::swagTitleParticles(Player("{{player}}"))
 
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.707
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 0.891

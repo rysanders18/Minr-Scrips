@@ -2,7 +2,10 @@
 @using Harha
 @fast
 
-@cooldown 10
+@cooldown 2
+
+@define String[] colorList3 = String["&#1FFB14", "&#FE984E", "&#00a800", "&#CE4426", "&#A3D0F2", "&#85C68B", "&#ff67c5"]
+
 
 @if numberCompletions[player] <= 3
     @player &cSpeedrun Mode is unlocked after &l3 &ccompletions!
@@ -11,39 +14,109 @@
 @fi
 
 @if speedrunMode[player] == 8
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 7
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[6]}}&lStage 7")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[17]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[12]}}
+        @return
+    @fi
     @var speedrunMode[player] = 0
     @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
-    @player &#d4d4d4Speedrun Mode &c&lDisabled
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: &c&lDisabled")}}
 @elseif speedrunMode[player] == 0
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 8
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: &a&lEntire Map")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[19]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[14]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[7]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 1
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[2]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[0]}}&lStage 1")}}
 @elseif speedrunMode[player] == 1
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 0
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: &c&lDisabled")}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[9]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 2
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[4]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[1]}}&lStage 2")}}
 @elseif speedrunMode[player] == 2
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 1
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[0]}}&lStage 1")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[7]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[2]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
-    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[11]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 3
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[10]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[5]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[2]}}&lStage 3")}}
 @elseif speedrunMode[player] == 3
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 2
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[1]}}&lStage 2")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[9]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[4]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[12]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 4
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[7]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[3]}}&lStage 4")}}
 @elseif speedrunMode[player] == 4
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 3
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[2]}}&lStage 3")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[10]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[5]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[14]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 5
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[9]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[4]}}&lStage 5")}}
 @elseif speedrunMode[player] == 5
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 4
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[3]}}&lStage 4")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[12]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[7]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
-    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[16]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 6
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[15]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[10]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[5]}}&lStage 6")}}
 @elseif speedrunMode[player] == 6
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 5
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[4]}}&lStage 5")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[14]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[9]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
-    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[18]}}
-    @player &#d4d4d4Speedrun Mode set to: &a&lStage 7
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[17]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[12]}}
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[6]}}&lStage 7")}}
 @elseif speedrunMode[player] == 7
+    @if player.isSneaking() == true
+        @var speedrunMode[player] = 6
+        @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: {{colorList3[5]}}&lStage 6")}}
+        @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[15]}}
+        @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[10]}}
+        @return
+    @fi
     @var speedrunMode[player] += 1
-    @player &#d4d4d4Speedrun Mode set to: &a&lEntire Map
+    @bypass /title {{player}} actionbar {{slytools::convertTextToTellraw("&#d4d4d4&lSpeedrun Mode: &a&lEntire Map")}}
     @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[19]}}
+    @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 0.5 {{musicNotes[14]}}
 @fi

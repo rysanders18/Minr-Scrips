@@ -1,14 +1,52 @@
-# cosmeticOre (Player player)
+# cosmeticOre (Player player) https://paste.minr.org/omohoqefef
 
 @fast
 @using Harha
 
-@define Int randomBlockNumber = Int(math::random(1.0D, 11.0D))
+@define Int randomBlockNumber = Int(math::random(1.0D, 6.0D))
 
-@if randomBlockNumber < 3
+@if randomBlockNumber == 1
     @var oreNumber[player] = 0
+    # reset sound effect
+    @if blocksSinceReset[player] >= 10 && blocksSinceReset[player] <= 34
+        @bypass /playsound minecraft:block.respawn_anchor.deplete master {{player}} ~ ~ ~ {{Float((musicNotes[blocksSinceReset[player] - 10]) / 2) - 0.25}} 1.0
+    @elseif blocksSinceReset[player] >= 35
+        @bypass /playsound minecraft:block.respawn_anchor.deplete master {{player}} ~ ~ ~ 0.75 1.0
+    @fi
+    @if blocksSinceReset[player] > blocksSinceResetPB[player]
+        @var blocksSinceResetPB[player] = blocksSinceReset[player]
+        @if blocksSinceResetPB[player] >= 5
+            @player
+            @player &6New Personal Best: &e&l{{blocksSinceResetPB[player]}}&6 Blocks since last reset!
+            @player &D&l{{(String(math::pow(0.8D, Double(blocksSinceReset[player])) * 100) + "000000").substring(0, 6)}}% &6Chance of reaching this far!
+            @player
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.6 {{musicNotes[13]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.6 {{musicNotes[20]}}
+        @fi
+    @fi
+    @var blocksSinceReset[player] = 0
 @elseif lastOreNumber[player] != 4
+    @var blocksSinceReset[player] += 1
     @var oreNumber[player] = lastOreNumber[player] + 1
+@else
+    @var blocksSinceReset[player] += 1
+    @if blocksSinceReset[player] >= 10
+        @bypass title {{player}} actionbar ["",{"text":"{{blocksSinceReset[player]}} ","bold":true,"color":"#b6b6b6"},{"text":"Blocks since last reset.   PB = {{blocksSinceResetPB[player]}}","bold":false,"color":"#9a9a9a"}]
+        @if blocksSinceReset[player] <= 34
+            @bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ {{Float((musicNotes[blocksSinceReset[player] - 10]) / 2) - 0.25}} {{(musicNotes[blocksSinceReset[player] - 10])}}
+        @elseif blocksSinceReset[player] <= 59
+            @bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ 0.75 2.0
+            @bypass /playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ {{Float((musicNotes[blocksSinceReset[player] - 35]) / 2) - 0.25}} {{(musicNotes[blocksSinceReset[player] - 35])}}
+        @elseif blocksSinceReset[player] <= 84
+            @bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ 0.75 2.0
+            @bypass /playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 0.75 2.0
+            @bypass /playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ {{Float((musicNotes[blocksSinceReset[player] - 60]) / 2) - 0.25}} {{(musicNotes[blocksSinceReset[player] - 60])}}
+        @elseif blocksSinceReset[player] > 84
+            @bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ 0.75 2.0
+            @bypass /playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 0.75 2.0
+            @bypass /playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 0.75 2.0
+        @fi
+    @fi
 @fi
 
 @var blockSelection[player] = oreList[oreNumber]

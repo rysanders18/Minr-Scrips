@@ -4,6 +4,10 @@
 @using Harha
 @fast
 
+@if player.getGameMode().toLowerCase() != "adventure"
+    @return
+@fi
+
 @define Long timeThisStage
 @define Boolean firstTime = false
 
@@ -70,6 +74,8 @@
             @bypass /title @s actionbar ["",{"text":"Stage 1 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage1PB[player])}}","bold":true,"color":"light_purple"}]
         @else
             @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
         @fi
     @fi
     

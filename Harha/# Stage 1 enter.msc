@@ -4,7 +4,13 @@
 @using Harha
 @fast
 
+@if player.getGameMode().toLowerCase() != "adventure"
+    @return
+@fi
+
+@define Boolean speedrunTeleportedRecentlyOld = speedrunTeleportedRecently[player]
 @var speedrunTeleportedRecently[player] = false
+@bypass attribute @s minecraft:entity_interaction_range base reset
 
 @if stage[player] == 0
     @var stage[player] += 1
@@ -17,6 +23,10 @@
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"#1FFB14"}]
     @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
+    @if speedrunTeleportedRecentlyOld == true
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
+    @fi
 
     @delay 1
     @bypass /title @s subtitle ["",{"text":"Go","color":"#d4d4d4"}]

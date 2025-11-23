@@ -4,6 +4,10 @@
 @using Harha
 @fast
 
+@if player.getGameMode().toLowerCase() != "adventure"
+    @return
+@fi
+
 @define Long timeThisStage
 @define Boolean firstTime = false
 
@@ -12,13 +16,13 @@
 
 @if stage[player] == 6
     
-    @define String gradient1 = "&#ff7b01"
-    @define String gradient2 = "&#ff7149"
-    @define String gradient3 = "&#ff7170"
-    @define String gradient4 = "&#ff708d"
-    @define String gradient5 = "&#ff6da8"
-    @define String gradient6 = "&#ff67c5"
-    @define String gradient7 = "&#fa70e3"
+    @define String gradient1 = "#ff7b01"
+    @define String gradient2 = "#ff7149"
+    @define String gradient3 = "#ff7170"
+    @define String gradient4 = "#ff708d"
+    @define String gradient5 = "#ff6da8"
+    @define String gradient6 = "#ff67c5"
+    @define String gradient7 = "#fa70e3"
     
     @var stage[player] += 1
     @var timeThisStage = (system::currentTimeMillis() - startTime[player])
@@ -65,6 +69,8 @@
             @bypass /title @s actionbar ["",{"text":"Stage 6 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage6PB[player])}}","bold":true,"color":"light_purple"}]
         @else
             @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
         @fi
     @fi
     

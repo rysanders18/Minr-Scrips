@@ -1,13 +1,12 @@
 @using Harha
 @fast
-# pcStats(Int pcSelect, Player user, Player player)
+# pcStats(Int pcSelect, Player user, Player player) https://paste.minr.org/manufogalu
 # .      .
 @define Int secretsFound
 @define Int secretsCompleted
 @define Double noteInt
 @var secretsFound = secretsFoundList[user].sum()
 @var secretsCompleted = secretsCompletedList[user].sum()
-@var calculate100(user)
 
 @define Int bestHardestHatRun = 0
 @for Int i in list::range(0, 69)
@@ -16,6 +15,67 @@
     @fi
 @done
 
+@if numberCompletions[user] >= 1
+    @var cosmeticsUnlocked[user][0] = 1
+@else
+    @var cosmeticsUnlocked[user][0] = 0
+@fi
+@if numberCompletions[user] >= 3
+    @var cosmeticsUnlocked[user][1] = 1
+@else
+    @var cosmeticsUnlocked[user][1] = 0
+@fi
+@if numberCompletions[user] >= 10
+    @var cosmeticsUnlocked[user][2] = 1
+@else
+    @var cosmeticsUnlocked[user][2] = 0
+@fi
+@if swagPoints[user] >= 500 || stylePointPrestiges[user] >= 1
+    @var cosmeticsUnlocked[user][3] = 1
+@else
+    @var cosmeticsUnlocked[user][3] = 0
+@fi
+@if swagPoints[user] >= 1000 || stylePointPrestiges[user] >= 1
+    @var cosmeticsUnlocked[user][4] = 1
+@else
+    @var cosmeticsUnlocked[user][4] = 0
+@fi
+@if swagPoints[user] >= 2000 || stylePointPrestiges[user] >= 1
+    @var cosmeticsUnlocked[user][5] = 1
+@else
+    @var cosmeticsUnlocked[user][5] = 0
+@fi
+@if secretsCompleted >= 1
+    @var cosmeticsUnlocked[user][6] = 1
+@else
+    @var cosmeticsUnlocked[user][6] = 0
+@fi
+@if secretsCompleted >= 3
+    @var cosmeticsUnlocked[user][7] = 1
+@else
+    @var cosmeticsUnlocked[user][7] = 0
+@fi
+@if secretsCompleted >= 10
+    @var cosmeticsUnlocked[user][8] = 1
+@else
+    @var cosmeticsUnlocked[user][8] = 0
+@fi
+@if numberCompletionsSoulLink[user] >= 1
+    @var cosmeticsUnlocked[user][9] = 1
+@else
+    @var cosmeticsUnlocked[user][9] = 0
+@fi
+@if numberCompletionsMaster[user] >= 1
+    @var cosmeticsUnlocked[user][10] = 1
+@else
+    @var cosmeticsUnlocked[user][10] = 0
+@fi
+@if pbFalls[user] <= 100
+    @var cosmeticsUnlocked[user][11] = 1
+@else
+    @var cosmeticsUnlocked[user][11] = 0
+@fi
+@var calculate100(user)
 
 # 0 = Main Screen
 @if pcSelect == 0 
@@ -33,14 +93,34 @@
 
 
     @chatscript 180s group12 pcStats(7, user, player)
-    @player &#917E9C*&#D3D6E0 Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @if progress100[user] >= 100.0
+        @player &#917E9C*&#D3D6E0 Progress to 100% completion: &#ffd700&l100.0%
+    @else
+        @player &#917E9C*&#D3D6E0 Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @fi
     @chatscript 180s group1 pcStats(1, user, player)
-    @player &#917E9C*&#D3D6E0 Times completed map: &#8596A6&l{{numberCompletions[user]}}
+    @if numberCompletions[user] >= 10
+        @player &#917E9C*&#D3D6E0 Times completed map: &#ffd700&l{{numberCompletions[user]}}
+    @else
+        @player &#917E9C*&#D3D6E0 Times completed map: &#8596A6&l{{numberCompletions[user]}}
+    @fi
     @chatscript 180s group2 pcStats(2, user, player)
-    @player &#917E9C*&#D3D6E0 Cosmetics unlocked: &#8596A6&l{{cosmeticsUnlocked[user].sum()}}/12
+    @if cosmeticsUnlocked[user].sum() == 12
+        @player &#917E9C*&#D3D6E0 Cosmetics unlocked: &#ffd700&l12/12
+    @else
+        @player &#917E9C*&#D3D6E0 Cosmetics unlocked: &#8596A6&l{{cosmeticsUnlocked[user].sum()}}/12
+    @fi
     @chatscript 180s group3 pcStats(3, user, player)
-    @player &#917E9C*&#D3D6E0 Style Points: &#8596A6&l{{swagPoints[user]}}/3500
-    @player &#D3D6E0 &#D3D6E0 Secrets completed: &#8596A6&l{{secretsCompleted}}/25 
+    @if stylePointPrestiges[user] >= 1
+        @player &#917E9C*&#D3D6E0 Style Prestiges: &#ffd700&l{{stylePointPrestiges[user]}}
+    @else
+        @player &#917E9C*&#D3D6E0 Style Points: &#8596A6&l{{formatNumber(String(swagPoints[user]))}}/4,000 
+    @fi
+    @if secretsCompleted >= 25
+        @player &#D3D6E0 &#D3D6E0 Secrets completed: &#ffd700&l25/25
+    @else
+        @player &#D3D6E0 &#D3D6E0 Secrets completed: &#8596A6&l{{secretsCompleted}}/25
+    @fi
     @player 
     @chatscript 180s group4 pcStats(4, user, player)
     @player &#917E9C*&#D3D6E0 Total Falls: &#8596A6&l{{totalFalls[user]}}
@@ -61,7 +141,11 @@
     @player 
     @chatscript 180s group5 pcStats(5, user, player)
     @player &#917E9C*&#D3D6E0 Fastest Times:
-    @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: {{allLevels[bestHardestHatRun]}}
+    @if numberCompletionsUMM[user] >= 1
+        @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: &#ffd700&l{{allLevels[bestHardestHatRun]}}
+    @else
+        @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: {{allLevels[bestHardestHatRun]}}
+    @fi
     @player
     @player &d&l!!! &#D3D6E0&nClick&#D3D6E0 on * items to see more
     
@@ -125,20 +209,26 @@
 
     @player 
 
-    @if swagPoints[user] <= 499
+    @if swagPoints[user] <= 499 && stylePointPrestiges[user] < 1
         @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &c{{formatNumber(String(swagPoints[user]))}}/500 Style Points. ✕
+    @elseif stylePointPrestiges[user] >= 1
+        @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &a{{formatNumber(String(stylePointPrestiges[user]))}} Style Prestiges. ✔
     @else
         @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &a{{formatNumber(String(swagPoints[user]))}}/500 Style Points. ✔
     @fi
     
-    @if swagPoints[user] <= 999
+    @if swagPoints[user] <= 999 && stylePointPrestiges[user] < 1
         @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &c{{formatNumber(String(swagPoints[user]))}}/1,000 Style Points. ✕
+    @elseif stylePointPrestiges[user] >= 1
+        @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &a{{formatNumber(String(stylePointPrestiges[user]))}} Style Prestiges. ✔
     @else
         @player &#304CD6&lC&#613CD0&lo&#932DCA&lr&#C41DC4&la&#CB34B9&ll &#D24AAE&lB&#D961A3&ll&#DC567F&lo&#E04A5A&lc&#E33F36&lk&#E0733B&ls&#DBDB46&l: &a{{formatNumber(String(swagPoints[user]))}}/1,000 Style Points. ✔
     @fi
     
-    @if swagPoints[user] <= 1999
+    @if swagPoints[user] <= 1999 && stylePointPrestiges[user] < 1
         @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk&#FFFFFF&l: &c{{formatNumber(String(swagPoints[user]))}}/2,000 Style Points. ✕
+    @elseif stylePointPrestiges[user] >= 1
+        @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk&#FFFFFF&l: &a{{formatNumber(String(stylePointPrestiges[user]))}} Style Prestiges. ✔
     @else
         @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk&#FFFFFF&l: &a{{formatNumber(String(swagPoints[user]))}}/2,000 Style Points. ✔
     @fi
@@ -165,10 +255,10 @@
 
     @player
 
-    @if totalFalls[user] <= 9999
-        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &c{{formatNumber(String(totalFalls[user]))}}/10,000 Total falls. ✕
+    @if numberCompletionsSoulLink[user] == 0
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &cHarder Hats not completed. ✕
     @else
-        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &a{{formatNumber(String(totalFalls[user]))}}/10,000 Total falls. ✔
+        @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &aHarder Hats completed. ✔
     @fi
 
     @if numberCompletionsMaster[user] == 0
@@ -177,14 +267,14 @@
         @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &aEven Harder Hat completed. ✔
     @fi
 
-    @if pbFalls[user] <= 25
+    @if pbFalls[user] >= 101
         @if pbFalls[user] == 1000000000
-            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = null). ✕
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 100 falls. ✕
         @else
-            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 25 falls. (best = {{formatNumber(String(pbFalls[user]))}}). ✕
+            @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 100 falls. (Best = {{formatNumber(String(pbFalls[user]))}}) ✕
         @fi
     @else
-        @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 25 falls. (best = {{formatNumber(String(pbFalls[user]))}}). ✔
+        @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 100 falls. (Best = {{formatNumber(String(pbFalls[user]))}}) ✔
     @fi
 
     @player 
@@ -783,46 +873,48 @@
         @player &#ffc71d✯ Certified Trackpad Victor!
     @fi
     @player
+    # @define String[] colorList3 = String["&#1FFB14&l", "&#FE984E&l", "&#00a800&l", "&#CE4426&l", "&#A3D0F2&l", "&#85C68B&l", "&#ff67c5&l"]
+
     @if stage1PB[user] == 0
-        @player &#D3D6E0Section 1: Not beaten yet.
+        @player &#1FFB14&lSection 1: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 1: {{timer::formatTime(stage1PB[user])}}
+        @player &#1FFB14&lSection 1: &#D3D6E0{{timer::formatTime(stage1PB[user])}}
     @fi
     @if stage2PB[user] == 0
-        @player &#D3D6E0Section 2: Not beaten yet.
+        @player &#FE984E&lSection 2: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 2: {{timer::formatTime(stage2PB[user])}}
+        @player &#FE984E&lSection 2: &#D3D6E0{{timer::formatTime(stage2PB[user])}}
     @fi
     @if stage3PB[user] == 0
-        @player &#D3D6E0Section 3: Not beaten yet.
+        @player &#00a800&lSection 3: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 3: {{timer::formatTime(stage3PB[user])}}
+        @player &#00a800&lSection 3: &#D3D6E0{{timer::formatTime(stage3PB[user])}}
     @fi
     @if stage4PB[user] == 0
-        @player &#D3D6E0Section 4: Not beaten yet.
+        @player &#CE4426&lSection 4: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 4: {{timer::formatTime(stage4PB[user])}}
+        @player &#CE4426&lSection 4: &#D3D6E0{{timer::formatTime(stage4PB[user])}}
     @fi
     @if stage5PB[user] == 0
-        @player &#D3D6E0Section 5: Not beaten yet.
+        @player &#A3D0F2&lSection 5: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 5: {{timer::formatTime(stage5PB[user])}}
+        @player &#A3D0F2&lSection 5: &#D3D6E0{{timer::formatTime(stage5PB[user])}}
     @fi
     @if stage6PB[user] == 0
-        @player &#D3D6E0Section 6: Not beaten yet.
+        @player &#85C68B&lSection 6: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 6: {{timer::formatTime(stage6PB[user])}}
+        @player &#85C68B&lSection 6: &#D3D6E0{{timer::formatTime(stage6PB[user])}}
     @fi
     @if stage7PB[user] == 0
-        @player &#D3D6E0Section 7: Not beaten yet.
+        @player &#ff67c5&lSection 7: &#D3D6E0Not beaten yet.
     @else
-        @player &#D3D6E0Section 7: {{timer::formatTime(stage7PB[user])}}
+        @player &#ff67c5&lSection 7: &#D3D6E0{{timer::formatTime(stage7PB[user])}}
     @fi
     @player
-    @if stage8PB[user] == 0
-        @player &#D3D6E0Sum of Best: N/A
+    @if stage8PB[user] == 0 && numberCompletions[user] == 0
+        @player &#D3D6E0&lSum of Best: &#D3D6E0N/A
     @else
-        @player &#D3D6E0Sum of Best: {{timer::formatTime(stage8PB[user])}}
+        @player &#D3D6E0&lSum of Best: &#D3D6E0{{timer::formatTime(stage8PB[user])}}
     @fi
     @player
     @chatscript 180s group10 pcStats(0, user, player)
@@ -963,42 +1055,56 @@
         @player &#ffc71d✯ Certified Trackpad Victor!
     @fi
     @player
-    @player &#D3D6E0Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @if progress100[user] >= 100.0
+        @player &#D3D6E0Progress to 100% completion: &a&l100.0%
+    @else
+        @player &#D3D6E0Progress to 100% completion: &#8596A6&l{{Int(progress100[user] * 10) / 10}}.{{Int(progress100[user] * 10) % 10}}%
+    @fi
     @player
     # (20%) Even Harder Hat Completion: Not Completed
     # (20%) Cosmetics Unlocked: xx/12
     # (20%) Secrets Found: xx/24
     # (20%) Secrets Completed: xx/24
-    # (20%) Style Points Unlocked: xxx/3500
+    # (20%) Style Points Unlocked: xxx/4000
     
-    @if numberCompletionsMaster >= 1
-        @player &#D3D6E020/20% Even Harder Hat: &aCompleted ✔
+    @if numberCompletionsMaster[user] >= 1
+        @player &#D3D6E010/10% Even Harder Hat: &a&lCompleted ✔
     @else
-        @player &#D3D6E00.0/20% Even Harder Hat: &cNot Completed ✕
+        @player &#D3D6E00.0/10% Even Harder Hat: &cNot Completed ✕
+    @fi
+
+    @if numberCompletionsSoulLink[user] >= 1
+        @player &#D3D6E010/10% Harder Hats: &a&lCompleted ✔
+    @else
+        @player &#D3D6E00.0/10% Harder Hats: &cNot Completed ✕
     @fi
 
     @if cosmeticsUnlocked[user].sum() == 12
-        @player &#D3D6E020/20% Cosmetics Unlocked: &a12/12 ✔
+        @player &#D3D6E020/20% Cosmetics Unlocked: &a&l12/12 ✔
     @else
         @player &#D3D6E0{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) / 10}}.{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) % 10}}/20% Cosmetics Unlocked: &{{colorList[Int(cosmeticsUnlocked[user].sum())]}}{{cosmeticsUnlocked[user].sum()}}/12  ✕
     @fi
 
-    @if secretsFoundList[user].sum() == 25
-        @player &#D3D6E020/20% Secrets Found: &a25/25 ✔
+    @if secretsFound == 25
+        @player &#D3D6E020/20% Secrets Found: &a&l25/25 ✔
     @else
-        @player &#D3D6E0{{Int(((Float(secretsFoundList[user].sum()) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsFoundList[user].sum()) / Float(25)) * 20) * 10) % 10}}/20% Secrets Found: &{{colorList[math::floor(Double(Float(secretsFoundList[user].sum() * 11) / 25))]}}{{secretsFoundList[user].sum()}}/25  ✕
+        @player &#D3D6E0{{Int(((Float(secretsFound) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsFound) / Float(25)) * 20) * 10) % 10}}/20% Secrets Found: &{{colorList[math::floor(Double(Float(secretsFound * 11) / 25))]}}{{secretsFound}}/25  ✕
     @fi
 
-    @if secretsCompletedList[user].sum() == 25
-        @player &#D3D6E020/20% Secrets Completed: &a25/25 ✔
+    @if secretsCompleted == 25
+        @player &#D3D6E020/20% Secrets Completed: &a&l25/25 ✔
     @else
-        @player &#D3D6E0{{Int(((Float(secretsCompletedList[user].sum()) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsCompletedList[user].sum()) / Float(25)) * 20) * 10) % 10}}/20% Secrets Completed: &{{colorList[math::floor(Double(Float(secretsCompletedList[user].sum() * 11) / 25))]}}{{secretsCompletedList[user].sum()}}/25  ✕
+        @player &#D3D6E0{{Int(((Float(secretsCompleted) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsCompleted) / Float(25)) * 20) * 10) % 10}}/20% Secrets Completed: &{{colorList[math::floor(Double(Float(secretsCompleted * 11) / 25))]}}{{secretsCompleted}}/25  ✕
     @fi
 
-    @if swagPoints[user] == 3500
-        @player &#D3D6E020/20% Style Points: &a3500/3500 ✔
+    @if swagPoints[user] == 4000
+        @player &#D3D6E020/20% Style Points: &a&l4,000/4,000 ✔
+    @elseif stylePointPrestiges[user] == 1
+        @player &#D3D6E020/20% Style Points: &a&l{{stylePointPrestiges[user]}} Prestige ✔
+    @elseif stylePointPrestiges[user] > 1
+        @player &#D3D6E020/20% Style Points: &a&l{{stylePointPrestiges[user]}} Prestiges ✔
     @else
-        @player &#D3D6E0{{Int(((Float(swagPoints[user]) / Float(3500)) * 20) * 10) / 10}}.{{Int(((Float(swagPoints[user]) / Float(3500)) * 20) * 10) % 10}}/20% Style Points: &{{colorList[Int((Float(swagPoints[user]) / Float(3500)) * 12)]}}{{swagPoints[user]}}/3500  ✕
+        @player &#D3D6E0{{Int(((Float(swagPoints[user]) / Float(4000)) * 20) * 10) / 10}}.{{Int(((Float(swagPoints[user]) / Float(4000)) * 20) * 10) % 10}}/20% Style Points: &{{colorList[Int((Float(swagPoints[user]) / Float(4000)) * 12)]}}{{formatNumber(String(swagPoints[user]))}}/4,000  ✕
     @fi
     @player
     @chatscript 180s group110 pcStats(0, user, player)

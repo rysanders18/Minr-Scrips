@@ -36,6 +36,7 @@
             @var ensureBlockSelection(i, player)
             @var stage[player] = 0
             @var player.teleport(allPositions[i])
+            @bypass attribute @s minecraft:entity_interaction_range base reset
             @var resetBlocks(player, 64)
             @bypass playsound minecraft:entity.enderman.teleport master @s 
 

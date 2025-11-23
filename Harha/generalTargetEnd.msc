@@ -1,4 +1,4 @@
-# generalTargetEnd(Block block, Int[] directions, Int level, Player player)
+# generalTargetEnd(Block block, Int[] directions, Int level, Player player) https://paste.minr.org/wijududoda
 @using Harha
 @fast
 
@@ -8,33 +8,6 @@
 @fi
 
 @delay 1
-
-# Handles cosmetics
-@if level != 62
-    @if cosmeticSwap == true
-        @if (grateList.contains(blockSelection))
-            @var cosmeticCopper(player)
-        @elseif (coralList.contains(blockSelection))
-            @var cosmeticCoral(player)
-        @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
-            @var cosmeticCoolGlass(player)
-        @elseif (woolList.contains(blockSelection))
-            @var cosmeticWool(player)
-        @elseif (glassList.contains(blockSelection)) && coolGlass == false
-            @var cosmeticGlass(player)
-        @elseif (spongeList.contains(blockSelection))
-            @var cosmeticSponge(player)
-        @elseif (leafList.contains(blockSelection))
-            @var cosmeticLeaf(player)
-        @elseif (obsidianList.contains(blockSelection))
-            @var cosmeticObsidian(player)
-        @elseif (oreList.contains(blockSelection))
-            @var cosmeticOre(player)
-        @elseif (pumpkinList.contains(blockSelection))
-            @var cosmeticPumpkin(player)
-        @fi
-    @fi
-@fi
 
 @define Int[] endDirectionsX = Int[]
 @define Int[] endDirectionsY = Int[]
@@ -90,11 +63,42 @@
     @if adjacentBlock.getBlockType().toLowerCase() != "air"
         
         @var totalBlocks[player] += 1
-        @var top100Function(player, 0)
+        @if sessionBlocks[player] % Int(math::random(5.0D, 8.0D)) == 0
+            @var top100Function(player, 0)
+        @fi
         @var sessionBlocks[player] += 1
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
         @var blocksThisStageGlobal[level] += 1
+
+        # Handles cosmetics
+        @if level != 62
+            @if cosmeticSwap == true
+                @if (grateList.contains(blockSelection))
+                    @var cosmeticCopper(player)
+                @elseif (coralList.contains(blockSelection))
+                    @var cosmeticCoral(player)
+                @elseif coolGlass == true && (coolGlassList.contains(blockSelection))
+                    @var cosmeticCoolGlass(player)
+                @elseif (woolList.contains(blockSelection))
+                    @var cosmeticWool(player)
+                @elseif (glassList.contains(blockSelection)) && coolGlass == false
+                    @var cosmeticGlass(player)
+                @elseif (spongeList.contains(blockSelection))
+                    @var cosmeticSponge(player)
+                @elseif (leafList.contains(blockSelection))
+                    @var cosmeticLeaf(player)
+                @elseif (obsidianList.contains(blockSelection))
+                    @var cosmeticObsidian(player)
+                @elseif (oreList.contains(blockSelection))
+                    @var cosmeticOre(player)
+                @elseif (pumpkinList.contains(blockSelection))
+                    @var cosmeticPumpkin(player)
+                @elseif (paleGardenList.contains(blockSelection))
+                    @var cosmeticPaleGarden(player)
+                @fi
+            @fi
+        @fi
 
         @if player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
             @var sectionBlocksPlacedMaster[player][level] += 1

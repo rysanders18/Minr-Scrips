@@ -1,0 +1,243 @@
+# master import for pesky region bullshit
+
+@using Harha
+
+# s3
+@bypass /s i w -9177 93 9674 Theta https://paste.minr.org/atuteyapen
+@bypass /s i w -9177 93 9675 Theta https://paste.minr.org/atuteyapen
+@bypass /s i w -9176 93 9675 Theta https://paste.minr.org/atuteyapen
+
+# s5
+@bypass /s i w -9180 93 9664 Theta https://paste.minr.org/zafiseboyo
+@bypass /s i w -9181 93 9664 Theta https://paste.minr.org/zafiseboyo
+@bypass /s i w -9181 93 9665 Theta https://paste.minr.org/zafiseboyo
+
+# s6
+@bypass /s i w -9193 94 9663 Theta https://paste.minr.org/kovubufotu
+@bypass /s i w -9193 94 9664 Theta https://paste.minr.org/kovubufotu
+@bypass /s i w -9192 94 9664 Theta https://paste.minr.org/kovubufotu
+@bypass /s i w -9193 94 9665 Theta https://paste.minr.org/kovubufotu
+@bypass /s i w -9194 94 9665 Theta https://paste.minr.org/kovubufotu
+@bypass /s i w -9194 94 9666 Theta https://paste.minr.org/kovubufotu
+
+# s7
+@bypass /s i w -9196 95 9646 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9198 95 9649 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9197 95 9648 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9197 95 9647 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9196 95 9646 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9194 95 9645 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9195 95 9644 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9196 95 9644 Theta https://paste.minr.org/uvisebobog
+@bypass /s i w -9196 96 9643 Theta https://paste.minr.org/uvisebobog
+
+# s8
+@bypass /s i w -9176 95 9638 Theta https://paste.minr.org/iboruqeqay
+@bypass /s i w -9176 95 9639 Theta https://paste.minr.org/iboruqeqay
+@bypass /s i w -9175 95 9639 Theta https://paste.minr.org/iboruqeqay
+
+# SECTION 2
+
+# JUMP 1
+@bypass /s i w -9144 93 9665 Theta https://paste.minr.org/uyekojenot
+@bypass /s i w -9145 93 9664 Theta https://paste.minr.org/uyekojenot
+@bypass /s i w -9145 93 9665 Theta https://paste.minr.org/uyekojenot
+
+# JUMP 2
+@bypass /s i w -9122 92 9665 Theta https://paste.minr.org/eviperosup
+@bypass /s i w -9122 92 9664 Theta https://paste.minr.org/eviperosup
+@bypass /s i w -9121 92 9664 Theta https://paste.minr.org/eviperosup
+
+# JUMP 3
+@bypass /s i w -9117 90 9680 Theta https://paste.minr.org/ehawasoben
+@bypass /s i w -9117 90 9679 Theta https://paste.minr.org/ehawasoben
+@bypass /s i w -9118 90 9679 Theta https://paste.minr.org/ehawasoben
+
+# JUMP 4
+@bypass /s i w -9136 91 9673 Theta https://paste.minr.org/mafafujaxe
+@bypass /s i w -9135 91 9673 Theta https://paste.minr.org/mafafujaxe
+@bypass /s i w -9135 91 9672 Theta https://paste.minr.org/mafafujaxe
+
+@bypass /s i w -9135 90 9672 Theta https://paste.minr.org/mafafujaxe
+@bypass /s i w -9134 90 9672 Theta https://paste.minr.org/mafafujaxe
+@bypass /s i w -9134 90 9671 Theta https://paste.minr.org/mafafujaxe
+
+# JUMP 5
+@bypass /s i w -9129 91 9690 Theta https://paste.minr.org/aralafepaz
+@bypass /s i w -9130 91 9690 Theta https://paste.minr.org/aralafepaz
+@bypass /s i w -9130 91 9691 Theta https://paste.minr.org/aralafepaz
+
+# SECTION 3
+
+# JUMP 1
+@bypass /s i w -9127 95 9637 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9126 95 9637 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9126 95 9638 Theta https://paste.minr.org/yozakefiji
+
+@bypass /s i w -9124 95 9633 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9124 95 9634 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9123 95 9634 Theta https://paste.minr.org/yozakefiji
+
+@bypass /s i w -9119 95 9638 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9119 95 9637 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9118 95 9637 Theta https://paste.minr.org/yozakefiji
+
+@bypass /s i w -9117 95 9635 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9117 95 9636 Theta https://paste.minr.org/yozakefiji
+@bypass /s i w -9116 95 9636 Theta https://paste.minr.org/yozakefiji
+
+# JUMP 2
+@bypass /s i w -9111 97 9630 Theta https://paste.minr.org/exinovopak
+@bypass /s i w -9114 97 9619 Theta https://paste.minr.org/exinovopak
+@bypass /s i w -9114 97 9617 Theta https://paste.minr.org/exinovopak
+@bypass /s i w -9113 97 9617 Theta https://paste.minr.org/exinovopak
+@bypass /s i w -9113 97 9616 Theta https://paste.minr.org/exinovopak
+
+# JUMP 4
+@bypass /s i w -9143 97 9624 Theta https://paste.minr.org/ofetoxuwar
+@bypass /s i w -9144 97 9624 Theta https://paste.minr.org/ofetoxuwar
+@bypass /s i w -9144 97 9625 Theta https://paste.minr.org/ofetoxuwar
+@bypass /s i w -9143 97 9625 Theta https://paste.minr.org/ofetoxuwar
+
+
+# # JUMP 5
+
+# IGNORE THESE ONES IF YOU WANT TO ALLOW STANDING THE AURA FROG POLE:
+
+@bypass /s i w -9150 96 9620 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9149 96 9620 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9149 96 9619 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9150 96 9619 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9149 96 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9148 96 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9147 96 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9147 96 9614 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9141 96 9616 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9141 96 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9140 96 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9139 97 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9140 97 9615 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9140 97 9616 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9141 97 9609 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9141 97 9610 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9142 97 9610 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9143 96 9611 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9142 96 9611 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9142 96 9612 Theta https://paste.minr.org/xokemurune
+@bypass /s i w -9144 96 9611 Theta https://paste.minr.org/xokemurune
+
+# JUMP 6
+
+@bypass /s i w -9123 97 9605 Theta https://paste.minr.org/cacedulogu
+@bypass /s i w -9124 97 9605 Theta https://paste.minr.org/cacedulogu
+@bypass /s i w -9124 97 9606 Theta https://paste.minr.org/cacedulogu
+
+# JUMP 7
+
+@bypass /s i w -9114 96 9595 Theta https://paste.minr.org/ijuhiruqex
+@bypass /s i w -9112 96 9595 Theta https://paste.minr.org/ijuhiruqex
+
+# JUMP 8
+
+@bypass /s i w -9131 93 9589 Theta https://paste.minr.org/vadedahuto
+@bypass /s i w -9130 93 9589 Theta https://paste.minr.org/vadedahuto
+
+# JUMP 9
+
+@bypass /s i w -9136 95 9591 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9136 95 9592 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9137 95 9592 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9135 95 9591 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9135 95 9590 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9143 95 9594 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9143 95 9595 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9144 95 9595 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9142 95 9598 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9142 95 9597 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9143 95 9597 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9143 95 9596 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9144 95 9596 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9145 95 9596 Theta https://paste.minr.org/korubehake
+@bypass /s i w -9143 95 9597 Theta https://paste.minr.org/korubehake
+
+# JUMP 10
+
+@bypass /s i w -9146 95 9591 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9146 95 9590 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9147 95 9590 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9147 95 9589 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9148 95 9589 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9147 94 9573 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9147 94 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9146 94 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9158 94 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9158 94 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9159 94 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9152 95 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9152 95 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9153 95 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9155 95 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9154 95 9575 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9155 95 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9156 95 9574 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9156 95 9573 Theta https://paste.minr.org/uvapepidur
+@bypass /s i w -9156 95 9572 Theta https://paste.minr.org/uvapepidur
+
+# SECTION 5
+# JUMP 1
+@bypass /s i w -9152 100 9556 Theta https://paste.minr.org/pepuwataxe
+@bypass /s i w -9153 100 9555 Theta https://paste.minr.org/pepuwataxe
+@bypass /s i w -9152 100 9558 Theta https://paste.minr.org/pepuwataxe
+@bypass /s i w -9153 100 9559 Theta https://paste.minr.org/pepuwataxe
+
+# JUMP 2
+@bypass /s i w -9129 100 9565 Theta https://paste.minr.org/obewokezin
+@bypass /s i w -9130 100 9564 Theta https://paste.minr.org/obewokezin
+@bypass /s i w -9124 100 9566 Theta https://paste.minr.org/obewokezin
+@bypass /s i w -9125 100 9565 Theta https://paste.minr.org/obewokezin
+
+# JUMP 3
+@bypass /s i w -9106 100 9561 Theta https://paste.minr.org/unevijuquy
+@bypass /s i w -9105 100 9560 Theta https://paste.minr.org/unevijuquy
+
+# JUMP 4
+@bypass /s i w -9094 100 9549 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9093 100 9548 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9095 100 9548 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9096 100 9547 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9092 101 9544 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9091 101 9543 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9092 100 9543 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9091 100 9542 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9094 101 9542 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9095 101 9541 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9094 100 9541 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9095 100 9540 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9093 100 9535 Theta https://paste.minr.org/lapuqagata
+@bypass /s i w -9092 100 9534 Theta https://paste.minr.org/lapuqagata
+
+# JUMP 5
+@bypass /s i w -9100 100 9537 Theta https://paste.minr.org/edisibiwoc
+@bypass /s i w -9099 100 9536 Theta https://paste.minr.org/edisibiwoc
+@bypass /s i w -9109 100 9538 Theta https://paste.minr.org/edisibiwoc
+@bypass /s i w -9110 100 9539 Theta https://paste.minr.org/edisibiwoc
+
+# JUMP 6
+@bypass /s i w -9099 99 9554 Theta https://paste.minr.org/jusawelawo
+@bypass /s i w -9098 99 9555 Theta https://paste.minr.org/jusawelawo
+
+# JUMP 7
+@bypass /s i w -9126 101 9557 Theta https://paste.minr.org/ibijopakon
+@bypass /s i w -9125 101 9556 Theta https://paste.minr.org/ibijopakon
+@bypass /s i w -9141 101 9553 Theta https://paste.minr.org/ibijopakon
+@bypass /s i w -9140 101 9554 Theta https://paste.minr.org/ibijopakon
+
+# JUMP 8
+@bypass /s i w -9121 102 9537 Theta https://paste.minr.org/epukitaxes
+@bypass /s i w -9122 102 9536 Theta https://paste.minr.org/epukitaxes
+
+# JUMP 9
+@bypass /s i w -9118 100 9514 Theta https://paste.minr.org/ibusidowop
+@bypass /s i w -9119 100 9515 Theta https://paste.minr.org/ibusidowop
+@bypass /s i w -9118 99 9515 Theta https://paste.minr.org/ibusidowop
+@bypass /s i w -9119 99 9516 Theta https://paste.minr.org/ibusidowop

@@ -1,4 +1,4 @@
-# harhaafter07-11
+# harhaafter07-11 https://paste.minr.org/iyojifoyej
 # gives blocks and runs handleStylePoints function
 # handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
 
@@ -187,11 +187,16 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
-    @fi
+    # @fi
 
 
 @done
@@ -248,6 +253,11 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
     # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
@@ -278,6 +288,11 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
 
@@ -308,18 +323,23 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
-    @fi
+    # @fi
 
 @done
 
 @bypass /title @s subtitle [""]
 @bypass /title @s title [""]
 
-@delay 1s
+@delay 3
 
 
 
@@ -409,11 +429,16 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
-    @fi
+    # @fi
 
 
 @done
@@ -459,6 +484,11 @@
 
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
     # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
@@ -489,6 +519,11 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
 
@@ -519,18 +554,23 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
-    @fi
+    # @fi
 
 @done
 
 @bypass /title @s subtitle [""]
 @bypass /title @s title [""]
 
-@delay 1s
+@delay 3
 
 
 
@@ -576,12 +616,14 @@
 
 
 
-
-
 @var text = ""
 @var subtext = ""
 
-@var title1text = "Style Points: {{formatNumber(String(swagPoints[player]))}}/3,500"
+@if stylePointPrestiges[player] >= 1
+    @var title1text = "Style Prestiges: {{formatNumber(String(stylePointPrestiges[player]))}}"
+@else
+    @var title1text = "Style Points: {{formatNumber(String(swagPoints[player]))}}/4,000"
+@fi
 @var title1subtext = "Cosmetics Unlocked: {{cosmeticsUnlocked[player].sum()}}"
 
 # # TODO: Change == to <
@@ -625,11 +667,16 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
-    @fi
+    # @fi
 
 
 @done
@@ -673,6 +720,11 @@
 
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
     # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
@@ -703,6 +755,11 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
 
@@ -733,11 +790,16 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
-    @fi
+    # @fi
 
 @done
 
@@ -759,7 +821,7 @@
 
 
 
-@delay 1s
+@delay 3
 
 
 
@@ -833,11 +895,16 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
-    @fi
+    # @fi
 
 
 @done
@@ -873,6 +940,11 @@
 
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
     # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
@@ -908,6 +980,11 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
 
@@ -938,15 +1015,20 @@
         @fi
     @done
     @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
-    @if musicEnabled[player] == false
+    # @if musicEnabled[player] == false
         @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
-    @fi
+    # @fi
 
 @done
 
 @bypass /title @s subtitle [""]
 @bypass /title @s title [""]
 
-@delay 1s
+@delay 3

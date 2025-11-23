@@ -1,4 +1,4 @@
-# handlePlacement(Block block, Int height, Player player)
+# handlePlacement(Block block, Int height, Player player) https://paste.minr.org/widiyibute
 
 
 @fast
@@ -15,8 +15,8 @@
 @elseif temporaryBlockSelection == "crying_obsidian"
     @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
 @elseif temporaryBlockSelection == "sculk_catalyst"
-    @if (totalFalls / 1000) <= 99
-        @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls / 1000}}
+    @if (soulLinkPlayersPB[player]) <= 9
+        @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{10 * soulLinkPlayersPB[player] - 10}}
     @else
         @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
         @bypass /particle minecraft:sculk_charge_pop {{x}} {{y + 1.15}} {{z}} 0.3 0.15 0.3 0.1 10

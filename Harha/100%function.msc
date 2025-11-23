@@ -1,0 +1,55 @@
+# the100function(Player player) https://paste.minr.org/upipejifam
+
+@fast
+@using Harha
+
+@define Float oldProgress100 = progress100[player]
+@var calculate100(player)
+@if progress100[player] >= 100.0 && oldProgress100 < 100.0
+    @bypass /tellraw @a {{slytools::convertTextToTellraw("&#ffd428⚠&l {{player}} &#ffaa00h&#ffae03a&#ffb106s &#ffb5091&#ffb80d0&#ffbc110&#ffbf14% &#ffc217c&#ffc61bo&#ffc91em&#ffcd21p&#ffd025l&#ffd428e&#ffd72bt&#ffda2fe&#ffde32d &#ffe135&lH&#ffe439&la&#ffe83c&lr&#ffeb40&ld&#ffee43&le&#fff247&lr &#fff54a&lH&#fff84e&la&#fffc51&lt&#ffff55&l! &#ffd428⛏")}}
+    @bypass /prefix set {{player}} 2d <#ffaa00>⚠<#ffc015>⛏<#ffd52a>⚠<#ffea3f>⛏<#ffff55>⚠ 
+
+    @bypass execute at {{player}} run particle minecraft:explosion_emitter ~ ~ ~ 2 2 2 1 10
+    @bypass execute at {{player}} run playsound minecraft:entity.generic.explode master @a[distance=..20] ~ ~ ~ 2 1
+
+    @for Int i in list::range(1, 14)
+        @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[7 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[12 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[16 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[19 - 8 + i]}}
+        @var delay(i + 1)
+        @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[7 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[12 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[16 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[19 - 8 + i]}}
+        @var delay(i + 1)
+        @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[7 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[12 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[16 - 8 + i]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 {{musicNotes[19 - 8 + i]}}
+        @var delay(i + 1)
+    @done
+
+    @bypass execute at {{player}} run particle minecraft:explosion_emitter ~ ~ ~ 2 2 2 1 10
+    @bypass execute at {{player}} run playsound minecraft:entity.generic.explode master @a[distance=..20] ~ ~ ~ 2 1
+
+
+    @for Int i in list::range(0, 60)
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[0]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[5]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[9]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[12]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[17]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[21]}}
+        @bypass playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ {{1 - Float(i) / 60}} {{musicNotes[24]}}
+        @if i % 4 == 0 && i < 41
+            @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+            @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+            @bypass /execute at {{player}} run summon firework_rocket ~{{2 - math::random(0D, 4D)}} ~ ~{{2 - math::random(0D, 4D)}} {LifeTime:{{math::random(10D, 20D)}},FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @fi
+        @delay 1
+    @done
+@fi

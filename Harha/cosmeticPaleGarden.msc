@@ -1,0 +1,13 @@
+# cosmeticPaleGarden(Player player) https://paste.minr.org/isovorenes
+
+@fast
+@using Harha
+
+@var leafNumber[player] = Int(math::random(0.0D, 8.0D))
+
+@var blockSelection[player] = paleGardenList[leafNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1
+@var lastLeafNumber[player] = leafNumber[player]

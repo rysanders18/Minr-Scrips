@@ -64,6 +64,7 @@
     relative Long statistic
     relative Boolean ifYoureHavingTrouble = false
     relative Boolean enteredEndThisRun
+    relative Int stylePointPrestiges = 0
 
     Int leaderboardType = 0
     Int leaderboardPage =
@@ -222,6 +223,7 @@
 
     # Int[][] allThresholds = Int[][[], [], [], [1], [1], [], [], [], [2, 3], [3, 4], [], [4, 5, 6, 7, 8], [5, 6, 7, 8], [2, 3], [5], [3], [], [4, 5], [], [], [], [2], [], [2], [], [], [], [6, 7, 8, 9, 10, 11, 12], [], [], [1, 2, 3], [], [], [], [], [3, 4, 5], [], [4], [], [], [2], [3], [2, 3, 4], [3], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [5, 6, 7], [2], [], [], [], [], [], [], [], [], []]
 
+    # 100 total
     Int[] l101Thresholds = Int[0]
     Int[] l101Rewards = Int[100]
     Int l101StartIndex = 0
@@ -234,12 +236,14 @@
     Int[] l103Rewards = Int[]
     Int l103StartIndex = 0
 
+    # 30 total
     Int[] l104Thresholds = Int[1]
     Int[] l104Rewards = Int[30]
     Int l104StartIndex = 1
 
+    # 110 total
     Int[] l105Thresholds = Int[1]
-    Int[] l105Rewards = Int[120]
+    Int[] l105Rewards = Int[110]
     Int l105StartIndex = 2
 
     Int[] l106Thresholds = Int[]
@@ -254,38 +258,45 @@
     Int[] l108Rewards = Int[]
     Int l108StartIndex = 0
 
+    # 100 total
     Int[] l109Thresholds = Int[2, 3]
-    Int[] l109Rewards = Int[90, 30]
+    Int[] l109Rewards = Int[70, 30]
     Int l109StartIndex = 3
 
     Int[] l110Thresholds = Int[]
     Int[] l110Rewards = Int[]
     Int l110StartIndex = 0
 
+    # 60 total
     Int[] l201Thresholds = Int[3, 4]
-    Int[] l201Rewards = Int[30, 40]
+    Int[] l201Rewards = Int[30, 30]
     Int l201StartIndex = 5
 
     Int[] l202Thresholds = Int[] 
     Int[] l202Rewards = Int[]
     Int l202StartIndex = 0
 
+    # 340 total, from 450
     Int[] l203Thresholds = Int[4, 5, 6, 7, 8]
-    Int[] l203Rewards = Int[50, 130, 100, 10, 10]
+    Int[] l203Rewards = Int[80, 140, 100, 10, 10]
     Int l203StartIndex = 7
 
+    # 180 total, from 220
     Int[] l204Thresholds = Int[5, 6, 7, 8]
-    Int[] l204Rewards = Int[120, 50, 30, 20]
+    Int[] l204Rewards = Int[80, 50, 30, 20]
     Int l204StartIndex = 12
 
+    # 50 total, from 60
     Int[] l205Thresholds = Int[2, 3]
-    Int[] l205Rewards = Int[40, 20]
+    Int[] l205Rewards = Int[30, 20]
     Int l205StartIndex = 16
 
+    # 70 total, from 60
     Int[] l206Thresholds = Int[5]
-    Int[] l206Rewards = Int[60]
+    Int[] l206Rewards = Int[70]
     Int l206StartIndex = 18
 
+    # 60 total
     Int[] l207Thresholds = Int[3]
     Int[] l207Rewards = Int[60]
     Int l207StartIndex = 19
@@ -294,8 +305,9 @@
     Int[] l208Rewards = Int[]
     Int l208StartIndex = 0
 
+    # 120 total. from 100
     Int[] l209Thresholds = Int[4, 5]
-    Int[] l209Rewards = Int[60, 40]
+    Int[] l209Rewards = Int[80, 40]
     Int l209StartIndex = 20
 
     Int[] l210Thresholds = Int[] 
@@ -310,6 +322,7 @@
     Int[] l302Rewards = Int[]
     Int l302StartIndex = 0
 
+    # 20 total
     Int[] l303Thresholds = Int[2]
     Int[] l303Rewards = Int[20]
     Int l303StartIndex = 22
@@ -318,6 +331,7 @@
     Int[] l304Rewards = Int[]
     Int l304StartIndex = 0
 
+    # 30 total
     Int[] l305Thresholds = Int[2]
     Int[] l305Rewards = Int[30]
     Int l305StartIndex = 23
@@ -338,8 +352,9 @@
     Int[] l309Rewards = Int[]
     Int l309StartIndex = 0
 
+    # 360 total, from 350
     Int[] l310Thresholds = Int[6, 7, 8, 9, 10, 11, 12]
-    Int[] l310Rewards = Int[190, 60, 20, 20, 20, 20, 20]
+    Int[] l310Rewards = Int[180, 70, 30, 20, 20, 20, 20]
     Int l310StartIndex = 24
 
     Int[] l401Thresholds = Int[] 
@@ -350,8 +365,9 @@
     Int[] l402Rewards = Int[]
     Int l402StartIndex = 0
 
+    # 80 total, from 50
     Int[] l403Thresholds = Int[1, 2, 3]
-    Int[] l403Rewards = Int[30, 10, 10]
+    Int[] l403Rewards = Int[40, 30, 10]
     Int l403StartIndex = 31
 
     Int[] l404Thresholds = Int[] 
@@ -370,6 +386,7 @@
     Int[] l407Rewards = Int[]
     Int l407StartIndex = 0
 
+    # 320 total
     Int[] l408Thresholds = Int[3, 4, 5]
     Int[] l408Rewards = Int[200, 80, 40]
     Int l408StartIndex = 34
@@ -390,18 +407,22 @@
     Int[] l502Rewards = Int[]
     Int l502StartIndex = 0
 
+    # 30 total,  from 40
     Int[] l503Thresholds = Int[2]
-    Int[] l503Rewards = Int[40]
+    Int[] l503Rewards = Int[30]
     Int l503StartIndex = 38
 
+    # 50 total, from 60
     Int[] l504Thresholds = Int[3]
-    Int[] l504Rewards = Int[60]
+    Int[] l504Rewards = Int[50]
     Int l504StartIndex = 39
 
+    # 180 total, from 150
     Int[] l505Thresholds = Int[2, 3, 4]
-    Int[] l505Rewards = Int[100, 40, 10]
+    Int[] l505Rewards = Int[120, 50, 10]
     Int l505StartIndex = 40
 
+    # 140 total
     Int[] l506Thresholds = Int[3]
     Int[] l506Rewards = Int[140]
     Int l506StartIndex = 43
@@ -418,8 +439,9 @@
     Int[] l509Rewards = Int[]
     Int l509StartIndex = 0
 
+    # 200 total, from 150 REVISIT
     Int[] l510Thresholds = Int[4] 
-    Int[] l510Rewards = Int[150]
+    Int[] l510Rewards = Int[200]
     Int l510StartIndex = 44
 
     Int[] l601Thresholds = Int[] 
@@ -434,16 +456,18 @@
     Int[] l603Rewards = Int[]
     Int l603StartIndex = 0
 
+    # 120 total, from 100
     Int[] l604Thresholds = Int[1] 
-    Int[] l604Rewards = Int[100]
+    Int[] l604Rewards = Int[120]
     Int l604StartIndex = 45
 
     Int[] l605Thresholds = Int[] 
     Int[] l605Rewards = Int[]
     Int l605StartIndex = 0
 
+    # total 370
     Int[] l606Thresholds = Int[2] 
-    Int[] l606Rewards = Int[380]
+    Int[] l606Rewards = Int[370]
     Int l606StartIndex = 46
 
     Int[] l607Thresholds = Int[] 
@@ -462,12 +486,14 @@
     Int[] l610Rewards = Int[]
     Int l610StartIndex = 0
 
+    # 360 total, from 300 
     Int[] l701Thresholds = Int[5, 6, 7]
-    Int[] l701Rewards = Int[130, 100, 70]
+    Int[] l701Rewards = Int[180, 100, 80]
     Int l701StartIndex = 47
 
+    # 180 total, from 150
     Int[] l702Thresholds = Int[2]
-    Int[] l702Rewards = Int[200]
+    Int[] l702Rewards = Int[180]
     Int l702StartIndex = 50
     
     Int[] l703Thresholds = Int[] 
@@ -490,8 +516,9 @@
     Int[] l707Rewards = Int[]
     Int l707StartIndex = 0
         
+    # 340 total, from 250
     Int[] l708Thresholds = Int[4] 
-    Int[] l708Rewards = Int[250]
+    Int[] l708Rewards = Int[340]
     Int l708StartIndex = 51
         
     Int[] l709Thresholds = Int[] 
@@ -593,7 +620,7 @@
     # =-=-=-=-=-=-=-=-=-=-=-=-=-=
 
     String[] allLevels = String["1-01", "1-02", "1-03", "1-04", "1-05", "1-06", "1-07", "1-08", "1-09", "1-10", "2-01", "2-02", "2-03", "2-04", "2-05", "2-06", "2-07", "2-08", "2-09", "2-10", "3-01", "3-02", "3-03", "3-04", "3-05", "3-06", "3-07", "3-08", "3-09", "3-10", "4-01", "4-02", "4-03", "4-04", "4-05", "4-06", "4-07", "4-08", "4-09", "4-10", "5-01", "5-02", "5-03", "5-04", "5-05", "5-06", "5-07", "5-08", "5-09", "5-10", "6-01", "6-02", "6-03", "6-04", "6-05", "6-06", "6-07", "6-08", "6-09", "6-10", "7-01", "7-02", "7-03", "7-04", "7-05", "7-06", "7-07", "7-08", "7-09", "7-10", "The-End!"]
-    Position[] allPositions = Position[Position(-9199.5, 96.0, 9704.5, 180, 10, "Theta"), Position(-9191.5, 93.0, 9689.5, 180, 10, "Theta"), Position(-9191.5, 96.0, 9675.5, 270, 10, "Theta"), Position(-9171.5, 98.0, 9669.5, 180, 10, "Theta"), Position(-9181.5, 95.0, 9656.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), Position(-9195.5, 97.0, 9656.5, 180, 10, "Theta"), Position(-9186.5, 97.0, 9640.5, 270, 10, "Theta"), Position(-9165.5, 100.0, 9648.5, 0, 10, "Theta"), Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9144.5, 95.0, 9671.5, 180.0, 10.0, "Theta"), Position(-9127.5, 95.0, 9664.5, 270.0, 10.0, "Theta"), Position(-9116.5, 92.0, 9672.5, 0.0, 10.0, "Theta"), Position(-9126.0, 92.0, 9673.5, 450.0, 10.0, "Theta"), Position(-9137.5, 94.0, 9691.0, 270.0, 10.0, "Theta"), Position(-9123.5, 94.0, 9694.5, 270.0, 10.0, "Theta"), Position(-9109.5, 95.0, 9689.5, 180.0, 10.0, "Theta"), Position(-9107.5, 96.0, 9672.5, 180.0, 10.0, "Theta"), Position(-9114.5, 93.0, 9655.5, 90.0, 10.0, "Theta"), Position(-9132.5, 96.0, 9648.5, 180.0, 10.0, "Theta"), Position(-9129.5, 101.0, 9636.5, 270.0, 10.0, "Theta"), Position(-9112.0, 100.0, 9634.5, 180.0, 10.0, "Theta"), Position(-9120.5, 100.0, 9613.5, 0.0, 10.0, "Theta"), Position(-9128.5, 101.0, 9626.5, 90.0, 10.0, "Theta"), Position(-9148.5, 101.0, 9623.5, 180.0, 10.0, "Theta"), Position(-9145.5, 103.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9112.5, 100.0, 9602.5, 180.0, 10.0, "Theta"), Position(-9113.5, 100.0, 9586.5, 90.0, 10.0, "Theta"), Position(-9131.5, 99.0, 9596.5, 90.0, 10.0, "Theta"), Position(-9146.5, 100.0, 9594.5, 180.0, 10.0, "Theta"), Position(-9199.5, 99.0625, 9607.5, 0.0, 10.0, "Theta"), Position(-9176.5, 93.0, 9614.5, 0.0, 10.0, "Theta"), Position(-9206.5, 82.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9172.5, 73.0, 9613.5, 270.0, 10.0, "Theta"), Position(-9169.5, 71.0, 9632.5, 90.0, 10.0, "Theta"), Position(-9193.5, 71.0, 9632.5, 270.0, 10.0, "Theta"), Position(-9163.5, 73.0, 9622.5, 180.0, 10.0, "Theta"), Position(-9187.5, 79.0, 9604.5, 90.0, 10.0, "Theta"), Position(-9176.5, 92.0, 9626.5, 180.0, 10.0, "Theta"), Position(-9199.5, 98.0, 9619.5, 180.0, 10.0, "Theta"), Position(-9162.5, 101.0, 9557.5, 270.0, 10.0, "Theta"), Position(-9138.5, 101.0, 9566.5, 270.0, 10.0, "Theta"), Position(-9114.5, 102.0, 9563.5, 270.0, 10.0, "Theta"), Position(-9094.5, 102.0, 9553.5, 180.0, 10.0, "Theta"), Position(-9101.5, 101.0, 9529.5, 0.0, 10.0, "Theta"), Position(-9107.5, 99.0, 9555.5, 270.0, 10.0, "Theta"), Position(-9118.5, 104.0, 9554.5, 90.0, 10.0, "Theta"), Position(-9144.5, 104.0, 9538.5, 270.0, 10.0, "Theta"), Position(-9116.5, 101.0, 9526.5, 180.0, 10.0, "Theta"), Position(-9104.5, 103.0, 9508.5, 270.0, 10.0, "Theta"), Position(-9068.5, 95.0, 9533.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9552.5, 270, 10, "Theta"), Position(-9044.5, 96.0, 9558.5, 0, 10, "Theta"), Position(-9051.5, 95.0, 9578.5, 180, 10, "Theta"), Position(-9056.5, 96.0, 9560.5, 90, 10, "Theta"), Position(-9074.5, 96.0, 9562.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9594.5, 90, 10, "Theta"), Position(-9060.5, 96.0, 9600.5, 270, 10, "Theta"), Position(-9045.5, 96.0, 9608.5, 90, 10, "Theta"), Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-4608.5, 90.0, 5191.0, 90, 10, "Theta_the_end"), Position(-4642.5, 93.0, 5170.5, 180, 10, "Theta_the_end"), Position(-4637.5, 91.0, 5131.5, 270, 10, "Theta_the_end"), Position(-4606.0, 93.0, 5124.5, 180, 10, "Theta_the_end"), Position(-4615.5, 86.0, 5095.5, 90, 10, "Theta_the_end"), Position(-4644.5, 92.0, 5102.5, 90, 10, "Theta_the_end"), Position(-4676.5, 91.0, 5111.5, 0.0, 10.0, "Theta_the_end"), Position(-4683.5, 92.0, 5134.5, 0.0, 10.0, "Theta_the_end"), Position(-4705.5, 93.0, 5139.5, 180.0, 10.0, "Theta_the_end"), Position(-4705.5, 94.0, 5100.5, 180.0, 10.0, "Theta_the_end")]
+    Position[] allPositions = Position[Position(-9199.5, 96.0, 9704.5, 180, 10, "Theta"), Position(-9191.5, 93.0, 9689.5, 180, 10, "Theta"), Position(-9191.5, 96.0, 9675.5, 270, 10, "Theta"), Position(-9171.5, 98.0, 9669.5, 180, 10, "Theta"), Position(-9181.5, 95.0, 9656.5, 0, 10, "Theta"), Position(-9188.5, 97.0, 9664.5, 90, 10, "Theta"), Position(-9195.5, 97.0, 9656.5, 180, 10, "Theta"), Position(-9186.5, 97.0, 9640.5, 270, 10, "Theta"), Position(-9165.5, 100.0, 9648.5, 0, 10, "Theta"), Position(-9159.5, 101.0, 9662.5, 0, 10, "Theta"), Position(-9144.5, 95.0, 9671.5, 180.0, 10.0, "Theta"), Position(-9127.5, 95.0, 9664.5, 270.0, 10.0, "Theta"), Position(-9116.5, 92.0, 9672.5, 0.0, 10.0, "Theta"), Position(-9126.0, 92.0, 9673.5, 450.0, 10.0, "Theta"), Position(-9137.5, 94.0, 9691.0, 270.0, 10.0, "Theta"), Position(-9123.5, 94.0, 9694.5, 270.0, 10.0, "Theta"), Position(-9109.5, 95.0, 9689.5, 180.0, 10.0, "Theta"), Position(-9107.5, 96.0, 9672.5, 180.0, 10.0, "Theta"), Position(-9114.5, 93.0, 9655.5, 90.0, 10.0, "Theta"), Position(-9132.5, 96.0, 9648.5, 180.0, 10.0, "Theta"), Position(-9129.5, 101.0, 9636.5, 270.0, 10.0, "Theta"), Position(-9112.0, 100.0, 9634.5, 180.0, 10.0, "Theta"), Position(-9120.5, 100.0, 9613.5, 0.0, 10.0, "Theta"), Position(-9128.5, 101.0, 9626.5, 90.0, 10.0, "Theta"), Position(-9148.5, 101.0, 9623.5, 180.0, 10.0, "Theta"), Position(-9145.5, 103.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9112.5, 100.0, 9602.5, 180.0, 10.0, "Theta"), Position(-9113.5, 100.0, 9586.5, 90.0, 10.0, "Theta"), Position(-9131.5, 99.0, 9596.5, 90.0, 10.0, "Theta"), Position(-9146.5, 100.0, 9594.5, 180.0, 10.0, "Theta"), Position(-9199.5, 99.0625, 9607.5, 0.0, 10.0, "Theta"), Position(-9176.5, 93.0, 9614.5, 0.0, 10.0, "Theta"), Position(-9207.5, 82.0, 9604.5, 270.0, 10.0, "Theta"), Position(-9172.5, 73.0, 9613.5, 270.0, 10.0, "Theta"), Position(-9169.5, 71.0, 9632.5, 90.0, 10.0, "Theta"), Position(-9193.5, 71.0, 9632.5, 270.0, 10.0, "Theta"), Position(-9163.5, 73.0, 9622.5, 180.0, 10.0, "Theta"), Position(-9187.5, 79.0, 9604.5, 90.0, 10.0, "Theta"), Position(-9176.5, 92.0, 9626.5, 180.0, 10.0, "Theta"), Position(-9199.5, 98.0, 9619.5, 180.0, 10.0, "Theta"), Position(-9162.5, 101.0, 9557.5, 270.0, 10.0, "Theta"), Position(-9138.5, 101.0, 9566.5, 270.0, 10.0, "Theta"), Position(-9114.5, 102.0, 9563.5, 270.0, 10.0, "Theta"), Position(-9094.5, 102.0, 9553.5, 180.0, 10.0, "Theta"), Position(-9101.5, 101.0, 9529.5, 0.0, 10.0, "Theta"), Position(-9107.5, 99.0, 9555.5, 270.0, 10.0, "Theta"), Position(-9118.5, 104.0, 9554.5, 90.0, 10.0, "Theta"), Position(-9144.5, 104.0, 9538.5, 270.0, 10.0, "Theta"), Position(-9116.5, 101.0, 9526.5, 180.0, 10.0, "Theta"), Position(-9104.5, 103.0, 9508.5, 270.0, 10.0, "Theta"), Position(-9068.5, 95.0, 9533.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9552.5, 270, 10, "Theta"), Position(-9044.5, 96.0, 9558.5, 0, 10, "Theta"), Position(-9051.5, 95.0, 9578.5, 180, 10, "Theta"), Position(-9056.5, 96.0, 9560.5, 90, 10, "Theta"), Position(-9074.5, 96.0, 9562.5, 0, 10, "Theta"), Position(-9065.5, 96.0, 9594.5, 90, 10, "Theta"), Position(-9060.5, 96.0, 9600.5, 270, 10, "Theta"), Position(-9045.5, 96.0, 9608.5, 90, 10, "Theta"), Position(-9042.5, 95.0, 9615.5, 0, 10, "Theta"), Position(-4608.5, 90.0, 5191.0, 90, 10, "Theta_the_end"), Position(-4642.5, 93.0, 5170.5, 180, 10, "Theta_the_end"), Position(-4637.5, 91.0, 5131.5, 270, 10, "Theta_the_end"), Position(-4606.0, 93.0, 5124.5, 180, 10, "Theta_the_end"), Position(-4615.5, 86.0, 5095.5, 90, 10, "Theta_the_end"), Position(-4644.5, 92.0, 5102.5, 90, 10, "Theta_the_end"), Position(-4676.5, 91.0, 5111.5, 0.0, 10.0, "Theta_the_end"), Position(-4683.5, 92.0, 5134.5, 0.0, 10.0, "Theta_the_end"), Position(-4705.5, 93.0, 5139.5, 180.0, 10.0, "Theta_the_end"), Position(-4705.5, 94.0, 5100.5, 180.0, 10.0, "Theta_the_end")]
     
 
     Int[] directionsX = Int[1, -1, 0, 0, 0, 0]
@@ -668,6 +695,7 @@
     relative Int lastCoralNumber = 0
 
     relative Int[] masterSoftCP = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    relative Int[] masterSLSoftCP = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] cosmeticsUnlocked = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] secretsFoundList = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     relative Int[] secretsCompletedList = Int[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

@@ -1,4 +1,4 @@
-# ensureBlockSelection(Int level, Player player)
+# ensureBlockSelection(Int level, Player player) https://paste.minr.org/jopiqunile
 @using Harha
 @fast
 
@@ -10,7 +10,7 @@
         @var trapdoorSwapped[player] = false
         @var targetSwapped[player] = false
     @fi
-@elseif (level >= 41 && level <= 49) || (level == 40 && iceSwapped[player] == true) || level == 63 || level == 67 || level == 69
+@elseif (level >= 41 && level <= 49) || (level == 40 && iceSwapped[player] == true) || (level == 50 && slimeSwapped[player] == false) || level == 63 || level == 67 || level == 69
     @if blockSelection[player] != "blue_ice"
         @var blockSelection[player] = "blue_ice"
         @var iceSwapped[player] = true
@@ -18,7 +18,7 @@
         @var trapdoorSwapped[player] = false
         @var targetSwapped[player] = false
     @fi
-@elseif (level >= 50 && level <= 59 && slimeSwapped == true)
+@elseif (level >= 51 && level <= 59) || (level == 50 && slimeSwapped[player] == true)
     @if blockSelection[player] != "slime_block"
         @var blockSelection[player] = "slime_block"
         @var iceSwapped[player] = false
