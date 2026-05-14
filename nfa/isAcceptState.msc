@@ -1,0 +1,16 @@
+# Boolean isAcceptState(String blockCoords)
+
+# Checks if a block coordinate represents an accept state (emerald block)
+# Parameters:
+#   - blockCoords: Block coordinates in format "x,y,z"
+# Returns: Boolean true if it's an emerald block 
+
+@using nfa
+@fast
+
+@define String[] coords = blockCoords.split(",")
+@if coords.length() == 3
+    @define Block block = Block(Int(coords[0]), Int(coords[1]), Int(coords[2]), "Theta")
+    @return (block.getBlockType() == "EMERALD_BLOCK" || block.getBlockType() == "VERDANT_FROGLIGHT")
+@fi
+@return false

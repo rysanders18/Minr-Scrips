@@ -1,0 +1,154 @@
+# Boolean isSquareAttacked(Player player, Int sq, Int byColor)
+# Reports whether any piece of `byColor` (0=white, 1=black) attacks
+# `sq` on the current board. Used for legality checks (castling
+# through check, "is my king attacked after this move", etc.).
+# Implementation: for each piece type, check the squares from which
+# that piece type could attack `sq`. Diagonal pawn attacks are
+# asymmetric, so direction depends on byColor. All other pieces
+# are symmetric - we walk outward from sq and ask "is there a
+# piece of the right type/color in this direction".
+# VARIANT RULE: pawns also attack the squares immediately left and
+# right of themselves (because they can capture sideways), so a
+# pawn at sq-1 or sq+1 of either color contributes a lateral
+# attack on sq.
+
+@using rychess
+@fast
+
+@var profIsAttacked[player] = profIsAttacked[player] + 1
+
+@define Int srcFile = sq % 8
+@define Int srcRank = sq / 8
+
+@define Int pawnCode = 1
+@if byColor == 1
+    @var pawnCode = 7
+@fi
+@if byColor == 0
+    @if srcFile > 0 && srcRank > 0
+        @if board[player][sq - 9] == pawnCode
+            @return true
+        @fi
+    @fi
+    @if srcFile < 7 && srcRank > 0
+        @if board[player][sq - 7] == pawnCode
+            @return true
+        @fi
+    @fi
+@else
+    @if srcFile > 0 && srcRank < 7
+        @if board[player][sq + 7] == pawnCode
+            @return true
+        @fi
+    @fi
+    @if srcFile < 7 && srcRank < 7
+        @if board[player][sq + 9] == pawnCode
+            @return true
+        @fi
+    @fi
+@fi
+
+@if srcFile > 0
+    @if board[player][sq - 1] == pawnCode
+        @return true
+    @fi
+@fi
+@if srcFile < 7
+    @if board[player][sq + 1] == pawnCode
+        @return true
+    @fi
+@fi
+
+@define Int knightCode = 2
+@if byColor == 1
+    @var knightCode = 8
+@fi
+@define Int[] kdx = Int[-2, -1, 1, 2, 2, 1, -1, -2]
+@define Int[] kdy = Int[-1, -2, -2, -1, 1, 2, 2, 1]
+@for Int i in list::range(0, 8)
+    @define Int tf = srcFile + kdx[i]
+    @define Int tr = srcRank + kdy[i]
+    @if tf >= 0 && tf <= 7 && tr >= 0 && tr <= 7
+        @if board[player][tr * 8 + tf] == knightCode
+            @return true
+        @fi
+    @fi
+@done
+
+@define Int kingCode = 6
+@if byColor == 1
+    @var kingCode = 12
+@fi
+@define Int[] gdx = Int[-1, 0, 1, 1, 1, 0, -1, -1]
+@define Int[] gdy = Int[-1, -1, -1, 0, 1, 1, 1, 0]
+@for Int i in list::range(0, 8)
+    @define Int tf = srcFile + gdx[i]
+    @define Int tr = srcRank + gdy[i]
+    @if tf >= 0 && tf <= 7 && tr >= 0 && tr <= 7
+        @if board[player][tr * 8 + tf] == kingCode
+            @return true
+        @fi
+    @fi
+@done
+
+@define Int rookCode = 4
+@define Int queenCode = 5
+@if byColor == 1
+    @var rookCode = 10
+    @var queenCode = 11
+@fi
+@define Int[] rdx = Int[0, 1, 0, -1]
+@define Int[] rdy = Int[1, 0, -1, 0]
+@for Int dir in list::range(0, 4)
+    @define Int cf = srcFile
+    @define Int cr = srcRank
+    @define Int continueRay = 1
+    @for Int step in list::range(0, 7)
+        @if continueRay == 1
+            @var cf = cf + rdx[dir]
+            @var cr = cr + rdy[dir]
+            @if cf < 0 || cf > 7 || cr < 0 || cr > 7
+                @var continueRay = 0
+            @else
+                @define Int p = board[player][cr * 8 + cf]
+                @if p != 0
+                    @var continueRay = 0
+                    @if p == rookCode || p == queenCode
+                        @return true
+                    @fi
+                @fi
+            @fi
+        @fi
+    @done
+@done
+
+@define Int bishopCode = 3
+@if byColor == 1
+    @var bishopCode = 9
+@fi
+@define Int[] bdx = Int[1, 1, -1, -1]
+@define Int[] bdy = Int[1, -1, -1, 1]
+@for Int dir in list::range(0, 4)
+    @define Int cf = srcFile
+    @define Int cr = srcRank
+    @define Int continueRay = 1
+    @for Int step in list::range(0, 7)
+        @if continueRay == 1
+            @var cf = cf + bdx[dir]
+            @var cr = cr + bdy[dir]
+            @if cf < 0 || cf > 7 || cr < 0 || cr > 7
+                @var continueRay = 0
+            @else
+                @define Int p = board[player][cr * 8 + cf]
+                @if p != 0
+                    @var continueRay = 0
+                    @if p == bishopCode || p == queenCode
+                        @return true
+                    @fi
+                @fi
+            @fi
+        @fi
+    @done
+@done
+
+@return false

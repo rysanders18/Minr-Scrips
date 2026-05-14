@@ -1,0 +1,74 @@
+# Double collideX(Player player, Double dx)
+# Per-axis X collision sweep. Uses the entity's CURRENT (post-Y-move)
+# AABB. Iterates blocks in the swept X volume × current Y/Z ranges,
+# clamps dx against any blocking sub-box, returns clamped dx.
+#
+# Caller does curX += dx and zeroes velX if dx != input. No onGround
+# update — that's collideY's job.
+#
+# Per-cell shape comes from mannequin::getBlockBoxes (flat list of N*6
+# doubles in LOCAL coords, Y can reach 1.5 for fences/walls). byMin is
+# extended down by 1 so a tall fence one cell below the entity's feet
+# can still block sideways motion. Sub-box-level Y/Z overlap is checked
+# inside the inner loop (a stair quadrant only fills part of its cell).
+
+@using mannequin
+@fast
+
+@define Double minX = curX[player] - playerHalfWidth
+@define Double maxX = curX[player] + playerHalfWidth
+@define Double minZ = curZ[player] - playerHalfWidth
+@define Double maxZ = curZ[player] + playerHalfWidth
+@define Double minY = curY[player]
+@define Double maxY = curY[player] + playerHeight
+
+@define Double sweptMinX = minX
+@define Double sweptMaxX = maxX
+@if dx < 0D
+    @var sweptMinX = minX + dx
+@elseif dx > 0D
+    @var sweptMaxX = maxX + dx
+@fi
+
+@define Int bxMin = Int(math::floor(sweptMinX))
+@define Int bxMax = Int(math::floor(sweptMaxX))
+@define Int byMin = Int(math::floor(minY)) - 1
+@define Int byMax = Int(math::floor(maxY))
+@define Int bzMin = Int(math::floor(minZ))
+@define Int bzMax = Int(math::floor(maxZ))
+
+@define Double newDx = dx
+
+@for Int by in list::range(byMin, byMax + 1)
+    @for Int bz in list::range(bzMin, bzMax + 1)
+        @for Int bx in list::range(bxMin, bxMax + 1)
+            @define Double[] boxes = mannequin::getBlockBoxes(bx, by, bz, world[player])
+            @define Int n = boxes.length() / 6
+            @for Int i in list::range(0, n)
+                @define Int j = i * 6
+                @define Double blockMinX = Double(bx) + boxes[j]
+                @define Double blockMinY = Double(by) + boxes[j + 1]
+                @define Double blockMinZ = Double(bz) + boxes[j + 2]
+                @define Double blockMaxX = Double(bx) + boxes[j + 3]
+                @define Double blockMaxY = Double(by) + boxes[j + 4]
+                @define Double blockMaxZ = Double(bz) + boxes[j + 5]
+                @if !(maxY <= blockMinY || minY >= blockMaxY) && !(maxZ <= blockMinZ || minZ >= blockMaxZ)
+                    @if newDx > 0D && maxX <= blockMinX
+                        @define Double gapPos = blockMinX - maxX
+                        @if gapPos < newDx
+                            @var newDx = gapPos
+                        @fi
+                    @fi
+                    @if newDx < 0D && minX >= blockMaxX
+                        @define Double gapNeg = blockMaxX - minX
+                        @if gapNeg > newDx
+                            @var newDx = gapNeg
+                        @fi
+                    @fi
+                @fi
+            @done
+        @done
+    @done
+@done
+
+@return newDx

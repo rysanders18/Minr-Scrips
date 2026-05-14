@@ -1,0 +1,29 @@
+# all summons
+# all interaction entities
+
+@for Int i in list::range(0, 5) 
+@for Int j in list::range(0, 3)
+@for Int k in list::range(0, 5)
+    @bypass /summon minecraft:interaction {{-9147.50 - i - (k * 20)}} {{101.0 - j}} 9300.5625 {Tags:["harhaCookieClicker{{k}}-{{(i + 1) * (j + 1)}}"]}
+@done
+@done
+@done
+
+# Main text displays and item displays
+@for Int k in list::range(0, 5)
+    # cookie
+    @bypass /summon item_display {{-9149.50 - (k * 20)}} 100.5 9301.0 {Tags:["harhaCookieItem{{k}}"],item:{id:"minecraft:cookie",count:1}}
+    
+    # cookie text
+    @bypass /summon text_display {{-9149.50 - (k * 20)}} 102.15 9301.0625 {default_background:0b,shadow:1b,alignment:"center",Tags:["cookieClickerText{{k}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.8f,0.8f,1f]},text:[{"bold":true,"color":"#FFA53D","text":"C"},{"bold":true,"color":"#FEA343","text":"o"},{"bold":true,"color":"#FEA04A","text":"o"},{"bold":true,"color":"#FD9E50","text":"k"},{"bold":true,"color":"#FD9B57","text":"i"},{"bold":true,"color":"#FC995D","text":"e"},{"bold":true,"color":"#FB9663","text":"s"},{"color":"#FA9170","text":":"},{"bold":true,"color":"#D4D4D4","text":" 123\n"},{"color":"#FFA53D","text":"C"},{"color":"#FFA440","text":"o"},{"color":"#FEA343","text":"o"},{"color":"#FEA146","text":"k"},{"color":"#FEA049","text":"i"},{"color":"#FE9F4C","text":"e"},{"color":"#FD9E4F","text":"s "},{"color":"#FD9D52","text":"P"},{"color":"#FD9C55","text":"e"},{"color":"#FC9A58","text":"r "},{"color":"#FC995B","text":"S"},{"color":"#FC985E","text":"e"},{"color":"#FB9761","text":"c"},{"color":"#FB9664","text":"o"},{"color":"#FB9567","text":"n"},{"color":"#FB936A","text":"d"},{"bold":false,"color":"#FA9170","text":":"},{"bold":true,"color":"#D4D4D4","text":" 123\n\n"},{"color":"#FFD125","text":"Golden Cookies:"},{"bold":true,"color":"#D4D4D4","text":" 123\n"},{"color":"#37FFE7","text":"Diamond Cookies:"},{"bold":true,"color":"#D4D4D4","text":" 123\n"},{"color":"#03FF70","text":"Emerald Cookies:"},{"bold":true,"color":"#D4D4D4","text":" 123\n\n"}],background:16711680,line_width:500}
+
+    # left text
+    @bypass /summon text_display {{-9155.8 - (k * 20)}} 99.15 9302.0025 {line_width:500,default_background:0b,shadow:1b,alignment:"right",Tags:["cookieClickerUpgrades1{{k}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.8f,0.8f,1f]},text:[{"bold":true,"color":"#2ED428","text":"Emerald Cookie Chances                        \n"},{"bold":false,"color":"#D4D4D4","text":"12345 12345\n"},{"bold":false,"color":"#D4D4D4","text":"12345 12345\n\n\n"},{"color":"aqua","text":"Diamond Cookie Chances\n"},{"bold":false,"color":"#D4D4D4","text":"12345 12345\n"},{"bold":false,"color":"#D4D4D4","text":"123 123\n\n\n"},{"color":"yellow","text":"Golden Cookie Chances\n"},{"bold":false,"color":"#D4D4D4","text":"Upgrade: 1/5 → 1/4\n"},{"bold":false,"color":"#D4D4D4","text":"Cost: 1,150,150 Cookies\n\n\n"},{"color":"blue","text":"Cookie Multiplier\n"},{"bold":false,"color":"#D4D4D4","text":"Current: x150 → x170\n"},{"bold":false,"color":"#D4D4D4","text":"Cost: 150,123,123,123,123,123,123,123,123 Cookies\n\n\n"},{"color":"red","text":"Cookie Cooldown\n"},{"bold":false,"color":"#D4D4D4","text":"Current: 50ms, MAXED OUT!\n"},{"bold":false,"color":"#D4D4D4","text":"Cost: MAXED OUT!"}],background:16711680}
+
+    # right text
+    @bypass /summon text_display {{-9143.2 - (k * 20)}} 99.15 9302.0025 {billboard:"fixed",line_width:500,default_background:0b,shadow:1b,alignment:"left",Tags:["cookieClickerUpgrades2{{k}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.8f,0.8f,1f]},text:"helloooooooooooooooooo",background:16711680}
+
+    # Milk
+    @bypass /summon minecraft:interaction {{-9146.50 - (k * 20)}} 99.0 9301.5625 {Tags:["harhaCookieMilkInteraction{{k}}"],width:.99f}
+    @bypass /summon item_display {{-9146.50 - (k * 20)}} 99.5 9302.0 {Tags:["harhaCookieMilkItem{{k}}"],item:{id:"minecraft:air",count:1}}
+@done

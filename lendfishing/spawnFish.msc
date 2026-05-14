@@ -1,0 +1,18 @@
+# spawnFish(Player player)
+@using lendfishing
+@fast
+
+@var nextLoot = defaultLoot.getLoot(player)
+@define Vector3 color = nextLoot.particleColor
+
+@bypass /data modify entity @n[tag={{player.getUniqueId()}}_bobber] Motion[1] set value -0.4d
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run particle minecraft:electric_spark ~ ~ ~ 0.25 0.125 0.25 0.00001 10 normal
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run particle dust{color:[{{color.getX()}},{{color.getY()}},{{color.getZ()}}],scale:1} ~ ~ ~ 0.25 0.5 0.25 0.1 25 normal
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:entity.fishing_bobber.splash master @s ~ ~ ~ 0.4 1
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:item.bucket.empty_fish master @s ~ ~ ~
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:entity.cod.flop master @s ~ ~ ~
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run particle minecraft:bubble ~ ~ ~ 0.25 0 0.25 0.1 10 normal
+@bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run particle minecraft:splash ~ ~ ~ 0.125 0 0.125 0.1 20 normal
+# @delay 10
+# @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:entity.cod.flop master @s ~ ~ ~
+# @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run particle minecraft:bubble ~ ~ ~ 0.25 0 0.25 0.1 10 normal

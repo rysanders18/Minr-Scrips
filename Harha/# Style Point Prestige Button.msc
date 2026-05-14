@@ -1,0 +1,87 @@
+# Style Point Prestige Button
+
+@fast
+@using Harha
+@cooldown 1s
+
+@if swagPoints[player] == 4000
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+    @player &#d4d4d4--------------------------------------
+    @player &#ffaa00&l&nS&#ffb005&l&nt&#ffb609&l&ny&#ffbc0e&l&nl&#ffc213&l&ne &#ffc718&l&nP&#ffcd1c&l&no&#ffd221&l&ni&#ffd726&l&nn&#ffdc2a&l&nt &#ffe02f&l&nP&#ffe534&l&nr&#ffe939&l&ne&#ffed3d&l&ns&#fff142&l&nt&#fff547&l&ni&#fff84c&l&ng&#fffc50&l&ne&#ffff55&l:
+    @player
+    @player &#d4d4d4● Gain &#ffc71d&l+1 Style Point Prestige&#d4d4d4 and &nreset&#d4d4d4 your points!
+    @player
+    @player &#d4d4d4● Unlocked by reaching &#ffc71d&l4,000 Style Points. &#d4d4d4({{formatNumber(String(swagPoints[player]))}}/4,000)
+    @player
+    @player &aType "reset" to confirm! &#d4d4d4(You will keep all cosmetics)
+    @player &#d4d4d4--------------------------------------
+    @define String confirmation
+    @prompt 30s confirmation &cYou ran out of time!
+    @if confirmation.toLowerCase() == "reset"
+        @var swagPoints[player] = 0
+        @var stylePointPrestiges[player] += 1
+        @var top100Function(player, 29)
+        @var claimedStylePoints[player] = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+        @player
+        @player &aPrestige Successful!    &l+1 Prestige Point!
+        @player
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[0]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[7]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~-0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[4]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~ {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[11]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[12]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~-0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[19]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~ {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[16]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[23]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~-0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[24]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~ {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[19]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[16]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~-0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[12]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~ {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[7]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[4]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~-0.5 {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+        @delay 1
+        @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 {{musicNotes[0]}}
+        @bypass /execute at {{player}} run summon firework_rocket ~ ~ ~ {LifeTime:5,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+    @else
+        @player &cStyle Point Reset cancelled.
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 0.5
+    @fi
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &#ffaa00&l&nS&#ffb005&l&nt&#ffb609&l&ny&#ffbc0e&l&nl&#ffc213&l&ne &#ffc718&l&nP&#ffcd1c&l&no&#ffd221&l&ni&#ffd726&l&nn&#ffdc2a&l&nt &#ffe02f&l&nP&#ffe534&l&nr&#ffe939&l&ne&#ffed3d&l&ns&#fff142&l&nt&#fff547&l&ni&#fff84c&l&ng&#fffc50&l&ne&#ffff55&l:
+    @player
+    @player &#d4d4d4● Gain &#ffc71d&l+1 Style Point Prestige&#d4d4d4 and &nreset&#d4d4d4 your points!
+    @player
+    @player &#d4d4d4● Unlocked by reaching &#ffc71d&l4,000 Style Points. &#d4d4d4({{formatNumber(String(swagPoints[player]))}}/4,000)
+    @player
+    @player &cYou do not meet the requirements! &#d4d4d4(You will keep all cosmetics)
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 1
+@fi

@@ -1,0 +1,22 @@
+# Double clampTurn(Double curYaw, Double targetYaw)
+# Returns the new yaw after rotating from curYaw toward targetYaw by at
+# most maxTurnPerTickDeg. Wraps the difference into (-180, 180] first so
+# the rotation always takes the short way around (e.g. -170 -> 170 turns
+# +20, not -340). MSC has no math::min/max, so the clamp is two @ifs.
+
+@using mannequin
+@fast
+
+@define Double diff = targetYaw - curYaw
+@var diff = ((diff + 180D) % 360D) - 180D
+@if diff <= -180D
+    @var diff = diff + 360D
+@fi
+
+@if diff > maxTurnPerTickDeg
+    @return curYaw + maxTurnPerTickDeg
+@fi
+@if diff < -maxTurnPerTickDeg
+    @return curYaw - maxTurnPerTickDeg
+@fi
+@return curYaw + diff

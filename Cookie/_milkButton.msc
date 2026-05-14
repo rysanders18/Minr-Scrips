@@ -1,0 +1,45 @@
+# _Milk Unlock Button
+@using cookie
+@fast
+
+@cooldown 2
+
+# @if milkUnlocked[player]
+#     @player &cYou have already unlocked this upgrade!
+#     @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+#     @return
+# @fi
+
+@if cookieCount[player] < 15000L
+    @player &#d4d4d4--------------------------------------
+    @player &#F5F5ED&lMilk Unlock Button
+    @player &#d4d4d4● Unlocks Milk Ability
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l15,000 Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(15000L - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &#F5F5ED&lMilk Unlock Button
+    @player &#d4d4d4● Milk Ability Unlocked!
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - 15000L))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var cookieCount[player] -= Long(15000L)
+    @var milkUnlocked[player] = true
+
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(15000L)
+    @done
+
+    @var milkActivated[player] = false
+    @bypass data merge entity @e[type=item_display,tag=harhaCookieMilkItem{{roomNumber[player]}},limit=1] {item:{id:"minecraft:milk_bucket",count:1}}
+    @delay 1
+    @bypass execute in minecraft:theta run setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} minecraft:air strict
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

@@ -1,0 +1,162 @@
+# Int chooseMove(Player player)
+# Root search. For each legal move, makes it, runs a depth-(N-1)
+# negamax sub-search to score the resulting position, then unmakes.
+# Returns the highest-scoring move, or 0 if there are no legal
+# moves (caller should check inCheck to distinguish mate/stalemate).
+# Yields one server tick (@delay 1) between each searched legal move.
+#
+# LEGALITY at the root: genOrderedLegalMoves returns pseudo-legal
+# moves (no king-safety filter) for speed during deeper search.
+# But the move chooseMove actually RETURNS must be legal - if it
+# returns a move that leaves our king attacked, the opponent
+# captures the king on their next turn (since their move generator
+# treats the king as a regular capturable piece). We filter
+# illegal moves per-iteration: makeMove, check our king isn't
+# attacked, search if legal, unmake. Illegal moves count toward
+# neither maxBranches nor bestMove tracking. If no legal moves
+# exist, return 0 so engineMove reports mate/stalemate.
+#
+# Branching cap: maxBranches limits how many LEGAL moves we deeply
+# search. Illegal pseudo-legal moves are quickly skipped (one
+# makeMove + isSquareAttacked + unmakeMove each).
+
+@using rychess
+@fast
+
+@define Int searchDepth = 2
+@define Int maxBranches = 5
+
+@var profGenLegal[player] = 0
+@var profGenOrdered[player] = 0
+@var profSearchInner[player] = 0
+@var profQsearch[player] = 0
+@var profMakeMove[player] = 0
+@var profEvaluate[player] = 0
+@var profIsAttacked[player] = 0
+@var profInCheck[player] = 0
+
+@define Long tStart = system::currentTimeMillis()
+
+@define Int[] moves = genOrderedLegalMoves(player)
+@delay 1
+@if moves.length() == 0
+    @return 0
+@fi
+
+@define Int bestMove = 0
+@define Int bestScore = -200000
+@define Int curAlpha = -200000
+@define Int beta = 200000
+@define Int foundLegal = 0
+@define Int searchedCount = 0
+@define Int myColorAtRoot = sideToMove[player]
+
+@player &7[DBG] scanning {{moves.length()}} ordered pseudo-legal moves (depth={{searchDepth}}, maxBranches={{maxBranches}})
+@for Int i in list::range(0, moves.length())
+    @if searchedCount < maxBranches
+        @define Int move = moves[i]
+        @define Int fromSq = moveFrom(move)
+        @define Int toSq = moveTo(move)
+        @define Int fromType = pieceType(board[player][fromSq])
+        @define Int sameRank = 0
+        @if (fromSq / 8) == (toSq / 8)
+            @var sameRank = 1
+        @fi
+        @var makeMove(player, move)
+
+        @define Int myKingSq = findKing(player, myColorAtRoot)
+        @define Int legal = 1
+        @if myKingSq < 0
+            @var legal = 0
+        @elseif isSquareAttacked(player, myKingSq, sideToMove[player])
+            @var legal = 0
+        @fi
+
+        @if legal == 1
+            @define Int score = -searchInner(player, searchDepth - 1, -beta, -curAlpha)
+            @if fromType == 1 && sameRank == 1
+                @player &b[DBG] {{squareName(fromSq)}}->{{squareName(toSq)}} pawnLat flag={{moveFlags(move)}} score={{score}}
+            @else
+                @player &7[DBG] {{squareName(fromSq)}}->{{squareName(toSq)}} flag={{moveFlags(move)}} score={{score}}
+            @fi
+            @if foundLegal == 0
+                @var foundLegal = 1
+                @var bestMove = move
+                @var bestScore = score
+            @elseif score > bestScore
+                @var bestScore = score
+                @var bestMove = move
+            @fi
+            @if bestScore > curAlpha
+                @var curAlpha = bestScore
+            @fi
+            @var searchedCount = searchedCount + 1
+        @fi
+
+        @var unmakeMove(player, move)
+
+        @if legal == 1
+            @delay 1
+        @fi
+    @fi
+@done
+
+@define Long tSearchEnd = system::currentTimeMillis()
+@define Int searchGenLegal = profGenLegal[player]
+@define Int searchGenOrdered = profGenOrdered[player]
+@define Int searchSearchInner = profSearchInner[player]
+@define Int searchQsearch = profQsearch[player]
+@define Int searchMakeMove = profMakeMove[player]
+@define Int searchEvaluate = profEvaluate[player]
+@define Int searchIsAttacked = profIsAttacked[player]
+@define Int searchInCheck = profInCheck[player]
+
+@if foundLegal == 0
+    @player &c[DBG] no legal moves - mate or stalemate
+    @return 0
+@fi
+
+@player &a[DBG] picked {{squareName(moveFrom(bestMove))}}->{{squareName(moveTo(bestMove))}} score={{bestScore}}
+
+# Cheap opponent-reply listing.
+@var makeMove(player, bestMove)
+@define Int[] replies = genLegalMoves(player)
+@player &7[DBG] opponent has {{replies.length()}} legal replies (captures+laterals shown)
+@for Int j in list::range(0, replies.length())
+    @define Int reply = replies[j]
+    @define Int rFrom = moveFrom(reply)
+    @define Int rTo = moveTo(reply)
+    @define Int rType = pieceType(board[player][rFrom])
+    @define Int rSameRank = 0
+    @if (rFrom / 8) == (rTo / 8)
+        @var rSameRank = 1
+    @fi
+    @if rType == 1 && rSameRank == 1
+        @player &b[DBG]   reply {{squareName(rFrom)}}->{{squareName(rTo)}} pawnLat flag={{moveFlags(reply)}}
+    @elseif moveFlags(reply) == 1
+        @player &e[DBG]   reply {{squareName(rFrom)}}->{{squareName(rTo)}} cap flag={{moveFlags(reply)}}
+    @fi
+@done
+@var unmakeMove(player, bestMove)
+
+@define Long tEnd = system::currentTimeMillis()
+@define Long searchMs = tSearchEnd - tStart
+@define Long debugMs = tEnd - tSearchEnd
+@define Long totalMs = tEnd - tStart
+
+@define Int dbgGenLegal = profGenLegal[player] - searchGenLegal
+@define Int dbgQsearch = profQsearch[player] - searchQsearch
+@define Int dbgMakeMove = profMakeMove[player] - searchMakeMove
+@define Int dbgEvaluate = profEvaluate[player] - searchEvaluate
+@define Int dbgIsAttacked = profIsAttacked[player] - searchIsAttacked
+@define Int dbgInCheck = profInCheck[player] - searchInCheck
+
+@player &6[PROFILE] === chooseMove {{totalMs}}ms (search={{searchMs}}ms debug={{debugMs}}ms) ===
+@player &6[PROFILE] SEARCH phase calls:
+@player &6[PROFILE]   genLegal={{searchGenLegal}} genOrdered={{searchGenOrdered}} searchInner={{searchSearchInner}} qsearch={{searchQsearch}}
+@player &6[PROFILE]   makeMove={{searchMakeMove}} evaluate={{searchEvaluate}} isAttacked={{searchIsAttacked}} inCheck={{searchInCheck}}
+@player &6[PROFILE] DEBUG-REPLY phase deltas:
+@player &6[PROFILE]   genLegal={{dbgGenLegal}} qsearch={{dbgQsearch}} makeMove={{dbgMakeMove}}
+@player &6[PROFILE]   evaluate={{dbgEvaluate}} isAttacked={{dbgIsAttacked}} inCheck={{dbgInCheck}}
+
+@return bestMove

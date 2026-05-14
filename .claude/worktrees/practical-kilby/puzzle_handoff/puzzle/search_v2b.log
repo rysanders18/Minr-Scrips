@@ -1,0 +1,9 @@
+Loading phase1 end state...
+Start: 86 blocks, conv=19, reds=13
+Start heuristic: 35
+  [IMPROVE d=1] new best_h=15 via green Z-chain (6925, 146, 2546)..(6925, 146, 2548) slide +Z×1 [convert: ((6925, 
+[d=1] beam_in=91 kept=91 best_now=15 best_ever=15 visited=92 elapsed=0.1s
+[d=2] beam_in=3892 kept=1500 best_now=15 best_ever=15 visited=3984 elapsed=3.2s
+[d=3] beam_in=67564 kept=1500 best_now=15 best_ever=15 visited=71548 elapsed=56.7s
+[d=4] beam_in=78795 kept=1500 best_now=15 best_ever=15 visited=150343 elapsed=120.2s
+[d=5] beam_in=76659 kept=1500 best_now=15 best_ever=15 visited=227002 elapsed=183.0s

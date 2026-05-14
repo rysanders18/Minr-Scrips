@@ -1,0 +1,27 @@
+# Bins Lodestone Teleport
+@fast
+
+# @bypass effect give @s minecraft:darkness 5 1 true
+
+@bypass /playsound minecraft:block.respawn_anchor.charge master @s ~ ~ ~ 0.75 1
+@for Int i in list::range(0, 200)
+  @for Int j in list::range(0, Int(Float(i) / 20) + 5)
+    @bypass /particle minecraft:copper_fire_flame {{player.getX() + (math::random(-2.5D, 2.5D))}} {{105.5 + (math::random(-2.5D, 2.5D))}} {{player.getZ() + (math::random(-2.5D, 2.5D))}} 0 1 0 {{0 + Float(i) / 250}} 0
+  @done
+  @bypass /playsound minecraft:entity.guardian.attack master @s ~ ~ ~ 0.75 {{(Float(i) / 100) * 0.48 + 0.5}} 
+  @delay 1
+
+@done
+
+
+@var player.teleport(Position(-7810.5, 315.0, 9405.5, player.getYaw(), player.getPitch(), "Theta"))
+# @var player.teleport(Position(-7750.5, 133.0, 9365.5, player.getYaw(), player.getPitch(), "Theta"))
+# @var player.teleport(Position(player.getX(), 110.0D, player.getZ(), player.getYaw(), player.getPitch(), "Theta"))
+@bypass /effect clear @s
+@bypass /playsound minecraft:entity.enderman.teleport master @s ~ ~ ~ 1 1
+# @bypass /playsound minecraft:entity.generic.explode master @s ~ ~ ~ 1 0.5
+
+# @bypass /execute as @s at @s anchored eyes run particle minecraft:explosion_emitter ^ ^ ^1 0 0 0 0 2 force @s
+
+
+

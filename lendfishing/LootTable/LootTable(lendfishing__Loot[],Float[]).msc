@@ -1,0 +1,6 @@
+# lendfishing::LootTable(lendfishing::Loot[] lootList, Float[] chances)
+
+@var this.lootList = lootList
+@var this.chances = chances
+
+@return this

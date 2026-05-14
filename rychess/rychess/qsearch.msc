@@ -1,0 +1,92 @@
+# Int qsearch(Player player, Int alpha, Int beta, Int recaptureSq, Int qsDepth)
+# Recapture-only quiescence search. Confines the capture-chain
+# extension to a single square: after the parent's move to
+# recaptureSq, we only consider captures that land on that same
+# square - i.e. recaptures of the just-moved piece.
+# Tradeoff: misses tactics that span multiple squares (e.g.
+# Nxd4 followed by Nxe2 on a later ply - the engine won't
+# preemptively set those up, but if the opponent walks into
+# them on a future move the next root search will find them).
+# Stand-pat: side to move may always refuse the recapture and
+# accept the static eval, sound when not in check.
+#
+# In-check branch uses real genLegalMoves (not pseudo-legal) on
+# purpose: it preserves mate detection (evasions.length() == 0 =>
+# checkmate) and prevents recursion ping-pong where two sides keep
+# being in check from pseudo-legal moves that don't actually
+# resolve the threat. This branch is rarely entered during search,
+# so the genLegalMoves cost is amortized.
+#
+# qsDepth cap: hard limit at >= 8 returns stand-pat. MSC's call-
+# stack limit is 100 frames; the prefix (play -> engineMove ->
+# chooseMove -> searchInner) costs 4, makeMove + pieceContrib add
+# 2 per ply, plus 1 per qsearch level. 8 plies of qsearch gives
+# 4 + 1 + 8*(1 makeMove + 1 pieceContrib + 1 qs) ~= 30-40 frames,
+# leaving comfortable headroom for helper calls inside leaf.
+
+@using rychess
+@fast
+
+@var profQsearch[player] = profQsearch[player] + 1
+
+@if qsDepth >= 8
+    @return evaluate(player)
+@fi
+
+@if inCheck(player)
+    @define Int[] evasions = genLegalMoves(player)
+    @if evasions.length() == 0
+        @return -100000
+    @fi
+    @define Int bestScore = -200000
+    @define Int curAlpha = alpha
+    @for Int i in list::range(0, evasions.length())
+        @define Int move = evasions[i]
+        @var makeMove(player, move)
+        @define Int score = -qsearch(player, -beta, -curAlpha, moveTo(move), qsDepth + 1)
+        @var unmakeMove(player, move)
+        @if score > bestScore
+            @var bestScore = score
+        @fi
+        @if bestScore > curAlpha
+            @var curAlpha = bestScore
+        @fi
+        @if curAlpha >= beta
+            @return bestScore
+        @fi
+    @done
+    @return bestScore
+@fi
+
+@define Int bestScore = evaluate(player)
+@if bestScore >= beta
+    @return bestScore
+@fi
+@define Int curAlpha = alpha
+@if bestScore > curAlpha
+    @var curAlpha = bestScore
+@fi
+
+@define Int stm = sideToMove[player]
+@if isSquareAttacked(player, recaptureSq, stm)
+    @define Int[] all = genAllPseudoLegal(player)
+    @for Int i in list::range(0, all.length())
+        @define Int move = all[i]
+        @if moveTo(move) == recaptureSq && moveFlags(move) == 1
+            @var makeMove(player, move)
+            @define Int score = -qsearch(player, -beta, -curAlpha, recaptureSq, qsDepth + 1)
+            @var unmakeMove(player, move)
+            @if score > bestScore
+                @var bestScore = score
+            @fi
+            @if bestScore > curAlpha
+                @var curAlpha = bestScore
+            @fi
+            @if curAlpha >= beta
+                @return bestScore
+            @fi
+        @fi
+    @done
+@fi
+
+@return bestScore

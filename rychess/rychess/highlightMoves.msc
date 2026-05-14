@@ -1,0 +1,39 @@
+# highlightMoves(Player player, Int square)
+# Highlights every square the piece on `square` can legally move to.
+# Quiet destinations (empty squares - normal moves, double-pushes,
+# castling landing squares) get the green "movable" texture.
+# Capture destinations (flag=1 ordinary capture, flag=3 en-passant)
+# get the red "capturable" texture. The captured-pawn square for ep
+# is technically off-target visually, but we mark `to` since that's
+# the square the user clicks to make the move.
+#
+# Records each highlighted square in highlightedSquares[player] so
+# clearHighlights knows what to revert later. Caller is responsible
+# for calling clearHighlights first if a previous selection's
+# highlights are still showing.
+#
+# Note: the rychessboard<R><F> entity tags are flipped along the
+# rank axis vs the logical rank, so the tag's first digit is
+# (7 - rank), not rank. The world position is correct - only the
+# tagging is mirrored.
+
+@using rychess
+@fast
+
+@define Int[] legal = genLegalMoves(player)
+@for Int i in list::range(0, legal.length())
+    @define Int m = legal[i]
+    @if moveFrom(m) == square
+        @define Int dest = moveTo(m)
+        @define Int flags = moveFlags(m)
+        @define Int rank = dest / 8
+        @define Int file = dest % 8
+        @define Int tagRank = 7 - rank
+        @var highlightedSquares[player].append(dest)
+        @if flags == 1 || flags == 3
+            @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureCapturable}}"}]}
+        @else
+            @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureMovable}}"}]}
+        @fi
+    @fi
+@done

@@ -1,0 +1,99 @@
+# cookieTextUpdate(Player player, Int roomNumber) https://paste.minr.org/hoxusegico
+@using cookie
+@fast 
+
+@define Long currentTime = system::currentTimeMillis()
+@define Long timeWindow = 10000L
+@define Long oldestCookieValue = cookieCount[player]
+@define Long oldestTime = currentTime
+@define Float averageCPS = 0.0F
+@define Float currentCPS = 0.0F
+@define Boolean foundOldest = false
+
+# Find the oldest cookie value within the last 10 seconds
+# Start from the position after current write position (oldest data) and wrap around
+@define Int startPos = (cookiesClicked[player] + 1) % 100
+@for Int offset in list::range(0, 99)
+    @define Int i = (startPos + offset) % 100
+    @if cookieLogTimes[player][i] > 0L && (currentTime - cookieLogTimes[player][i]) <= timeWindow && foundOldest == false
+        @var oldestCookieValue = cookieLog[player][i]
+        @var oldestTime = cookieLogTimes[player][i]
+        @var foundOldest = true
+    @fi
+@done
+
+# @player {{cookieCount[player]}} - {{oldestCookieValue}} == {{cookieCount[player] - oldestCookieValue}}
+
+# Calculate cookies per second
+
+@if foundOldest == true && oldestTime < currentTime
+    @var currentCPS = Float(cookieCount[player] - oldestCookieValue) / (Float(currentTime - oldestTime) / 1000.0F)
+    # @player @var currentCPS = {{Float(cookieCount[player] - oldestCookieValue)}} / ({{currentTime}} - {{oldestTime}})
+@fi
+
+# Smooth the CPS by averaging with the previous value
+@if lastAverageCPS > 0.0F
+    @var averageCPS = (currentCPS + (lastAverageCPS[player] * 5)) / 6.0F
+@else
+    @var averageCPS = currentCPS
+@fi
+
+@if averageCPS < 0.0F
+    @var averageCPS = 0.0F
+@fi
+# Store the smoothed value for next time
+@var lastAverageCPS[player] = averageCPS
+
+# @player {{averageCPS}}
+
+
+@define String string10 = ""
+@define String string11 = ""
+@if milkUnlocked[player] == true
+    @if milkActivated[player] == true
+        @var string10 = "Milk Time Remaining: "
+
+        @define Long remainingMillis = milkDuration[player] * 1000 - (system::currentTimeMillis() - lastMilkActivationTime[player])
+        @define Long seconds = remainingMillis / 1000
+        @define Long centiseconds = (remainingMillis % 1000) / 10
+
+        @if seconds >= 0 && centiseconds >= 0
+            @if centiseconds < 10
+                @var string11 = String(seconds) + ".0" + String(centiseconds) + "s"
+            @else
+                @var string11 = String(seconds) + "." + String(centiseconds) + "s"
+            @fi
+        @else
+            @var string11 = "0.00s"
+        @fi
+        
+    @else
+        @define Long cooldownMillis = 45000L - (system::currentTimeMillis() - (lastMilkActivationTime[player]))
+        @define Long seconds = cooldownMillis / 1000
+        @define Long centiseconds = (cooldownMillis % 1000) / 10
+
+        @if seconds >= 0 && centiseconds >= 0
+            @if centiseconds < 10
+                @var string11 = String(seconds) + ".0" + String(centiseconds) + "s"
+            @else
+                @var string11 = String(seconds) + "." + String(centiseconds) + "s"
+            @fi
+        @else
+            @var string11 = "0.00s"
+        @fi
+
+        @if cooldownMillis > 0L
+            @var string10 = "Milk Cooldown: "
+        @else
+            @var string10 = "Milk Ready!"
+            @var string11 = ""
+        @fi
+    @fi
+@fi
+
+
+
+
+# TODO: remove golden and diamond if they are not found.
+
+@bypass /data merge entity @e[tag=cookieClickerText{{roomNumber}},limit=1] {text:[{"bold":true,"color":"#FFA53D","text":"C"},{"bold":true,"color":"#FEA343","text":"o"},{"bold":true,"color":"#FEA04A","text":"o"},{"bold":true,"color":"#FD9E50","text":"k"},{"bold":true,"color":"#FD9B57","text":"i"},{"bold":true,"color":"#FC995D","text":"e"},{"bold":true,"color":"#FB9663","text":"s"},{"color":"#FA9170","text":":"},{"bold":true,"color":"#D4D4D4","text":" {{Harha::formatNumber(String(cookieCount[player]))}}\n"},{"color":"#FFA53D","text":"C"},{"color":"#FFA440","text":"o"},{"color":"#FEA343","text":"o"},{"color":"#FEA146","text":"k"},{"color":"#FEA049","text":"i"},{"color":"#FE9F4C","text":"e"},{"color":"#FD9E4F","text":"s "},{"color":"#FD9D52","text":"P"},{"color":"#FD9C55","text":"e"},{"color":"#FC9A58","text":"r "},{"color":"#FC995B","text":"S"},{"color":"#FC985E","text":"e"},{"color":"#FB9761","text":"c"},{"color":"#FB9664","text":"o"},{"color":"#FB9567","text":"n"},{"color":"#FB936A","text":"d"},{"bold":false,"color":"#FA9170","text":": "},{"bold":true,"color":"#D4D4D4","text":"{{Harha::formatNumber(String(Int(averageCPS)))}}\n"},{"color":"#FFA53D","text":"T"},{"color":"#FFA440","text":"o"},{"color":"#FEA342","text":"t"},{"color":"#FEA245","text":"a"},{"color":"#FEA148","text":"l "},{"color":"#FEA04A","text":"C"},{"color":"#FD9F4D","text":"o"},{"color":"#FD9E50","text":"o"},{"color":"#FD9D52","text":"k"},{"color":"#FD9C55","text":"i"},{"color":"#FC9A58","text":"e"},{"color":"#FC995B","text":"s "},{"color":"#FC985D","text":"E"},{"color":"#FC9760","text":"a"},{"color":"#FB9663","text":"r"},{"color":"#FB9565","text":"n"},{"color":"#FB9468","text":"e"},{"color":"#FB936B","text":"d"},{"color":"#FA9170","text":": "},{"bold":true,"color":"#D4D4D4","text":"{{Harha::formatNumber(String(totalCookiesEarned[player]))}}\n\n"},{"color":"#FFD125","text":"Golden Cookies:"},{"bold":true,"color":"#D4D4D4","text":" {{Harha::formatNumber(String(goldenCookiesClicked[player]))}}\n"},{"color":"#37FFE7","text":"Diamond Cookies:"},{"bold":true,"color":"#D4D4D4","text":" {{Harha::formatNumber(String(diamondCookiesClicked[player]))}}\n"},{"bold":true,"color":"white","text":"{{string10}} "},{"bold":true,"color":"#D4D4D4","text":"{{string11}}\n"}]}

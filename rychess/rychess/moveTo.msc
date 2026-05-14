@@ -1,0 +1,8 @@
+# Int moveTo(Int move)
+# Decodes the to-square (0..63) from a packed move Int.
+# See moveEncode.msc for the bit layout.
+
+@using rychess
+@fast
+
+@return (move / 64) % 64

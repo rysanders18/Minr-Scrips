@@ -1,0 +1,54 @@
+# Int[] genAllPseudoLegal(Player player)
+# Walks the 64 squares once and returns the pseudo-legal move list
+# for the side to move. "Pseudo-legal" means the moves obey piece
+# movement rules but may leave the moving side's own king in check;
+# Phase 4 adds the legality filter. The dispatch is one branch per
+# piece type, calling the matching gen* function and copying its
+# result into the combined output (MSC has no array-extend, so the
+# copy is an explicit append loop).
+
+@using rychess
+@fast
+
+@define Int[] moves = Int[]
+@define Int stm = sideToMove[player]
+
+@for Int sq in list::range(0, 64)
+    @define Int piece = board[player][sq]
+    @if piece != 0 && pieceColor(piece) == stm
+        @define Int type = pieceType(piece)
+        @if type == 1
+            @define Int[] sub = genPawnMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @elseif type == 2
+            @define Int[] sub = genKnightMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @elseif type == 3
+            @define Int[] sub = genBishopMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @elseif type == 4
+            @define Int[] sub = genRookMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @elseif type == 5
+            @define Int[] sub = genQueenMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @elseif type == 6
+            @define Int[] sub = genKingMoves(player, sq)
+            @for Int i in list::range(0, sub.length())
+                @var moves.append(sub[i])
+            @done
+        @fi
+    @fi
+@done
+
+@return moves

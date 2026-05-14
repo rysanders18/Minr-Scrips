@@ -1,0 +1,45 @@
+# _Milk Duration Button
+@fast
+@using cookie
+
+# @define Int[] milkDurationPrices = Int[50000, 100000, 175000, 250000, 400000, 600000, 800000, 1150000, 1500000, 2000000]
+# @define Int[] milkDurationDurations = Int[6, 7, 8, 9, 10, 12, 14, 16, 18, 20]
+
+@if milkDurationStage[player] >= milkDurationDurations.length()
+    @player &#d4d4d4--------------------------------------
+    @player &cYou have reached the maximum upgrade for this button!
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @return
+@fi
+
+@if cookieCount[player] < milkDurationPrices[milkDurationStage[player]]
+    @player &#d4d4d4--------------------------------------
+    @player &#59EBE1&lMilk Duration Button&#d4d4d4
+    @player &#d4d4d4● Current Milk Duration: &#59EBE1{{milkDuration[player]}}s
+    @player &#d4d4d4● Next Upgrade: &#59EBE1{{milkDurationDurations[milkDurationStage[player]]}}s
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l{{Harha::formatNumber(String(milkDurationPrices[milkDurationStage[player]]))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(milkDurationPrices[milkDurationStage[player]] - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &#59EBE1&lMilk Duration Button&#d4d4d4
+    @player &#d4d4d4● New Upgrade: &#59EBE1{{milkDuration[player]}}s → {{milkDurationDurations[milkDurationStage[player]]}}s
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(milkDurationPrices[milkDurationStage[player]])))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var milkDuration[player] = milkDurationDurations[milkDurationStage[player]]
+    @var cookieCount[player] -= Long(milkDurationPrices[milkDurationStage[player]])
+    
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(milkDurationPrices[milkDurationStage[player]])
+    @done
+    @var milkDurationStage[player] += 1
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

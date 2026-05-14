@@ -1,0 +1,387 @@
+# DUCK
+@using Harha
+@fast
+
+@define String[] meowList = String["meow", "meoww", "mew", "maw", "meeeooow", "meoooow", "meeeeow", "purr", "^-^", "meows", "miaow", "miau", "meaow", "mewl", "mrrrow", "mrow", "mreow", "mrrrr", "meaw", "miaou", "meo", "miao", "meww", "meowww", "mewmew", "mrrp", "mrrrroww", "meowy", "mrowr", "mree", "mrr", "nya", "nyan", "nyaa", "nyah", "mlem", "meow?", "meow!", "MEOW", "mew?", "mew!", "MEW", "mrow?", "mrow!", "MROW", "nyan?", "nyan!", "NYAN", "meow meow", "mew mew", "mrow mrow", "nya nya", "purrr", "prrr", "purrrr", "purrrrrr", "hisss", "hiss", "purrs", "hisses", "mroww", "mreeow", "mrrreow", "meeow", "meeoo", "meoo", "mweo", "mweow", "myao", "myaow", "myow", "myaw", "m'ow", "me.ow", "meeaow", "meeyow", "meeyaw", "mraow", "mraoww", "mrrrrooow", "meown", "meowsy", "miaoww", "miawww", "miew", "maow", "maoww", "meeaaw", "myaou", "myaown", "mow", "m'yow", "m'yaw", "ngya", "ngyan", "meowwwwww", "mmmmeow", "mmmrrrr", "mmmmew", "meowoo", "meowu", "meeau", "meeaou", "meeyo", "meeoww", "miiiaaaooow", "myaaa", "myaa", "myan", "maau", "maauw", "myauw", "mrawr", "mrour", "miu", "meeu", "meouw", "meew", "meoow", "meau", "mrrew", "mraawr", "maauh", "meough", "냐옹", "ニャー", "м'яу", "мяу", "mjau", "meo-meo", "miaŭ", "ngiyaw", "miáú", "miar", "miao-miao", "mau", "miauw", "mauw", "mjav", "miyav", "nau", "mews", "caterwauls", "yowls", ":3", "=＾• ⋏ •＾=", "/ᐠ｡ꞈ｡ᐟ\ ", "ᓚᘏᗢ", "(=^･ω･^=)", "(=^･ｪ･^=)", "( =ω=)", "(=｀ω´=)", "(ΦωΦ)", "(^=˃ᆺ˂=^)", "(=TㅅT=)", "＼(=^‥^=)／", "（=´∇｀=）", "(=^-ω-^=)", "(^・x・^)", "ฅ(⌯͒• ɪ •⌯͒)ฅ", ">^..^<", "(=①ω①=)", "(=^･^=)", "ଲ( ⓛ ‸ ⓛ )ଲ", "(=⌒‿⌒=)", "(=ಠᆽಠ=)", "(=^･o･^=)", "(=^･ω･^=)ﾉ", "(ﾐⓛᆽⓛﾐ)", "(^._.^)ﾉ", "~ ( =’ェ’= ) ~", "(=;ェ;=)", "((≡^⚲͜^≡))", "/(^•ω•^)\ ", "(=•ω•=)", "ฅ/ᐠ｡ᆽ｡ᐟ \ฅ", "( ⓛ ω ⓛ )", "( ^..^ )", "(=x.x=)"]
+@define String[] wisdomList = String["True enlightenment is realizing the tastiest bread is always the piece someone else is about to eat.", "Never trust a goose; they are just tall ducks with anger management issues and no sense of irony.", "The secret to eternal happiness is a perfectly still pond and the absence of dogs.", "A confident quack can solve approximately 47% of life's problems.", "To understand the universe, you must first understand why soggy bread is superior to dry bread.", "The most powerful spell is looking pathetic in the rain until a giant gives you a sandwich.", "A wizard's staff is impressive, but have you ever tried whacking someone with a wet cattail?", "Do not waste your energy on revenge; simply poop on your enemy's newly cleaned chariot.", "The two most powerful forces in the world are love and a stale baguette.", "A ripple in the water may seem small, but it can successfully annoy a very large fish.", "Before you judge a man, walk a mile in his shoes; then you're a mile away, and you have his shoes.", "The best magic is convincing everyone you're wise when you're mostly just thinking about worms.", "If you cannot be clever, be loud; the effect is often the same.", "Gravity is a suggestion, especially when you have wings and a bit of a tailwind.", "A well-timed nap in a sunbeam is the cornerstone of any good magical practice.", "Never enter a staring contest with a frog; they have no eyelids and no honor.", "True courage is eating the snail that everyone else thought was a little too slimy.", "One must preen their feathers not for vanity, but to be aerodynamically prepared for a sudden escape.", "The person who says it cannot be done should not interrupt the duck who is doing it.", "A premonition is just your stomach rumbling before you've seen the bread.", "Patience is a virtue, unless there's only one piece of cracker left.", "The difference between a hero and a villain is who has the better public relations goose.", "If you listen closely, the wind doesn't whisper secrets; it mostly just messes up your feathers.", "To achieve inner peace, one must learn to ignore the incessant chirping of smaller, less important birds.", "A full belly leads to a sleepy mind, which is the best kind of mind.", "The greatest mystery of the cosmos is where the humans go after they leave the park.", "Always carry a spare lily pad, for you never know when you'll need a dramatic place to sit.", "They say the early bird gets the worm, but the second duck gets the bread thrown by the early bird's human.", "A potion is just a beverage that you've stared at with magical intent.", "Never underestimate the tactical advantage of being slightly too low to the ground to be noticed.", "The only thing more unpredictable than magic is a toddler with a bag of oats.", "A proper hat can make even the most absurd statement sound like ancient wisdom.", "A journey of a thousand miles begins with a single, awkward waddle.", "If at first you don't succeed, quack, quack again.", "The path to power is paved with the discarded crusts of the unambitious.", "Why build a bridge when you can just get your feet a little wet?", "An opinion is like a tail feather; everyone has one, but it's rude to wave it in someone's face.", "True wealth is not measured in gold, but in the number of ponds you can call your own.", "Never ask a fish for directions; their worldview is fundamentally skewed.", "The most complex magical rune is still less confusing than a human's tax forms.", "A dramatic pause is only effective if you don't fall asleep during it.", "To be truly wise is to know that you know nothing, except for the location of the best mud.", "The best way to defeat an enemy is to invite them for a swim and then forget to mention the leeches.", "A day without being chased by a small child is a day well spent.", "One should always float with the current, unless the current is heading towards a waterfall.", "The sound of one hand clapping is not nearly as interesting as the sound of one beak chomping.", "A good plan is to have no plan and see what happens; it's more fun that way.", "You cannot change the direction of the wind, but you can adjust your tail feathers.", "The meaning of life is to float, to eat, and to occasionally bother a swan.", "It is better to have quacked and been ignored than to have never quacked at all.", "A sceptre is just a fancy stick for a wizard who is afraid to get his hands dirty.", "The wise duck does not store all his bread in one pond.", "If you love something, set it free; unless it's a particularly juicy beetle.", "The future is unwritten, but it probably involves rain.", "Never trust a spell with more than three ingredients, especially if one of them is 'a hint of cosmic dread'.", "The art of diplomacy is letting the other guy have your way.", "A comfortable silence is more valuable than a clever conversation.", "Don't count your ducklings before they've hatched, as they are very difficult to count.", "He who hesitates has probably spotted a hidden net.", "A problem is simply an opportunity to take a nap and hope it goes away.", "The best hiding place is right behind the thing everyone is looking at.", "To be a sorcerer is to be a master of convincing yourself that you know what you're doing.", "A clean feather is a sign of a productive day.", "Never try to reason with a squirrel; their logic is based on hoarding and frantic energy.", "The secret ingredient to every great adventure is a complete lack of foresight.", "A pond without algae is like a life without challenges: clean, but boring.", "The grass is always greener on the other side, probably because it has better drainage.", "If you're not a little bit scared, you're not waddling fast enough.", "Always look a gift horse in the mouth, and then check for bread.", "A moment of patience in a moment of anger saves you a hundred moments of regret, or so I'm told.", "A prophecy is just a guess made with a very deep voice.", "The tide of history is vast, but it can be briefly redirected with a well-constructed dam of twigs.", "True focus is the ability to preen a single feather while the world descends into chaos.", "A nest is not a home; it's just a suggestion for where to sleep.", "The mighty oak was once a nut that stood its ground, which is a terrible strategy for a duck.", "Do not fear the darkness, for it is where the most delicious slugs hide.", "An echo is the universe's way of agreeing with you, so always quack wisely.", "A rival is just a friend who is trying to eat your food.", "It is a fool who argues with a raincloud.", "The two greatest inventions are the wheel and the concept of a free lunch.", "Time is a great healer, but a good mud bath is faster.", "The first rule of magic is to never tell anyone all your rules.", "A memory is just a story you tell yourself to explain why your feathers are wet.", "The easiest way to find something lost is to buy a replacement.", "If you want to seem wise, nod slowly and occasionally say 'Indeed'.", "A crown is just a hat that lets in the rain.", "Never gamble with a raccoon; they have too many hands and no morals.", "The difference between magic and science is just a matter of presentation.", "A map is a fine thing, but it will not protect you from a grumpy badger.", "The smallest act of kindness is to not eat the last watercress.", "To fly is divine, but to float is to truly live.", "The universe is full of magical things, patiently waiting for our wits to grow sharper, or for us to just trip over them.", "Fame is fleeting, but a good pond is forever.", "The only stupid question is the one you ask a turtle.", "In the end, all we have are our stories and the faint taste of algae.", "Wisdom is knowing the right path to take; integrity is taking it, and magic is making a shortcut appear."]
+@define String[] secretBuilders = String["RY \& Crow", "leo_lazuli", "Crowenza", "jasmine476", "masts", "bin200", "Dalox02", "ItsPoekie", "RY \& Crow", "Jakube_", "johnplumber", "RYgamer1", "BoggledToggo", "Lennerd07", "JM4s", "Swifph \& Tet", "Vermilion_Stone", "2uba", "rmanimal", "Alienout", "RYgamer1", "Lagbolo", "ZombieKiler", "RYgamer1", "LendKaru"]
+@define String[] secretDifficulties = String["&8&lExpert", "&a&lNovice", "&c&lVery Hard", "&6&lHard", "&b&lEasy", "&7&lNot Rated Yet", "&6&lHard", "&e&lModerate", "&8&lExpert", "&6&lHard", "&6&lHard", "&6&lHard", "&c&lVery Hard", "&c&lVery Hard", "&c&lVery Hard", "&a&lNovice", "&8&lExpert", "&#EDE8EA&lVery Easy", "&a&lNovice", "&6&lHard", "&c&lVery Hard", "&c&lVery Hard", "&c&lVery Hard", "&e&lModerate", "&e&lModerate"]
+@define String[] secretMapTypes = String["Adventure with Parkour, Maze, Puzzle, Dropper, Search, Guess and Story", "Pure Maze", "Pure Parkour", "Pure Parkour", "Pure Guess", "Maze with Parkour, Puzzle, And Search", "Parkour with Search", "Pure Dropper", "Co-op Parkour with Puzzle", "Pure Search", "Parkour with Search", "Guess with Story", "Parkour with Puzzle and Maze", "Parkour with Search", "Search with Puzzle and Parkour", "Gambling", "Pure Parkour", "Pure Maze", "Pure Puzzle", "Puzzle with Maze, Search, and Parkour", "Search with Parkour", "Pure Parkour", "Pure Parkour", "Aim Trainer", "Fish..."]
+
+@define String[] colorList4 = String["#cc93cb", "#d88dbe", "#e289af", "#e7869e", "#e9868b", "#e68879", "#e08c68", "#d59258", "#c7984b", "#b59f42", "#a0a540", "#88aa44", "#6baf4f", "#46b360", "#00b575", "#00b48d", "#00b1a3", "#00afb5", "#00adc5", "#00acd3", "#00aae4", "#00a7fb", "#209fff", "#6d95ff", "#9c86ff", "#c375ff"]
+# @define String[] colorList4 = String["#00a7fa", "#08a5fa", "#0fa3fa", "#17a1fb", "#1e9ffb", "#269dfb", "#2d9bfb", "#349afb", "#3c98fc", "#4396fc", "#4b94fc", "#5292fc", "#5a90fc", "#628efd", "#698cfd", "#708afd", "#7888fd", "#8086fd", "#8784fd", "#8e82fe", "#9681fe", "#9e7ffe", "#a57dfe", "#ac7bfe", "#b479ff", "#bb77ff", "#c375ff"]
+
+# #f0ff1f
+# #fdf612
+# #ffed0c
+# #ffe55f
+# #ffdf7f
+# #ffd98f
+# #ffd498
+# #ffce9d
+# #ffc9a1
+# #ffc4a4
+# #ffbfa6
+# #ffb9a7
+# #ffb4a9
+# #ffaeab
+# #ffa8ad
+# #ffa2af
+# #ff9bb2
+# #ff94b6
+# #ff8cbc
+# #ff83c2
+# #ff78cc
+# #ff6bd8
+# #ff64e4
+# #f567ec
+# #e56bf4
+# #d46ffa
+# #c273ff
+
+
+
+# @for Int i in list::range(0, 179)
+#     @player {{meowList[i]}} {{Int(math::random(0.0D, 179.0D))}}
+# @done
+
+@if canTalkToDuck[player] == true
+@if duckCount[player] == 0
+    @player &e&lDuck&r: meow
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = false
+    @delay 30
+    @player &7It seems like this duck has a lot to say!
+    @player &7Maybe I should talk to it more...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @delay 10
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] > 0
+@if duckCount[player] == 172
+    @bypass /rocket {{player}} -10 0.5 -0.2
+    @player &e&lDuck&r: &lGET AWAY FROM ME!!! &r&7({{duckCount[player]}}/1000)
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 {{Float(duckCount[player]) / Float(1000) * 1.5 + 0.5}}
+    @bypass playsound minecraft:entity.generic.explode master @s ~ ~ ~ 2 1
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = false
+    @bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^1 0 0 0 0 2 force @s
+    @bypass /particle minecraft:explosion -9172 97 9676 1 1 1 0 10 normal @s
+    @delay 2s
+    @player &7What the heck?? Why did he do that :(
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] == 173
+    @var canTalkToDuck[player] = false
+    @player &7I'm sorry I clicked on you so much!
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @delay 15
+    @player &7Will you forgive me &e&lDuck&7?
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @delay 25
+    @player &e&lDuck&r: hmmm...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.5
+    @delay 40
+    @player &e&lDuck&r: hmmmmm...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.75
+    @delay 55
+    @player &e&lDuck&r: hmmmmmmmm...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1.25
+    @delay 4s
+    @player &e&lDuck&r: &dmeow
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 20
+    @player &7bruh okay...
+    @delay 10
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.75
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+
+# Earthquake
+@elseif duckCount[player] == 326
+    @var canTalkToDuck[player] = false
+    @bypass /playsound minecraft:block.gravel.break master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /playsound minecraft:block.gravel.break master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /execute as @s at @s anchored eyes run minecraft:tp ~{{math::random(0.0D, 0.1D) - 0.05}} ~ ~{{math::random(0.0D, 0.1D) - 0.05}}
+    @bypass execute in minecraft:theta run particle block{block_state:"minecraft:dirt"} -9173 96 9675 1 0.25 1 .01 4 normal @s
+    @bypass execute in minecraft:theta run particle block{block_state:"minecraft:gravel"} -9173 96 9675 1 0.25 1 .01 4 normal @s
+    @delay 1s
+    @player &7What was that?
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @delay 30
+    @for Int i in list::range(0, 120)
+        @bypass /playsound minecraft:block.gravel.break master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /playsound minecraft:block.gravel.break master @s ~ ~ ~ 1 {{math::random(0.5D, 2.0D)}}
+        @bypass /execute as @s at @s anchored eyes run minecraft:tp ~{{math::random(0.0D, 0.1D) - 0.05}} ~ ~{{math::random(0.0D, 0.1D) - 0.05}}
+        @bypass execute in minecraft:theta run particle block{block_state:"minecraft:dirt"} -9173 96 9675 1 0.25 1 .01 4 normal @s
+        @delay 1
+        @bypass execute in minecraft:theta run particle block{block_state:"minecraft:gravel"} -9173 96 9675 1 0.25 1 .01 4 normal @s
+        @if i < 25
+            @delay 2
+            @if i == 15
+                @player &7Is this an earthquake?!?!
+                @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+            @fi
+        @elseif i >= 25 && i < 60
+            @delay 1
+        @elseif i >=60 && i < 115
+            @delay 0
+            @if i == 90
+                @player &7WHAT IS HAPPENING?!?!?!
+                @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+            @fi
+        @else
+            @delay 4
+        @fi
+    
+    @done
+    @delay 1s
+    @player &7Uhhh that was scary...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.7
+    @delay 15
+    @player &7This duck must be very powerful.
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.8
+    @delay 45
+    @player &7Uh oh.
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.9
+    @delay 10
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] == 512
+    @var canTalkToDuck[player] = false
+    @player &e&lDuck&r: &#FF54EE&l&kI &#FC55EF&l&ka&#FA57EF&l&km &#F758F0&l&kg&#F559F1&l&ko&#F25AF2&l&ki&#F05CF2&l&kn&#ED5DF3&l&kg &#EB5EF4&l&kt&#E860F4&l&ko &#E661F5&l&kt&#E362F6&l&ke&#E164F7&l&kl&#DE65F7&l&kl &#DB66F8&l&ky&#D967F9&l&ko&#D669F9&l&ku &#D46AFA&l&ks&#D16BFB&l&ke&#CF6DFB&l&kc&#CC6EFC&l&kr&#CA6FFD&l&ke&#C770FE&l&kt&#C273FF&l&ks
+    @bypass /playsound minecraft:entity.enderman.scream master @s ~ ~ ~ 1 0.7
+    @bypass /playsound minecraft:block.portal.travel master @s ~ ~ ~ 1 0
+    @delay 20
+    @for Int i in list::range(0, 140)
+        @if i < 70
+            @bypass execute as @s at @s anchored eyes run minecraft:tp {{player}} ~ ~ ~ ~{{i / 2}} ~
+            @delay 1
+            @bypass execute as @s at @s anchored feet run particle minecraft:reverse_portal {{player.getX()}} {{player.getY() + 0.2}} {{player.getZ()}} 1 0 1 1 10 normal @s
+            
+            @if i == 20
+                @player &7Ok what now bruh
+                @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+            @elseif i == 60
+                @player &7Nah this is crazy.
+                @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+            @fi
+
+            # @player DEBUG: {{player.getX()}} {{player.getY() + 0.2}} {{player.getZ()}}
+        @else
+            @bypass execute as @s at @s anchored eyes run minecraft:tp {{player}} ~ ~ ~ ~{{70 - (i / 2)}} ~
+            @delay 1
+            @bypass execute as @s at @s anchored feet run particle minecraft:reverse_portal {{player.getX()}} {{player.getY() + 0.2}} {{player.getZ()}} 1 0 1 1 10 normal @s
+            
+            @if i == 110
+                @player &7No way bro just cast a spell on me.
+                @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+            @fi
+        @fi
+    @done
+    @delay 50
+    @player &7...
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 0.7 0.7
+    @delay 10
+    @player &7Alright then.
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 0.7
+    @delay 10
+    # @player {{player.getX()}} {{player.getY() + 0.2}} {{player.getZ()}}
+
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] == 970
+    @var canTalkToDuck[player] = false
+    @player &e&lDuck&r: I have enjoyed our conversation so far &l{{player}}.
+    @bypass /playsound minecraft:entity.panda.hurt master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 0.7D)}}
+    @delay 40
+    @player &7Sure man, me too.
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+    @delay 10
+    @player &e&lDuck&r: BEHOLD! My final transformation.
+    @bypass /playsound minecraft:entity.panda.hurt master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 0.7D)}}
+    @delay 30
+    @bypass playsound minecraft:entity.generic.explode master @s ~ ~ ~ 2 1
+    @bypass /particle minecraft:explosion -9172 97 9676 1 1 1 0 10 normal @s
+    @bypass /playsound minecraft:block.end_portal.spawn master @s ~ ~ ~ 1 1.25
+
+    @for Int i in list::range(0, 90)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+        @if i == 20
+            @player &e&lDuck&r: I am now...
+            @bypass /playsound minecraft:entity.panda.hurt master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 0.7D)}}
+        @elseif i == 30
+            @bypass /title @s times 86 0 0 
+            @bypass /title @s title [{"bold":true,"color":"#F0FF1F","text":"M"},{"color":"#E7E24D","text":"r"},{"color":"#DDC67A","text":". "},{"color":"#D4A9A8","text":"D"},{"color":"#CD95C8","text":"u"},{"color":"#C98ADA","text":"c"},{"color":"#C273FF","text":"k"}]
+            @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8MR DUCK!!!!!!!!!!!!!!!
+            @bypass /playsound minecraft:entity.ender_dragon.death master @s ~ ~ ~ 2 0
+            @bypass /playsound minecraft:entity.ender_dragon.death master @s ~ ~ ~ 2 2
+            @bypass /playsound minecraft:entity.ender_dragon.death master @s ~ ~ ~ 2 1
+        @elseif i == 50
+            @bypass /stopsound {{player}}
+        @elseif i == 51
+            @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Ok cut that out.
+            @bypass playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+            @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+        @elseif i == 66
+            @player &7I'm so confused.
+            @bypass playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+        @elseif i == 70
+            @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8I will now begin to share my wise knowledge I have gathered over the years. Please pay attention.
+            @bypass playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+            @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+        @elseif i == 80
+            @player &7ok
+            @bypass playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1
+        @fi
+    @done
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] > 970 && duckCount <= 999
+    @var canTalkToDuck[player] = false
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8{{wisdomList[Int(math::random(0.0D, 95.0D))]}} &7({{duckCount[player]}}/1000) 
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 15)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+    @done
+
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+@elseif duckCount[player] == 1000
+    @var canTalkToDuck[player] = false
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DThank you for keeping me company &l{{player}}.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 60
+    @player &7That was the best advice I have ever heard in my entire life.
+    @bypass playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1.3
+    @delay 50
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DPerhaps I was too harsh on you {{player}}.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 40
+    @player &7Yeah bro you actually exploded me.
+    @bypass playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1.3
+    @delay 30
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DNonetheless, there is something I would like to share with you.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 60
+    @player &7Please no more advice.
+    @bypass playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 1.3
+    @delay 30
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DThis land that we stand in is riddled with hidden &lsecrets&#E7E24D.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 60
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DOver the years, I have located and conquered all there is to find in these lands.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 60
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#E7E24DI will share my knowledge with you, and tell you which secrets you have and haven't found.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @var duckCount[player] += 1
+    @var canTalkToDuck[player] = true
+
+@elseif duckCount[player] > 1000
+    @var canTalkToDuck[player] = false
+    @var duckCount[player] += 1
+
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Ah, hello {{player}}!
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 10)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+    @done
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Let me pull up your &lsecret files...
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 15)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass /playsound minecraft:item.book.page_turn master @s -9171.50 96.00 9676.50 1 {{math::random(0.9D, 1.1D)}}
+        @delay 4
+    @done
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Aha! Here we are.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 4)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @if i == 2 
+            @bypass /playsound minecraft:item.book.page_turn master @s -9171.50 96.00 9676.50 1 {{math::random(0.9D, 1.1D)}}
+        @fi
+        @delay 4
+    @done
+    @for Int i in list::range(0, 60)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+        @if i == 3
+            @bypass playsound minecraft:item.armor.equip_wolf master @s -9171.50 96.00 9676.50 1 0.9
+            @bypass playsound minecraft:item.armor.equip_leather master @s -9171.50 96.00 9676.50 1 1.1
+            @bypass playsound minecraft:item.armor.equip_elytra master @s -9171.50 96.00 9676.50 1 0.5
+            @player
+            @player &#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-&#F0FF1F&lM&#ECF333&lr&#E8E646&l. &#E4DA5A&lD&#E0CE6D&lu&#DCC281&lc&#D8B594&lk&#D4A9A8&l'&#D1A1B4&ls &#CF9AC1&lP&#CC92CD&la&#CA8ADA&lg&#C782E6&le&#C273FF&ls&#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-
+            @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[0]}}#X:&l  &#C273FF &nF&#CD95C8 &4 &#C273FF &nC&r &e Builders &#CD95C8- &lDifficulty")}}
+            @player 
+            @for Int j in list::range(0, 9)
+                @if secretsFoundList[player][j] == 0 && secretsCompletedList[player][j] == 0 
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &c ✕&:&c&lSecret Not Found.:&  &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[player][j] == 1 && secretsCompletedList[player][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &a ✔&:&a&lSecret Found!:& &d &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[player][j] == 0 && secretsCompletedList[player][j] == 1
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &c ✕&:&c&lSecret Not Found.:&  &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @else
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &a ✔ &d &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @fi
+                # @player &#CD95C8Difficulty: {{secretDifficulties[j]}}
+                # @player
+            @done
+            @for Int j in list::range(9, 25)
+                @if secretsFoundList[player][j] == 0 && secretsCompletedList[player][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &c ✕&:&c&lSecret Not Found.:&  &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[player][j] == 1 && secretsCompletedList[player][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &a ✔&:&a&lSecret Found!:& &d &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[player][j] == 0 && secretsCompletedList[player][j] == 1
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &c ✕&:&c&lSecret Not Found.:&  &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @else
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &a ✔&:&a&lSecret Found!:& &d &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @fi
+                # @player &#CD95C8Difficulty: {{secretDifficulties[j]}}
+                # @player                              &l &r  &{{colorList4[j + 1]}}#Difficulty
+            @done
+            @player &{{colorList4[26]}}#X:&l  &#C273FF &nF&#CD95C8 &4 &#C273FF &nC&r &e Builders &#CD95C8- &lDifficulty
+            @player
+            @player &#C273FFF = Found       &#C273FFC = Completed
+
+            @player &#CD95C8Secrets Found: &l{{Int(Float((Float(secretsFoundList[player].sum()) / 25) * 100) * 10) / 10}}%&4     &#CD95C8Completed: &l{{Int(Float((Float(secretsCompletedList[player].sum()) / 25) * 100) * 10) / 10}}%
+            @chatscript 100s harhaduck{{duckCount}} duckFunction(player)
+            @player &#CD95C8&nClick&#CD95C8 here to view someone else's progress!
+            @player &#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-&#F0FF1F&lM&#ECF333&lr&#E8E646&l. &#E4DA5A&lD&#E0CE6D&lu&#DCC281&lc&#D8B594&lk&#D4A9A8&l'&#D1A1B4&ls &#CF9AC1&lP&#CC92CD&la&#CA8ADA&lg&#C782E6&le&#C273FF&ls&#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-
+        @fi
+    @done
+
+    @var canTalkToDuck[player] = true
+@else 
+    @player &e&lDuck&r: {{meowList[Int(math::random(0.0D, 179.0D))]}} &7({{duckCount[player]}}/1000) 
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /playsound minecraft:entity.chicken.egg master @s -9171.50 96.00 9676.50 1 {{Float(duckCount[player]) / Float(1000) * 1.5 + 0.5}}
+    @var duckCount[player] += 1
+@fi
+@fi
+@fi
+
+
+
+
+
+

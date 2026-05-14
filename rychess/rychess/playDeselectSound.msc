@@ -1,0 +1,10 @@
+# playDeselectSound(Player player)
+# Plays the "piece deselected" sound. Fires when a previously-
+# selected piece is no longer the selected piece (i.e. when the
+# player clicks a different own piece, before the new piece's
+# selectSound). CHANGE the sound name below.
+
+@using rychess
+@fast
+
+@bypass /playsound minecraft:ui.button.click master @s -9134.0 -61.0 9669.0 1 0.8

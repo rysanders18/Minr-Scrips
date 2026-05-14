@@ -1,0 +1,72 @@
+# unmakeMove(Player player, Int move)
+# Reverts the last makeMove for this player. Must be called with
+# the same `move` Int passed to the matching makeMove. Pops the top
+# entry from undoStack to restore captured piece, castling, ep,
+# halfmove, AND the prior runningScore (saved at slot 4 by
+# makeMove). The runningScore restore is what makes the incremental
+# eval work - we don't need to recompute the delta in reverse.
+# Side to move and fullmove are derived (no need to store them).
+# Handles all move types: normal, capture, double push, ep capture
+# (restores the captured pawn at to-forward, not at to), castling
+# (reverses the rook move), and promotion. For promotions, the piece
+# at `to` after make is a queen but we must put a pawn back at
+# `from` - the pre-promotion type is reconstructed from movePromo(move)
+# (non-zero => was a pawn) and the queen's color, so it doesn't need
+# to be stored on undoStack.
+
+@using rychess
+@fast
+
+@define Int from = moveFrom(move)
+@define Int to = moveTo(move)
+@define Int flags = moveFlags(move)
+
+@var undoPly[player] = undoPly[player] - 1
+@define Int base = undoPly[player] * 5
+@define Int capturedPiece = undoStack[player][base]
+@define Int priorCastling = undoStack[player][base + 1]
+@define Int priorEp = undoStack[player][base + 2]
+@define Int priorHalfmove = undoStack[player][base + 3]
+@define Int priorRunningScore = undoStack[player][base + 4]
+
+@define Int movedPiece = board[player][to]
+@define Int movedColor = pieceColor(movedPiece)
+
+@if movePromo(move) != 0
+    @var movedPiece = 1
+    @if movedColor == 1
+        @var movedPiece = 7
+    @fi
+@fi
+
+@var board[player][from] = movedPiece
+
+@if flags == 3
+    @var board[player][to] = 0
+    @define Int forward = 8
+    @if movedColor == 1
+        @var forward = -8
+    @fi
+    @define Int capturedSq = to - forward
+    @var board[player][capturedSq] = capturedPiece
+@elseif flags == 4
+    @var board[player][to] = 0
+    @var board[player][to + 1] = board[player][to - 1]
+    @var board[player][to - 1] = 0
+@elseif flags == 5
+    @var board[player][to] = 0
+    @var board[player][to - 2] = board[player][to + 1]
+    @var board[player][to + 1] = 0
+@else
+    @var board[player][to] = capturedPiece
+@fi
+
+@var castling[player] = priorCastling
+@var epSquare[player] = priorEp
+@var halfmoveClock[player] = priorHalfmove
+@var runningScore[player] = priorRunningScore
+
+@if sideToMove[player] == 0
+    @var fullmove[player] = fullmove[player] - 1
+@fi
+@var sideToMove[player] = 1 - sideToMove[player]

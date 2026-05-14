@@ -1,0 +1,112 @@
+# testMannequin.msc
+# Top-down end-to-end test for the mannequin namespace. Run from in-game
+# (chat trigger / @chatscript) standing on flat ground with ~60 blocks of
+# clearance in every horizontal direction. Each cruiseTo blocks until
+# cruiseTick reaches arrival, so phases run sequentially without manual
+# waits between them.
+#
+# What this verifies:
+#   P1  math::sin/cos/arctan return degrees (the design assumes this).
+#   P2  spawnMannequin templates correctly: /summon mannequin syntax,
+#       UUID-templated tag, player-name nameplate, isSpawned flag.
+#   P3  cruiseTo + cruiseTick + teleportMannequin pipeline reaches a
+#       short eastward target. Validates yaw=-90 (east) branch of the
+#       quadrant block and that /tp accepts the per-tick stream.
+#   P4  Reverse cruise to the start point. Validates yaw=+90 (west)
+#       branch and that re-arming via cruiseTo from a stopped state
+#       picks up cleanly (tickGen bump).
+#   P5  Diagonal SE cruise. Validates the dz>0 / dx<0 quadrant branch
+#       and produces a yaw that is not ±90 / 0 / 180.
+#   P6  Long (~50 b) cruise far from the executor. Validates that
+#       /tp @e[tag=...,limit=1] still resolves the mannequin once it
+#       has left the chunk we summoned in.
+#   P7  Cruise back home. Sanity-cleans the world.
+#
+# What this does NOT cover (needs separate triggers because cruiseTo
+# blocks the caller):
+#   - Mid-cruise cruiseTo retarget (the tickGen reentrancy guard)
+#   - stopCruising firing while cruiseTick is still in its loop
+
+@using mannequin
+@fast
+
+# ---------------------------------------------------------------------------
+# Phase 1 — math primitives
+# ---------------------------------------------------------------------------
+@player &b=== mannequin test ===
+@player &7P1: math
+@player   &7cos(0D)=&f{{math::cos(0D)}} &8(want 1.0)
+@player   &7cos(180D)=&f{{math::cos(180D)}} &8(want -1.0)
+@player   &7sin(90D)=&f{{math::sin(90D)}} &8(want 1.0)
+@player   &7sin(-90D)=&f{{math::sin(-90D)}} &8(want -1.0)
+@player   &7arctan(1D)=&f{{math::arctan(1D)}} &8(want 45.0)
+@player   &7arctan(-1D)=&f{{math::arctan(-1D)}} &8(want -45.0)
+
+@delay 30
+
+# ---------------------------------------------------------------------------
+# Phase 2 — spawn
+# ---------------------------------------------------------------------------
+@player &7P2: spawn
+@define Double startX = player.getX()
+@define Double startY = player.getY()
+@define Double startZ = player.getZ()
+@var mannequin::spawnMannequin(player)
+@player   &7pos=&f({{curX[player]}}, {{curY[player]}}, {{curZ[player]}})
+@player   &7isSpawned=&f{{isSpawned[player]}} &8(want true)
+@player   &eYou should see a player-skinned mannequin with your name above it.
+
+@delay 40
+
+# ---------------------------------------------------------------------------
+# Phase 3 — short cruise +10 X (east)
+# ---------------------------------------------------------------------------
+@player &7P3: cruise +10 X (~40 ticks)
+@var mannequin::cruiseTo(player, Float(startX + 10D), Float(startZ))
+@player   &7arrived=&f({{curX[player]}}, {{curZ[player]}}) &8want ({{startX + 10D}}, {{startZ}})
+@player   &7isCruising=&f{{isCruising[player]}} &8(want false)
+@player   &7yaw=&f{{curYawDeg[player]}} &8(want ~-90, facing +X east)
+
+@delay 20
+
+# ---------------------------------------------------------------------------
+# Phase 4 — return -10 X (west). Tests the yaw flip + clean re-arm.
+# ---------------------------------------------------------------------------
+@player &7P4: return -10 X
+@var mannequin::cruiseTo(player, Float(startX), Float(startZ))
+@player   &7arrived=&f({{curX[player]}}, {{curZ[player]}})
+@player   &7yaw=&f{{curYawDeg[player]}} &8(want ~+90, facing -X west)
+
+@delay 20
+
+# ---------------------------------------------------------------------------
+# Phase 5 — diagonal SE +15 X, +15 Z
+# ---------------------------------------------------------------------------
+@player &7P5: diagonal +15 X, +15 Z
+@var mannequin::cruiseTo(player, Float(startX + 15D), Float(startZ + 15D))
+@player   &7arrived=&f({{curX[player]}}, {{curZ[player]}})
+@player   &7yaw=&f{{curYawDeg[player]}} &8(want ~-45, SE)
+
+@delay 20
+
+# ---------------------------------------------------------------------------
+# Phase 6 — long cruise (-50 X). Validates @e[tag] global resolution.
+# ---------------------------------------------------------------------------
+@player &7P6: long cruise to (startX-50, startZ+15) (~250 ticks)
+@var mannequin::cruiseTo(player, Float(startX - 50D), Float(startZ + 15D))
+@player   &7arrived=&f({{curX[player]}}, {{curZ[player]}})
+@player   &7&aIf the mannequin reached this position, @e[tag=...] resolves at distance.
+
+@delay 20
+
+# ---------------------------------------------------------------------------
+# Phase 7 — home
+# ---------------------------------------------------------------------------
+@player &7P7: home
+@var mannequin::cruiseTo(player, Float(startX), Float(startZ))
+@player   &7final=&f({{curX[player]}}, {{curZ[player]}})
+
+@player &b=== test complete ===
+@player &7Manual tests:
+@player   &7- mid-cruise retarget: fire two cruiseTo calls from separate triggers ~10 ticks apart, expect a curved arc
+@player   &7- stopCruising mid-cruise: cruiseTo from one trigger, stopCruising from another while the mannequin is moving

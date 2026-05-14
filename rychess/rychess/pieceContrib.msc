@@ -1,0 +1,53 @@
+# Int pieceContrib(Int piece, Int sq)
+# Returns the signed (material + PST) contribution of `piece` at
+# square `sq` from white's POV. White pieces contribute positively,
+# black negatively. Empty squares return 0. Used by makeMove and
+# unmakeMove to update runningScore[player] incrementally, so the
+# leaf evaluate() can skip the 64-square sweep.
+# The PST lookup applies the same white/black square flip that
+# evaluate.msc uses: white pieces index pstSq=sq; black pieces
+# index pstSq=(7-rank)*8+file.
+# MSC NOTE: pieceColor and pieceType are inlined here rather than
+# called as separate functions. MSC's recursion limit is 100 call
+# frames, and pieceContrib is invoked up to 5 times per makeMove,
+# itself deep inside searchInner/qsearch recursion. Every saved
+# frame matters; with the helpers called separately we hit the
+# limit at "Recursion too deep: 101 > 100 in script pieceColor".
+
+@using rychess
+@fast
+
+@if piece == 0
+    @return 0
+@fi
+
+@define Int[] values = Int[0, 100, 320, 330, 500, 900, 20000]
+
+@define Int type = piece
+@define Int sign = 1
+@if piece >= 7
+    @var type = piece - 6
+    @var sign = -1
+@fi
+
+@define Int pstSq = sq
+@if sign == -1
+    @var pstSq = (7 - sq / 8) * 8 + (sq % 8)
+@fi
+
+@define Int pstVal = 0
+@if type == 1
+    @var pstVal = pawnPST[pstSq]
+@elseif type == 2
+    @var pstVal = knightPST[pstSq]
+@elseif type == 3
+    @var pstVal = bishopPST[pstSq]
+@elseif type == 4
+    @var pstVal = rookPST[pstSq]
+@elseif type == 5
+    @var pstVal = queenPST[pstSq]
+@elseif type == 6
+    @var pstVal = kingPST[pstSq]
+@fi
+
+@return sign * (values[type] + pstVal)

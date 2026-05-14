@@ -1,0 +1,54 @@
+# Cookie Reset Button 
+@using cookie
+@fast
+
+@cooldown 10s
+
+@define String confirmation
+@player &7Type &#D3D6E0"Yes"&7 in chat to confirm reset.
+@prompt 20s confirmation &cYou took too long!
+@var confirmation = confirmation.toLowerCase()
+
+@if confirmation == "yes"
+
+    @var netheriteUnlocked[player] = false
+    @var milkUnlocked[player] = false
+    @var cookieCount[player] = 0L
+    @var timeSinceLastCookie[player] = 10000L
+    @var cookiesClicked[player] = 0
+    @var totalCookiesEarned[player] = 0L
+    @var cookieLog[player] = Long[0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L]
+    @var cookieLogTimes[player] = Long[0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L]
+    @var cookieCooldown[player] = 1000
+    @var cooldownStage[player] = 0
+    @var lastAverageCPS[player] = 0.0F
+    @var cookieMultiplier[player] = 1.0F
+    @var multiplierStage[player] = 0
+    @var goldenCookieChance[player] = 50
+    @var goldenCookieMultiplier[player] = 20
+    @var goldenCookieChanceStage[player] = 0
+    @var goldenCookiesClicked[player] = 0
+    @var diamondCookieChance[player] = 500
+    @var diamondCookieChanceStage[player] = 0
+    @var diamondCookiesClicked[player] = 0
+    @var roomNumber[player] = 1
+    @var goldenCookieLocations[player] = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    @var diamondCookieLocations[player] = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    @var milkActivated[player] = false
+    @var milkDuration[player] = 5
+    @var milkDurationStage[player] = 0
+    @var milkMultiplier[player] = 2L
+    @var milkMultiplierStage[player] = 0
+    @var lastMilkActivationTime[player]
+
+    
+    
+    @var cookieRoomSetup(roomNumber[player] - 1, player)
+    @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.75 1.0
+    @player &#d4d4d4---------------------------------
+    @player &#d4d4d4● Reset all &6&lCookie Data &#d4d4d4successfully!
+    @player &#d4d4d4---------------------------------
+@fi
+
+
+

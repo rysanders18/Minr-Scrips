@@ -1,0 +1,17 @@
+# 100% Door
+@fast
+@using Harha
+
+@cooldown 1s
+
+@var calculate100(player)
+
+@if progress100[player] < 100.0F
+    @player &cYou must have 100% completion before unlocking this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 1
+    @bypass playsound minecraft:block.iron_door.close master @s ~ ~ ~ 0.75 1
+@else
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.75 1
+    @bypass playsound minecraft:block.iron_door.open master @s ~ ~ ~ 0.75 1
+    @var player.teleport(Position(-9220.5, 97.0, 9706.5, 180.0, 10.0, "Theta"))
+@fi

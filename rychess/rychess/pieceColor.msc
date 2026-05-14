@@ -1,0 +1,16 @@
+# Int pieceColor(Int piece)
+# Returns the color of a piece code:
+#   0 = white (codes 1..6)
+#   1 = black (codes 7..12)
+#  -1 = empty (code 0)
+
+@using rychess
+@fast
+
+@if piece == 0
+    @return -1
+@fi
+@if piece <= 6
+    @return 0
+@fi
+@return 1

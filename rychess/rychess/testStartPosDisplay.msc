@@ -1,0 +1,16 @@
+# testStartPosDisplay(Player player)
+# Phase 2 end-to-end smoke test: kicks off a new game, which sets up
+# the starting position, resets all per-player state, and renders the
+# board. Run this first to confirm the framework's basic plumbing
+# (board literal, per-player array writes, piece glyph lookup, chat
+# rendering) all hang together.
+
+@using rychess
+@fast
+
+@var newGame(player)
+
+@player &7Castling rights bits: {{castling[player]}} &7(expected 15)
+@player &7EP square: {{epSquare[player]}} &7(expected -1)
+@player &7Halfmove clock: {{halfmoveClock[player]}} &7(expected 0)
+@player &7Fullmove number: {{fullmove[player]}} &7(expected 1)

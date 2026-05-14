@@ -1,0 +1,45 @@
+# particleLine(Location startLocation, Location endLocation, Int points, Int delay, String particleType, Int particleCount)
+
+# Developed by RYgamer1! Enjoy :)
+
+# Location startLocation: The coordinates of the start of the particle line 
+# Location endLocation: The coordinates of the end of the particle line
+# Int points: The number of particles to spawn along the line
+# Int delay: The delay in ticks between each particle spawn (0 for instant)
+# String particleType: The type of particle to spawn (e.g., "minecraft:happy_villager")
+# Int particleCount: The number of particles to spawn at each point
+
+@fast
+@using nfa
+
+# Extract start coordinates
+@define Double startX = startLocation.getX()
+@define Double startY = startLocation.getY()
+@define Double startZ = startLocation.getZ()
+
+# Extract end coordinates
+@define Double endX = endLocation.getX()
+@define Double endY = endLocation.getY()
+@define Double endZ = endLocation.getZ()
+
+@define Double t
+@define Double particleX
+@define Double particleY
+@define Double particleZ
+
+# Spawn particles along the line
+@for Int i in list::range(0, points)
+    @var t = Double(i) / Double(points - 1)
+    @var particleX = startX + (endX - startX) * t
+    @var particleY = startY + (endY - startY) * t
+    @var particleZ = startZ + (endZ - startZ) * t
+
+    # Spawn the particle at the calculated position
+    @bypass /execute in minecraft:{{startLocation.getWorld().toLowerCase()}} run particle {{particleType}} {{particleX}} {{particleY}} {{particleZ}} 0 0 0 0 {{particleCount}}
+
+    @if (delay > 0) && (i < points - 1)
+        @var rytools::delay(delay)
+    @fi
+@done
+
+

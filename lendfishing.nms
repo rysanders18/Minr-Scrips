@@ -1,0 +1,81 @@
+@namespace lendfishing
+    errorMessage(String message)
+
+    summonInteraction(Player player)
+    disableInteraction(Player player)
+    enableInteraction(Player player)
+    spawnFish(Player player)
+
+
+    interactionEntityScript(Player player)
+    startFishing(Player player, Float catchChanceHalfSecond, Int maxTimeSeconds, Int initialDelaySeconds)
+
+    relative Int totalMoney = 0
+
+    relative Boolean isFishing = false
+    relative Boolean readyToCatch = false
+    relative Boolean isCatching = false
+    relative lendfishing::Loot nextLoot
+
+    String[] rarityNames = String["Common", "Uncommon", "Rare", "Legendary", "Extinct"]
+    String[] commandColors = String["white", "aqua", "green", "gold", "dark_purple"]
+    Vector3[] particleColors = Vector3[Vector3(1D, 1D, 1D), Vector3(0D, 0.6D, 1D), Vector3(0D, 1D, 0D), Vector3(1D, 0.667D, 0D), Vector3(1D, 0.129D, 0.941D)]
+
+    Float shinyBaseChance = 0.01
+
+    lendfishing::LootTable defaultLoot = lendfishing::LootTable(lendfishing::Loot[
+        lendfishing::Loot("DRIED_KELP", "Trash", Float[0.1, 3.0], 1, 0),
+        lendfishing::Loot("COD", "Cod", Float[0.3, 5.0], 10, 1),
+        lendfishing::Loot("SALMON", "Salmon", Float[1.0, 6.0], 15, 1),
+        lendfishing::Loot("EMERALD", "Gemstone", Float[4.0, 10.0], 55, 2),
+        lendfishing::Loot("DIAMOND", "Diamond", Float[40.0, 100.0], 550, 2)
+    ], Float[0.5, 0.2, 0.2, 0.1])
+
+    lendfishing::LootTable defaultLoot2 = lendfishing::LootTable(lendfishing::Loot[
+        lendfishing::Loot("COPPER_NUGGET", "Copper Nugget", Float[0.1, 0.5], 1, 1),
+        lendfishing::Loot("IRON_NUGGET", "Iron Nugget", Float[0.2, 0.6], 1, 1),
+        lendfishing::Loot("GOLD_NUGGET", "Gold Nugget", Float[0.3, 0.7], 2, 1),
+        lendfishing::Loot("COPPER_INGOT", "Copper Ingot", Float[2.1, 4.5], 10, 2),
+        lendfishing::Loot("IRON_INGOT", "Iron Ingot", Float[3.2, 5.6], 15, 2),
+        lendfishing::Loot("GOLD_INGOT", "Gold Ingot", Float[4.3, 6.7], 20, 2),
+        lendfishing::Loot("EMERALD", "Emerald", Float[10.0, 20.0], 40, 3),
+        lendfishing::Loot("DIAMOND", "Diamond", Float[20.0, 40.0], 60, 4),
+        lendfishing::Loot("NETHERITE", "Netherite", Float[40.0, 100.0], 120, 4)
+    ], Float[0.2, 0.15, 0.125, 0.105, 0.103, 0.1, 0.07, 0.055, 0.047])
+
+ 
+
+
+    # STATISTICS
+    relative Int fishCaught = 0
+    relative Int trashCaught = 0
+    relative Int treasureCaught = 0
+    relative Int legendariesCaught = 0
+    relative Int biggestFish = 0
+
+    @class Loot
+        String item
+        String name
+        Float minWeight
+        Float maxWeight
+        Int basePrice
+        Int rarity
+        String rarityName
+        Vector3 particleColor
+        String commandColor
+
+        Loot(String item, String name, Float[] weightRange, Int basePrice, Int rarity)
+
+        # Rolls random stats on the loot and returns the give and summon commands for it
+        String[] getLootInstanceCommandData(Player player)
+    @endclass
+    @class LootTable
+        lendfishing::Loot[] lootList
+        Float[] chances
+
+        LootTable(lendfishing::Loot[] lootList, Float[] chances)
+
+        lendfishing::Loot getLoot(Player player)
+        String[] getLootCommandData(Player player)
+    @endclass
+@endnamespace

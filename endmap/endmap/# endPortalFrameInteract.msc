@@ -1,0 +1,7 @@
+@using endmap
+@global_cooldown 50
+@fast
+
+@define Int frameNumber = 7
+@define Block targetBlock = Block(block.getX(), block.getY(), block.getZ(), block.getWorld())
+@var endPortalFrame(targetBlock, frameNumber)

@@ -1,0 +1,94 @@
+# recordInputs(Player player, Int durationTicks)
+# Records the player's per-tick input state for `durationTicks` ticks
+# into seven aligned Boolean[] arrays (inputForward, inputBackward,
+# inputLeft, inputRight, inputJump, inputSneak, inputSprint) plus two
+# Double[] arrays for look direction (inputYaw, inputPitch). All nine
+# arrays share the same length and index alignment.
+#
+# Per tick:
+#   1. Append `false` to all seven arrays — the just-appended slot at
+#      tickIdx == arr.length() - 1 is this tick's element.
+#   2. Issue seven /execute-if-predicate commands, one per input. Each
+#      command tests the live entity_properties.player.input field and,
+#      when held, runs `function execute mannequin::recInputTrue(...)`
+#      which flips that slot to true.
+#   3. @delay 1 tick.
+#
+# The append-false-then-conditionally-set-true pattern is needed because
+# /execute if predicate ... run only fires the inner command on truth;
+# we never get a "false" callback. So default-false + flip-on-true.
+#
+# Predicate source: minecraft:entity_properties (Java 1.21.2+). The
+# predicate matches when the named input is currently held; this is
+# evaluated synchronously when the /execute command runs, which is the
+# same tick @bypass emits it.
+#
+# Cross-MSC dispatch: `function execute mannequin::recInputTrue(...)` is
+# the canonical Minr bridge from a vanilla command back into an MSC
+# function (see endmap/theCubeAnimation.msc:54-56 for the same pattern).
+# Player(...) is reconstructed from the username because the inner
+# command runs in vanilla scope and can't capture the outer Player handle
+# directly — name reconstruction is the standard workaround.
+#
+# Yaw/pitch are recorded alongside the booleans into Double[] arrays
+# inputYaw and inputPitch. Read directly from player.getYaw()/getPitch()
+# each tick — no predicate bridge needed. Replay should treat consecutive
+# yaw samples as the short-way-around delta (wrap to (-180, 180]) so a
+# 359° → 1° transition replays as +2°, not -358°.
+#
+# Blocks for `durationTicks` ticks (50 ms each) — caller sees the
+# recording finish inline. 1000-tick (50 s) cap keeps any one recording
+# bounded; longer captures should chain multiple calls.
+
+@using mannequin
+@fast
+
+@if durationTicks > 1000
+    @var durationTicks = 1000
+@fi
+
+@var inputForward[player] = Boolean[]
+@var inputBackward[player] = Boolean[]
+@var inputLeft[player] = Boolean[]
+@var inputRight[player] = Boolean[]
+@var inputJump[player] = Boolean[]
+@var inputSneak[player] = Boolean[]
+@var inputSprint[player] = Boolean[]
+@var inputYaw[player] = Double[]
+@var inputPitch[player] = Double[]
+
+# Capture starting world position AND facing so any future playback can
+# warp the mannequin to the player's exact start pose. world is set so
+# collision block lookups during playback hit the right world.
+@var recordStartX[player] = player.getX()
+@var recordStartY[player] = player.getY()
+@var recordStartZ[player] = player.getZ()
+@var recordStartYaw[player] = Double(player.getYaw())
+@var recordStartPitch[player] = Double(player.getPitch())
+@var world[player] = player.getWorld()
+
+@for Int t in list::range(0, durationTicks)
+    @if !player.isOnline()
+        @return
+    @fi
+
+    @var inputForward[player].append(false)
+    @var inputBackward[player].append(false)
+    @var inputLeft[player].append(false)
+    @var inputRight[player].append(false)
+    @var inputJump[player].append(false)
+    @var inputSneak[player].append(false)
+    @var inputSprint[player].append(false)
+    @var inputYaw[player].append(Double(player.getYaw()))
+    @var inputPitch[player].append(Double(player.getPitch()))
+
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{forward:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 0, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{backward:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 1, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{left:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 2, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{right:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 3, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{jump:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 4, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{sneak:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 5, {{t}})
+    @bypass /execute as {{player}} if predicate {condition:"minecraft:entity_properties",entity:"this",predicate:{type_specific:{type:"minecraft:player",input:{sprint:true}}}} run function execute mannequin::recInputTrue(Player("{{player.getName()}}"), 6, {{t}})
+
+    @delay 1
+@done

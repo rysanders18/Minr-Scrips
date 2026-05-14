@@ -1,0 +1,28 @@
+# resetAllBoardTextures(Player player)
+# Force-resets every one of the 64 board squares to its original
+# light/dark texture, regardless of what highlightedSquares[player]
+# currently says. Used by newGame to clean up stale highlights left
+# over from a prior game / disconnect / player-handoff that didn't
+# go through the normal clearHighlights path.
+# Also clears highlightedSquares[player] so subsequent highlightMoves
+# starts from a known-empty state.
+#
+# 64 /data modify commands. Only call on game setup, not per-move -
+# clearHighlights is the cheaper option for interactive selection
+# since it only reverts the squares it tracked.
+
+@using rychess
+@fast
+
+@for Int sq in list::range(0, 64)
+    @define Int rank = sq / 8
+    @define Int file = sq % 8
+    @define Int tagRank = 7 - rank
+    @if isLightSquare(sq)
+        @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureLight}}"}]}
+    @else
+        @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureDark}}"}]}
+    @fi
+@done
+
+@var highlightedSquares[player] = Int[]

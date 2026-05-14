@@ -1,0 +1,24 @@
+# testReturnInLoop(Player player)
+# Phase 1 driver: confirm that calling a function that returns an
+# Int[] from inside a @for loop works as expected, that the returned
+# array's length() and sum() are usable, and that successive calls
+# do not share state.
+# Sums of buildList(1..5) are 0,1,3,6,10 -> grand total 20.
+
+@using rychess
+@fast
+
+@player &6=== Phase 1: Function-Return-In-Loop Test ===
+
+@define Int totalSum = 0
+@for Int size in list::range(1, 6)
+    @define Int[] sub = buildList(size)
+    @define Int subLen = sub.length()
+    @define Int subSum = sub.sum()
+    @player &eSize {{size}}: len={{subLen}} sum={{subSum}}
+    @var totalSum = totalSum + subSum
+@done
+
+@player &eGrand total: {{totalSum}} &7(expected 20)
+
+@player &6=== Done ===

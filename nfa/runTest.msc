@@ -1,0 +1,133 @@
+# Boolean runTest(String inputString, Player player, Boolean debug)
+
+# NFA Debug Script
+# Displays detailed step-by-step processing of an input string through the NFA
+
+@using nfa
+@fast
+
+# Test string
+# @define String inputString = "01"
+
+@if debug
+    @player &e=== NFA DEBUG MODE ===
+    @player &6Input: &e{{inputString}}
+    @player &r
+@fi
+
+# Get start states
+@define String[] currentStates = nfa::getStartStates(player)
+
+@if debug
+    @player &61. Start States:
+
+    @for String state in currentStates
+        @player &7 - {{state}}
+    @done
+@fi
+
+# Get epsilon closure of start states
+@define String[] withEpsilon = String[]
+@for String state in currentStates
+    @define String[] closure = nfa::getEpsilonClosure(player, state)
+    @for String s in closure
+        @if !withEpsilon.contains(s)
+            @var withEpsilon.append(s)
+        @fi
+    @done
+@done
+
+@if debug
+    @player &62. After ε-closure:
+    @for String state in withEpsilon
+        @player &7   - {{state}}
+    @done
+@fi
+
+@var visualizeStates(player, withEpsilon)
+@if debug
+    @delay 20
+@fi
+
+@var currentStates = withEpsilon
+
+# Process each symbol
+@for Int i in list::range(0, inputString.length())
+    @if i < inputString.length()
+        @define String symbol = inputString.substring(i, i + 1)
+        
+        @if debug
+            @player 
+            @player &63. Processing symbol '{{symbol}}':
+        @fi
+        
+        # Move
+        @var currentStates = nfa::move(player, currentStates, symbol)
+        @if debug
+            @player &7 After move:
+            @for String state in currentStates
+                @player &7 - {{state}}
+            @done
+        @fi
+        
+        # Epsilon closure
+        @var withEpsilon = String[]
+        @for String state in currentStates
+            @define String[] closure = nfa::getEpsilonClosure(player, state)
+            @for String s in closure
+                @if !withEpsilon.contains(s)
+                    @var withEpsilon.append(s)
+                @fi
+            @done
+        @done
+        
+        @var currentStates = withEpsilon
+
+        @if debug
+            @player &7 After ε-closure:
+            @for String state in currentStates
+                @player &7 - {{state}}
+            @done
+        @fi
+        
+        @bypass visualizeStates(player, currentStates)
+        @if debug
+            @delay 20
+        @fi
+    @fi
+@done
+
+# Check acceptance
+@define Boolean accepted = false
+
+@if debug
+    @player 
+    @player &64. Final States:
+@fi
+
+@for String state in currentStates
+    @if nfa::isAcceptState(state)
+        @if debug
+            @player &7 - {{state}} &a(ACCEPT STATE!)
+        @fi
+        @var accepted = true
+    @else
+        @if debug
+            @player &7 - {{state}}
+        @fi
+    @fi
+@done
+
+@if debug
+    @player 
+    @if accepted
+        @player &a✓ STRING ACCEPTED!
+        @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 1 1.5
+    @else
+        @player &c✗ STRING REJECTED!
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 0.5
+    @fi
+
+    @player &e==================
+@fi
+@return accepted

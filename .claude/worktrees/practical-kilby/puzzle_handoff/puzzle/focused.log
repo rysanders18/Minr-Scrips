@@ -1,0 +1,37 @@
+Start: conv=19, h=-7
+
+=== beam=600, depth=25, budget=300s ===
+[d=1] new best_h=-10: green Z-chain (6925, 146, 2546)..(6925, 146, 2548) slide +Z×1 [convert: ((6925, 146, 2546),)]
+d=1: frontier=58, seen=59, best_h=-10, t=0.0s, est_mem=0MB
+d=3: frontier=600, seen=15257, best_h=-10, t=2.7s, est_mem=9MB
+d=5: frontier=600, seen=41689, best_h=-10, t=7.3s, est_mem=24MB
+d=7: frontier=600, seen=70273, best_h=-10, t=12.1s, est_mem=40MB
+d=9: frontier=600, seen=96238, best_h=-10, t=16.8s, est_mem=55MB
+d=11: frontier=601, seen=118671, best_h=-10, t=20.8s, est_mem=68MB
+d=13: frontier=600, seen=142506, best_h=-10, t=25.1s, est_mem=82MB
+d=15: frontier=600, seen=164150, best_h=-10, t=29.1s, est_mem=94MB
+d=17: frontier=600, seen=183137, best_h=-10, t=32.7s, est_mem=105MB
+d=19: frontier=600, seen=201304, best_h=-10, t=36.3s, est_mem=115MB
+d=21: frontier=600, seen=220104, best_h=-10, t=40.0s, est_mem=126MB
+d=23: frontier=600, seen=241735, best_h=-10, t=44.0s, est_mem=138MB
+d=25: frontier=600, seen=265323, best_h=-10, t=48.1s, est_mem=152MB
+
+=== beam=1500, depth=30, budget=400s ===
+[d=1] new best_h=-10: green Z-chain (6925, 146, 2546)..(6925, 146, 2548) slide +Z×1 [convert: ((6925, 146, 2546),)]
+d=1: frontier=58, seen=59, best_h=-10, t=0.0s, est_mem=0MB
+d=3: frontier=1500, seen=26816, best_h=-10, t=5.4s, est_mem=15MB
+d=5: frontier=1500, seen=81619, best_h=-10, t=16.2s, est_mem=47MB
+d=7: frontier=1500, seen=138994, best_h=-10, t=27.1s, est_mem=80MB
+d=9: frontier=1500, seen=192876, best_h=-10, t=37.4s, est_mem=110MB
+d=11: frontier=1500, seen=245458, best_h=-10, t=47.4s, est_mem=140MB
+d=13: frontier=1500, seen=297528, best_h=-10, t=57.4s, est_mem=170MB
+d=15: frontier=1500, seen=348882, best_h=-10, t=67.6s, est_mem=200MB
+d=17: frontier=1500, seen=391660, best_h=-10, t=76.7s, est_mem=224MB
+d=19: frontier=1500, seen=435207, best_h=-10, t=85.8s, est_mem=249MB
+d=21: frontier=1501, seen=479633, best_h=-10, t=95.1s, est_mem=274MB
+d=23: frontier=1500, seen=526583, best_h=-10, t=104.5s, est_mem=301MB
+d=25: frontier=1500, seen=581476, best_h=-10, t=114.8s, est_mem=333MB
+d=27: frontier=1500, seen=635698, best_h=-10, t=125.5s, est_mem=364MB
+d=29: frontier=1500, seen=697048, best_h=-10, t=136.8s, est_mem=399MB
+
+No solution found.

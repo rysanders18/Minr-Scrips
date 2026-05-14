@@ -1,0 +1,14 @@
+# String squareName(Int sq)
+# Converts a square index (0..63) to algebraic notation.
+# 0 -> "a1", 7 -> "h1", 28 -> "e4", 56 -> "a8", 63 -> "h8".
+
+@using rychess
+@fast
+
+@define String[] files = String["a", "b", "c", "d", "e", "f", "g", "h"]
+@define String[] ranks = String["1", "2", "3", "4", "5", "6", "7", "8"]
+
+@define Int file = sq % 8
+@define Int rank = sq / 8
+
+@return files[file] + ranks[rank]

@@ -1,0 +1,69 @@
+# Double collideZ(Player player, Double dz)
+# Per-axis Z collision sweep. Mirror of collideX. Uses the entity's
+# current (post-Y-move, possibly post-X-move depending on dominance order)
+# AABB and clamps dz against blocks in the swept Z volume × current
+# X/Y ranges.
+#
+# Per-cell shape comes from mannequin::getBlockBoxes; see collideX for
+# the byMin extension and per-sub-box overlap rationale.
+
+@using mannequin
+@fast
+
+@define Double minX = curX[player] - playerHalfWidth
+@define Double maxX = curX[player] + playerHalfWidth
+@define Double minZ = curZ[player] - playerHalfWidth
+@define Double maxZ = curZ[player] + playerHalfWidth
+@define Double minY = curY[player]
+@define Double maxY = curY[player] + playerHeight
+
+@define Double sweptMinZ = minZ
+@define Double sweptMaxZ = maxZ
+@if dz < 0D
+    @var sweptMinZ = minZ + dz
+@elseif dz > 0D
+    @var sweptMaxZ = maxZ + dz
+@fi
+
+@define Int bxMin = Int(math::floor(minX))
+@define Int bxMax = Int(math::floor(maxX))
+@define Int byMin = Int(math::floor(minY)) - 1
+@define Int byMax = Int(math::floor(maxY))
+@define Int bzMin = Int(math::floor(sweptMinZ))
+@define Int bzMax = Int(math::floor(sweptMaxZ))
+
+@define Double newDz = dz
+
+@for Int bx in list::range(bxMin, bxMax + 1)
+    @for Int by in list::range(byMin, byMax + 1)
+        @for Int bz in list::range(bzMin, bzMax + 1)
+            @define Double[] boxes = mannequin::getBlockBoxes(bx, by, bz, world[player])
+            @define Int n = boxes.length() / 6
+            @for Int i in list::range(0, n)
+                @define Int j = i * 6
+                @define Double blockMinX = Double(bx) + boxes[j]
+                @define Double blockMinY = Double(by) + boxes[j + 1]
+                @define Double blockMinZ = Double(bz) + boxes[j + 2]
+                @define Double blockMaxX = Double(bx) + boxes[j + 3]
+                @define Double blockMaxY = Double(by) + boxes[j + 4]
+                @define Double blockMaxZ = Double(bz) + boxes[j + 5]
+                @if !(maxX <= blockMinX || minX >= blockMaxX) && !(maxY <= blockMinY || minY >= blockMaxY)
+                    @if newDz > 0D && maxZ <= blockMinZ
+                        @define Double gapPos = blockMinZ - maxZ
+                        @if gapPos < newDz
+                            @var newDz = gapPos
+                        @fi
+                    @fi
+                    @if newDz < 0D && minZ >= blockMaxZ
+                        @define Double gapNeg = blockMaxZ - minZ
+                        @if gapNeg > newDz
+                            @var newDz = gapNeg
+                        @fi
+                    @fi
+                @fi
+            @done
+        @done
+    @done
+@done
+
+@return newDz

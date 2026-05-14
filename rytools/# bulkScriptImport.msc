@@ -1,0 +1,60 @@
+# bulkScriptImport
+
+@fast
+
+# ALL INPUTS
+# corner1
+@define Vector3 corner1 = Vector3(-8824, 80, 9670)
+
+# corner2
+@define Vector3 corner2 = Vector3(-8836, 71, 9682)
+
+# World
+@define String world = "Theta"
+
+# scriptType, i for interact, w for walk, g for ground, ect
+@define String scriptType = "i"
+
+# script link
+@define String scriptLink = "https://paste.minr.org/zehekupifu"
+
+@define Int x1
+@define Int y1
+@define Int z1
+@define Int x2
+@define Int y2
+@define Int z2
+
+@if corner1.getX() > corner2.getX()
+    @var x1 = Int(corner2.getX())
+    @var x2 = Int(corner1.getX())
+@else
+    @var x1 = Int(corner1.getX())
+    @var x2 = Int(corner2.getX())
+@fi
+@if corner1.getY() > corner2.getY()
+    @var y1 = Int(corner2.getY())
+    @var y2 = Int(corner1.getY())
+@else
+    @var y1 = Int(corner1.getY())
+    @var y2 = Int(corner2.getY())
+@fi
+@if corner1.getZ() > corner2.getZ()
+    @var z1 = Int(corner2.getZ())
+    @var z2 = Int(corner1.getZ())
+@else
+    @var z1 = Int(corner1.getZ())
+    @var z2 = Int(corner2.getZ())
+@fi
+
+@for Int x in list::range(x1, x2 + 1)
+    @for Int y in list::range(y1, y2 + 1)
+        @for Int z in list::range(z1, z2 + 1)
+            @bypass /s i {{scriptType}} {{x}} {{y}} {{z}} {{world}} {{scriptLink}}
+            @player {{x}} {{y}} {{z}} done! Progress: {{Float((x - x1) * (y2 - y1 + 1) * (z2 - z1 + 1) + (y - y1) * (z2 - z1 + 1) + (z - z1) + 1) * 100 / Float((x2 - x1 + 1) * (y2 - y1 + 1) * (z2 - z1 + 1))}}%
+            @delay 3
+        @done
+        @delay 1
+    @done
+    @delay 1
+@done

@@ -1,0 +1,19 @@
+# Boolean isLightSquare(Int sq)
+# True iff sq is currently displaying the light board texture
+# (2dca60e4...), false if dark (f392f7c3...).
+# The rychessboard<R><F> entity tags are flipped along the rank
+# axis vs the logical chess rank (entity tag R = 7 - logical rank).
+# Since __init__.msc assigned light to (TAG_rank + TAG_file) even,
+# the light squares in logical chess coords are at (7-rank+file)
+# even. clearHighlights uses this to pick the right original
+# texture when reverting a highlighted square.
+
+@using rychess
+@fast
+
+@define Int rank = sq / 8
+@define Int file = sq % 8
+@if (7 - rank + file) % 2 == 0
+    @return true
+@fi
+@return false

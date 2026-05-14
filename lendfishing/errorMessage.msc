@@ -1,0 +1,3 @@
+@using lendfishing
+
+@player &8[&4ERROR&8] &c{{message}}

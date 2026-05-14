@@ -1,0 +1,155 @@
+# makeMove(Player player, Int move)
+# Applies a packed move to the player's game state and pushes a
+# 5-int undo record (captured piece, prior castling, prior ep,
+# prior halfmove, prior runningScore) onto undoStack so unmakeMove
+# can reverse it.
+# Handles all move types: quiet, capture, double-push (sets ep),
+# ep capture (clears the captured pawn from a different square),
+# castling (also moves the rook), and promotion.
+# Promotion: pawns auto-promote to a queen on the back rank. The
+# move's promo field (set by genPawnMoves to 4 when destination is
+# on the back rank) is the trigger; we don't need to store the
+# pre-promotion piece on undoStack because unmakeMove can reconstruct
+# the pawn from movePromo(move) and the moving color.
+# Castling rights are updated on king moves, rook moves from home
+# corners, and rook captures on home corners.
+# Incremental eval: at the end we compute the (material + PST)
+# delta caused by this move via pieceContrib() and add it to
+# runningScore. evaluate() then returns runningScore in O(1)
+# instead of scanning 64 squares. The prior runningScore is
+# stashed at undoStack slot 4 so unmake can restore it.
+
+@using rychess
+@fast
+
+@var profMakeMove[player] = profMakeMove[player] + 1
+
+@define Int from = moveFrom(move)
+@define Int to = moveTo(move)
+@define Int flags = moveFlags(move)
+@define Int movingPiece = board[player][from]
+@define Int movingColor = pieceColor(movingPiece)
+@define Int movingType = pieceType(movingPiece)
+
+@define Int capturedSq = to
+@define Int capturedPiece = board[player][to]
+@if flags == 3
+    @define Int forward = 8
+    @if movingColor == 1
+        @var forward = -8
+    @fi
+    @var capturedSq = to - forward
+    @var capturedPiece = board[player][capturedSq]
+    @var board[player][capturedSq] = 0
+@fi
+
+@define Int base = undoPly[player] * 5
+@var undoStack[player][base] = capturedPiece
+@var undoStack[player][base + 1] = castling[player]
+@var undoStack[player][base + 2] = epSquare[player]
+@var undoStack[player][base + 3] = halfmoveClock[player]
+@var undoStack[player][base + 4] = runningScore[player]
+@var undoPly[player] = undoPly[player] + 1
+
+@var board[player][from] = 0
+@var board[player][to] = movingPiece
+
+@define Int placedPiece = movingPiece
+@if movePromo(move) != 0
+    @if movingColor == 0
+        @var placedPiece = 5
+    @else
+        @var placedPiece = 11
+    @fi
+    @var board[player][to] = placedPiece
+@fi
+
+@if flags == 4
+    @var board[player][to - 1] = board[player][to + 1]
+    @var board[player][to + 1] = 0
+@elseif flags == 5
+    @var board[player][to + 1] = board[player][to - 2]
+    @var board[player][to - 2] = 0
+@fi
+
+@define Int evalDelta = 0
+@var evalDelta = evalDelta - pieceContrib(movingPiece, from)
+@var evalDelta = evalDelta + pieceContrib(placedPiece, to)
+@if capturedPiece != 0
+    @var evalDelta = evalDelta - pieceContrib(capturedPiece, capturedSq)
+@fi
+@if flags == 4
+    @define Int rookKDest = to - 1
+    @define Int rookKSrc = to + 1
+    @define Int rookKPiece = board[player][rookKDest]
+    @var evalDelta = evalDelta - pieceContrib(rookKPiece, rookKSrc)
+    @var evalDelta = evalDelta + pieceContrib(rookKPiece, rookKDest)
+@elseif flags == 5
+    @define Int rookQDest = to + 1
+    @define Int rookQSrc = to - 2
+    @define Int rookQPiece = board[player][rookQDest]
+    @var evalDelta = evalDelta - pieceContrib(rookQPiece, rookQSrc)
+    @var evalDelta = evalDelta + pieceContrib(rookQPiece, rookQDest)
+@fi
+@var runningScore[player] = runningScore[player] + evalDelta
+
+@if movingType == 1 || capturedPiece != 0
+    @var halfmoveClock[player] = 0
+@else
+    @var halfmoveClock[player] = halfmoveClock[player] + 1
+@fi
+
+@var epSquare[player] = -1
+@if flags == 2
+    @var epSquare[player] = (from + to) / 2
+@fi
+
+@if movingType == 6
+    @if movingColor == 0
+        @if (castling[player] % 2) == 1
+            @var castling[player] = castling[player] - 1
+        @fi
+        @if ((castling[player] / 2) % 2) == 1
+            @var castling[player] = castling[player] - 2
+        @fi
+    @else
+        @if ((castling[player] / 4) % 2) == 1
+            @var castling[player] = castling[player] - 4
+        @fi
+        @if ((castling[player] / 8) % 2) == 1
+            @var castling[player] = castling[player] - 8
+        @fi
+    @fi
+@fi
+
+@if from == 0 && ((castling[player] / 2) % 2) == 1
+    @var castling[player] = castling[player] - 2
+@fi
+@if from == 7 && (castling[player] % 2) == 1
+    @var castling[player] = castling[player] - 1
+@fi
+@if from == 56 && ((castling[player] / 8) % 2) == 1
+    @var castling[player] = castling[player] - 8
+@fi
+@if from == 63 && ((castling[player] / 4) % 2) == 1
+    @var castling[player] = castling[player] - 4
+@fi
+
+@if to == 0 && ((castling[player] / 2) % 2) == 1
+    @var castling[player] = castling[player] - 2
+@fi
+@if to == 7 && (castling[player] % 2) == 1
+    @var castling[player] = castling[player] - 1
+@fi
+@if to == 56 && ((castling[player] / 8) % 2) == 1
+    @var castling[player] = castling[player] - 8
+@fi
+@if to == 63 && ((castling[player] / 4) % 2) == 1
+    @var castling[player] = castling[player] - 4
+@fi
+
+@define Int newStm = 1 - sideToMove[player]
+@var sideToMove[player] = newStm
+@if newStm == 0
+    @var fullmove[player] = fullmove[player] + 1
+@fi

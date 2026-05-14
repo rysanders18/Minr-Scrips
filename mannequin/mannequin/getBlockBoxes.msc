@@ -1,0 +1,521 @@
+# Double[] getBlockBoxes(Int bx, Int by, Int bz, String world)
+# Returns the block at (bx, by, bz)'s collision shape as a flat list of
+# AABBs in LOCAL block-space (each coord in [0, 1.5]; Y can exceed 1 for
+# fences / walls / fence gates which extend 0.5 above their cell to
+# prevent jump-overs, matching vanilla).
+#
+# Output layout: N * 6 doubles per box, [minX, minY, minZ, maxX, maxY, maxZ]
+# repeated. Callers do `worldMinX = bx + boxes[base]`, etc.
+#
+#   length()  == 0  : block is passable (no collision)
+#   length()  == 6  : single AABB. Full unit cube is [0,0,0, 1,1,1].
+#   length() >= 12  : composite shape (stairs, fence, wall, pane).
+#
+# Default for unrecognized block types is a full unit cube — matches the
+# old isSolidBlock behavior so unfamiliar terrain still blocks.
+#
+# Side-table approach: a fixed @if chain over getBlockType(). Blocks
+# whose shape depends on state (slab type, stair facing/half/shape,
+# trapdoor open/half/facing, fence/pane cardinal connections, fence-gate
+# open/facing, wall up/north/south/east/west) read the full state string
+# once via Block.string() and grep substrings out of it. Block types not
+# in the chess-room set fall through to the full-cube default.
+
+@using mannequin
+@fast
+
+@define Double[] boxes = Double[]
+@define Block b = Block(bx, by, bz, world)
+@define String t = b.getBlockType()
+
+# ---- Passable: no collision at all ----
+# Vanilla air variants + plant cover kept from the old isSolidBlock so
+# existing test arenas continue to behave the same.
+@if t == "AIR" || t == "CAVE_AIR" || t == "VOID_AIR" || t == "LIGHT" || t == "SHORT_GRASS" || t == "TALL_GRASS" || t == "POPPY"
+    @return boxes
+@fi
+# Switches / buttons / signs / wall banners: real shape is < 4px in one
+# axis. Below the player AABB resolution, treat as passable.
+@if t == "BAMBOO_BUTTON" || t == "POLISHED_BLACKSTONE_BUTTON" || t == "LEVER"
+    @return boxes
+@fi
+@if t == "BAMBOO_WALL_SIGN" || t == "BIRCH_SIGN" || t == "MANGROVE_WALL_SIGN" || t == "RED_WALL_BANNER"
+    @return boxes
+@fi
+# Thin/small decoration where vanilla has tiny collision boxes we don't
+# bother modelling: candles, end rods, copper chain/lantern, sea pickle,
+# potted plants.
+@if t == "CANDLE" || t == "LIGHT_GRAY_CANDLE" || t == "YELLOW_CANDLE"
+    @return boxes
+@fi
+@if t == "WAXED_EXPOSED_COPPER_CHAIN" || t == "WAXED_EXPOSED_COPPER_LANTERN" || t == "END_ROD"
+    @return boxes
+@fi
+@if t == "SEA_PICKLE" || t == "POTTED_AZURE_BLUET" || t == "POTTED_CACTUS" || t == "POTTED_LILY_OF_THE_VALLEY" || t == "POTTED_WHITE_TULIP"
+    @return boxes
+@fi
+# Bell collision is a small fixture attached to a wall/floor; over-
+# modelling it as a full cube would block doorways under it. Skip.
+@if t == "BELL"
+    @return boxes
+@fi
+
+# ---- Slabs: parse type=bottom|top|double from state string ----
+@if t == "BAMBOO_SLAB" || t == "MANGROVE_SLAB" || t == "MUD_BRICK_SLAB" || t == "OAK_SLAB" || t == "QUARTZ_SLAB" || t == "SMOOTH_QUARTZ_SLAB"
+    @define String s = b.string()
+    @if s.contains("type=double")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+    @elseif s.contains("type=top")
+        @var boxes.append(0D)
+        @var boxes.append(0.5D)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+    @else
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(0.5D)
+        @var boxes.append(1D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Stairs: base half-slab + 1..3 upper-half corner quadrants ----
+# half=bottom puts the slab on the bottom and corner(s) on the top half.
+# half=top mirrors Y.
+# shape=straight  : 2 quadrants on the side OPPOSITE facing.
+# shape=outer_*   : 1 corner quadrant. left/right are relative to facing
+#                   (left = counter-clockwise from facing, looking down).
+# shape=inner_*   : straight 2 quadrants + 1 front-side quadrant.
+# Quadrant in local space (Y interval determined by half):
+#   NW = [0..0.5, _, 0..0.5]    (x-, z-)
+#   NE = [0.5..1, _, 0..0.5]    (x+, z-)
+#   SW = [0..0.5, _, 0.5..1]    (x-, z+)
+#   SE = [0.5..1, _, 0.5..1]    (x+, z+)
+@if t == "BAMBOO_STAIRS" || t == "MANGROVE_STAIRS" || t == "MUD_BRICK_STAIRS" || t == "OAK_STAIRS" || t == "QUARTZ_STAIRS" || t == "SMOOTH_QUARTZ_STAIRS"
+    @define String s = b.string()
+    @define Double baseY0 = 0D
+    @define Double baseY1 = 0.5D
+    @define Double topY0 = 0.5D
+    @define Double topY1 = 1D
+    @if s.contains("half=top")
+        @var baseY0 = 0.5D
+        @var baseY1 = 1D
+        @var topY0 = 0D
+        @var topY1 = 0.5D
+    @fi
+    @var boxes.append(0D)
+    @var boxes.append(baseY0)
+    @var boxes.append(0D)
+    @var boxes.append(1D)
+    @var boxes.append(baseY1)
+    @var boxes.append(1D)
+
+    @define Boolean qNW = false
+    @define Boolean qNE = false
+    @define Boolean qSW = false
+    @define Boolean qSE = false
+
+    @if s.contains("facing=north")
+        @if s.contains("shape=outer_left")
+            @var qSW = true
+        @elseif s.contains("shape=outer_right")
+            @var qSE = true
+        @elseif s.contains("shape=inner_left")
+            @var qSW = true
+            @var qSE = true
+            @var qNW = true
+        @elseif s.contains("shape=inner_right")
+            @var qSW = true
+            @var qSE = true
+            @var qNE = true
+        @else
+            @var qSW = true
+            @var qSE = true
+        @fi
+    @elseif s.contains("facing=south")
+        @if s.contains("shape=outer_left")
+            @var qNE = true
+        @elseif s.contains("shape=outer_right")
+            @var qNW = true
+        @elseif s.contains("shape=inner_left")
+            @var qNW = true
+            @var qNE = true
+            @var qSE = true
+        @elseif s.contains("shape=inner_right")
+            @var qNW = true
+            @var qNE = true
+            @var qSW = true
+        @else
+            @var qNW = true
+            @var qNE = true
+        @fi
+    @elseif s.contains("facing=east")
+        @if s.contains("shape=outer_left")
+            @var qNW = true
+        @elseif s.contains("shape=outer_right")
+            @var qSW = true
+        @elseif s.contains("shape=inner_left")
+            @var qNW = true
+            @var qSW = true
+            @var qNE = true
+        @elseif s.contains("shape=inner_right")
+            @var qNW = true
+            @var qSW = true
+            @var qSE = true
+        @else
+            @var qNW = true
+            @var qSW = true
+        @fi
+    @elseif s.contains("facing=west")
+        @if s.contains("shape=outer_left")
+            @var qSE = true
+        @elseif s.contains("shape=outer_right")
+            @var qNE = true
+        @elseif s.contains("shape=inner_left")
+            @var qNE = true
+            @var qSE = true
+            @var qSW = true
+        @elseif s.contains("shape=inner_right")
+            @var qNE = true
+            @var qSE = true
+            @var qNW = true
+        @else
+            @var qNE = true
+            @var qSE = true
+        @fi
+    @fi
+
+    @if qNW
+        @var boxes.append(0D)
+        @var boxes.append(topY0)
+        @var boxes.append(0D)
+        @var boxes.append(0.5D)
+        @var boxes.append(topY1)
+        @var boxes.append(0.5D)
+    @fi
+    @if qNE
+        @var boxes.append(0.5D)
+        @var boxes.append(topY0)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(topY1)
+        @var boxes.append(0.5D)
+    @fi
+    @if qSW
+        @var boxes.append(0D)
+        @var boxes.append(topY0)
+        @var boxes.append(0.5D)
+        @var boxes.append(0.5D)
+        @var boxes.append(topY1)
+        @var boxes.append(1D)
+    @fi
+    @if qSE
+        @var boxes.append(0.5D)
+        @var boxes.append(topY0)
+        @var boxes.append(0.5D)
+        @var boxes.append(1D)
+        @var boxes.append(topY1)
+        @var boxes.append(1D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Trapdoors: 3/16 thin slab, position depends on open/half/facing ----
+# Closed: horizontal at top (half=top) or bottom of cell.
+# Open  : vertical against the wall opposite `facing` (vanilla maps
+# facing=north → wall at z=13..16 i.e. +Z side, etc.).
+@if t == "BAMBOO_TRAPDOOR" || t == "MANGROVE_TRAPDOOR" || t == "OAK_TRAPDOOR" || t == "PALE_OAK_TRAPDOOR"
+    @define String s = b.string()
+    @if s.contains("open=true")
+        @if s.contains("facing=north")
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(0.8125D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+        @elseif s.contains("facing=south")
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+            @var boxes.append(0.1875D)
+        @elseif s.contains("facing=east")
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(0.1875D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+        @elseif s.contains("facing=west")
+            @var boxes.append(0.8125D)
+            @var boxes.append(0D)
+            @var boxes.append(0D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+            @var boxes.append(1D)
+        @fi
+    @elseif s.contains("half=top")
+        @var boxes.append(0D)
+        @var boxes.append(0.8125D)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+    @else
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(1D)
+        @var boxes.append(0.1875D)
+        @var boxes.append(1D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Fence: 4/16 center post + cardinal arms, all 1.5 tall ----
+# Local Y = 1.5 (24 pixels) matches vanilla collision so the mannequin
+# can't sprint-jump over an unbroken fence line. The collide loops know
+# to widen their byMin by 1 cell so a fence on cell N can still block an
+# entity whose feet are at cell N+1.
+@if t == "BAMBOO_FENCE"
+    @define String s = b.string()
+    @var boxes.append(0.375D)
+    @var boxes.append(0D)
+    @var boxes.append(0.375D)
+    @var boxes.append(0.625D)
+    @var boxes.append(1.5D)
+    @var boxes.append(0.625D)
+    @if s.contains("north=true")
+        @var boxes.append(0.375D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.625D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.375D)
+    @fi
+    @if s.contains("south=true")
+        @var boxes.append(0.375D)
+        @var boxes.append(0D)
+        @var boxes.append(0.625D)
+        @var boxes.append(0.625D)
+        @var boxes.append(1.5D)
+        @var boxes.append(1D)
+    @fi
+    @if s.contains("east=true")
+        @var boxes.append(0.625D)
+        @var boxes.append(0D)
+        @var boxes.append(0.375D)
+        @var boxes.append(1D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.625D)
+    @fi
+    @if s.contains("west=true")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.375D)
+        @var boxes.append(0.375D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.625D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Fence gate: closed → 4-thick perpendicular bar, 1.5 tall ----
+# Open: vanilla collision shrinks to empty for entity pathing.
+@if t == "BAMBOO_FENCE_GATE"
+    @define String s = b.string()
+    @if s.contains("open=true")
+        @return boxes
+    @fi
+    @if s.contains("facing=north") || s.contains("facing=south")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.375D)
+        @var boxes.append(1D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.625D)
+    @else
+        @var boxes.append(0.375D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.625D)
+        @var boxes.append(1.5D)
+        @var boxes.append(1D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Wall: 6/16 center post (when up=true) + cardinal arms ----
+# Arm height: tall = 1.5, low = 0.875 (14/16). Width 6/16 (5..11), depth
+# from edge to 9/16 of the way across the block. up=false omits the post.
+@if t == "DIORITE_WALL" || t == "SANDSTONE_WALL"
+    @define String s = b.string()
+    @if !s.contains("up=false")
+        @var boxes.append(0.25D)
+        @var boxes.append(0D)
+        @var boxes.append(0.25D)
+        @var boxes.append(0.75D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.75D)
+    @fi
+    @if s.contains("north=tall")
+        @var boxes.append(0.3125D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.6875D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.5625D)
+    @elseif s.contains("north=low")
+        @var boxes.append(0.3125D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.6875D)
+        @var boxes.append(0.875D)
+        @var boxes.append(0.5625D)
+    @fi
+    @if s.contains("south=tall")
+        @var boxes.append(0.3125D)
+        @var boxes.append(0D)
+        @var boxes.append(0.4375D)
+        @var boxes.append(0.6875D)
+        @var boxes.append(1.5D)
+        @var boxes.append(1D)
+    @elseif s.contains("south=low")
+        @var boxes.append(0.3125D)
+        @var boxes.append(0D)
+        @var boxes.append(0.4375D)
+        @var boxes.append(0.6875D)
+        @var boxes.append(0.875D)
+        @var boxes.append(1D)
+    @fi
+    @if s.contains("east=tall")
+        @var boxes.append(0.4375D)
+        @var boxes.append(0D)
+        @var boxes.append(0.3125D)
+        @var boxes.append(1D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.6875D)
+    @elseif s.contains("east=low")
+        @var boxes.append(0.4375D)
+        @var boxes.append(0D)
+        @var boxes.append(0.3125D)
+        @var boxes.append(1D)
+        @var boxes.append(0.875D)
+        @var boxes.append(0.6875D)
+    @fi
+    @if s.contains("west=tall")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.3125D)
+        @var boxes.append(0.5625D)
+        @var boxes.append(1.5D)
+        @var boxes.append(0.6875D)
+    @elseif s.contains("west=low")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.3125D)
+        @var boxes.append(0.5625D)
+        @var boxes.append(0.875D)
+        @var boxes.append(0.6875D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Iron bars / glass panes: 2/16 thin center post + arms, full 1 tall ----
+@if t == "IRON_BARS" || t == "WHITE_STAINED_GLASS_PANE"
+    @define String s = b.string()
+    @var boxes.append(0.4375D)
+    @var boxes.append(0D)
+    @var boxes.append(0.4375D)
+    @var boxes.append(0.5625D)
+    @var boxes.append(1D)
+    @var boxes.append(0.5625D)
+    @if s.contains("north=true")
+        @var boxes.append(0.4375D)
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.5625D)
+        @var boxes.append(1D)
+        @var boxes.append(0.5625D)
+    @fi
+    @if s.contains("south=true")
+        @var boxes.append(0.4375D)
+        @var boxes.append(0D)
+        @var boxes.append(0.4375D)
+        @var boxes.append(0.5625D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+    @fi
+    @if s.contains("east=true")
+        @var boxes.append(0.4375D)
+        @var boxes.append(0D)
+        @var boxes.append(0.4375D)
+        @var boxes.append(1D)
+        @var boxes.append(1D)
+        @var boxes.append(0.5625D)
+    @fi
+    @if s.contains("west=true")
+        @var boxes.append(0D)
+        @var boxes.append(0D)
+        @var boxes.append(0.4375D)
+        @var boxes.append(0.5625D)
+        @var boxes.append(1D)
+        @var boxes.append(0.5625D)
+    @fi
+    @return boxes
+@fi
+
+# ---- Slab-like fixed shapes (no state to read) ----
+# Beds are 9/16 tall (the bedrail), flat. Campfires are 7/16 tall. Brewing
+# stand is a 2/16 base; the center spire is too thin to bother modelling.
+@if t == "RED_BED"
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(1D)
+    @var boxes.append(0.5625D)
+    @var boxes.append(1D)
+    @return boxes
+@fi
+@if t == "CAMPFIRE"
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(1D)
+    @var boxes.append(0.4375D)
+    @var boxes.append(1D)
+    @return boxes
+@fi
+@if t == "BREWING_STAND"
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(0D)
+    @var boxes.append(1D)
+    @var boxes.append(0.125D)
+    @var boxes.append(1D)
+    @return boxes
+@fi
+
+# ---- Default: full unit cube ----
+# Catches every solid block we haven't special-cased (concrete, wool,
+# planks, deepslate, smooth_basalt, calcite, packed_mud, lodestone,
+# stripped_mangrove_wood, the shelf variants, etc.). Matches the legacy
+# isSolidBlock fall-through.
+@var boxes.append(0D)
+@var boxes.append(0D)
+@var boxes.append(0D)
+@var boxes.append(1D)
+@var boxes.append(1D)
+@var boxes.append(1D)
+@return boxes

@@ -1,0 +1,110 @@
+# interactionEntityScript(Player player)
+# This gets run every time the player tries to right click when in fishing areas and the interaction isn't disabled.
+@using lendfishing
+@fast
+@cooldown 3
+
+@if (player.getItemInMainHand().getItemType().contains("BARRIER"))
+    @bypass /minecraft:kill @n[tag={{player.getUniqueId()}}_inter]
+    @return
+@fi
+
+# FLOW:
+# 1. Player clicks, trying to throw a fishing rod
+# Start throw strength minigame (moving xp bar up and down, stopping when fishing bobber is thrown out)
+# when bobber is detected, give it a tag and set Motion data based on the throw strength
+
+# start random wait time for fish to 
+
+@if (isFishing)
+    @if (readyToCatch)
+        @var isCatching = true
+        @define String[] commandData = nextLoot.getLootInstanceCommandData(player)
+
+        @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run summon item ~ ~0.2 ~ {{commandData[0]}}
+        @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:entity.fishing_bobber.retrieve master @s ~ ~ ~ 1 1
+        @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:block.note_block.bell master @s ~ ~ ~ 1 1.1
+       
+        @bypass /minecraft:kill @n[tag={{player.getUniqueId()}}_bobber]
+
+        @delay 10
+        @bypass /minecraft:kill @n[tag={{player.getUniqueId()}}_loot]
+        @bypass /give {{player}} {{commandData[1]}}
+        @return
+
+    @else
+        @bypass /execute positioned as @n[tag={{player.getUniqueId()}}_bobber] run playsound minecraft:entity.fishing_bobber.retrieve master @s ~ ~ ~ 1 1
+        @bypass /minecraft:kill @n[tag={{player.getUniqueId()}}_bobber]
+        @var isFishing = false
+        @return
+    @fi
+@fi
+
+
+# @delay 10
+@if (!player.getItemInMainHand().getItemType().contains("FISHING_ROD") && !player.getItemInOffHand().getItemType().contains("FISHING_ROD"))
+    @var errorMessage("no rod in hand")
+    @return
+@fi
+
+@var disableInteraction(player)
+
+# XP BAR
+@define Int cycleDuration = 40
+@define Int halfCycleDuration = cycleDuration / 2
+@define Int resolution = 100
+# xpBound = 5.69620253164557, should be 741
+@define Int xpBound = 9 * resolution - 159
+@define Float progress
+
+@bypass /experience set {{player}} {{resolution}} levels
+@bypass /experience set {{player}} 0 points
+
+@define Int rodUses = player.getMaterialStatistic(statistic::useItem, material::fishingRod)
+
+# XP Bar Animation
+@for Int i in list::range(0, cycleDuration)
+    @var progress = (i / Float(halfCycleDuration))
+    @if progress >= 1
+        @var progress = 2 - progress
+    @fi
+
+    @bypass /experience set {{player}} {{resolution}} levels
+    @bypass /experience set {{player}} {{Int(xpBound * progress + 0.5)}} points
+    @bypass /experience set {{player}} 0 levels
+
+    # if fishing bobber gets thrown
+    @if (player.getMaterialStatistic(statistic::useItem, material::fishingRod) > rodUses)
+    @bypass /data modify entity @n[tag=!assigned,type=fishing_bobber] Tags set value ["{{player.getUniqueId()}}_bobber", "assigned"]
+
+        @player &aDEBUG: progress = &e{{progress}}
+
+        # Cast Playsounds
+        @bypass /playsound minecraft:entity.fishing_bobber.throw master {{player}} ~ ~ ~ 0.75 {{math::random(0.9D, 1.1D)}}
+        @if progress == 1.0
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.5 {{Harha::musicNotes[24]}}
+            @bypass /execute as @s at @s anchored eyes run particle minecraft:happy_villager ^ ^ ^0.5 0.5 1 0.5 0 10 force @a[distance=..50]
+        @fi
+        @if progress > 0.71
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.4 {{Harha::musicNotes[19]}}
+        @fi
+        @if progress < 0.71
+            @bypass /playsound minecraft:block.respawn_anchor.deplete master {{player}} ~ ~ ~ 0.4 0.5
+        @fi
+
+        @var enableInteraction(player)
+        @var startFishing(player, 0.1, 5, 2)
+        @return
+    @fi
+
+    @define Double randomPitchIncrease = math::random(0D, 0.2D)
+    @bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ {{progress * 0.2 + 0.1}} {{(progress * 0.75) + 1.0 + randomPitchIncrease}}
+
+    @delay 1
+@done
+
+
+
+@var enableInteraction(player)
+@bypass /experience set {{player}} 0 points
+# END XP BAR

@@ -1,0 +1,12 @@
+# cookieExit 
+# cookie
+@global_cooldown 3
+
+@fast
+@using cookie
+
+@var player.teleport(Position(-9101.5, 101.0, 9529.5, 0.0, 10.0, "Theta"))
+@delay 2
+@bypass playsound minecraft:entity.enderman.teleport master @s
+@bypass execute at @s run particle minecraft:witch ~ ~ ~ 0 1 0 1 20 normal
+@bypass attribute @s minecraft:entity_interaction_range base reset

@@ -1,0 +1,46 @@
+# emitSprintParticle(Player player)
+# Emits a single vanilla-equivalent sprint particle at the mannequin's
+# feet. Mirrors net.minecraft.world.entity.Entity#spawnSprintParticle
+# (called every tick from aiStep while isSprinting && !isInWater):
+#
+#   - Block sampled at (floor(x), floor(y - 0.2), floor(z)) — the block
+#     directly under the feet. If that block is air, skip (this is what
+#     makes vanilla particles vanish mid sprint-jump arc).
+#   - Particle type = minecraft:block with that block's lowered enum name
+#     as block_state Name, so the dust matches whatever you're running on
+#     (planks, concrete, slab top, stair tread, ...).
+#   - Position: feet center + uniform jitter in X/Z over (-width/2,
+#     +width/2) i.e. ±0.3 for a 0.6-wide player AABB, and Y = feet + 0.1.
+#   - Velocity vector: (-velX * 4, 1.5, -velZ * 4) — backward kick in
+#     proportion to horizontal motion plus a small upward toss.
+#
+# Emission cadence: one particle per call; vanilla has no walkDist gate,
+# so the caller should invoke this every cruise tick. We also skip during
+# coast (player has dropped the sprint key) — match that at the caller.
+#
+# /particle command quirk: count=0 + speed=1 is the only way to spawn
+# exactly ONE particle with the dx/dy/dz interpreted as the literal
+# velocity vector. With count>=1 the deltas become Gaussian spread radii
+# and the velocity is randomized — wrong for sprint dust. `force` keeps
+# the particle visible to players with reduced particle settings.
+
+@using mannequin
+@fast
+
+@define Int bx = Int(math::floor(curX[player]))
+@define Int by = Int(math::floor(curY[player] - 0.2D))
+@define Int bz = Int(math::floor(curZ[player]))
+@define String t = Block(bx, by, bz, world[player]).getBlockType()
+
+@if t == "AIR" || t == "CAVE_AIR" || t == "VOID_AIR"
+    @return
+@fi
+
+@define String blockName = t.toLowerCase()
+@define Double px = curX[player] + (math::random(0D, 1D) - 0.5D) * 0.6D
+@define Double py = curY[player] + 0.1D
+@define Double pz = curZ[player] + (math::random(0D, 1D) - 0.5D) * 0.6D
+@define Double vx = -velX[player] * 4D
+@define Double vz = -velZ[player] * 4D
+
+@bypass /particle minecraft:block{block_state:{Name:"minecraft:{{blockName}}"}} {{px}} {{py}} {{pz}} {{vx}} 1.5 {{vz}} 1 0 force

@@ -1,0 +1,214 @@
+# goldenCookieFunction(Int cookieLocation, Int roomNumber, Player player) 
+@fast
+@using cookie
+
+@define Int particleCount = 4
+@define Long cookieCountPrevious = cookieCount[player]
+
+@if goldenCookieLocations[player][cookieLocation] == true
+
+    # Diamond Cookie
+    @if diamondCookieLocations[player][cookieLocation] == true
+    
+        # diamond cookie particles
+        @if milkActivated[player] == true
+            @for Int i in list::range(0, particleCount + 12)
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle effect{color:[0.216,1.000,0.906]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 2 0 normal 
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle minecraft:soul_fire_flame ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 2 0 normal
+            @done
+            @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle minecraft:flash{color:[.0,.75,.8,1]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.3 0 0 0 1 0 normal
+            @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle minecraft:gust ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+        @else
+            @for Int i in list::range(0, particleCount + 12)
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle effect{color:[0.216,1.000,0.906]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+            @done
+        @fi
+
+        # Playsound
+        @if milkActivated[player] == true
+            @bypass playsound minecraft:entity.player.burp master @s ~ ~ ~ 0.45 {{math::random(1.2D, 1.4D)}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[24]}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[16]}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[19]}}
+            @bypass playsound minecraft:entity.generic.eat master @s ~ ~ ~ 0.75 {{math::random(1.3D, 1.7D)}}
+            @bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.4 {{math::random(1.3D, 1.7D)}}
+
+            @bypass playsound minecraft:item.firecharge.use master @s ~ ~ ~ 0.5 {{math::random(1.4D, 1.8D)}}
+            @bypass playsound minecraft:entity.firework_rocket.large_blast master @s ~ ~ ~ 0.5 {{math::random(1.8D, 2.0D)}}
+        @else
+            @bypass playsound minecraft:entity.player.burp master @s ~ ~ ~ 0.45 {{math::random(0.9D, 1.1D)}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[24]}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[16]}}
+            @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.75 {{Harha::musicNotes[19]}}
+            @bypass playsound minecraft:entity.generic.eat master @s ~ ~ ~ 0.75 {{math::random(1.0D, 1.4D)}}
+            @bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.4 {{math::random(1.0D, 1.4D)}}
+        @fi
+
+
+        # Cookie Increase
+        @if milkActivated == true
+            @var cookieCount[player] = Long(cookieCount[player] + (goldenCookieMultiplier[player] * 10) * milkMultiplier[player] * cookieMultiplier[player])
+            @var totalCookiesEarned[player] += Long((goldenCookieMultiplier[player] * 10) * milkMultiplier[player] * cookieMultiplier[player])
+        @else
+            @var cookieCount[player] = Long(cookieCount[player] + (goldenCookieMultiplier[player] * 10) * cookieMultiplier[player])
+            @var totalCookiesEarned[player] += Long((goldenCookieMultiplier[player] * 10) * cookieMultiplier[player])
+        @fi
+
+        # Log stuff
+        @var cookieLog[Int(cookiesClicked) % 100] = cookieCount[player]
+        @var cookieLogTimes[Int(cookiesClicked) % 100] = system::currentTimeMillis()
+
+        # Actionbar Title
+        @if milkActivated[player] == true
+            @bypass title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#e7edff"},{"text":"Cookies: ","bold":true,"color":"#d8efff"},{"text":"{{Harha::formatNumber(String(cookieCount[player]))}}","bold":true,"color":"#c6f2ff"},{"text":"  + (20 x {{String(Int(cookieMultiplier[player]))}}) x {{milkMultiplier[player]}})","bold":true,"color":"#adf6ff"}]
+        @else
+            @bypass title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#ffd700"},{"text":"Cookies: ","bold":true,"color":"#b2f055"},{"text":"{{Harha::formatNumber(String(cookieCount[player]))}}","bold":true,"color":"#67fca2"},{"text":"  + (200 x {{String(Int(cookieMultiplier[player]))}})","bold":true,"color":"#37ffe7"}] 
+        @fi
+
+        # Animation
+        @bypass /data merge entity @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] {transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]}}
+        @delay 2
+        @bypass /data merge entity @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] {interpolation_duration:2,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0f,0f,0f]}}
+        @delay 2
+        @bypass /minecraft:kill @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}}]
+        @var goldenCookieLocations[player][cookieLocation] = false
+        @var diamondCookieLocations[player][cookieLocation] = false
+        @var diamondCookiesClicked[player] += 1
+        @var cookieTextUpdate(player, roomNumber)
+        @var checkIfNewUpgrade(player, roomNumber, cookieCountPrevious)
+
+        # Golden Cookies Chance
+        @if Int(math::random(0D, Double(goldenCookieChance[player]))) == 1
+
+            # Define coords around the cookie
+            @define Float[] goldenCoordsList = Float[-9148.5F, 101.5F, -9149.5F, 101.5F, -9150.5F, 101.5F, -9148.5F, 100.5F, -9150.5F, 100.5F, -9148.5F, 99.5F, -9149.5F, 99.5F, -9150.5F, 99.5F, -9147.5F, 101.5F, -9151.5F, 101.5F, -9147.5F, 100.5F, -9151.5F, 100.5F, -9147.5F, 99.5F, -9151.5F, 99.5F]
+            @define Int randIndex = Int(math::random(0D, 14D))
+            # If the location is not taken, spawn a golden cookie
+            @if goldenCookieLocations[player][randIndex] == false
+
+                # Diamond Cookie Chance
+                @define Int randIndex2 = Int(math::random(0D, Double(diamondCookieChance[player])))
+                @if randIndex2 == 1
+                    @var goldenCookieLocations[player][randIndex] = true
+                    @var diamondCookieLocations[player][randIndex] = true
+                    @bypass /summon item_display {{goldenCoordsList[randIndex * 2] - 20 * roomNumber}} {{goldenCoordsList[randIndex * 2 + 1]}} 9301.0 {item:{id:"minecraft:diamond",count:1,components:{"minecraft:enchantment_glint_override":true}},Tags:["goldenCookie{{randIndex}}{{roomNumber}}"]}
+                    # @bypass title {{player}} actionbar ["",{"text":"Diamond Cookie! ","bold":true,"color":"#00ffff"},{"text":"+50 Cookies","bold":true,"color":"#00d4ff"}]
+                    @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 0.6 2
+                    @bypass playsound minecraft:entity.cat.ambient master @s ~ ~ ~ 0.5 2
+
+                    # Golden Cookie Particles
+                    @for Int i in list::range(0, particleCount + 12)
+                        @bypass /execute at @e[tag=goldenCookie{{randIndex}}{{roomNumber}},limit=1] run particle minecraft:block{block_state:"diamond_block"} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+                    @done
+                @else
+                    @var goldenCookieLocations[player][randIndex] = true
+                    @bypass /summon item_display {{goldenCoordsList[randIndex * 2] - 20 * roomNumber}} {{goldenCoordsList[randIndex * 2 + 1]}} 9301.0 {item:{id:"minecraft:enchanted_golden_apple",count:1},Tags:["goldenCookie{{randIndex}}{{roomNumber}}"]}
+                    # @bypass title {{player}} actionbar ["",{"text":"Golden Cookie! ","bold":true,"color":"#ffd700"},{"text":"+10 Cookies","bold":true,"color":"#ffea00"}]
+                    @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 0.4 1
+
+                    # Golden Cookie Particles
+                    @for Int i in list::range(0, particleCount + 4)
+                        @bypass /execute at @e[tag=goldenCookie{{randIndex}}{{roomNumber}},limit=1] run particle minecraft:block{block_state:"gold_block"} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+                    @done
+                @fi
+            @fi
+        @fi
+    # Golden Cookie
+    @else
+
+        # Particles
+        @if milkActivated[player] == true
+            @for Int i in list::range(0, particleCount + 4)
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle effect{color:[1.000,0.969,0.931]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle minecraft:flame ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+            @done
+            @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle minecraft:flash{color:[1.0,.8,.5,1]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.3 0 0 0 1 0 normal
+        @else
+            @for Int i in list::range(0, particleCount + 4)
+                @bypass /execute at @e[tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] run particle effect{color:[1.000,0.969,0.031]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+            @done
+        @fi
+
+        # Playsound
+        @if milkActivated[player] == true
+            @bypass playsound minecraft:entity.player.burp master @s ~ ~ ~ 0.65 {{math::random(1.5D, 1.9D)}}
+            @bypass playsound minecraft:block.note_block.pling  master @s ~ ~ ~ 0.35 {{Harha::musicNotes[10]}}
+            @bypass playsound minecraft:block.note_block.pling  master @s ~ ~ ~ 0.35 {{Harha::musicNotes[18]}}
+            @bypass playsound minecraft:entity.generic.eat master @s ~ ~ ~ 0.75 {{math::random(1.5D, 1.9D)}}
+            @bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.7 {{math::random(1.4D, 1.8D)}}
+            @bypass playsound minecraft:entity.firework_rocket.blast master @s ~ ~ ~ 0.5 {{math::random(1.2D, 1.4D)}}
+        @else
+            @bypass playsound minecraft:entity.player.burp master @s ~ ~ ~ 0.65 {{math::random(1.2D, 1.6D)}}
+            @bypass playsound minecraft:block.note_block.pling  master @s ~ ~ ~ 0.15 {{Harha::musicNotes[8]}}
+            @bypass playsound minecraft:block.note_block.pling  master @s ~ ~ ~ 0.15 {{Harha::musicNotes[16]}}
+            @bypass playsound minecraft:entity.generic.eat master @s ~ ~ ~ 0.75 {{math::random(1.2D, 1.6D)}}
+            @bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.7 {{math::random(1.0D, 1.4D)}}
+        @fi
+
+        # Cookie Increase
+        @if milkActivated == true
+            @var cookieCount[player] = Long(cookieCount[player] + goldenCookieMultiplier[player] * milkMultiplier[player] * cookieMultiplier[player])
+            @var totalCookiesEarned[player] += Long(goldenCookieMultiplier[player] * milkMultiplier[player] * cookieMultiplier[player])
+        @else
+            @var cookieCount[player] = Long(cookieCount[player] + goldenCookieMultiplier[player] * cookieMultiplier[player])
+            @var totalCookiesEarned[player] += Long(goldenCookieMultiplier[player] * cookieMultiplier[player])
+        @fi
+
+        # Actionbar Title
+        @if milkActivated[player] == true
+            @bypass title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#e7edff"},{"text":"Cookies: ","bold":true,"color":"#d8efff"},{"text":"{{Harha::formatNumber(String(cookieCount[player]))}}","bold":true,"color":"#c6f2ff"},{"text":"  + (20 x {{String(Int(cookieMultiplier[player]))}}) x {{milkMultiplier[player]}})","bold":true,"color":"#adf6ff"}]
+        @else
+            @bypass title {{player}} actionbar ["",{"text":"Total ","bold":true,"color":"#ff7f37"},{"text":"Cookies: ","bold":true,"color":"#ff9c27"},{"text":"{{Harha::formatNumber(String(cookieCount[player]))}}","bold":true,"color":"#ffb913"},{"text":"  + (20 x {{String(Int(cookieMultiplier[player]))}})","bold":true,"color":"#ffd700"}] 
+        @fi
+
+        # Animation
+        @bypass /data merge entity @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] {transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]}}
+        @delay 2
+        @bypass /data merge entity @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}},limit=1] {interpolation_duration:2,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0f,0f,0f]}}
+        @delay 2
+        @bypass /minecraft:kill @e[type=item_display,tag=goldenCookie{{cookieLocation}}{{roomNumber}}]
+        @var goldenCookieLocations[player][cookieLocation] = false
+        @var goldenCookiesClicked[player] += 1
+        @var cookieTextUpdate(player, roomNumber)
+        @var checkIfNewUpgrade(player, roomNumber, cookieCountPrevious)
+
+
+        # Golden Cookies
+        @if Int(math::random(0D, Double(goldenCookieChance[player]))) == 1
+
+            # Define coords around the cookie
+            @define Float[] goldenCoordsList = Float[-9148.5F, 101.5F, -9149.5F, 101.5F, -9150.5F, 101.5F, -9148.5F, 100.5F, -9150.5F, 100.5F, -9148.5F, 99.5F, -9149.5F, 99.5F, -9150.5F, 99.5F, -9147.5F, 101.5F, -9151.5F, 101.5F, -9147.5F, 100.5F, -9151.5F, 100.5F, -9147.5F, 99.5F, -9151.5F, 99.5F]
+            @define Int randIndex = Int(math::random(0D, 14D))
+            # If the location is not taken, spawn a golden cookie
+            @if goldenCookieLocations[player][randIndex] == false
+
+                # Diamond Cookie Chance
+                @define Int randIndex2 = Int(math::random(0D, Double(diamondCookieChance[player])))
+                @if randIndex2 == 1
+                    @var goldenCookieLocations[player][randIndex] = true
+                    @var diamondCookieLocations[player][randIndex] = true
+                    @bypass /summon item_display {{goldenCoordsList[randIndex * 2] - 20 * roomNumber}} {{goldenCoordsList[randIndex * 2 + 1]}} 9301.0 {item:{id:"minecraft:diamond",count:1,components:{"minecraft:enchantment_glint_override":true}},Tags:["goldenCookie{{randIndex}}{{roomNumber}}"]}
+                    # @bypass title {{player}} actionbar ["",{"text":"Diamond Cookie! ","bold":true,"color":"#00ffff"},{"text":"+50 Cookies","bold":true,"color":"#00d4ff"}]
+                    @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 0.6 2
+                    @bypass playsound minecraft:entity.cat.ambient master @s ~ ~ ~ 0.5 2
+
+                    # Golden Cookie Particles
+                    @for Int i in list::range(0, particleCount + 12)
+                        @bypass /execute at @e[tag=goldenCookie{{randIndex}}{{roomNumber}},limit=1] run particle minecraft:block{block_state:"diamond_block"} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+                    @done
+                @else
+                    @var goldenCookieLocations[player][randIndex] = true
+                    @bypass /summon item_display {{goldenCoordsList[randIndex * 2] - 20 * roomNumber}} {{goldenCoordsList[randIndex * 2 + 1]}} 9301.0 {item:{id:"minecraft:enchanted_golden_apple",count:1},Tags:["goldenCookie{{randIndex}}{{roomNumber}}"]}
+                    # @bypass title {{player}} actionbar ["",{"text":"Golden Cookie! ","bold":true,"color":"#ffd700"},{"text":"+10 Cookies","bold":true,"color":"#ffea00"}]
+                    @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 0.4 1
+
+                    # Golden Cookie Particles
+                    @for Int i in list::range(0, particleCount + 4)
+                        @bypass /execute at @e[tag=goldenCookie{{randIndex}}{{roomNumber}},limit=1] run particle minecraft:block{block_state:"gold_block"} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 1 0 normal 
+                    @done
+                @fi
+            @fi
+        @fi
+    @fi
+@fi
+

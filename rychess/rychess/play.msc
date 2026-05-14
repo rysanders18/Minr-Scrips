@@ -1,0 +1,74 @@
+# play(Player player, Int humanColor)
+# Top-level entry point for human vs engine play. humanColor:
+#   0 = human plays White (moves first)
+#   1 = human plays Black (engine moves first)
+# Loops prompting the human for a move (in coordinate notation
+# like "e2e4" or "e7e8q") and alternating with the engine until
+# the game ends via checkmate, stalemate, or the 50-move rule.
+# Type "resign" or "quit" to abandon the game.
+# Each prompt waits up to 15 minutes for input. After a typo or
+# illegal move the loop simply re-prompts without advancing the
+# game.
+
+@using rychess
+@fast
+
+@var newGame(player)
+@var playerColor[player] = humanColor
+@player &6=== Chess: You vs the Engine ===
+@if humanColor == 0
+    @player &aYou play &fWhite&a. Type your move (e.g. &fe2e4&a).
+@else
+    @player &aYou play &fBlack&a. Engine moves first.
+@fi
+@player &7Type &fresign&7 to end the game.
+
+@if humanColor == 1
+    @var engineMove(player)
+    @if checkGameOver(player)
+        @return
+    @fi
+    @if inCheck(player)
+        @player &eYou are in check.
+    @fi
+@fi
+
+@define String moveStr 
+
+@for Int turn in list::range(0, 400)
+    @prompt 900s moveStr &cTimed out. Game abandoned.
+
+    @if moveStr == "resign" || moveStr == "quit"
+        @player &eYou resigned.
+        @return
+    @fi
+
+    @define Int move = parseMove(player, moveStr)
+    @if move == 0
+        @player &cIllegal or invalid move: &f{{moveStr}}&c. Try again.
+    @else
+        @var makeMove(player, move)
+        @var applyMoveVisually(player, move)
+        @var displayBoard(player)
+
+        @if checkGameOver(player)
+            @return
+        @fi
+        @if inCheck(player)
+            @player &eEngine is in check.
+            @var playCheckSound(player)
+        @fi
+
+        @var engineMove(player)
+
+        @if checkGameOver(player)
+            @return
+        @fi
+        @if inCheck(player)
+            @player &eYou are in check.
+            @var playCheckSound(player)
+        @fi
+    @fi
+@done
+
+@player &eMaximum turn limit reached.

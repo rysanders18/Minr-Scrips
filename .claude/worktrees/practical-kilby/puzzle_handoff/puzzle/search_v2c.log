@@ -1,0 +1,13 @@
+Loading phase1 end state...
+Start: 86 blocks, conv=19, reds=13
+Start heuristic: 53
+  [IMP d=1] h=28: green Z-chain (6925, 146, 2546)..(6925, 146, 2548) slide +Z×1 [convert: ((6925, 146, 2546)
+[d=1] in=80 keep=80 now=28 ever=28 vis=81 t=0.1s
+[d=2] in=2974 keep=2974 now=28 ever=28 vis=3055 t=2.4s
+[d=3] in=70156 keep=3000 now=28 ever=28 vis=73211 t=62.1s
+  [IMP d=4] h=10: red X-chain (6926, 148, 2548)..(6927, 148, 2548) slide +X×1 [convert: ((6926, 148, 2548), 
+[d=4] in=121563 keep=3000 now=10 ever=10 vis=194774 t=162.5s
+[d=5] in=132059 keep=3000 now=10 ever=10 vis=326833 t=270.2s
+[d=6] in=125584 keep=3000 now=10 ever=10 vis=452417 t=374.0s
+[d=7] in=151678 keep=3000 now=10 ever=10 vis=604095 t=497.6s
+[d=8] in=145118 keep=3000 now=10 ever=10 vis=749213 t=648.2s

@@ -1,0 +1,30 @@
+# String[] getLootInstanceCommandData(Player player)
+@using lendfishing
+
+@define Double randomWeight = Int(math::random(this.minWeight^1, this.maxWeight^1) * 10) / 10.0D
+
+@define String displayName = this.name
+
+@define Double multiplierFromWeight = (randomWeight - this.minWeight^1) / (this.maxWeight - this.minWeight)^1 + 1
+@define Int price = Int(this.basePrice * multiplierFromWeight)
+
+@define Boolean isShiny = math::randomDouble() < shinyBaseChance
+@if (isShiny)
+    @var displayName = "🟊 {{this.name}} 🟊"
+    @var price *= 3
+@fi
+# ----- SCRAPPED BECAUSE YOU CAN"T SCALE ITEM ENTITIES I HATE MOJANG I HATE MOJANG
+# # Converts the random weight into a scale for the entity, 1 being minWeight and 2 being maxWeight
+# --------
+
+# Figure out Motion values, to intantly rocket the item towards the player
+@define Double bobberX = util::executeAndQueryResult("/execute in minecraft:theta run data get entity @n[tag={{player.getUniqueId()}}_bobber] Pos[0] 1000") / 1000.0D
+@define Double bobberY = util::executeAndQueryResult("/execute in minecraft:theta run data get entity @n[tag={{player.getUniqueId()}}_bobber] Pos[1] 1000") / 1000.0D
+@define Double bobberZ = util::executeAndQueryResult("/execute in minecraft:theta run data get entity @n[tag={{player.getUniqueId()}}_bobber] Pos[2] 1000") / 1000.0D
+@define Vector3 flyDir = Vector3(player.getX()-bobberX,player.getY()-bobberY,player.getZ()-bobberZ).normalise()
+
+
+@define String summonCommandData = "{Motion:[{{flyDir.getX()*0.7}}d,{{flyDir.getY()*2}}d,{{flyDir.getZ()*0.7}}d],CustomNameVisible:1b,PickupDelay:32767,Tags:[\"{{player.getUniqueId()}}_loot\"],CustomName:'[{\"bold\":true,\"color\":\"{{this.commandColor}}\",\"italic\":false,\"text\":\"{{displayName}}\"},{\"bold\":false,\"color\":\"gray\",\"italic\":true,\"text\":\"   {{randomWeight}}kg\"}]',Item:{id:\"minecraft:{{this.item.toLowerCase()}}\",count:1} }" 
+@define String giveCommandData = "{{this.item.toLowerCase()}}[max_stack_size=1,custom_name={\"bold\":true,\"color\":\"{{this.commandColor}}\",\"text\":\"{{this.name}}\"},lore=[{\"color\":\"{{this.commandColor}}\",\"italic\":true,\"text\":\"{{this.rarityName}}\"},{\"color\":\"gray\",\"text\":\"Weight: {{randomWeight}}kg\"},{\"color\":\"gold\",\"text\":\"Price: {{price}}¢\"}],enchantment_glint_override={{isShiny}}] 1"
+
+@return String[summonCommandData, giveCommandData]

@@ -1,0 +1,18 @@
+# summonInteraction(Player player)
+@using lendfishing
+
+@define BlockLocation player_pos = player.getLocation().asBlockLocation()
+
+@bypass /execute as {{player}} run summon interaction {{player_pos.string().split("\s[a-zA-Z]")[0]}} {Tags:["{{player.getUniqueId()}}_inter"],width:0.02f,height:-0.3f}
+
+@define Entity interEntity = Entity(player_pos.getX(), player_pos.getY(), player_pos.getZ(), player_pos.getWorld())
+
+@if (interEntity.getEntityType().equalsIgnoreCase("CraftInteraction"))
+    @var errorMessage("Something went wrong initialising item scripts. Please message a creator.")
+    @bypass /minecraft:kill @e[tag={{player.getUniqueId()}}_inter,limit=1,type=interaction]
+    @return
+@fi
+
+@var Entity(player.getUniqueId()).addPassenger(interEntity)
+
+@console /script create entity {{interEntity.getUniqueId()}} @var lendfishing::interactionEntityScript(player)

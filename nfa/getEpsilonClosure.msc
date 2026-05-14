@@ -1,0 +1,55 @@
+# Function: String[] getEpsilonClosure(Player player, String blockCoords)
+
+# Returns all block coordinates reachable from the given block via epsilon (iron) transitions
+# Parameters:
+#   - player: The player whose connection list to search
+#   - blockCoords: The starting block coordinates in format "x,y,z"
+# Returns: String[] of block coordinates reachable via epsilon transitions
+
+@using nfa
+@fast
+
+@define String[] closure = String[]
+@var closure.append(blockCoords)
+@define String[] toProcess = String[]
+@var toProcess.append(blockCoords)
+
+# Process each state in the closure until no new states are found
+# Use a large iteration limit to simulate while loop behavior
+@define Int index = 0
+@for Int iteration in list::range(0, 100)
+    @if index < toProcess.length()
+        @define String currentBlock = toProcess[index]
+        
+        # Find all iron (epsilon) transitions from current block
+        @for String connection in listOfConnections[player]
+            @define String[] parts = connection.split(";")
+            @if parts.length() == 6 && parts[0] == "connection" && parts[3] == "minecraft:iron_block"
+                # Check if current block is the source (directed transition: block1 -> block2)
+                @if parts[1] == currentBlock
+                    @define String nextBlock = parts[2]
+                    # Add to closure if not already present
+                    @if !closure.contains(nextBlock)
+                        @var closure.append(nextBlock)
+                        @var toProcess.append(nextBlock)
+                    @fi
+                @fi
+            @fi
+        @done
+        
+        @var index += 1
+    @fi
+@done
+
+@return closure
+
+
+
+
+
+
+
+
+
+
+

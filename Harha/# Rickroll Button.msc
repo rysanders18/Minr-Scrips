@@ -1,0 +1,13 @@
+# Rickroll Button
+@using rickastley
+
+@define String[] entityTags = String["entityScreenTest1", "entityScreenTest2", "entityScreenTest3", "entityScreenTest4"]
+
+@for Int i in list::range(0, rickAstleyArrayJSON.length() - 1)
+    @var rytools::screenDisplay(rickAstleyArrayJSON, i, entityTags)
+    @delay 1
+@done
+
+@for String entityTag in entityTags
+    @bypass execute in minecraft:theta run data merge entity @e[tag={{entityTag}},limit=1] {text:[""]}
+@done

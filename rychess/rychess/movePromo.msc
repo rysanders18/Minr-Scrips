@@ -1,0 +1,9 @@
+# Int movePromo(Int move)
+# Decodes the promotion field from a packed move Int.
+# 0 = no promotion, 1 = knight, 2 = bishop, 3 = rook, 4 = queen.
+# See moveEncode.msc for the bit layout.
+
+@using rychess
+@fast
+
+@return (move / 4096) % 8

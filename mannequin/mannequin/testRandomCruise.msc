@@ -1,0 +1,50 @@
+# testRandomCruise.msc
+# Stress-test for cruiseToFacing. Picks 10 random waypoints inside a
+# 12 x 12 box centered on the executing player (offsets in [-6, +6] for X
+# and Z), each with a random final pose: yaw in [-180, +180] and pitch in
+# [-90, +90]. Navigates the mannequin to each in sequence — the head/body
+# eases naturally toward the final pose during the coast phase, so by
+# the time the mannequin stops it's already (or very nearly) facing the
+# requested direction.
+#
+# Run from a button/sign on flat ground with at least 8 b of clearance
+# in every horizontal direction (12x12 / 2 = 6, plus ~1-2 b of typical
+# coast overshoot). cruiseToFacing blocks until physics settles AND
+# facing converges, so each iteration runs sequentially.
+#
+# What this exercises:
+#   - cruiseTo retarget across all yaw quadrants (random angle each time).
+#   - Brake-to-coast transition firing from many entry conditions.
+#   - Coast-phase facing ease: yaw + pitch interpolate during the slide.
+#   - Convergence-gated coast exit: short coasts wait for facing to settle.
+#   - cruiseToFacing's pitch reset: each new leg starts level even though
+#     the previous leg ended with a random pitch.
+
+@using mannequin
+@fast
+
+# @if !isSpawned[player]
+    @var mannequin::spawnMannequin(player)
+# @fi
+
+@define Double startX = player.getX()
+@define Double startZ = player.getZ()
+
+@player &b=== random nav: 10 waypoints in 12x12 ===
+@player &7origin=&f({{startX}}, {{startZ}})
+
+@for Int i in list::range(0, 20)
+    @define Double offX = math::random(-6.0D, 6.0D)
+    @define Double offZ = math::random(-6.0D, 6.0D)
+    @define Double tx = startX + offX
+    @define Double tz = startZ + offZ
+    @define Double yaw = math::random(-180.0D, 180.0D)
+    @define Double pitch = math::random(-90.0D, 90.0D)
+
+    @player &7[{{i + 1}}/10] &fto ({{tx}}, {{tz}}) &7yaw=&f{{yaw}} &7pitch=&f{{pitch}}
+    @var mannequin::cruiseToFacing(player, Float(tx), Float(tz), Float(yaw), Float(pitch))
+    @delay 3
+@done
+
+@player &b=== random nav complete ===
+@player &7final pos=&f({{curX[player]}}, {{curZ[player]}}) &7yaw=&f{{curYawDeg[player]}} &7pitch=&f{{curPitchDeg[player]}}

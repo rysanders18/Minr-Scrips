@@ -1,0 +1,3 @@
+@using lendfishing
+
+@bypass /data modify entity @n[tag={{player.getUniqueId()}}_inter] height set value 0f

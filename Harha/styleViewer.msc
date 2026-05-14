@@ -1,0 +1,752 @@
+# styleViewer(Player player, Int level) https://paste.minr.org/owequqocub
+@using Harha
+@fast
+
+@if speedrunMode[player] == 0 || difficultySelection != "normal"
+    @define Int[] thresholds = Int[]
+    @define Int[] rewards = Int[]
+    @define Int startIndex = 0
+    @define Int pointsToEarn = 0
+    @define Int totalPoints = 0
+    
+    @bypass playsound minecraft:ui.button.click master @s
+    
+    @if level == 0
+        @var thresholds = l101Thresholds
+        @var rewards = l101Rewards
+        @var startIndex = l101StartIndex
+    @elseif level == 1
+        @var thresholds = l102Thresholds
+        @var rewards = l102Rewards
+        @var startIndex = l102StartIndex
+    @elseif level == 2
+        @var thresholds = l103Thresholds
+        @var rewards = l103Rewards
+        @var startIndex = l103StartIndex
+    @elseif level == 3
+        @var thresholds = l104Thresholds
+        @var rewards = l104Rewards
+        @var startIndex = l104StartIndex
+    @elseif level == 4
+        @var thresholds = l105Thresholds
+        @var rewards = l105Rewards
+        @var startIndex = l105StartIndex
+    @elseif level == 5
+        @var thresholds = l106Thresholds
+        @var rewards = l106Rewards
+        @var startIndex = l106StartIndex
+    @elseif level == 6
+        @var thresholds = l107Thresholds
+        @var rewards = l107Rewards
+        @var startIndex = l107StartIndex
+    @elseif level == 7
+        @var thresholds = l108Thresholds
+        @var rewards = l108Rewards
+        @var startIndex = l108StartIndex
+    @elseif level == 8
+        @var thresholds = l109Thresholds
+        @var rewards = l109Rewards
+        @var startIndex = l109StartIndex
+    @elseif level == 9
+        @var thresholds = l110Thresholds
+        @var rewards = l110Rewards
+        @var startIndex = l110StartIndex
+    @elseif level == 10
+        @var thresholds = l201Thresholds
+        @var rewards = l201Rewards
+        @var startIndex = l201StartIndex
+    @elseif level == 11
+        @var thresholds = l202Thresholds
+        @var rewards = l202Rewards
+        @var startIndex = l202StartIndex
+    @elseif level == 12
+        @var thresholds = l203Thresholds
+        @var rewards = l203Rewards
+        @var startIndex = l203StartIndex
+    @elseif level == 13
+        @var thresholds = l204Thresholds
+        @var rewards = l204Rewards
+        @var startIndex = l204StartIndex
+    @elseif level == 14
+        @var thresholds = l205Thresholds
+        @var rewards = l205Rewards
+        @var startIndex = l205StartIndex
+    @elseif level == 15
+        @var thresholds = l206Thresholds
+        @var rewards = l206Rewards
+        @var startIndex = l206StartIndex
+    @elseif level == 16
+        @var thresholds = l207Thresholds
+        @var rewards = l207Rewards
+        @var startIndex = l207StartIndex
+    @elseif level == 17
+        @var thresholds = l208Thresholds
+        @var rewards = l208Rewards
+        @var startIndex = l208StartIndex
+    @elseif level == 18
+        @var thresholds = l209Thresholds
+        @var rewards = l209Rewards
+        @var startIndex = l209StartIndex
+    @elseif level == 19
+        @var thresholds = l210Thresholds
+        @var rewards = l210Rewards
+        @var startIndex = l210StartIndex
+    @elseif level == 20
+        @var thresholds = l301Thresholds
+        @var rewards = l301Rewards
+        @var startIndex = l301StartIndex
+    @elseif level == 21
+        @var thresholds = l302Thresholds
+        @var rewards = l302Rewards
+        @var startIndex = l302StartIndex
+    @elseif level == 22
+        @var thresholds = l303Thresholds
+        @var rewards = l303Rewards
+        @var startIndex = l303StartIndex
+    @elseif level == 23
+        @var thresholds = l304Thresholds
+        @var rewards = l304Rewards
+        @var startIndex = l304StartIndex
+    @elseif level == 24
+        @var thresholds = l305Thresholds
+        @var rewards = l305Rewards
+        @var startIndex = l305StartIndex
+    @elseif level == 25
+        @var thresholds = l306Thresholds
+        @var rewards = l306Rewards
+        @var startIndex = l306StartIndex
+    @elseif level == 26
+        @var thresholds = l307Thresholds
+        @var rewards = l307Rewards
+        @var startIndex = l307StartIndex
+    @elseif level == 27
+        @var thresholds = l308Thresholds
+        @var rewards = l308Rewards
+        @var startIndex = l308StartIndex
+    @elseif level == 28
+        @var thresholds = l309Thresholds
+        @var rewards = l309Rewards
+        @var startIndex = l309StartIndex
+    @elseif level == 29
+        @var thresholds = l310Thresholds
+        @var rewards = l310Rewards
+        @var startIndex = l310StartIndex
+    @elseif level == 30
+        @var thresholds = l401Thresholds
+        @var rewards = l401Rewards
+        @var startIndex = l401StartIndex
+    @elseif level == 31
+        @var thresholds = l402Thresholds
+        @var rewards = l402Rewards
+        @var startIndex = l402StartIndex
+    @elseif level == 32
+        @var thresholds = l403Thresholds
+        @var rewards = l403Rewards
+        @var startIndex = l403StartIndex
+    @elseif level == 33
+        @var thresholds = l404Thresholds
+        @var rewards = l404Rewards
+        @var startIndex = l404StartIndex
+    @elseif level == 34
+        @var thresholds = l405Thresholds
+        @var rewards = l405Rewards
+        @var startIndex = l405StartIndex
+    @elseif level == 35
+        @var thresholds = l406Thresholds
+        @var rewards = l406Rewards
+        @var startIndex = l406StartIndex
+    @elseif level == 36
+        @var thresholds = l407Thresholds
+        @var rewards = l407Rewards
+        @var startIndex = l407StartIndex
+    @elseif level == 37
+        @var thresholds = l408Thresholds
+        @var rewards = l408Rewards
+        @var startIndex = l408StartIndex
+    @elseif level == 38
+        @var thresholds = l409Thresholds
+        @var rewards = l409Rewards
+        @var startIndex = l409StartIndex
+    @elseif level == 39
+        @var thresholds = l410Thresholds
+        @var rewards = l410Rewards
+        @var startIndex = l410StartIndex
+    @elseif level == 40
+        @var thresholds = l501Thresholds
+        @var rewards = l501Rewards
+        @var startIndex = l501StartIndex
+    @elseif level == 41
+        @var thresholds = l502Thresholds
+        @var rewards = l502Rewards
+        @var startIndex = l502StartIndex
+    @elseif level == 42
+        @var thresholds = l503Thresholds
+        @var rewards = l503Rewards
+        @var startIndex = l503StartIndex
+    @elseif level == 43
+        @var thresholds = l504Thresholds
+        @var rewards = l504Rewards
+        @var startIndex = l504StartIndex
+    @elseif level == 44
+        @var thresholds = l505Thresholds
+        @var rewards = l505Rewards
+        @var startIndex = l505StartIndex
+    @elseif level == 45
+        @var thresholds = l506Thresholds
+        @var rewards = l506Rewards
+        @var startIndex = l506StartIndex
+    @elseif level == 46
+        @var thresholds = l507Thresholds
+        @var rewards = l507Rewards
+        @var startIndex = l507StartIndex
+    @elseif level == 47
+        @var thresholds = l508Thresholds
+        @var rewards = l508Rewards
+        @var startIndex = l508StartIndex
+    @elseif level == 48
+        @var thresholds = l509Thresholds
+        @var rewards = l509Rewards
+        @var startIndex = l509StartIndex
+    @elseif level == 49
+        @var thresholds = l510Thresholds
+        @var rewards = l510Rewards
+        @var startIndex = l510StartIndex
+    @elseif level == 50
+        @var thresholds = l601Thresholds
+        @var rewards = l601Rewards
+        @var startIndex = l601StartIndex
+    @elseif level == 51
+        @var thresholds = l602Thresholds
+        @var rewards = l602Rewards
+        @var startIndex = l602StartIndex
+    @elseif level == 52
+        @var thresholds = l603Thresholds
+        @var rewards = l603Rewards
+        @var startIndex = l603StartIndex
+    @elseif level == 53
+        @var thresholds = l604Thresholds
+        @var rewards = l604Rewards
+        @var startIndex = l604StartIndex
+    @elseif level == 54
+        @var thresholds = l605Thresholds
+        @var rewards = l605Rewards
+        @var startIndex = l605StartIndex
+    @elseif level == 55
+        @var thresholds = l606Thresholds
+        @var rewards = l606Rewards
+        @var startIndex = l606StartIndex
+    @elseif level == 56
+        @var thresholds = l607Thresholds
+        @var rewards = l607Rewards
+        @var startIndex = l607StartIndex
+    @elseif level == 57
+        @var thresholds = l608Thresholds
+        @var rewards = l608Rewards
+        @var startIndex = l608StartIndex
+    @elseif level == 58
+        @var thresholds = l609Thresholds
+        @var rewards = l609Rewards
+        @var startIndex = l609StartIndex
+    @elseif level == 59
+        @var thresholds = l610Thresholds
+        @var rewards = l610Rewards
+        @var startIndex = l610StartIndex
+    @elseif level == 60
+        @var thresholds = l701Thresholds
+        @var rewards = l701Rewards
+        @var startIndex = l701StartIndex
+    @elseif level == 61
+        @var thresholds = l702Thresholds
+        @var rewards = l702Rewards
+        @var startIndex = l702StartIndex
+    @elseif level == 62
+        @var thresholds = l703Thresholds
+        @var rewards = l703Rewards
+        @var startIndex = l703StartIndex
+    @elseif level == 63
+        @var thresholds = l704Thresholds
+        @var rewards = l704Rewards
+        @var startIndex = l704StartIndex
+    @elseif level == 64
+        @var thresholds = l705Thresholds
+        @var rewards = l705Rewards
+        @var startIndex = l705StartIndex
+    @elseif level == 65
+        @var thresholds = l706Thresholds
+        @var rewards = l706Rewards
+        @var startIndex = l706StartIndex
+    @elseif level == 66
+        @var thresholds = l707Thresholds
+        @var rewards = l707Rewards
+        @var startIndex = l707StartIndex
+    @elseif level == 67
+        @var thresholds = l708Thresholds
+        @var rewards = l708Rewards
+        @var startIndex = l708StartIndex
+    @elseif level == 68
+        @var thresholds = l709Thresholds
+        @var rewards = l709Rewards
+        @var startIndex = l709StartIndex
+    @elseif level == 69
+        @var thresholds = l710Thresholds
+        @var rewards = l710Rewards
+        @var startIndex = l710StartIndex
+    @fi
+    
+    @if startIndex == 0 && level != 0
+        
+        @player &#d4d4d4-=-=-=-= &n{{allLevels[level]}}&#d4d4d4 =-=-=-=-
+        @player &#7e7e7e{{allLevels[level]}} has no style points.
+        @player
+        
+    @else
+        
+        @player &#d4d4d4-=-=-=-= &n{{allLevels[level]}}&#d4d4d4 =-=-=-=-
+        @for Int i in list::range(0, thresholds.length())
+            # DEBUG @player i = {{i}}
+            # DEBUG @player claimed style points? {{claimedStylePoints[startIndex + rewards.length() - i - 1]}} {{startIndex + rewards.length() - i - 1}}
+            @if claimedStylePoints[startIndex + rewards.length() - i - 1] == true
+                
+                @var totalPoints += rewards[rewards.length() - 1 - i]
+                @var pointsToEarn += rewards[rewards.length() - 1 - i]
+                
+                @if thresholds[thresholds.length() - 1 - i] == 1
+                    @player &aBeat using {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✔
+                @else
+                    @player &aBeat using {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✔
+                @fi
+                
+                
+            @else
+                @var totalPoints += rewards[rewards.length() - 1 - i]
+                
+                @if thresholds[thresholds.length() - 1 - i] == 1
+                    @player &cBeat using {{thresholds[thresholds.length() - 1 - i]}} Block: {{totalPoints}} Points ✕
+                @else
+                    @player &cBeat using {{thresholds[thresholds.length() - 1 - i]}} Blocks: {{totalPoints}} Points ✕
+                @fi
+                
+            @fi
+            
+        @done
+        @player &#d4d4d4Style points this stage: ({{pointsToEarn}}/{{totalPoints}}), Total: ({{formatNumber(String(swagPoints[player]))}}/4,000)
+        @player
+        
+    @fi
+    
+    # Section 1
+    # 1-01: 0:03
+    # 1-02: 0:07
+    # 1-03: 0:10
+    # 1-04: 0:14
+    # 1-05: 0:18
+    # 1-06: 0:20
+    # 1-07: 0:23
+    # 1-08: 0:27
+    # 1-09: 0:31
+    # 1-10: 0:35
+    
+    # Section 2
+    # 2-01: 0:42
+    # 2-02: 0:48
+    # 2-03: 0:53
+    # 2-04: 1:02
+    # 2-05: 1:11
+    # 2-06: 1:15
+    # 2-07: 1:21
+    # 2-08: 1:27
+    # 2-09: 1:32
+    # 2-10: 1:40
+    
+    # Section 3
+    # 3-01: 1:45
+    # 3-02: 1:48
+    # 3-03: 1:53
+    # 3-04: 1:56
+    # 3-05: 2:00
+    # 3-06: 2:04
+    # 3-07: 2:10
+    # 3-08: 2:14
+    # 3-09: 2:18
+    # 3-10: 2:24
+    
+    # Section 4
+    # 4-01: 2:52
+    # 4-02: 2:59
+    # 4-03: 3:11
+    # 4-04: 3:20
+    # 4-05: 3:25
+    # 4-06: 3:30
+    # 4-07: 3:36
+    # 4-08: 3:42
+    # 4-09: 3:56
+    # 4-10: 4:04
+    
+    # Section 5
+    # 5-01: 4:22
+    # 5-02: 4:26
+    # 5-03: 4:29
+    # 5-04: 4:32
+    # 5-05: 4:37
+    # 5-06: 4:42
+    # 5-07: 4:47
+    # 5-08: 4:52
+    # 5-09: 4:57
+    # 5-10: 5:05
+    
+    # Section 6
+    # 6-01: 5:14
+    # 6-02: 5:18
+    # 6-03: 5:22
+    # 6-04: 5:26
+    # 6-05: 5:30
+    # 6-06: 5:34
+    # 6-07: 5:40
+    # 6-08: 5:46
+    # 6-09: 5:52
+    # 6-10: 5:56
+    
+    # Section 7
+    # 7-01: 6:09
+    # 7-02: 6:17
+    # 7-03: 6:23
+    # 7-04: 6:29
+    # 7-05: 6:35
+    # 7-06: 6:40
+    # 7-07: 6:46
+    # 7-08: 6:51
+    # 7-09: 6:56
+    # 7-10: 7:01
+    
+    @if level == 0
+        @player &#d4d4d4&lAdvice:&7 These signs will give &#d4d4d4&ltips and advice &7for each level! If you’re stuck, these signs can definitely help you out. It's good practice to try to &#d4d4d4&lplace right before you land.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=3s
+    @elseif level == 1
+        @player &#d4d4d4&lAdvice:&7 Here it helps to &#d4d4d4&lturn as soon as you place. Try to strafe so you don’t slam into the walls.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=7s
+    @elseif level == 2
+        @player &#d4d4d4&lAdvice:&7 If you’re running into the iron bar, &#d4d4d4&ltry landing further left &7on the first block. Turn right after you place and strafe left away from the wall.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=10s
+    @elseif level == 3
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lSlow down &7so you &#d4d4d4&ldon't run into the corner. &7It's easier to &#d4d4d4&lonly place 2 blocks!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=14s
+    @elseif level == 4
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe left &7away from the wall so you don’t hit the corner. &#d4d4d4&lYou can land very far left &7on the first block. Further than you think!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=18s
+    @elseif level == 5
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe left &7away from the wall so you don’t hit the iron bars. &#d4d4d4&lYou can land very far left &7on the first block. Further than you think!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=20s
+    @elseif level == 6
+        @player &#d4d4d4&lAdvice:&7 Try to focus on &#d4d4d4&lstrafing further away from the targets! &7The further you are away from the target, the easier it is to aim.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=23s
+    @elseif level == 7
+        @player &#d4d4d4&lAdvice:&7 You can carry your momentum and &#d4d4d4&lchain the jumps,&7 or you can stop and take each jump slow! The choice is yours.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=27s
+    @elseif level == 8
+        @player &#d4d4d4&lAdvice:&7 It might help if you &#d4d4d4&lslow down around the corners! &7You can slow down by letting go of W for a bit or by stopping your sprint. &#d4d4d4&lTry to avoid bonking against the corners. &7You can stand pretty far out on the blocks you place.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=31s
+    @elseif level == 9
+        @player &#d4d4d4&lAdvice:&7 Try to land &#d4d4d4&las far as possible &7on the first block, &#d4d4d4&lstrafe right, and turn in &7to pass the iron bars!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=35s
+    @elseif level == 10
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lplace right before you land &7when stacking! Get as much speed as you can for the last 2+1. If you &#d4d4d4&lstart gaining momentum earlier &7and &#d4d4d4&lland on the edge &7you can make it! You can &#d4d4d4&lrun a bit &7on the last block if you &#d4d4d4&lplace it right before landing &7on it.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=42s
+    @elseif level == 11
+        @player &#d4d4d4&lAdvice:&7 If you stand in the middle, you &#d4d4d4&ldon’t have to strafe left and right! &7Just move your mouse, not your body. Make sure you &#d4d4d4&lgain enough speed to make the final jump.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=48s
+    @elseif level == 12
+        @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move a shorter distance and it's easier to aim!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=53s
+    @elseif level == 13
+        @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the walls. &7You have to move a shorter distance and it's easier to aim! You also don’t have to strafe left and right.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=62s
+    @elseif level == 14
+        @player &#d4d4d4&lAdvice:&7 It helps if you try to &#d4d4d4&ljump halfway between the blocks &7so you &#d4d4d4&ldon’t have to move left and right. &7You can &#d4d4d4&lrun a bit on the last block &7to gain more speed if you &#d4d4d4&lplace it right before landing &7on it.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=71s
+    @elseif level == 15
+        @player &#d4d4d4&lAdvice:&7 This level is much easier if you &#d4d4d4&ldon’t press against the sides. &7You have to move a shorter distance and it's easier to aim!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=75s
+    @elseif level == 16
+        @player &#d4d4d4&lAdvice:&7 If you’re failing the last jump, try to &#d4d4d4&lrun a bit &7before you jump on the last block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=81s
+    @elseif level == 17
+        @player &#d4d4d4&lAdvice:&7 If you’re failing the last jump, try to &#d4d4d4&lrun a bit &7before you jump on the last block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=87s
+    @elseif level == 18
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstay as close to the middle &7as you can, and don’t press against any walls. This level is easier if you &#d4d4d4&ldon’t sprint.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=92s
+    @elseif level == 19
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lrun as long as possible &7on each block. It will help your aim if you &#d4d4d4&lstand towards the closer edge &7of the block, because you have to move your mouse less. &#d4d4d4&lStrafe!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=100s
+    @elseif level == 20
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lHold space &7for most of the slimes in this section!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=105s
+    @elseif level == 21
+        @player &#d4d4d4&lAdvice:&7 Get some momentum and &#d4d4d4&lhold space &7on the slime.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=108s
+    @elseif level == 22
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lfocus on cutting the corner as tight as possible &7without hitting the wall.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=113s
+    @elseif level == 23
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lget as close as you can to the fence &7without hitting it, and &#d4d4d4&lhold space &7on the slime.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=116s
+    @elseif level == 24
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lLand as far as possible on the first block &7and slowly turn in while strafing to land on the 2nd block. &#d4d4d4&lFlick your mouse straight &7again after you place the 2nd block and &#d4d4d4&lcut the corner tight &7to turn in and place the last block around the corner.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=120s
+    @elseif level == 25
+        @player &#d4d4d4&lAdvice:&7 Don’t attempt to place the blocks while you are inside them. &#d4d4d4&lYou need to be fully above the blocks. &7You might need to slow down a bit for the last target.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=124s
+    @elseif level == 26
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lCut the corner &7tight and &#d4d4d4&lplace the block as late as possible. &7The later you place the block, the more time you have to turn around and run to get some speed for the final jump.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=130s
+    @elseif level == 27
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lSlow down &7after the log to easily land on the 2nd block. You can experiment with holding space or not. &#d4d4d4&lMove away from the wall &7on the last block to &#d4d4d4&lavoid hitting the fence!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=134s
+    @elseif level == 28
+        @player &#d4d4d4&lAdvice:&7 Aim to land on the &#d4d4d4&lvery south-east corner &7of the 3rd block. This helps a ton with getting around the corner, especially if you &#d4d4d4&lgain as much speed as you can from the 2nd block
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=138s
+    @elseif level == 29
+        @player &#d4d4d4&lAdvice:&7 Take your time and &#d4d4d4&lrun on the top blocks of each wall when turning around. &7When switching to another wall, make sure you &#d4d4d4&lstay far away from the walls, &7so it’s easier to clutch, and focus on &#d4d4d4&lcontrolling yourself mid-air. &7Treat this like three separate stacking sections with difficult slime jumps in between. It’s &#d4d4d4&lpossible to overshoot &7the spruce at the end, so be careful.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=144s
+    @elseif level == 30
+        @player &#d4d4d4&lAdvice:&7 You hit your head here, so get an &#d4d4d4&lextra jump for momentum!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=172s
+    @elseif level == 31
+        @player &#d4d4d4&lAdvice:&7 Aim to &#d4d4d4&lland on the very back corner of the block, &7so you have lots of distance to clear the pillar! &#d4d4d4&lDon't dodge at too steep an angle, &7or you won't land on the iron bars!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=179s
+    @elseif level == 32
+        @player &#d4d4d4&lAdvice:&7 Make sure to &#d4d4d4&lmove far enough to clear the anvils &7so you don't hit your head! Turn in and stack up, and &#d4d4d4&lrun a little on the last block &7to make the final jump!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=191s
+    @elseif level == 33
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lCut your corners tight, &7and remember you can &#d4d4d4&lrun a couple ticks &7on the last block! &#d4d4d4&lFlick back to the left &7after placing the 2nd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=200s
+    @elseif level == 34
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lThe further you are from the walls, &7the easier it is to place the blocks! Experiment with &#d4d4d4&lstrafing away from the walls &7and focusing on aiming.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=205s
+    @elseif level == 35
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lThe further you are from the walls, &7the easier it is to place the blocks! Experiment with &#d4d4d4&lstrafing away from the walls &7and focusing on aiming.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=210s
+    @elseif level == 36
+        @player &#d4d4d4&lAdvice:&7 For the first block, &#d4d4d4&ljump as far as you can &7so it's easier to place the 2nd block. Make sure to &#d4d4d4&lrun a few ticks on the 2nd block &7for the final jump!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=216s
+    @elseif level == 37
+        @player &#d4d4d4&lAdvice:&7 When jumping around the anvils, try to get as much &#d4d4d4&lsideways momentum &7as you can. It's very important to &#d4d4d4&lrun on the last block, &7and it helps a ton if you &#d4d4d4&lstart gaining momentum after jumping off of the 4th block. &7Make sure to &#d4d4d4&ldistance yourself from the targets.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=222s
+    @elseif level == 38
+        @player &#d4d4d4&lAdvice:&7 This is where the map starts getting harder… &#d4d4d4&lSlow down &7as much as possible when turning around to place the block. As soon as you place it, &#d4d4d4&lflick your mouse forward and run as long as you can &7before jumping!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=236s
+    @elseif level == 39
+        @player &#d4d4d4&lAdvice:&7 There are several ways to approach this very difficult level. The most recommended strategy is to &#d4d4d4&lwalk backwards&7 (easier if holding S and D/A), then &#d4d4d4&ljump &7and place the first block &#d4d4d4&lright before you land. &7Turn around &#d4d4d4&las soon as you right-click, &7and sprint to the &#d4d4d4&lvery edge of the block &7before jumping. Another strategy is crouching to the edge of the starting platform, then placing the first block and &#d4d4d4&lturning around instantly to run &7to make the 3+1. This is harder if you have a lower ping. The final accepted strategy is gaining momentum, then jumping and flicking backwards quickly to place the block. Good luck!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=244s
+    @elseif level == 40
+        @player &#d4d4d4&lAdvice:&7 All &#d4d4d4&lice blocks &7placed in this section last &#d4d4d4&l2 ticks longer! &7Good luck!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=262s
+    @elseif level == 41
+        @player &#d4d4d4&lAdvice:&7 Make sure to &#d4d4d4&lavoid hitting the wall &7and try to &#d4d4d4&lrun on the last block &7to gain enough speed.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=266s
+    @elseif level == 42
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lRun on each ice block &7before jumping to &#d4d4d4&lgain as much speed as possible. &7Don’t hit the wall and flick forwards after placing your 2nd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=269s
+    @elseif level == 43
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lRun on each ice block &7before jumping to &#d4d4d4&lgain as much speed as possible. &7Don’t hit any walls and flick forwards after placing the 3rd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=272s
+    @elseif level == 44
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lSlow down around the corners! &7You can slow down by letting go of W for a bit or by stopping your sprint. &#d4d4d4&lTry to avoid bonking against the corners. &7You can stand pretty far out on the blocks you place. &#d4d4d4&lRun on the 4th block &7to gain enough speed for the end.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=277s
+    @elseif level == 45
+        @player &#d4d4d4&lAdvice:&7 There are several ways to approach this difficult level. After you place the 2nd block, instead of trying to go straight for the 3rd target, &#d4d4d4&lplace another block on the 2nd target. &7Remember that &#d4d4d4&lice blocks last 2 ticks longer, so to prevent lagging into the block, be very patient and wait as long as possible before jumping off the 2nd block. &7It’s hard to turn around on the 2nd target, so &#d4d4d4&lexperiment with crouching to the far edge &7of the 2nd block, then &#d4d4d4&lwait before jumping. &7Alternatively, if you don’t want to crouch, this level becomes much easier if you &#d4d4d4&lplace the 2nd block immediately after placing the 1st block &7to start its timer earlier, so you can jump earlier.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=282s
+    @elseif level == 46
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lRun as long as possible on each block to gain as much speed as you can &7for the final jump! Make sure you &#d4d4d4&ljump at the very far edge of the last block, &7and flick forwards so you are &#d4d4d4&laiming straight ahead when you jump. &7Keep in mind, you can &#d4d4d4&lgain momentum on the starting platform &7to help!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=287s
+    @elseif level == 47
+        @player &#d4d4d4&lAdvice:&7 Similarly to the last level, &#d4d4d4&lRun as long as possible on each block to gain as much speed as you can &7for the final jump. Make sure you &#d4d4d4&ljump at the very far edge of the last block, &7and flick forwards so you are &#d4d4d4&laiming straight ahead when you jump. Land on the far left edge &7of each block. You can stand much farther right on the block than you think!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=292s
+    @elseif level == 48
+        @player &#d4d4d4&lAdvice:&7 Envision yourself landing on the &#d4d4d4&lvery far left corner of the first block. Run a little &7on the first block to gain some speed, and stick close to the wall without hitting it. &#d4d4d4&lFlick forwards after placing the last block, and run as long as you can &7before jumping to the end.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=297s
+    @elseif level == 49
+        @player &#d4d4d4&lAdvice:&7 Good luck on this &#d4d4d4&lvery difficult level! &7Getting enough speed for the final jump is the most challenging factor of this level. &#d4d4d4&lRunning as long as possible on the 4th block &7is necessary, and make sure to &#d4d4d4&lflick forwards &7immediately after placing it. Experiment with &#d4d4d4&lrunning on the 2nd block &7to gain some extra speed, and try to &#d4d4d4&lfocus on strafing to travel in a perfectly straight line, &7as moving side to side will slow you down a lot.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=305s
+    @elseif level == 50
+        @player &#d4d4d4&lAdvice:&7 Enjoy &#d4d4d4&lplacing slime blocks &7in this section! Get some momentum and &#d4d4d4&lhold jump on the slime &7for this level!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=314s
+    @elseif level == 51
+        @player Get some momentum and &#d4d4d4&lhold jump on the slime &7for this level! Try to &#d4d4d4&lflick back straight ahead &7so you get as much speed on the jump.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=318s
+    @elseif level == 52
+        @player &#d4d4d4&lAdvice:&7 Try to aim for the very &#d4d4d4&lfront right corner &7of the first block. &#d4d4d4&lGain as much momentum to the right &7before landing as you can.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=322s
+    @elseif level == 53
+        @player &#d4d4d4&lAdvice:&7 Slow down right after you clear the first walls, then try to &#d4d4d4&lspeed up as much as you can &7without hitting the 2nd walls. Try to &#d4d4d4&lget as close as possible to the 2nd walls &7without hitting them.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=326s
+    @elseif level == 54
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lSlow down &7right after your first bounce, then &#d4d4d4&lgain as much speed as possible &7for your 2nd bounce &#d4d4d4&lwithout hitting the iron trapdoors. &7You can &#d4d4d4&lhold backwards &7after you place the 2nd block, or you can also &#d4d4d4&lflick forwards &7right after placing.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=330s
+    @elseif level == 55
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lRepress jump &7for the first block, and &#d4d4d4&lcross over to the other side &7after the iron bars!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=334s
+    @elseif level == 56
+        @player &#d4d4d4&lAdvice:&7 You should be &#d4d4d4&lholding D &7for the majority of this level. Focus on landing at the &#d4d4d4&lfurthest edge of the last block with as much momentum as possible &7by hugging close to the wall. &#d4d4d4&lFlick forwards immediately &7after placing the last block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=340s
+    @elseif level == 57
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lThe blackstone slabs set you up for success! JUMP backwards &7directly off the starting platform and &#d4d4d4&lstay backwards the entire time. &7Hold S and try to &#d4d4d4&ltime your clicks perfectly. &7A &#d4d4d4&lpitch of 73-75 degrees &7works great, but adjusting your mouse can definitely help.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=346s
+    @elseif level == 58
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lland on the far left edge &7of the first block, with &#d4d4d4&las much leftward momentum as you can. &7It helps if you &#d4d4d4&ljump from the right half of the starting platform. &7Cut the corners tight and turn in to place the 2nd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=352s
+    @elseif level == 59
+        @player &#d4d4d4&lAdvice:&7 You have to &#d4d4d4&lplace blocks on the bottom face of the targets above! &7You need lots of speed, so &#d4d4d4&lgain lots of momentum from the starting platform. Flick upwards immediately &7after placing the first block, and &#d4d4d4&lbe prepared to place the 3rd block quickly. &7This level is very difficult for people with low sensitivity.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=356s
+    @elseif level == 60
+        @player &#d4d4d4&lAdvice:&7 Welcome to the &#d4d4d4&lfinal section! &7The challenge of this level is &#d4d4d4&lendurance. &7Use everything you have learned so far, like &#d4d4d4&lavoiding hitting the corners. &7There are &#d4d4d4&lsolid blocks you can stop and rest on, &7so take your time and &#d4d4d4&lfocus on consistency.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=369s
+    @elseif level == 61
+        @player &#d4d4d4&lAdvice:&7 You have to &#d4d4d4&lplace blocks on the bottom face of the targets above! &7You need lots of speed, so &#d4d4d4&lgain lots of momentum from the starting platform. &7The last jump is the hardest, so aim to &#d4d4d4&ljump from the far corner of the 3rd block, &7running a couple of ticks and jumping at the last second. It helps if you only &#d4d4d4&lbarely miss the quartz pillar.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=377s
+    @elseif level == 62
+        @player &#d4d4d4&lAdvice:&7 Use your target blocks to perform &#d4d4d4&ltwo double extensions! &7For a double extension, gain some speed and &#d4d4d4&lplace both blocks as quickly as possible. &7Move your mouse &#d4d4d4&limmediately after placing the first block, &7and experiment with finding the perfect angle to flick to place the 2nd block. It helps if you make an effort to &#d4d4d4&lplace the first block as soon as it’s within your reach &7to give you more time to place the 2nd block. Keep in mind that getting too much momentum might make it harder to place the 2nd block!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=383s
+    @elseif level == 63
+        @player &#d4d4d4&lAdvice:&7 Good luck with these &#d4d4d4&lmuch smaller targets! &7Make sure to &#d4d4d4&lrun some ticks on each ice block, &7and strafe so you &#d4d4d4&ltravel in a straight line. Flick forwards &7before jumping off the last block, and focus on placing in the &#d4d4d4&ldead center &7of the targets. Experiment with either flicking your mouse to place each block or moving your mouse slowly and precisely.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=389s
+    @elseif level == 64
+        @player &#d4d4d4&lAdvice:&7 Clicking on the &#d4d4d4&llower half of the target places a bottom trapdoor, &7while clicking on the &#d4d4d4&lupper half places a top trapdoor. &7Pick one wall, and &#d4d4d4&laim precisely and accordingly. &7Jumping up &#d4d4d4&l1.1875 blocks&7 is much harder, so &#d4d4d4&lgain some speed and jump earlier to avoid bonking.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=395s
+    @elseif level == 65
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lland on the outside edges of the blocks. &7You can land much further than you think! &#d4d4d4&lAngle yourself to thread the needle &7from the 2nd block to the 3rd block. &#d4d4d4&lStrafe around the arrows, &7and run and jump at the last second for the last block!
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=400s
+    @elseif level == 66
+        @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe as little as you can &7before the first block so you are as &#d4d4d4&lclose to the sides as possible, without actually hitting the sides. &7If you are traveling diagonally after the first block, you will not have enough speed to reach the 2nd block. After you narrowly pass the front wall, &#d4d4d4&lslowly turn in by strafing and flick your mouse backwards quickly. &7You can choose between stopping your momentum and stacking up from the bottom block or carrying your momentum and flicking straight ahead before jumping to the end.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=406s
+    @elseif level == 67
+        @player &#d4d4d4&lAdvice:&7 Place the 3rd ice block on the wall and &#d4d4d4&luse it to stop your momentum quickly before turning around. &7It helps if you &#d4d4d4&lgain as much momentum as you can &7so you are in the air for less time before slamming into the ice. It helps if you already &#d4d4d4&lhave some rightward momentum &7before you slam into the ice. &#d4d4d4&lStart turning around immediately after you hit the ice, not before.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=411s
+    @elseif level == 68
+        @player &#d4d4d4&lAdvice:&7 This &#d4d4d4&lvery challenging penultimate level &7combines rapid mouse movement with precise player movement. &#d4d4d4&lClick the note blocks mid air to activate the targets. &7Click the 1st note block after placing the first block, and click the 2nd note block after placing the 2nd block. Start moving your mouse &#d4d4d4&limmediately after clicking the note blocks &7to give yourself more time to place the targets. It helps if you &#d4d4d4&lstrafe slightly away from the walls, &7so you are closer to the note blocks, and it is easier to place the blocks. &#d4d4d4&lThink ahead&7 after placing the 3rd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=416s
+    @elseif level == 69
+        @player &#d4d4d4&lAdvice:&7 This is the &#d4d4d4&lfinal level!&7 This extremely difficult stage requires you to apply everything you’ve learned so far. Getting enough speed for the &#d4d4d4&lfinal jump is the most challenging factor&7 of this level. &#d4d4d4&lRun as long as possible on the last block, and jump at the very edge.&7 You should be &#d4d4d4&lfacing forwards for each jump&7 towards the end of this level to gain enough speed. Experiment with &#d4d4d4&lcrossing over to the other side&7 after placing the 3rd block.
+        @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=421s
+    @fi
+    
+    @player &#d4d4d4-=-=-=-=-=-=-=-=-=-=-
+    
+@else
+    # @player DEBUG: {{system::currentTimeMillis() - timeOfLastSignClick[player]}}
+    @if (system::currentTimeMillis() - timeOfLastSignClick[player] > 3600000) && timeOfLastSignClick[player] != 0L
+        @bypass playsound minecraft:ui.button.click master {{player}} ~ ~ ~ 0.5 1
+        @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.5 0
+        @player &c-----------------------------------
+        @player &6&lREMINDER: &#d4d4d4You still have &#bbff46speedrun mode &#d4d4d4enabled! You haven't clicked a level sign in &lover an hour. &#d4d4d4Are you sure you want to teleport and invalidate your run? &6(y/n)
+        @player &c-----------------------------------
+        @define String tpConfirmation
+        @prompt 20s tpConfirmation
+        @if tpConfirmation.toLowerCase() != "y" && tpConfirmation.toLowerCase() != "yes"
+            @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+            @player &#d4d4d4Speedrun Mode &c&lDisabled
+            @var speedrunMode[player] = 0
+            @var timeOfLastSignClick[player] = system::currentTimeMillis()
+            @return
+        @fi
+    @fi
+    
+    # TODO: uncomment this
+    # @define timer::Timer timer = timer::getMapTimer(player, "harha")
+    # @if timer != null
+    #     @var timer.invalidate()
+    #     @player &cTimer Invalidated!
+    # @fi
+    
+    @var speedrunTeleportedRecently[player] = true
+    @var hasTeleported[player] = true
+    
+    @if speedrunMode[player] == 1
+        @var player.teleport(Position(-9199.5, 96.0, 9715.5, 180.0, 10.0, "Theta"))
+        @var setLevel(0, player)
+        @var stage[player] = 0
+        @var ensureBlockSelection(0, player)
+        @var resetBlocks(player, 64)
+        @bypass clear {{player}} leather_boots
+        @if bootsObtained[player] == true
+            @var bootsObtained[player] = false
+            @bypass /item replace entity {{player}} armor.head with air
+            @delay 1
+            @var hatFunction(player)
+        @fi
+    @elseif speedrunMode[player] == 2
+        @var player.teleport(Position(-9160.5, 101.0, 9680.5, 270.0, 10.0, "Theta"))
+        @var setLevel(10, player)
+        @var stage[player] = 1
+        @var ensureBlockSelection(10, player)
+        @var resetBlocks(player, 64)
+        @bypass clear {{player}} leather_boots
+        @if bootsObtained[player] == true
+            @var bootsObtained[player] = false
+            @bypass /item replace entity {{player}} armor.head with air
+            @delay 1
+            @var hatFunction(player)
+        @fi
+    @elseif speedrunMode[player] == 3
+        @var player.teleport(Position(-9132.5, 101.0, 9641.5, 180.0, 10.0, "Theta"))
+        @var setLevel(20, player)
+        @var stage[player] = 2
+        @var ensureBlockSelection(20, player)
+        @var resetBlocks(player, 64)
+        @bypass clear {{player}} leather_boots
+        @if bootsObtained[player] == true
+            @var bootsObtained[player] = false
+            @bypass /item replace entity {{player}} armor.head with air
+            @delay 1
+            @var hatFunction(player)
+        @fi
+    @elseif speedrunMode[player] == 4
+        @var player.teleport(Position(-9189.5, 100.13, 9582.5, 287.0, 10.0, "Theta"))
+        @var setLevel(30, player)
+        @var stage[player] = 3
+        @var ensureBlockSelection(30, player)
+        @var resetBlocks(player, 64)
+        @bypass clear {{player}} leather_boots
+        @if bootsObtained[player] == true
+            @var bootsObtained[player] = false
+            @bypass /item replace entity {{player}} armor.head with air
+            @delay 1
+            @var hatFunction(player)
+        @fi
+    @elseif speedrunMode[player] == 5
+        @var player.teleport(Position(-9182.5, 101.0, 9563.5, 180.0, 10.0, "Theta"))
+        @var setLevel(40, player)
+        @var stage[player] = 4
+        @var ensureBlockSelection(40, player)
+        @var resetBlocks(player, 64)
+        @var bootsObtained = true
+        @var bootsFunction(player)
+    @elseif speedrunMode[player] == 6
+        @var player.teleport(Position(-9067.5, 102.0, 9509.0, 0.0, 10.0, "Theta"))
+        @var setLevel(50, player)
+        @var stage[player] = 5
+        @var ensureBlockSelection(50, player)
+        @var resetBlocks(player, 64)
+        @var bootsObtained = true
+        @var bootsFunction(player)
+    @elseif speedrunMode[player] == 7
+        @var player.teleport(Position(-4600.5, 91.0, 5201.5, -180.0, 10.0, "Theta_the_end"))
+        @var setLevel(60, player)
+        @var stage[player] = 6
+        @var ensureBlockSelection(60, player)
+        @var resetBlocks(player, 64)
+        @var bootsObtained = true
+        @var bootsFunction(player)
+    @elseif speedrunMode[player] == 8
+        @var player.teleport(Position(-9199.5, 92.0, 9742.5, -180.0, 20.0, "Theta"))
+        @var setLevel(0, player)
+        @var stage[player] = 0
+        @var ensureBlockSelection(0, player)
+        @var bootsObtained = false
+        @bypass clear {{player}}
+    @fi
+    
+    @bypass playsound minecraft:ui.button.click master {{player}} ~ ~ ~ 0.5 1
+    @bypass playsound minecraft:entity.enderman.teleport master {{player}} ~ ~ ~ 0.5 1
+    @var timeOfLastSignClick[player] = system::currentTimeMillis()
+@fi

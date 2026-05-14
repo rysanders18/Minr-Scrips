@@ -1,0 +1,109 @@
+# Int[] genPawnMoves(Player player, Int sq)
+# Returns the pseudo-legal pawn moves for the pawn at sq.
+# Standard moves: single push, double push, diagonal captures,
+# en-passant captures.
+#
+# VARIANT RULES:
+#   - Pawns auto-promote to a queen when reaching the back rank.
+#     Encoded by setting the move's promo field to 4 (queen) on any
+#     forward push, double push, diagonal capture, or ep-capture
+#     whose destination rank is the back rank. makeMove reads the
+#     flag and swaps the piece on the board; applyMoveVisually
+#     reads it and recolors the piece. Sideways moves can never
+#     change rank, so they never carry a promo flag.
+#   - Pawns may move OR capture one square left or right.
+#   - Pawns may double-push (two squares forward) from ANY rank,
+#     not just the starting rank.
+#   - Pawn attacks in isSquareAttacked include the squares
+#     immediately left and right.
+
+@using rychess
+@fast
+
+@define Int[] moves = Int[]
+@define Int piece = board[player][sq]
+@define Int myColor = pieceColor(piece)
+@define Int file = sq % 8
+@define Int rank = sq / 8
+
+@define Int forward = 8
+@define Int backRank = 7
+@if myColor == 1
+    @var forward = -8
+    @var backRank = 0
+@fi
+
+@if rank != backRank
+    @define Int onePushPromo = 0
+    @if (rank + forward / 8) == backRank
+        @var onePushPromo = 4
+    @fi
+    @define Int twoPushPromo = 0
+    @if (rank + (2 * forward) / 8) == backRank
+        @var twoPushPromo = 4
+    @fi
+
+    @define Int oneStep = sq + forward
+    @if board[player][oneStep] == 0
+        @var moves.append(moveEncode(sq, oneStep, onePushPromo, 0))
+    @fi
+
+    @define Int twoStep = sq + forward + forward
+    @if twoStep >= 0 && twoStep <= 63
+        @if board[player][oneStep] == 0 && board[player][twoStep] == 0
+            @var moves.append(moveEncode(sq, twoStep, twoPushPromo, 2))
+        @fi
+    @fi
+
+    @if file > 0
+        @define Int capLeft = sq + forward - 1
+        @define Int capLeftPiece = board[player][capLeft]
+        @if capLeftPiece != 0 && pieceColor(capLeftPiece) != myColor
+            @var moves.append(moveEncode(sq, capLeft, onePushPromo, 1))
+        @fi
+    @fi
+    @if file < 7
+        @define Int capRight = sq + forward + 1
+        @define Int capRightPiece = board[player][capRight]
+        @if capRightPiece != 0 && pieceColor(capRightPiece) != myColor
+            @var moves.append(moveEncode(sq, capRight, onePushPromo, 1))
+        @fi
+    @fi
+
+    @define Int ep = epSquare[player]
+    @if ep >= 0
+        @if file > 0
+            @define Int epLeft = sq + forward - 1
+            @if epLeft == ep
+                @var moves.append(moveEncode(sq, epLeft, onePushPromo, 3))
+            @fi
+        @fi
+        @if file < 7
+            @define Int epRight = sq + forward + 1
+            @if epRight == ep
+                @var moves.append(moveEncode(sq, epRight, onePushPromo, 3))
+            @fi
+        @fi
+    @fi
+@fi
+
+@if file > 0
+    @define Int leftSq = sq - 1
+    @define Int leftPiece = board[player][leftSq]
+    @if leftPiece == 0
+        @var moves.append(moveEncode(sq, leftSq, 0, 0))
+    @elseif pieceColor(leftPiece) != myColor
+        @var moves.append(moveEncode(sq, leftSq, 0, 1))
+    @fi
+@fi
+@if file < 7
+    @define Int rightSq = sq + 1
+    @define Int rightPiece = board[player][rightSq]
+    @if rightPiece == 0
+        @var moves.append(moveEncode(sq, rightSq, 0, 0))
+    @elseif pieceColor(rightPiece) != myColor
+        @var moves.append(moveEncode(sq, rightSq, 0, 1))
+    @fi
+@fi
+
+@return moves

@@ -1,0 +1,16 @@
+# String pieceGlyph(Int piece)
+# Returns the colored chat glyph for a piece code.
+# Empty squares are a dark-gray dot. White pieces are uppercase
+# letters in white; black pieces are lowercase letters in red so
+# the two sides stay visually distinct in chat.
+# Codes: 0=empty, 1-6=WP/N/B/R/Q/K, 7-12=BP/N/B/R/Q/K.
+
+@using rychess
+@fast
+
+@if piece == 0
+    @return "&8_"
+@fi
+
+@define String[] glyphs = String["&fP", "&fN", "&fB", "&fR", "&fQ", "&fK", "&cp", "&cn", "&cb", "&cr", "&cq", "&ck"]
+@return glyphs[piece - 1]

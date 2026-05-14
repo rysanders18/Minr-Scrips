@@ -1,0 +1,53 @@
+# milkActivation
+@fast
+@using cookie
+
+@cooldown 45s
+
+@if milkUnlocked[player] == false 
+    @return
+@fi
+
+@if milkActivated[player] == false 
+    # Activate Milk
+
+    @var lastMilkActivationTime[player] = system::currentTimeMillis()
+    @var milkActivated[player] = true
+    @bypass data merge entity @e[type=item_display,tag=harhaCookieItem{{roomNumber[player]}},limit=1] {item:{id:"minecraft:milk_bucket",count:1}}
+    @bypass data merge entity @e[type=item_display,tag=harhaCookieMilkItem{{roomNumber[player]}},limit=1] {item:{id:"minecraft:bucket",count:1}}
+    @var cookieTextUpdate(player, roomNumber[player])
+    @var upgradeTextUpdate(player, roomNumber[player])
+    @var milkAnimation(roomNumber[player], true)
+
+    
+
+    # @player before delay {{20 * milkDuration[player]}}
+    # Delay
+    @var Harha::delay(20 * milkDuration[player] - 7)
+    # @player after delay {{20 * milkDuration[player]}}
+
+    # Deactivate Milk
+    @var milkActivated[player] = false
+    @bypass data merge entity @e[type=item_display,tag=harhaCookieItem{{roomNumber[player]}},limit=1] {item:{id:"minecraft:cookie",count:1}}
+    @var cookieTextUpdate(player, roomNumber[player])
+    @var upgradeTextUpdate(player, roomNumber[player])
+    @var milkAnimation(roomNumber[player], false)
+    
+
+    # @player before delay {{893 - (20 * milkDuration[player])}}
+    # Cooldown
+    @var Harha::delay(893 - (20 * milkDuration[player]))
+    # @player after delay {{893 - (20 * milkDuration[player])}}
+
+    # Reset Milk Thing
+    @bypass data merge entity @e[type=item_display,tag=harhaCookieMilkItem{{roomNumber[player]}},limit=1] {item:{id:"minecraft:milk_bucket",count:1}}
+    @var upgradeTextUpdate(player, roomNumber[player])
+
+    # Particles
+    @for Int i in list::range(0, 12)
+        @bypass /execute at @e[tag=harhaCookieMilkItem{{roomNumber[player]}},limit=1] run particle effect{color:[0.95,0.95,1.0]} ~{{math::random(-0.35D, 0.35D)}} ~{{math::random(-0.3D, 0.3D)}} ~0.1 {{math::random(-0.05D, 0.05D)}} {{0.1 + math::random(-0.05D, 0.02D)}} {{0.05 + math::random(-0.025D, 0.025D)}} 2 0 normal 
+    @done
+
+    @bypass playsound minecraft:entity.witch.drink master {{player}} ~ ~ ~ 1 1 
+    @bypass playsound minecraft:entity.goat.screaming.milk master {{player}} ~ ~ ~ 0.5 1 
+@fi

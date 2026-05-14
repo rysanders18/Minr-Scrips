@@ -1,0 +1,27 @@
+# clearHighlights(Player player)
+# Reverts every currently-highlighted board square back to its
+# original light/dark texture (uses isLightSquare to pick which
+# original). Resets highlightedSquares[player] to empty so the
+# next highlightMoves starts fresh.
+# Safe to call when there are no highlights (empty list - no-op).
+#
+# Note: the rychessboard<R><F> entity tags are flipped along the
+# rank axis vs the logical rank, so the tag's first digit is
+# (7 - rank), not rank.
+
+@using rychess
+@fast
+
+@for Int i in list::range(0, highlightedSquares[player].length())
+    @define Int sq = highlightedSquares[player][i]
+    @define Int rank = sq / 8
+    @define Int file = sq % 8
+    @define Int tagRank = 7 - rank
+    @if isLightSquare(sq)
+        @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureLight}}"}]}
+    @else
+        @bypass /data modify entity @e[limit=1,tag=rychessboard{{tagRank}}{{file}}] item.components."minecraft:profile" set value {properties:[{name:"textures",value:"{{boardTextureDark}}"}]}
+    @fi
+@done
+
+@var highlightedSquares[player] = Int[]

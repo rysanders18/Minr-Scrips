@@ -1,0 +1,19 @@
+# delay(Int ticks) https://paste.minr.org/siwujugado
+
+# Developed by RYgamer1! Enjoy :)
+# ticks: The number of ticks to delay (1 second = 20 ticks)
+
+@using rytools
+@fast
+
+@define Long startTick = system::currentTimeMillis()
+@define Long limit = Long(50 * ticks)
+
+# Delay for the specified number of ticks
+@for Int tickCount in list::range(0, ticks)
+    @delay 1
+    # Extra precaution to avoid overshooting the delay time
+    @if (system::currentTimeMillis() - startTick) >= limit
+        @return
+    @fi
+@done

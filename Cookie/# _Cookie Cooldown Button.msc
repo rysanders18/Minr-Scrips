@@ -1,0 +1,44 @@
+# Cookie Cooldown Button
+@fast
+@using cookie
+
+# @define Int[] cooldownPrices = Int[10, 25, 100, 400, 800, 1300, 2000, 3000, 5000, 10000, 20000, 1000000]
+# @define Int[] cooldownCooldowns = Int[800, 650, 450, 350, 275, 200, 150, 100, 80, 65, 50, 1]
+
+@if cooldownStage[player] >= cooldownCooldowns.length()
+    @player &#d4d4d4--------------------------------------
+    @player &cYou have reached the maximum upgrade for this button!
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @return
+@fi
+
+@if cookieCount[player] < cooldownPrices[cooldownStage[player]]
+    @player &#d4d4d4--------------------------------------
+    @player &c&lCookie Cooldown Button&#d4d4d4
+    @player &#d4d4d4● Current Cooldown: &c{{cookieCooldown[player]}}ms
+    @player &#d4d4d4● Next Cooldown: &c{{cooldownCooldowns[cooldownStage[player]]}}ms
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l{{Harha::formatNumber(String(cooldownPrices[cooldownStage[player]]))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(cooldownPrices[cooldownStage[player]] - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &c&lCookie Cooldown Button&#d4d4d4
+    @player &#d4d4d4● New Cooldown: &c{{cookieCooldown[player]}} → {{cooldownCooldowns[cooldownStage[player]]}}ms
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(cooldownPrices[cooldownStage[player]])))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var cookieCooldown[player] = cooldownCooldowns[cooldownStage[player]]
+    @var cookieCount[player] -= Long(cooldownPrices[cooldownStage[player]])
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(cooldownPrices[cooldownStage[player]])
+    @done
+    @var cooldownStage[player] += 1
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

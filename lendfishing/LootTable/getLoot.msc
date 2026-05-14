@@ -1,0 +1,16 @@
+# lendfishing::Loot getLoot(Player player)
+@using lendfishing
+
+@define Double randChance = math::randomDouble()
+
+@for Int i in list::range(0, this.chances.length())
+    @define Double currChance = Double(this.chances[i])
+    @for Int j in list::range(0, i)
+        @var currChance += Double(this.chances[j])
+    @done
+
+    @if (randChance < currChance)
+        @return this.lootList[i]
+    @fi
+@done
+@var errorMessage("Something went wrong with rolling loot from the loot table. Please contact a creator.")

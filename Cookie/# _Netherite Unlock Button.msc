@@ -1,0 +1,39 @@
+# _Netherite Unlock Button
+@fast
+@using cookie
+
+# @define Int netheritePrice = 100000000
+# @define relative Boolean netheriteUnlocked = false
+
+@if cookieCount[player] < netheritePrice
+    @player &#d4d4d4--------------------------------------
+    @player &#5C5C5C&lSecret Completion Button&#d4d4d4
+    @player &#d4d4d4● Purchase this to beat the secret!
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l100,000,000 Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(netheritePrice - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &#5C5C5C&lSecret Completion Button&#d4d4d4
+    @player &#d4d4d4● Secret Completed! Congratulations!
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(netheritePrice)))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+
+    @var player.teleport(Position(-9189.5, 99.0, 9294.5, 180.0, -10.0, "Theta"))
+
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @bypass playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 0.75 1 
+    @var cookieCount[player] -= Long(netheritePrice)
+    
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(netheritePrice)
+    @done
+    @var netheriteUnlocked[player] = true
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

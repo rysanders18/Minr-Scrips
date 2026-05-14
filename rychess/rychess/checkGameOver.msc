@@ -1,0 +1,31 @@
+# Boolean checkGameOver(Player player)
+# Side-effecting helper: returns true and prints the appropriate
+# game-over message if the game has ended (checkmate, stalemate,
+# 50-move rule). Returns false if play continues.
+# Threefold repetition is not detected (would require Zobrist
+# hashing or board-state strings, deferred to a later phase).
+
+@using rychess
+@fast
+
+@if isCheckmate(player)
+    @if sideToMove[player] == 0
+        @player &c&l*** Checkmate! Black wins. ***
+    @else
+        @player &c&l*** Checkmate! White wins. ***
+    @fi
+    @var playCheckmateSound(player)
+    @return true
+@fi
+
+@if isStalemate(player)
+    @player &e&l*** Stalemate. Draw. ***
+    @return true
+@fi
+
+@if halfmoveClock[player] >= 100
+    @player &e&l*** Draw by 50-move rule. ***
+    @return true
+@fi
+
+@return false

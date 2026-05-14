@@ -1,0 +1,536 @@
+# theCubeAnimation
+@using endmap
+@fast
+@global_cooldown 2s
+
+# TODO: Check if player in region first
+@if Region("endmapcutscene", "Theta_the_end").getPlayersInside().length() > 0
+    @player &cPlease try again in a few seconds...
+    @bypass /playsound minecraft:block.noteblock.didgeridoo master {{player}} ~ ~ ~ 0.4 1
+    @return
+@fi
+
+
+
+# Reset cp number
+@var cpnumber[player] = 0
+
+# Attribute
+@bypass attribute {{player}} minecraft:safe_fall_distance base set 50
+
+# Reset the cube
+@for Int x in list::range(0, 10)
+    @for Int z in list::range(0, 10)
+        @for Int y in list::range(0, 10)
+            @bypass /data merge entity @e[limit=1,tag=rycube_x{{x}}_y{{y}}_z{{z}}] {interpolation_duration:0,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[{{-7.324 + math::random(0D, 1D)}}f, 0f, 0.324f, 0.889f],translation:[{{-4 + math::random(-1D, 1D)}}f,4f,{{4 + math::random(-1D, 1D)}}f],scale:[0f,0f,0f]}}         
+        @done 
+    @done 
+@done
+
+# Kill pig
+@bypass /minecraft:tp @e[tag=endmappig,distance=..200] -4600 131 5499 
+@bypass /minecraft:kill @e[tag=endmappig,distance=..200] 
+
+# Summon pig to ride
+@bypass /summon pig -4613.0 232.0 5508.98 {NoGravity:1b,Silent:1b,Invulnerable:1b,Tags:["endmappig"],CustomName:[{"bold":true,"color":"#AC30FF","text":"T"},{"color":"#C433FB","text":"H"},{"color":"#DB36F8","text":"E "},{"color":"#F339F4","text":"C"},{"color":"#F339F4","text":"U"},{"color":"#DB36F8","text":"B"},{"color":"#AC30FF","text":"E"}],active_effects:[{id:"minecraft:invisibility",amplifier:1,duration:200000,show_particles:0b,show_icon:0b}]}
+@bypass /effect give {{player}} minecraft:darkness 2 0 true
+@bypass /playsound minecraft:block.beacon.deactivate master {{player}} ~ ~ ~ 0.5 0.5 1
+
+@delay 20
+
+@bypass /minecraft:tp {{player}} ~ ~ ~ 245 15
+@bypass /ride {{player}} mount @e[tag=endmappig,limit=1,sort=nearest]
+@bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 0.5 0.75
+# @bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[0.0,0.0,-0.1]}
+
+
+@for Int i in list::range(0, 85)
+    @bypass /rotate {{player}} facing -4599.5 233.00 5499.5
+    @bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[0.0,0.0,-0.1]}
+    @bypass /ride @s mount @e[tag=endmappig,limit=1,sort=nearest]
+    @delay 1
+
+    @if i == 10
+        @console /function execute endmap::theCubeShellAnimation()
+    @elseif i == 36
+        @console /function execute endmap::theCubeShellParticles(Player("{{player.getName()}}"))
+    @fi
+@done
+
+@for Int i in list::range(0, 52)
+    @bypass /rotate {{player}} facing -4599.5 233.00 5499.5
+    @bypass /ride @s mount @e[tag=endmappig,limit=1,sort=nearest]
+    # @bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[0.0,0.0,-0.1]}
+    @delay 1
+@done
+
+@delay 1
+# @bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[0.0,0.0,0.0]}
+# @player {{system::currentTimeMillis()}}
+@bypass /playsound minecraft:entity.evoker.prepare_summon master {{player}} ~ ~ ~ 0.5 1
+@bypass /playsound minecraft:entity.warden.sonic_boom master {{player}} ~ ~ ~ 0.5 0.5
+@bypass /playsound minecraft:block.portal.trigger master {{player}} ~ ~ ~ 0.5 0.9
+@bypass /particle minecraft:enchant -4603.5 233.5 5499.5 4.0 4.0 4.0 1 1000
+
+@bypass /execute in minecraft:theta_the_end run particle flash{color:[0.412,0.000,0.824,0.000],scale:5} -4613.00 232.27 5499.50 .3 .3 .3 0 100
+
+@bypass /effect give {{player}} minecraft:darkness 5 0 true
+
+@bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[-0.3,0.0,0.0]}
+# @bypass /attribute {{player}} minecraft:movement_speed base set 0.05
+
+# Glyph - corners (32)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+
+# Glyph - midpoints (96)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5499.2500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5499.5000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5499.7500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5500.2500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5500.5000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5500.7500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5501.2500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5501.5000, "Theta_the_end"), Location(-4609.0000, 231.5000, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0000, 5501.7500, "Theta_the_end"), Location(-4609.0000, 231.5000, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.2500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 231.8000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.2500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 231.8000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 232.1000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 232.1000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.7500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 232.4000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.7500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 232.4000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5497.2500, "Theta_the_end"), Location(-4609.0000, 232.7000, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5497.5000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5497.7500, "Theta_the_end"), Location(-4609.0000, 232.7000, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5500.2500, "Theta_the_end"), Location(-4609.0000, 232.7000, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5500.5000, "Theta_the_end"), Location(-4609.0000, 232.7000, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0000, 5500.7500, "Theta_the_end"), Location(-4609.0000, 232.7000, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.2500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 233.0000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 233.3000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.7500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 233.6000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5497.2500, "Theta_the_end"), Location(-4609.0000, 233.9000, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5497.5000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5497.7500, "Theta_the_end"), Location(-4609.0000, 233.9000, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5501.2500, "Theta_the_end"), Location(-4609.0000, 233.9000, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5501.5000, "Theta_the_end"), Location(-4609.0000, 233.9000, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0000, 5501.7500, "Theta_the_end"), Location(-4609.0000, 233.9000, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.2500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 234.2000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.2500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 234.2000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 234.5000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 234.5000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.7500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 234.8000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.7500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 234.8000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5497.2500, "Theta_the_end"), Location(-4609.0000, 235.1000, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5497.5000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5497.7500, "Theta_the_end"), Location(-4609.0000, 235.1000, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5501.2500, "Theta_the_end"), Location(-4609.0000, 235.1000, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5501.5000, "Theta_the_end"), Location(-4609.0000, 235.1000, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0000, 5501.7500, "Theta_the_end"), Location(-4609.0000, 235.1000, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.2500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 235.4000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5498.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5499.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5501.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5000, 5502.0000, "Theta_the_end"), Location(-4609.0000, 235.7000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.7500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 236.0000, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5498.2500, "Theta_the_end"), Location(-4609.0000, 236.3000, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5498.5000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5498.7500, "Theta_the_end"), Location(-4609.0000, 236.3000, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5501.2500, "Theta_the_end"), Location(-4609.0000, 236.3000, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5501.5000, "Theta_the_end"), Location(-4609.0000, 236.3000, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0000, 5501.7500, "Theta_the_end"), Location(-4609.0000, 236.3000, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.2500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 236.6000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.2500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 236.6000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5000, 5497.0000, "Theta_the_end"), Location(-4609.0000, 236.9000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5000, 5500.0000, "Theta_the_end"), Location(-4609.0000, 236.9000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.7500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 237.2000, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.7500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 237.2000, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5497.2500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5497.5000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5497.7500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5498.2500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5498.5000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5498.7500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5499.2500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5499.5000, "Theta_the_end"), Location(-4609.0000, 237.5000, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0000, 5499.7500, "Theta_the_end"), Location(-4609.0000, 237.5000, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+
+@delay 1
+
+# walls - corners (64)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 231.5600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 231.5600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 231.5600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 231.5600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 232.7600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 232.7600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 232.7600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 232.7600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 233.9600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 233.9600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 233.9600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 233.9600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 235.1600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 235.1600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 235.1600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 235.1600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 236.3600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 236.3600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 236.3600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 236.3600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 237.5600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 237.5600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 237.5600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 237.5600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5497.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5496.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5498.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5497.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5499.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5498.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5500.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5500.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5501.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5501.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5502.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5502.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+
+# walls - midpoints (192)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5495.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5494.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5495.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5494.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5495.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5495.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5496.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5495.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5496.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5495.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5496.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5496.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5497.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5497.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5497.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5498.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5498.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5498.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5499.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5499.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5499.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5500.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5500.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5500.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5501.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5501.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5501.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5502.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5502.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5502.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5503.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5502.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5503.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5503.2500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5504.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5503.5000, "Theta_the_end"), Location(-4609.0000, 229.1600, 5504.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.0500, 5503.7500, "Theta_the_end"), Location(-4609.0000, 229.1600, 5504.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 229.4600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 229.4600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 229.7600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 229.7600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 230.0600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 230.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 230.0600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5496.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5495.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5496.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5495.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5496.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5496.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5497.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5497.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5497.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5498.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5498.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5498.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5499.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5499.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5499.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5500.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5500.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5500.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5501.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5501.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5501.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5502.2500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5502.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5502.5000, "Theta_the_end"), Location(-4609.0000, 230.3600, 5503.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.0500, 5502.7500, "Theta_the_end"), Location(-4609.0000, 230.3600, 5503.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 230.6600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 230.6600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 230.6600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 230.6600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 230.9600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 230.9600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 230.9600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 230.9600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 231.2600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 231.2600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 231.2600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 231.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 231.2600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 231.8600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 231.8600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 231.8600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 231.8600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 232.1600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 232.1600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 232.1600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 232.1600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 232.4600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 232.4600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 232.4600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 232.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 232.4600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 233.0600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 233.0600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 233.0600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 233.0600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 233.3600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 233.3600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 233.3600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 233.3600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 233.6600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 233.6600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 233.6600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 233.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 233.6600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 234.2600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 234.2600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 234.2600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 234.2600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 234.5600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 234.5600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 234.5600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 234.5600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 234.8600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 234.8600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 234.8600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 234.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 234.8600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 235.4600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 235.4600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 235.4600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 235.4600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 235.7600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 235.7600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 235.7600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 235.7600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 236.0600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 236.0600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 236.0600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 235.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 236.0600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 236.6600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 236.6600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 236.6600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 236.6600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 236.9600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 236.9600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 236.9600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 236.9600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 237.2600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 237.2600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 237.2600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 236.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 237.2600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 237.8600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.3000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 237.8600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.3000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 237.8600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 237.8600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 238.1600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.5500, 5496.0000, "Theta_the_end"), Location(-4609.0000, 238.1600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.5500, 5503.0000, "Theta_the_end"), Location(-4609.0000, 238.1600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 238.1600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 238.4600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.8000, 5496.0000, "Theta_the_end"), Location(-4609.0000, 238.4600, 5495.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.8000, 5503.0000, "Theta_the_end"), Location(-4609.0000, 238.4600, 5503.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 237.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 238.4600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5496.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5495.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5496.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5495.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5496.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5496.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5497.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5497.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5497.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5498.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5498.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5498.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5499.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5499.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5499.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5500.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5500.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5500.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5501.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5501.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5501.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5502.2500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5502.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5502.5000, "Theta_the_end"), Location(-4609.0000, 238.7600, 5503.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.0500, 5502.7500, "Theta_the_end"), Location(-4609.0000, 238.7600, 5503.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.3000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 239.0600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.3000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 239.0600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.5500, 5495.0000, "Theta_the_end"), Location(-4609.0000, 239.3600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.5500, 5504.0000, "Theta_the_end"), Location(-4609.0000, 239.3600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.8000, 5495.0000, "Theta_the_end"), Location(-4609.0000, 239.6600, 5494.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 238.8000, 5504.0000, "Theta_the_end"), Location(-4609.0000, 239.6600, 5504.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5495.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5494.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5495.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5494.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5495.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5495.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5496.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5495.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5496.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5495.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5496.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5496.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5497.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5496.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5497.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5497.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5497.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5497.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5498.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5498.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5498.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5498.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5498.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5498.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5499.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5499.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5499.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5499.5000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5499.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5499.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5500.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5500.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5500.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5500.7000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5500.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5501.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5501.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5501.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5501.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5501.9000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5501.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5502.2000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5502.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5502.8000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5502.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5503.1000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5502.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5503.4000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5503.2500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5504.0000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5503.5000, "Theta_the_end"), Location(-4609.0000, 239.9600, 5504.3000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+@console /function execute rytools::particleLine(Location(-4604.0000, 239.0500, 5503.7500, "Theta_the_end"), Location(-4609.0000, 239.9600, 5504.6000, "Theta_the_end"), 4, 4, "minecraft:dust{color:[0.412,0.000,0.824],scale:1}", 1)
+
+# spread apart
+# Reset the cube
+@for Int x in list::range(0, 10)
+    @for Int z in list::range(0, 10)
+        @for Int y in list::range(0, 10)
+            @bypass /data merge entity @e[limit=1,tag=rycube_x{{x}}_y{{y}}_z{{z}}] {interpolation_duration:200,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[{{math::random(-10D, 10D)}}f, {{math::random(1-0D, 10D)}}f, {{math::random(-10D, 10D)}}f, {{math::random(-10D, 10D)}}f],translation:[{{x - 4 + math::random(-1D, 1D)}}f,{{y + math::random(-1D, 1D)}}f,{{z - 4 + math::random(0D, 1D)}}f],scale:[1f,1f,1f]}}         
+        @done 
+    @done 
+@done
+
+
+
+@for Int i in list::range(0, 41)
+    @bypass particle minecraft:portal -4598.50 234.0 5499.50 0 0 0 5 100
+    @delay 1
+@done
+
+@delay 5
+
+@for Int i in list::range(0, 15)
+    @bypass /data merge entity @e[tag=endmappig,limit=1] {Motion:[{{i / 10}}.{{i}},0.0,0.0]}
+    @delay 2
+@done
+
+# @bypass /effect give {{player}} blindness 1 0 true
+@delay 0
+
+
+@bypass /attribute {{player}} minecraft:movement_speed base reset
+
+@bypass minecraft:teleport {{player}} -4599.52 61.00 5527.5 180.00 -40.0
+@bypass /playsound minecraft:entity.creaking.death master {{player}} ~ ~ ~ 0.25 0
+@bypass /playsound minecraft:item.totem.use master {{player}} ~ ~ ~ 0.25 {{math::random(1.1D, 1.4D)}}
+@bypass /playsound minecraft:block.beacon.ambient master {{player}} ~ ~ ~ 0.25 {{math::random(0.5D, 0.6D)}}
+@bypass /playsound minecraft:entity.lightning_bolt.thunder master {{player}} ~ ~ ~ 1 0.5
+@delay 1
+@bypass /particle minecraft:witch -4599.52 62.20 5527.50 0 0.1 0 1 30
+@bypass /particle minecraft:end_rod -4599.52 62.50 5527.50 0 0 0 0.5 100
+@bypass /execute as @s at @s anchored eyes run particle flash{color:[0.412,0.000,0.824,0.000],scale:5} ^ ^ ^1 0 0 0 0 2 force @s
+@bypass /effect clear {{player}}
+
+# Kill pig
+@bypass /minecraft:tp @e[tag=endmappig,distance=..200] -4600 131 5499 
+@bypass /minecraft:kill @e[tag=endmappig,distance=..200] 
+
+
+# Spread from bottom-NE corner (x=9, y=0, z=0) to top-SW corner (x=0, y=9, z=9)
+# Wave step d = (9 - x) + y + z, ranging 0..27
+# @for Int d in list::range(0, 28)
+#     @for Int x in list::range(0, 10)
+#         @for Int y in list::range(0, 10)
+#             @for Int z in list::range(0, 10)
+#                 @if (9 - x) + y + z == d
+#                     @bypass /data merge entity @e[limit=1,tag=rycube_x{{x}}_y{{y}}_z{{z}}] {interpolation_duration:30,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}
+#                 @fi
+#             @done
+#         @done
+#     @done
+#     @delay 4
+# @done
+

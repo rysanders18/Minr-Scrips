@@ -1,0 +1,32 @@
+# cruiseTo(Player player, Float tx, Float tz)
+# Public entry: aim the mannequin at world (tx, tz) and start the per-tick
+# cruise loop. Auto-spawns the mannequin on first call. Bumping tickGen
+# invalidates any cruiseTick still running from a prior cruiseTo or from
+# a coast triggered by stopCruising, so rapid retargets don't stack tick
+# loops. isCoasting is cleared so the new loop starts in cruising phase
+# even if we were mid-coast when this fired.
+#
+# cruiseTicks is reset only on idle → cruise transitions. A fresh start
+# gets the jumpDelayTicks windup before the first sprint-jump; mid-cruise
+# or mid-coast retargets keep the existing counter so the rhythm doesn't
+# stutter. Pitch is NOT reset — cruiseTick eases it toward cruisePitchDeg
+# from wherever the previous arrival left it.
+
+@using mannequin
+@fast
+
+@if !isSpawned[player]
+    @var mannequin::spawnMannequin(player)
+@fi
+
+@if !isCruising[player] && !isCoasting[player]
+    @var cruiseTicks[player] = 0
+@fi
+
+@var targetX[player] = Double(tx)
+@var targetZ[player] = Double(tz)
+@var hasTargetFacing[player] = false
+@var isCruising[player] = true
+@var isCoasting[player] = false
+@var tickGen[player] = tickGen[player] + 1
+@var mannequin::cruiseTick(player, tickGen[player])

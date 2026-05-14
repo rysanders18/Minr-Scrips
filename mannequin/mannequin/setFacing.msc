@@ -1,0 +1,14 @@
+# setFacing(Player player, Double yaw, Double pitch)
+# Snaps the mannequin's head/body to a final pose. Intended for use AFTER
+# cruiseTo has returned (i.e. after the coast has settled), so the final
+# orientation isn't immediately overwritten by the next cruiseTick frame.
+# Yaw uses the standard Minecraft convention: 0 = +Z (south), 90 = -X (west),
+# ±180 = -Z (north), -90 = +X (east). Pitch: -90 = looking straight up,
+# 0 = level, +90 = looking straight down.
+
+@using mannequin
+@fast
+
+@var curYawDeg[player] = yaw
+@var curPitchDeg[player] = pitch
+@var mannequin::teleportMannequin(player, curX[player], curZ[player])

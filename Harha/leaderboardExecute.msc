@@ -1,0 +1,168 @@
+# leaderboardExecute(String[] topPlayersRank, String[] topPlayers, String[] topPlayersStat, String[] topPlayersColor, Int variation)
+
+@fast
+@using Harha
+
+@define String[] leaderboardTitles = String["Total Blocks Placed", "Total Times Fallen", "PB Lowest Falls", "PB Falls Even Harder", "PB Falls Hardest", "PB Falls Soul Link", "PB Falls Harder Soul Link", "PB Lowest Blocks Placed", "PB Blocks Even Harder", "PB Blocks Hardest", "PB Blocks Soul Link", "PB Blocks Harder Soul Link", "# Of Completions Total", "# Of Completions Normal", "# Of Completions Even Harder", "# Of Completions Hardest", "# Of Completions Soul Link", "# Of Completions Harder Soul Link", "Section 1 Times", "Section 2 Times", "Section 3 Times", "Section 4 Times", "Section 5 Times", "Section 6 Times", "Section 7 Times", "Sum of Best Sections", "? Anomalies Experienced ?", "Soul Link Group Size", "Harder Soul Link Group Size", "Style Point Prestiges"]
+@define String[] leaderboardColorList = String["aqua", "aqua", "green", "gold", "red", "aqua", "light_purple", "green", "gold", "red", "aqua", "light_purple", "aqua" ,"green", "gold", "red", "aqua", "light_purple", "aqua", "aqua", "aqua", "aqua", "aqua", "aqua", "aqua", "aqua", "dark_purple", "aqua", "light_purple", "gold"]
+@define Boolean[] isBolded = Boolean[false, false, false, false, false, false, false, false, false, false]
+
+@var leftArrow = "<<<     "
+@var rightArrow = "     >>>"
+
+
+# @var topPlayersRank = Int[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1]
+# @var topPlayers = String["RYgamer1 ", "Crowenza ", "johnplumber ", "ItsPoekie ", "Lagbolo ", "coolkane8 ", "Tetration ", "masts ", "MaxLovesFrogs ", "--", "RYgamer1"]
+# @var topPlayersStat = String["6,969,420", "6,969,419", "1,000,000", "999,999", "888,888", "876,543", "876,542", "854,545", "420,420", "", "6,969,420"]
+# @var topPlayersColor = String["green", "green", "green", "green", "green", "green", "gold", "green", "green", "gray", "green"]
+
+@if topPlayersRank[0] == "1"
+    @var leftArrow = "        "
+@else
+    @var leftArrow = "<<<     "
+@fi
+
+@if topPlayersRank[0] == "991"
+    @var rightArrow = "        "
+@else
+    @var rightArrow = "     >>>"
+@fi
+
+
+
+# @var leftArrow = "test"
+# @player left Arrow = {{leftArrow}}
+
+# @player {{topPlayersRank[0]}}
+
+
+@define String select1
+@define String select2
+@define String upArrow1 = "↑"
+@define String upArrow2 = "↑"
+@define String downArrow1 = "↓"
+@define String downArrow2 = "↓"
+
+@if variation == 0
+    @var select1 = "Total Stats"
+    @var select2 = "Blocks"
+@elseif variation == 1
+    @var select1 = "Total Stats"
+    @var select2 = "Falls"
+@elseif variation == 2
+    @var select1 = "PB Falls"
+    @var select2 = "Challenge"
+@elseif variation == 3
+    @var select1 = "PB Falls"
+    @var select2 = "Challenge"
+@elseif variation == 4
+    @var select1 = "PB Falls"
+    @var select2 = "Challenge"
+@elseif variation == 5
+    @var select1 = "PB Falls"
+    @var select2 = "Challenge"
+@elseif variation == 6
+    @var select1 = "PB Falls"
+    @var select2 = "Challenge"
+@elseif variation == 7
+    @var select1 = "PB Blocks"
+    @var select2 = "Challenge"
+@elseif variation == 8
+    @var select1 = "PB Blocks"
+    @var select2 = "Challenge"
+@elseif variation == 9
+    @var select1 = "PB Blocks"
+    @var select2 = "Challenge"
+@elseif variation == 10
+    @var select1 = "PB Blocks"
+    @var select2 = "Challenge"
+@elseif variation == 11
+    @var select1 = "PB Blocks"
+    @var select2 = "Challenge"
+@elseif variation == 12
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 13
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 14
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 15
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 16
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 17
+    @var select1 = "# of Completions"
+    @var select2 = "Challenge"
+@elseif variation == 18
+    @var select1 = "Section Times"
+    @var select2 = "Section 1"
+@elseif variation == 19
+    @var select1 = "Section Times"
+    @var select2 = "Section 2"
+@elseif variation == 20
+    @var select1 = "Section Times"
+    @var select2 = "Section 3"
+@elseif variation == 21
+    @var select1 = "Section Times"
+    @var select2 = "Section 4"
+@elseif variation == 22
+    @var select1 = "Section Times"
+    @var select2 = "Section 5"
+@elseif variation == 23
+    @var select1 = "Section Times"
+    @var select2 = "Section 6"
+@elseif variation == 24
+    @var select1 = "Section Times"
+    @var select2 = "Section 7"
+@elseif variation == 25
+    @var select1 = "Section Times"
+    @var select2 = "Sum of Best"
+@elseif variation == 26
+    @var select1 = "Other"
+    @var select2 = "Group Size"
+@elseif variation == 27
+    @var select1 = "Other"
+    @var select2 = "Group Size"
+@elseif variation == 28
+    @var select1 = "Other"
+    @var select2 = "Prestiges"
+@elseif variation == 29
+    @var select1 = "Other"
+    @var select2 = "Anomalies"
+@elseif variation == 30
+    @var select1 = "Other"
+    @var select2 = "Gambling PB"
+@fi
+    # @var upArrow1 = " "
+    # @var upArrow2 = " "
+    # @var downArrow1 = " "
+    # @var downArrow2 = " "
+@for Int i in list::range(0, 10)
+    @if topPlayers[i] == topPlayers[10] + " "
+        @var isBolded[i] = true
+    @fi
+@done
+
+@bypass /execute as @e[tag=harhaLeaderboardEntity] run data merge entity @s {text:[{"bold":true,"color":"{{leaderboardColorList[variation]}}","text":"{{leaderboardTitles[variation]}}\n\n","underlined":true},{"bold":false,"color":"yellow","text":"{{topPlayersRank[0]}}. ","underlined":false},{"bold":{{String(isBolded[0])}},"color":{{topPlayersColor[0]}},"text":"{{topPlayers[0]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[0]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[1]}}. ","underlined":false},{"bold":{{String(isBolded[1])}},"color":{{topPlayersColor[1]}},"text":"{{topPlayers[1]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[1]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[2]}}. ","underlined":false},{"bold":{{String(isBolded[2])}},"color":{{topPlayersColor[2]}},"text":"{{topPlayers[2]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[2]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[3]}}. ","underlined":false},{"bold":{{String(isBolded[3])}},"color":{{topPlayersColor[3]}},"text":"{{topPlayers[3]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[3]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[4]}}. ","underlined":false},{"bold":{{String(isBolded[4])}},"color":{{topPlayersColor[4]}},"text":"{{topPlayers[4]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[4]}}\n","underlined":false},{"bold":true,"color":"gray","text":"{{leftArrow}}","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[5]}}. ","underlined":false},{"bold":{{String(isBolded[5])}},"color":{{topPlayersColor[5]}},"text":"{{topPlayers[5]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[5]}}","underlined":false},{"bold":true,"color":"gray","text":"{{rightArrow}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[6]}}. ","underlined":false},{"bold":{{String(isBolded[6])}},"color":{{topPlayersColor[6]}},"text":"{{topPlayers[6]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[6]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[7]}}. ","underlined":false},{"bold":{{String(isBolded[7])}},"color":{{topPlayersColor[7]}},"text":"{{topPlayers[7]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[7]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[8]}}. ","underlined":false},{"bold":{{String(isBolded[8])}},"color":{{topPlayersColor[8]}},"text":"{{topPlayers[8]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[8]}}\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[9]}}. ","underlined":false},{"bold":{{String(isBolded[9])}},"color":{{topPlayersColor[9]}},"text":"{{topPlayers[9]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[9]}}\n\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[10]}}. ","underlined":false},{"bold":true,"color":{{topPlayersColor[10]}},"text":"{{topPlayers[10]}}","underlined":true},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[10]}}\n\n","underlined":false}]}
+
+@bypass /execute as @e[tag=harhaLeaderboardEntity2] run data merge entity @s {text:[{"bold":true,"color":"gray","text":"{{upArrow1}}\n","underlined":false},{"bold":true,"color":"aqua","text":"{{select1}}\n","underlined":false},{"bold":true,"color":"gray","text":"{{downArrow1}}\n","underlined":false}]}
+@bypass /execute as @e[tag=harhaLeaderboardEntity3] run data merge entity @s {text:[{"bold":true,"color":"gray","text":"{{upArrow2}}\n","underlined":false},{"bold":true,"color":"green","text":"{{select2}}\n","underlined":false},{"bold":true,"color":"gray","text":"{{downArrow2}}\n","underlined":false}]}
+
+# @player {{topPlayersRank}}
+# @player {{topPlayers}}
+# @player {{topPlayersStat}}
+# @player {{topPlayersColor}}
+
+# @bypass minecraft:kill @e[tag=harhaLeaderboardEntity]
+# @bypass minecraft:kill @e[tag=harhaLeaderboardEntity2]
+# @bypass minecraft:kill @e[tag=harhaLeaderboardEntity3]
+
+# @bypass /execute as @e[tag=harhaLeaderboardEntity] run data merge entity @e[type=text_display,limit=1,tag=harhaLeaderboardEntity] {text:'[{"bold":true,"color":"aqua","text":"Leaderboards Test\\n\\n","underlined":true},{"bold":false,"color":"yellow","text":"1. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[0]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"color":"yellow","text":"{{topPlayersStat[0]}}\\n"},{"bold":false,"color":"yellow","text":"2. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[1]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[1]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"3. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[2]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[2]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"4. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[3]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[3]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"5. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[4]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[4]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"6. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[5]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[5]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"7. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[6]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[6]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"8. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[7]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[7]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"9. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[8]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[8]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"10. ","underlined":false},{"bold":false,"color":"#FFBDBD","text":"{{topPlayers[9]}} ","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[9]}}\\n\\n","underlined":false},{"bold":false,"color":"yellow","text":"uhhhh ","underlined":false},{"bold":true,"color":"#FFBDBD","text":"{{topPlayers[10]}} ","underlined":true},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[10]}}\\n","underlined":false}]'}
+
+# @bypass /summon text_display -9209.5 95.125 9715.0 {default_background:0b,line_width:500,shadow:1b,Rotation:[-90F,0F],Tags:["harhaLeaderboardEntity"],text:'[{"bold":true,"color":"{{leaderboardColorList[variation]}}","text":"{{leaderboardTitles[variation]}}\\n\\n","underlined":true},{"bold":false,"color":"yellow","text":"{{topPlayersRank[0]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[0]}},"text":"{{topPlayers[0]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[0]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[1]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[1]}},"text":"{{topPlayers[1]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[1]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[2]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[2]}},"text":"{{topPlayers[2]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[2]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[3]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[3]}},"text":"{{topPlayers[3]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[3]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[4]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[4]}},"text":"{{topPlayers[4]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[4]}}\\n","underlined":false},{"bold":true,"color":"gray","text":"{{leftArrow}}","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[5]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[5]}},"text":"{{topPlayers[5]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[5]}}","underlined":false},{"bold":true,"color":"gray","text":"{{rightArrow}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[6]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[6]}},"text":"{{topPlayers[6]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[6]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[7]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[7]}},"text":"{{topPlayers[7]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[7]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[8]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[8]}},"text":"{{topPlayers[8]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[8]}}\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[9]}}. ","underlined":false},{"bold":false,"color":{{topPlayersColor[9]}},"text":"{{topPlayers[9]}}","underlined":false},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[9]}}\\n\\n","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersRank[10]}}. ","underlined":false},{"bold":true,"color":{{topPlayersColor[10]}},"text":"{{topPlayers[10]}}","underlined":true},{"bold":false,"color":"gray","text":"- ","underlined":false},{"bold":false,"color":"yellow","text":"{{topPlayersStat[10]}}\\n\\n","underlined":false}]',background:16711680}
+# @bypass /summon text_display -9209.5 94.25 9716.0 {default_background:0b,line_width:500,shadow:1b,Rotation:[-90F,0F],Tags:["harhaLeaderboardEntity2"],text:'[{"bold":true,"color":"gray","text":"↑\\n","underlined":false},{"bold":true,"color":"aqua","text":"Total Blocks\\n","underlined":false},{"bold":true,"color":"gray","text":"↓\\n","underlined":false}]',background:16711680}
+# @bypass /summon text_display -9209.5 94.25 9714.0 {default_background:0b,line_width:500,shadow:1b,Rotation:[-90F,0F],Tags:["harhaLeaderboardEntity3"],text:'[{"bold":true,"color":"gray","text":"↑\\n","underlined":false},{"bold":true,"color":"green","text":"Section 1\\n","underlined":false},{"bold":true,"color":"gray","text":"↓\\n","underlined":false}]',background:16711680}

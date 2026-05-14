@@ -1,0 +1,23 @@
+# Int[] genQueenMoves(Player player, Int sq)
+# Returns the pseudo-legal queen moves for the piece at sq.
+# Composed as the union of rook moves + bishop moves on the same
+# square. genRookMoves and genBishopMoves only inspect the source
+# square's piece to decide what color is moving, so they work
+# correctly when called on a queen.
+
+@using rychess
+@fast
+
+@define Int[] moves = Int[]
+
+@define Int[] r = genRookMoves(player, sq)
+@for Int i in list::range(0, r.length())
+    @var moves.append(r[i])
+@done
+
+@define Int[] b = genBishopMoves(player, sq)
+@for Int i in list::range(0, b.length())
+    @var moves.append(b[i])
+@done
+
+@return moves

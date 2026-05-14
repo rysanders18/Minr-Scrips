@@ -1,0 +1,31 @@
+# movePieceVisually(Int pieceCode, Int targetSq)
+# Animates a single chess piece to the specified target square.
+# Looks up the piece's per-entity base translations (extracted once
+# from __init__.msc, stored as the piece*Base constants in
+# rychess.nms) and delegates to applyTransform with yOffset=0.
+
+# The translation update inside applyTransform is surgical - it
+# modifies only transformation[3], [7], [11] via /data modify, so
+# each entity keeps its own within-piece offset and rotation/scale
+# (which is what was being clobbered by the older
+# transformation:{translation:[...]} compound form - that decomposes
+# the matrix and replaces translation/scale/rotation with defaults,
+# which is why every entity used to collapse to the same point).
+
+# pieceCode encoding (matches the rychess<rank><file><NN> tag scheme):
+#   rank-tag (high digit): 0=white back, 1=white pawns,
+#                          2=black pawns, 3=black back
+#   file-tag (low digit) : 0=a..7=h
+#   pieceCode = rankTag*10 + fileTag
+#   e.g. 14 = white pawn that started on e2; 04 = white king;
+#        37 = black rook that started on h8.
+
+# Captured pieces and special-move secondary translations (the rook
+# during castling, the captured pawn during en-passant) are NOT
+# handled here - applyMoveVisually orchestrates those.
+
+@using rychess
+@fast
+
+@define Float[] base = lookupPieceBase(pieceCode)
+@var applyTransform(pieceCode, targetSq, base, 0.0F)

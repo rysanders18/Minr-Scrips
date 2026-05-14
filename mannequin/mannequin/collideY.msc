@@ -1,0 +1,103 @@
+# Double collideY(Player player, Double dy)
+# Per-axis Y collision sweep. Reads the entity AABB from per-player state,
+# enumerates blocks whose X/Z extents overlap that AABB and whose Y cell
+# lies in the swept Y range, clamps dy against the top (descending) or
+# bottom (ascending) of each blocking sub-box, and returns the clamped dy.
+#
+# Side effect: updates onGround[player]. True iff dy was negative AND a
+# clamp engaged (we tried to fall and were stopped by a floor). In all
+# other cases — including dy>0 ceiling clamps and free vertical motion —
+# onGround is set false. Caller is responsible for curY += dy and for
+# zeroing velY when the returned dy != input dy.
+#
+# Per-cell shape resolution is delegated to mannequin::getBlockBoxes,
+# which returns a flat Double[] of N*6 entries in LOCAL block coords
+# (each in [0, 1.5] — Y can exceed 1 for fences / walls / fence gates).
+# Empty array = passable cell. Two consequences for the iteration:
+#   1. byMin is extended down by 1 to catch a 1.5-tall block whose base
+#      cell sits below the entity's feet.
+#   2. The X/Z disjoint guard runs PER SUB-BOX, not per cell — a stair's
+#      upper quadrant covers only half the cell footprint, and the cell
+#      guard would over-claim it.
+
+@using mannequin
+@fast
+
+@define Double minX = curX[player] - playerHalfWidth
+@define Double maxX = curX[player] + playerHalfWidth
+@define Double minZ = curZ[player] - playerHalfWidth
+@define Double maxZ = curZ[player] + playerHalfWidth
+@define Double minY = curY[player]
+@define Double maxY = curY[player] + playerHeight
+
+@define Double sweptMinY = minY
+@define Double sweptMaxY = maxY
+@if dy < 0D
+    @var sweptMinY = minY + dy
+@elseif dy > 0D
+    @var sweptMaxY = maxY + dy
+@fi
+
+@define Int bxMin = Int(math::floor(minX))
+@define Int bxMax = Int(math::floor(maxX))
+@define Int bzMin = Int(math::floor(minZ))
+@define Int bzMax = Int(math::floor(maxZ))
+# Extend byMin by 1 so a fence/wall sitting one block below the entity
+# (top at Y+1.5) is still considered.
+@define Int byMin = Int(math::floor(sweptMinY)) - 1
+@define Int byMax = Int(math::floor(sweptMaxY))
+
+@define Boolean clamped = false
+@define Double newDy = dy
+
+@for Int bx in list::range(bxMin, bxMax + 1)
+    @for Int bz in list::range(bzMin, bzMax + 1)
+        @for Int by in list::range(byMin, byMax + 1)
+            @define Double[] boxes = mannequin::getBlockBoxes(bx, by, bz, world[player])
+            @define Int n = boxes.length() / 6
+            @for Int i in list::range(0, n)
+                @define Int j = i * 6
+                @define Double blockMinX = Double(bx) + boxes[j]
+                @define Double blockMinY = Double(by) + boxes[j + 1]
+                @define Double blockMinZ = Double(bz) + boxes[j + 2]
+                @define Double blockMaxX = Double(bx) + boxes[j + 3]
+                @define Double blockMaxY = Double(by) + boxes[j + 4]
+                @define Double blockMaxZ = Double(bz) + boxes[j + 5]
+                # Disjoint X/Z guard — entity must overlap THIS sub-box on
+                # both non-moving axes. Edge-touching counts as disjoint
+                # (matches vanilla "shared face → no collision").
+                @if !(maxX <= blockMinX || minX >= blockMaxX) && !(maxZ <= blockMinZ || minZ >= blockMaxZ)
+                    # Ascending into a ceiling: clamp newDy down toward gap.
+                    @if newDy > 0D && maxY <= blockMinY
+                        @define Double gapUp = blockMinY - maxY
+                        @if gapUp < newDy
+                            @var newDy = gapUp
+                            @var clamped = true
+                        @fi
+                    @fi
+                    # Descending onto a floor: clamp newDy up toward gap
+                    # (gap is negative here; "less negative" stops sooner).
+                    @if newDy < 0D && minY >= blockMaxY
+                        @define Double gapDown = blockMaxY - minY
+                        @if gapDown > newDy
+                            @var newDy = gapDown
+                            @var clamped = true
+                        @fi
+                    @fi
+                @fi
+            @done
+        @done
+    @done
+@done
+
+# onGround update. Vanilla rule: set true iff this tick was attempting a
+# downward Y move that got stopped. A grounded mannequin sees this every
+# tick because gravity always supplies a small negative velY (oscillating
+# 0 / -0.0784 with the post-tick gravity step), so the clamp re-fires.
+@if dy < 0D && clamped
+    @var onGround[player] = true
+@else
+    @var onGround[player] = false
+@fi
+
+@return newDy

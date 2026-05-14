@@ -1,0 +1,31 @@
+# Int[] genKnightMoves(Player player, Int sq)
+# Returns the pseudo-legal knight moves for the knight at sq.
+# Eight L-shaped offsets, each gated by a file/rank in-bounds check.
+
+@using rychess
+@fast
+
+@define Int[] moves = Int[]
+@define Int piece = board[player][sq]
+@define Int myColor = pieceColor(piece)
+@define Int srcFile = sq % 8
+@define Int srcRank = sq / 8
+
+@define Int[] dx = Int[-2, -1, 1, 2, 2, 1, -1, -2]
+@define Int[] dy = Int[-1, -2, -2, -1, 1, 2, 2, 1]
+
+@for Int i in list::range(0, 8)
+    @define Int targetFile = srcFile + dx[i]
+    @define Int targetRank = srcRank + dy[i]
+    @if targetFile >= 0 && targetFile <= 7 && targetRank >= 0 && targetRank <= 7
+        @define Int target = targetRank * 8 + targetFile
+        @define Int targetPiece = board[player][target]
+        @if targetPiece == 0
+            @var moves.append(moveEncode(sq, target, 0, 0))
+        @elseif pieceColor(targetPiece) != myColor
+            @var moves.append(moveEncode(sq, target, 0, 1))
+        @fi
+    @fi
+@done
+
+@return moves

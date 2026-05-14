@@ -1,0 +1,59 @@
+# Boolean processString(Player player, String input)
+
+# Processes an input string through the NFA and checks if it's accepted
+# Parameters:
+#   - player: The player whose NFA to process
+#   - input: String of 0s and 1s (e.g., "0110")
+# Returns: Boolean true if the string is accepted
+
+@using nfa
+@fast
+
+# Get start states and compute epsilon closure
+@define String[] currentStates = nfa::getStartStates(player)
+@define String[] statesWithEpsilon = String[]
+
+# Add epsilon closure for each start state
+@for String state in currentStates
+    @define String[] closure = nfa::getEpsilonClosure(player, state)
+    @for String s in closure
+        @if !statesWithEpsilon.contains(s)
+            @var statesWithEpsilon.append(s)
+        @fi
+    @done
+@done
+
+@var currentStates = statesWithEpsilon
+
+# Process each symbol in the input string
+# Use iteration limit to simulate while loop
+@for Int i in list::range(0, input.length())
+    @if i < input.length()
+        @define String symbol = input.substring(i, i + 1)
+        
+        # Perform move operation
+        @var currentStates = nfa::move(player, currentStates, symbol)
+        
+        # Compute epsilon closure of result
+        @var statesWithEpsilon = String[]
+        @for String state in currentStates
+            @define String[] closure = nfa::getEpsilonClosure(player, state)
+            @for String s in closure
+                @if !statesWithEpsilon.contains(s)
+                    @var statesWithEpsilon.append(s)
+                @fi
+            @done
+        @done
+        
+        @var currentStates = statesWithEpsilon
+    @fi
+@done
+
+# Check if any final state is an accept state
+@for String state in currentStates
+    @if nfa::isAcceptState(state)
+        @return true
+    @fi
+@done
+
+@return false

@@ -1,0 +1,51 @@
+# bin200Cake(Player player, Int cakeNumber, Block block)
+
+@using Harha
+@fast
+
+@define String[] binColorList = String["#FFAAC9" ,"#FF59DB" ,"#922cba" ,"#2d4eae" ,"#0796d3" ,"#008d8c" ,"#4d8a00" ,"#32cb12" ,"#efd144" ,"#ef7b0d" ,"#da291f" ,"#a55c33" ,"#383552" ,"#435c60" ,"#817d72" ,"#dee2e3" ,"#f8e6b8"]
+@define String[] binColorList2 = String["1.000,0.667,0.788", "1.000,0.345,0.859", "0.573,0.173,0.729", "0.176,0.306,0.682", "0.027,0.588,0.827", "0.000,0.553,0.549", "0.302,0.541,0.000", "0.196,0.796,0.071", "0.937,0.820,0.263", "0.937,0.482,0.051", "0.855,0.161,0.122", "0.647,0.361,0.200", "0.220,0.208,0.322", "0.263,0.361,0.376", "0.506,0.490,0.447", "0.871,0.886,0.890", "0.973,0.902,0.722"]
+@define String[] binColorList3 = String["pink_", "magenta_", "purple_", "blue_", "light_blue_", "cyan_", "green_", "lime_", "yellow_", "orange_", "red_", "brown_", "black_", "gray_", "light_gray_", "white_", ""]
+
+# @var binCakes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+@if binCakes[player][cakeNumber] == 1
+    @player &cYou have already collected this candle cake! ({{binCakes[player].sum()}}/17)
+    @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 0.75 1
+    @return
+@fi 
+
+@var binCakes[player][cakeNumber] = 1
+
+# Chat Message
+@player &{{binColorList[cakeNumber]}}&l----------------------------
+@player &{{binColorList[cakeNumber]}}&lYou found a candle cake! ({{binCakes[player].sum()}}/17)
+@player &{{binColorList[cakeNumber]}}&l----------------------------
+
+# Particles
+@bypass particle dust{color:[{{binColorList2[cakeNumber]}}],scale:1} {{block.getX()+0.5}} {{block.getY()+0.2}} {{block.getZ()+0.5}} 0.75 0 0.75 10 100
+
+
+
+# Playsound
+@bypass playsound minecraft:entity.firework_rocket.launch master {{player}} ~ ~ ~ 1 1
+@bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[11]}}
+@delay 2
+@bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[15]}}
+@delay 2
+@bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[18]}}
+
+
+@for Int i in list::range(0, 150)
+    @bypass /execute in minecraft:theta run particle dust{color:[{{binColorList2[cakeNumber]}}],scale:1} -{{((-1.40 * math::cos(Double(i * 3))) * math::cos(Double(i * 10 + 180)) - block.getX() - 0.5)}} {{block.getY() + 3 - ((Float(i) / 50))}} {{((-1.40 * math::sin(Double(i * 3))) * math::sin(Double(i * 10 + 180))) + block.getZ() + 0.5}} 0 0 0 0 1
+    @bypass /execute in minecraft:theta run particle dust{color:[{{binColorList2[cakeNumber]}}],scale:1} -{{((-1.40 * math::cos(Double(i * 3))) * math::cos(Double(i * 10)) - block.getX() - 0.5)}} {{block.getY() + 3 - ((Float(i) / 50))}} {{((-1.40 * math::sin(Double(i * 3))) * math::sin(Double(i * 10))) + block.getZ() + 0.5}} 0 0 0 0 1
+    @bypass /playsound minecraft:block.amethyst_block.resonate master {{player}} ~ ~ ~ 0.4 {{(1 - Float(i) / 150.0) * 1.5 + 0.5}}
+    @delay 1
+@done
+
+@bypass particle flash{color:[{{binColorList2[cakeNumber]}},1.0]} {{block.getX()+0.5}} {{block.getY()+1}} {{block.getZ()+0.5}} 0 0 0 0 1
+@bypass playsound minecraft:entity.firework_rocket.blast master {{player}} ~ ~ ~ 1 1
+@bypass particle minecraft:firework {{block.getX()+0.5}} {{block.getY()+0.5}} {{block.getZ()+0.5}} 0 0 0 0.4 50
+
+@bypass setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} minecraft:{{binColorList3[cakeNumber]}}candle_cake[lit=true]
+@delay 100
+@bypass setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} minecraft:{{binColorList3[cakeNumber]}}candle_cake[lit=false]

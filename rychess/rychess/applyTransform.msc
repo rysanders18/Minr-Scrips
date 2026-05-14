@@ -1,0 +1,54 @@
+# applyTransform(Int pieceCode, Int sq, Float[] base, Float yOffset)
+# Core entity-loop helper shared by movePieceVisually (yOffset=0) and
+# sinkPiece (yOffset=sinkDepth). For each entity in the piece, computes
+# the new (x, y, z) translation as base + delta and writes it to the
+# entity's transformation.translation via /data modify. Using the
+# compound `.translation` path (instead of list-index [3]/[7]/[11])
+# is what actually triggers the interpolation system - and it leaves
+# the entity's rotation, scale, and the rest of the transformation
+# untouched, so each entity keeps its original within-piece offset
+# and shape.
+
+# pieceCode encodes the piece's identity and spawn square:
+#   tagRank = pieceCode/10, tagFile = pieceCode%10
+#   spawnRank = 0/1/6/7 mapping from tagRank 0/1/2/3
+# sq is where the piece should be placed visually (the target square for
+# movePieceVisually, the current square for sinkPiece).
+# base is the (m03,m13,m23) triple-list from lookupPieceBase(pieceCode).
+# yOffset is added to m13 (negative for sinking, 0 for normal moves).
+
+# Board orientation matches movePieceVisually: +X for files a->h,
+# -Z for ranks 1->8, squareSize = 0.18655F per chess square.
+# interpolation_duration:30 + start_interpolation:0 are merged onto each
+# entity to trigger the smooth slide.
+
+@using rychess
+@fast
+
+@define Int tagRank = pieceCode / 10
+@define Int tagFile = pieceCode % 10
+
+@define Int spawnRank = tagRank
+@if tagRank == 2
+    @var spawnRank = 6
+@elseif tagRank == 3
+    @var spawnRank = 7
+@fi
+
+@define Int targetFile = sq % 8
+@define Int targetRank = sq / 8
+
+@define Float squareSize = 0.18655F * 2.0F
+
+@define Float dx = Float(targetFile - tagFile) * squareSize
+@define Float dz = Float(spawnRank - targetRank) * squareSize
+
+@define Int numEntities = base.length() / 3
+
+@for Int i in list::range(0, numEntities)
+    @define Float new_m03 = base[i * 3] + dx
+    @define Float new_m13 = base[i * 3 + 1] + yOffset
+    @define Float new_m23 = base[i * 3 + 2] + dz
+    @bypass /data merge entity @e[limit=1,tag=rychess{{tagRank}}{{tagFile}}{{i / 10}}{{i % 10}}] {interpolation_duration:4,start_interpolation:0}
+    @bypass /data modify entity @e[limit=1,tag=rychess{{tagRank}}{{tagFile}}{{i / 10}}{{i % 10}}] transformation.translation set value [{{new_m03}}f,{{new_m13}}f,{{new_m23}}f]
+@done

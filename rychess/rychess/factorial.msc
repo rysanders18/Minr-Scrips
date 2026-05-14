@@ -1,0 +1,14 @@
+# Int factorial(Int n)
+# Phase 1 helper. Recursive factorial. Used to confirm MSC supports
+# self-recursive function calls and that @return passes values back
+# through nested calls correctly.
+
+@using rychess
+@fast
+
+@if n <= 1
+    @return 1
+@fi
+
+@define Int sub = factorial(n - 1)
+@return n * sub

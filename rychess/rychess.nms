@@ -1,0 +1,219 @@
+@namespace rychess
+
+# Variables - per-player game state
+
+    relative Int[] board = Int[]
+    relative Int sideToMove = 0
+    relative Int castling = 15
+    relative Int epSquare = -1
+    relative Int halfmoveClock = 0
+    relative Int fullmove = 1
+    relative Int undoPly = 0
+    relative Int[] undoStack = Int[]
+    relative Int runningScore = 0
+    relative Int[] pieceCodeAt = Int[]
+    relative Int selectedSquare = -1
+    relative Int playerColor = 0
+    relative Int[] highlightedSquares = Int[]
+
+# Variables - phase 1 test scratch
+
+    relative Int[] testBoard = Int[]
+
+# Variables - profiling counters (reset at start of chooseMove,
+# dumped at end). Track call counts of the hot functions so we
+# can localize where compute is actually being spent.
+
+    relative Int profGenLegal = 0
+    relative Int profGenOrdered = 0
+    relative Int profSearchInner = 0
+    relative Int profQsearch = 0
+    relative Int profMakeMove = 0
+    relative Int profEvaluate = 0
+    relative Int profIsAttacked = 0
+    relative Int profInCheck = 0
+
+# Constants - piece-square tables (white perspective, sq 0=a1)
+# Standard simplified Michniewski tables, flipped so rank 1 comes first.
+# Black pieces look these up at (7 - sq/8) * 8 + (sq % 8).
+
+    Int[] pawnPST = Int[0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 10, -20, -20, 10, 10, 5, 5, -5, -10, 0, 0, -10, -5, 5, 0, 0, 0, 20, 20, 0, 0, 0, 5, 5, 10, 25, 25, 10, 5, 5, 10, 10, 20, 30, 30, 20, 10, 10, 50, 50, 50, 50, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] knightPST = Int[-50, -40, -30, -30, -30, -30, -40, -50, -40, -20, 0, 5, 5, 0, -20, -40, -30, 5, 10, 15, 15, 10, 5, -30, -30, 0, 15, 20, 20, 15, 0, -30, -30, 5, 15, 20, 20, 15, 5, -30, -30, 0, 10, 15, 15, 10, 0, -30, -40, -20, 0, 0, 0, 0, -20, -40, -50, -40, -30, -30, -30, -30, -40, -50]
+    Int[] bishopPST = Int[-20, -10, -10, -10, -10, -10, -10, -20, -10, 5, 0, 0, 0, 0, 5, -10, -10, 10, 10, 10, 10, 10, 10, -10, -10, 0, 10, 10, 10, 10, 0, -10, -10, 5, 5, 10, 10, 5, 5, -10, -10, 0, 5, 10, 10, 5, 0, -10, -10, 0, 0, 0, 0, 0, 0, -10, -20, -10, -10, -10, -10, -10, -10, -20]
+    Int[] rookPST = Int[0, 0, 0, 5, 5, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, 5, 10, 10, 10, 10, 10, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] queenPST = Int[-20, -10, -10, -5, -5, -10, -10, -20, -10, 0, 5, 0, 0, 0, 0, -10, -10, 5, 5, 5, 5, 5, 0, -10, 0, 0, 5, 5, 5, 5, 0, -5, -5, 0, 5, 5, 5, 5, 0, -5, -10, 0, 5, 5, 5, 5, 0, -10, -10, 0, 0, 0, 0, 0, 0, -10, -20, -10, -10, -5, -5, -10, -10, -20]
+    Int[] kingPST = Int[20, 30, 10, 0, 0, 10, 30, 20, 20, 20, 0, 0, 0, 0, 20, 20, -10, -20, -20, -20, -20, -20, -20, -10, -20, -30, -30, -40, -40, -30, -30, -20, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30]
+
+# Constants - board square textures (player_head profile values).
+# Originals: boardTextureLight on (rank+file) even squares,
+#            boardTextureDark on (rank+file) odd squares.
+# Highlights: boardTextureMovable for empty destination squares,
+#             boardTextureCapturable for enemy-occupied destination squares.
+
+    String boardTextureLight = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRjYTYwZTRlMjNjNjI3OTc5YWJiMjZmMjhiYjkxODNhZThjMmM2ZmViZTU0YjNjODliOGZjNDYzZjNhNDAwNSJ9fX0="
+    String boardTextureDark = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjM5MmY3YzMyZTBjNjFiZjUzOWJiMTMwNGRiMGNjYTJkZjZlYzY2ZTMxM2JjMTJhMmJjMWNjNDE4MjJmMTUxNiJ9fX0="
+    String boardTextureMovable = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmMwZTZkOWUyNDI3MzU0ODE5MThjNWZkMTQ0OThiZDc2MGJiOWY0ZmY2NDMwYWQ0Njk2YjM4ZThhODgzZGE5NyJ9fX0="
+    String boardTextureCapturable = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTc4ZDNjYmE0MWRjMTFlYmE0MThkOGM2N2Q2NGRiNmNiMTc5YmM2YWJmY2U3YWQwNzAzZmI0ZDczNjlkNjg5YSJ9fX0="
+
+# Constants - per-entity base translations (auto-extracted from __init__.msc)
+# Each pieceXXBase array holds (m03, m13, m23) triples - one triple per
+# entity in the piece, in the order rychessXX00, rychessXX01, .... When a
+# piece moves to a new square, applyTransform reads each triple, adds the
+# piece's spawn-to-target delta, and writes the result back into the
+# entity's transformation[3], [7], [11] indices via /data modify (which
+# preserves the rest of the matrix - rotation/scale - unlike the compound
+# {translation:[...]} form which decomposes and clobbers everything else).
+
+    
+
+    Float[] piece00Base = Float[0.5445F, 0.0985F, 3.155F, 0.562F, 0.1335F, 3.1725F, 0.5445F, 0.151F, 3.155F, 0.562F, 0.221F, 3.1725F, 0.5965F, 0.2905F, 3.2075F, 0.562F, 0.483F, 3.1725F, 0.5445F, 0.536F, 3.155F, 0.5445F, 0.6055F, 3.155F, 0.5445F, 0.6055F, 3.3645F, 0.5445F, 0.6055F, 3.26F, 0.789F, 0.6055F, 3.155F, 0.789F, 0.6055F, 3.3645F, 0.789F, 0.6055F, 3.26F, 0.6495F, 0.6055F, 3.19F, 0.6495F, 0.6055F, 3.4345F, 0.7545F, 0.6055F, 3.435F, 0.5445F, 0.6055F, 3.435F, 0.5445F, 0.6055F, 3.19F, 0.7545F, 0.6055F, 3.19F]
+    Float[] piece01Base = Float[1.197F, 0.0925F, 3.4345F, 1.1795F, 0.145F, 3.417F, 1.162F, 0.1975F, 3.4F, 1.1445F, 0.2325F, 3.417F, 1.1275F, 0.267F, 3.4F, 1.1095F, 0.3025F, 3.3825F, 1.1275F, 0.355F, 3.365F, 1.1445F, 0.39F, 3.3825F, 1.1445F, 0.425F, 3.4F, 1.1445F, 0.4595F, 3.4F, 1.1445F, 0.477F, 3.4F, 1.1275F, 0.495F, 3.4F, 1.1095F, 0.5125F, 3.4F, 1.1095F, 0.5645F, 3.4F, 1.1095F, 0.582F, 3.4F, 1.092F, 0.5995F, 3.4F, 1.0745F, 0.6175F, 3.3295F, 1.1095F, 0.547F, 3.452F, 1.1095F, 0.5125F, 3.4345F]
+    Float[] piece02Base = Float[1.5465F, 0.132F, 3.1785F, 1.532F, 0.088F, 3.193F, 1.532F, 0.19F, 3.193F, 1.5175F, 0.234F, 3.2075F, 1.5025F, 0.2775F, 3.2225F, 1.4885F, 0.394F, 3.2365F, 1.5175F, 0.438F, 3.2075F, 1.5025F, 0.4815F, 3.2225F, 1.5175F, 0.5395F, 3.2075F, 1.4885F, 0.5985F, 3.2365F, 1.4595F, 0.6565F, 3.2655F, 1.509F, 0.5985F, 3.1875F]
+    Float[] piece03Base = Float[1.6935F, 0.1255F, 3.209F, 1.7075F, 0.0845F, 3.223F, 1.7075F, 0.18F, 3.223F, 1.721F, 0.221F, 3.236F, 1.735F, 0.2625F, 3.25F, 1.7485F, 0.3695F, 3.2635F, 1.721F, 0.4305F, 3.236F, 1.735F, 0.531F, 3.25F, 1.721F, 0.5855F, 3.236F, 1.7485F, 0.64F, 3.2635F, 1.7755F, 0.6945F, 3.291F, 1.704F, 0.4485F, 3.2215F, 1.721F, 0.467F, 3.236F, 1.768F, 0.7215F, 3.282F, 1.721F, 0.635F, 3.289F, 1.721F, 0.635F, 3.3325F, 1.775F, 0.637F, 3.2505F, 1.8185F, 0.637F, 3.2505F, 1.775F, 0.634F, 3.4F, 1.8185F, 0.634F, 3.4F, 1.8695F, 0.638F, 3.289F, 1.8695F, 0.638F, 3.3325F, 1.8695F, 0.638F, 3.3765F, 1.8695F, 0.638F, 3.2435F, 1.721F, 0.635F, 3.3765F, 1.721F, 0.635F, 3.2435F]
+    Float[] piece04Base = Float[2.041F, 0.084F, 3.4245F, 2.0605F, 0.124F, 3.405F, 2.081F, 0.4235F, 3.385F, 2.081F, 0.4635F, 3.4245F, 2.043F, 0.4635F, 3.205F, 2.081F, 0.4835F, 3.4445F, 2.0265F, 0.4835F, 3.205F, 2.232F, 0.144F, 3.365F, 2.0925F, 0.144F, 3.3445F, 2.232F, 0.5035F, 3.365F, 2.0925F, 0.5035F, 3.3445F, 2.232F, 0.5635F, 3.385F, 2.0725F, 0.5635F, 3.3445F, 2.1435F, 0.6035F, 3.426F, 2.038F, 0.6035F, 3.2495F, 2.142F, 0.643F, 3.265F, 2.1575F, 0.6835F, 3.283F, 2.1325F, 0.758F, 3.283F]
+    Float[] piece05Base = Float[2.6655F, 0.132F, 3.1785F, 2.651F, 0.088F, 3.193F, 2.651F, 0.19F, 3.193F, 2.6365F, 0.234F, 3.2075F, 2.6215F, 0.2775F, 3.2225F, 2.607F, 0.394F, 3.2365F, 2.6365F, 0.438F, 3.2075F, 2.6215F, 0.4815F, 3.2225F, 2.6365F, 0.5395F, 3.2075F, 2.607F, 0.5985F, 3.2365F, 2.5785F, 0.6565F, 3.2655F, 2.628F, 0.5985F, 3.1875F]
+    Float[] piece06Base = Float[3.0615F, 0.0925F, 3.4345F, 3.0445F, 0.145F, 3.417F, 3.027F, 0.1975F, 3.4F, 3.0095F, 0.2325F, 3.417F, 2.992F, 0.267F, 3.4F, 2.974F, 0.3025F, 3.3825F, 2.992F, 0.355F, 3.365F, 3.0095F, 0.39F, 3.3825F, 3.0095F, 0.425F, 3.4F, 3.0095F, 0.4595F, 3.4F, 3.0095F, 0.477F, 3.4F, 2.992F, 0.495F, 3.4F, 2.974F, 0.5125F, 3.4F, 2.974F, 0.5645F, 3.4F, 2.974F, 0.582F, 3.4F, 2.957F, 0.5995F, 3.4F, 2.9395F, 0.6175F, 3.3295F, 2.974F, 0.547F, 3.452F, 2.974F, 0.5125F, 3.4345F]
+    Float[] piece07Base = Float[3.155F, 0.0985F, 3.155F, 3.1725F, 0.1335F, 3.1725F, 3.155F, 0.151F, 3.155F, 3.1725F, 0.221F, 3.1725F, 3.2075F, 0.2905F, 3.2075F, 3.1725F, 0.483F, 3.1725F, 3.155F, 0.536F, 3.155F, 3.155F, 0.6055F, 3.155F, 3.155F, 0.6055F, 3.3645F, 3.155F, 0.6055F, 3.26F, 3.4F, 0.6055F, 3.155F, 3.4F, 0.6055F, 3.3645F, 3.4F, 0.6055F, 3.26F, 3.26F, 0.6055F, 3.19F, 3.26F, 0.6055F, 3.4345F, 3.365F, 0.6055F, 3.435F, 3.155F, 0.6055F, 3.435F, 3.155F, 0.6055F, 3.19F, 3.365F, 0.6055F, 3.19F]
+    Float[] piece10Base = Float[0.5705F, 0.0785F, 2.7905F, 0.5885F, 0.0955F, 2.808F, 0.6055F, 0.113F, 2.826F, 0.623F, 0.1655F, 2.861F, 0.6405F, 0.218F, 2.878F, 0.623F, 0.3055F, 2.861F, 0.6055F, 0.323F, 2.8435F]
+    Float[] piece11Base = Float[0.9665F, 0.0785F, 2.7905F, 0.9845F, 0.0955F, 2.808F, 1.002F, 0.113F, 2.826F, 1.0195F, 0.1655F, 2.861F, 1.037F, 0.218F, 2.878F, 1.0195F, 0.3055F, 2.861F, 1.002F, 0.323F, 2.8435F]
+    Float[] piece12Base = Float[1.3165F, 0.0785F, 2.7905F, 1.334F, 0.0955F, 2.808F, 1.3515F, 0.113F, 2.826F, 1.369F, 0.1655F, 2.861F, 1.3865F, 0.218F, 2.878F, 1.369F, 0.3055F, 2.861F, 1.3515F, 0.323F, 2.8435F]
+    Float[] piece13Base = Float[1.689F, 0.0785F, 2.7905F, 1.707F, 0.0955F, 2.808F, 1.7245F, 0.113F, 2.826F, 1.742F, 0.1655F, 2.861F, 1.7595F, 0.218F, 2.878F, 1.742F, 0.3055F, 2.861F, 1.7245F, 0.323F, 2.8435F]
+    Float[] piece14Base = Float[2.062F, 0.0785F, 2.7905F, 2.08F, 0.0955F, 2.808F, 2.0975F, 0.113F, 2.826F, 2.115F, 0.1655F, 2.861F, 2.1325F, 0.218F, 2.878F, 2.115F, 0.3055F, 2.861F, 2.0975F, 0.323F, 2.8435F]
+    Float[] piece15Base = Float[2.435F, 0.0785F, 2.7905F, 2.453F, 0.0955F, 2.808F, 2.4705F, 0.113F, 2.826F, 2.488F, 0.1655F, 2.861F, 2.505F, 0.218F, 2.878F, 2.488F, 0.3055F, 2.861F, 2.4705F, 0.323F, 2.8435F]
+    Float[] piece16Base = Float[2.808F, 0.0785F, 2.7905F, 2.826F, 0.0955F, 2.808F, 2.8435F, 0.113F, 2.826F, 2.861F, 0.1655F, 2.861F, 2.878F, 0.218F, 2.878F, 2.861F, 0.3055F, 2.861F, 2.8435F, 0.323F, 2.8435F]
+    Float[] piece17Base = Float[3.181F, 0.0785F, 2.7905F, 3.199F, 0.0955F, 2.808F, 3.2165F, 0.113F, 2.826F, 3.234F, 0.1655F, 2.861F, 3.251F, 0.218F, 2.878F, 3.234F, 0.3055F, 2.861F, 3.2165F, 0.323F, 2.8435F]
+    Float[] piece20Base = Float[0.5705F, 0.0785F, 0.926F, 0.5885F, 0.0955F, 0.9435F, 0.6055F, 0.113F, 0.961F, 0.623F, 0.1655F, 0.996F, 0.6405F, 0.218F, 1.0135F, 0.623F, 0.3055F, 0.996F, 0.6055F, 0.323F, 0.9785F]
+    Float[] piece21Base = Float[0.9435F, 0.0785F, 0.926F, 0.961F, 0.0955F, 0.9435F, 0.9785F, 0.113F, 0.961F, 0.996F, 0.1655F, 0.996F, 1.0135F, 0.218F, 1.0135F, 0.996F, 0.3055F, 0.996F, 0.9785F, 0.323F, 0.9785F]
+    Float[] piece22Base = Float[1.3165F, 0.0785F, 0.926F, 1.334F, 0.0955F, 0.9435F, 1.3515F, 0.113F, 0.961F, 1.369F, 0.1655F, 0.996F, 1.3865F, 0.218F, 1.0135F, 1.369F, 0.3055F, 0.996F, 1.3515F, 0.323F, 0.9785F]
+    Float[] piece23Base = Float[1.689F, 0.0785F, 0.926F, 1.707F, 0.0955F, 0.9435F, 1.7245F, 0.113F, 0.961F, 1.742F, 0.1655F, 0.996F, 1.7595F, 0.218F, 1.0135F, 1.742F, 0.3055F, 0.996F, 1.7245F, 0.323F, 0.9785F]
+    Float[] piece24Base = Float[2.062F, 0.0785F, 0.926F, 2.08F, 0.0955F, 0.9435F, 2.0975F, 0.113F, 0.961F, 2.115F, 0.1655F, 0.996F, 2.1325F, 0.218F, 1.0135F, 2.115F, 0.3055F, 0.996F, 2.0975F, 0.323F, 0.9785F]
+    Float[] piece25Base = Float[2.435F, 0.0785F, 0.926F, 2.453F, 0.0955F, 0.9435F, 2.4705F, 0.113F, 0.961F, 2.488F, 0.1655F, 0.996F, 2.505F, 0.218F, 1.0135F, 2.488F, 0.3055F, 0.996F, 2.4705F, 0.323F, 0.9785F]
+    Float[] piece26Base = Float[2.808F, 0.0785F, 0.926F, 2.826F, 0.0955F, 0.9435F, 2.8435F, 0.113F, 0.961F, 2.861F, 0.1655F, 0.996F, 2.878F, 0.218F, 1.0135F, 2.861F, 0.3055F, 0.996F, 2.8435F, 0.323F, 0.9785F]
+    Float[] piece27Base = Float[3.181F, 0.0785F, 0.926F, 3.199F, 0.0955F, 0.9435F, 3.2165F, 0.113F, 0.961F, 3.234F, 0.1655F, 0.996F, 3.251F, 0.218F, 1.0135F, 3.234F, 0.3055F, 0.996F, 3.2165F, 0.323F, 0.9785F]
+    Float[] piece30Base = Float[0.5445F, 0.0755F, 0.521F, 0.562F, 0.11F, 0.5385F, 0.5445F, 0.1275F, 0.521F, 0.562F, 0.1975F, 0.5385F, 0.5965F, 0.2675F, 0.5735F, 0.562F, 0.4595F, 0.5385F, 0.5445F, 0.5125F, 0.521F, 0.5445F, 0.582F, 0.521F, 0.5445F, 0.582F, 0.731F, 0.5445F, 0.582F, 0.626F, 0.789F, 0.582F, 0.521F, 0.789F, 0.582F, 0.731F, 0.789F, 0.582F, 0.626F, 0.6495F, 0.582F, 0.556F, 0.6495F, 0.582F, 0.8005F, 0.7545F, 0.582F, 0.801F, 0.5445F, 0.582F, 0.801F, 0.5445F, 0.582F, 0.556F, 0.7545F, 0.582F, 0.556F]
+    Float[] piece31Base = Float[0.9175F, 0.0925F, 0.5445F, 0.935F, 0.145F, 0.562F, 0.9525F, 0.1975F, 0.5795F, 0.9695F, 0.2325F, 0.562F, 0.987F, 0.267F, 0.5795F, 1.005F, 0.3025F, 0.5965F, 0.987F, 0.355F, 0.614F, 0.9695F, 0.39F, 0.5965F, 0.9695F, 0.425F, 0.5795F, 0.9695F, 0.4595F, 0.5795F, 0.9695F, 0.477F, 0.5795F, 0.987F, 0.495F, 0.5795F, 1.005F, 0.5125F, 0.5795F, 1.005F, 0.5645F, 0.5795F, 1.005F, 0.582F, 0.5795F, 1.0225F, 0.5995F, 0.5795F, 1.04F, 0.6175F, 0.6495F, 1.005F, 0.547F, 0.527F, 1.005F, 0.5125F, 0.5445F]
+    Float[] piece32Base = Float[1.5465F, 0.1085F, 0.5445F, 1.532F, 0.065F, 0.559F, 1.532F, 0.167F, 0.559F, 1.5175F, 0.2105F, 0.5735F, 1.5025F, 0.2545F, 0.5885F, 1.4885F, 0.371F, 0.6025F, 1.5175F, 0.4145F, 0.5735F, 1.5025F, 0.458F, 0.5885F, 1.5175F, 0.5165F, 0.5735F, 1.4885F, 0.575F, 0.6025F, 1.4595F, 0.633F, 0.632F, 1.509F, 0.575F, 0.5535F]
+    Float[] piece33Base = Float[1.6935F, 0.1255F, 0.575F, 1.7075F, 0.0845F, 0.589F, 1.7075F, 0.18F, 0.589F, 1.721F, 0.221F, 0.602F, 1.735F, 0.2625F, 0.616F, 1.7485F, 0.3695F, 0.6295F, 1.721F, 0.4305F, 0.602F, 1.735F, 0.531F, 0.616F, 1.721F, 0.5855F, 0.602F, 1.7485F, 0.64F, 0.6295F, 1.7755F, 0.6945F, 0.657F, 1.704F, 0.4485F, 0.5875F, 1.721F, 0.467F, 0.602F, 1.768F, 0.7215F, 0.648F, 1.721F, 0.635F, 0.655F, 1.721F, 0.635F, 0.6985F, 1.775F, 0.637F, 0.6165F, 1.8185F, 0.637F, 0.6165F, 1.775F, 0.634F, 0.766F, 1.8185F, 0.634F, 0.766F, 1.8695F, 0.638F, 0.655F, 1.8695F, 0.638F, 0.6985F, 1.8695F, 0.638F, 0.7425F, 1.8695F, 0.638F, 0.6095F, 1.721F, 0.635F, 0.7425F, 1.721F, 0.635F, 0.6095F]
+    Float[] piece34Base = Float[2.041F, 0.084F, 0.814F, 2.0605F, 0.124F, 0.794F, 2.081F, 0.4235F, 0.774F, 2.081F, 0.4635F, 0.814F, 2.043F, 0.4635F, 0.594F, 2.081F, 0.4835F, 0.834F, 2.0265F, 0.4835F, 0.594F, 2.232F, 0.144F, 0.7545F, 2.0925F, 0.144F, 0.734F, 2.232F, 0.5035F, 0.7545F, 2.0925F, 0.5035F, 0.734F, 2.232F, 0.5635F, 0.774F, 2.0725F, 0.5635F, 0.734F, 2.1435F, 0.6035F, 0.8155F, 2.038F, 0.6035F, 0.639F, 2.142F, 0.643F, 0.6545F, 2.1575F, 0.6835F, 0.6725F, 2.1325F, 0.758F, 0.6725F]
+    Float[] piece35Base = Float[2.6655F, 0.1085F, 0.5445F, 2.651F, 0.065F, 0.559F, 2.651F, 0.167F, 0.559F, 2.6365F, 0.2105F, 0.5735F, 2.6215F, 0.2545F, 0.5885F, 2.607F, 0.371F, 0.6025F, 2.6365F, 0.4145F, 0.5735F, 2.6215F, 0.458F, 0.5885F, 2.6365F, 0.5165F, 0.5735F, 2.607F, 0.575F, 0.6025F, 2.5785F, 0.633F, 0.632F, 2.628F, 0.575F, 0.5535F]
+    Float[] piece36Base = Float[2.782F, 0.0925F, 0.521F, 2.7995F, 0.145F, 0.5385F, 2.817F, 0.1975F, 0.556F, 2.8345F, 0.2325F, 0.5385F, 2.852F, 0.267F, 0.556F, 2.8695F, 0.3025F, 0.5735F, 2.852F, 0.355F, 0.591F, 2.8345F, 0.39F, 0.5735F, 2.8345F, 0.425F, 0.556F, 2.8345F, 0.4595F, 0.556F, 2.8345F, 0.477F, 0.556F, 2.852F, 0.495F, 0.556F, 2.8695F, 0.5125F, 0.556F, 2.8695F, 0.5645F, 0.556F, 2.8695F, 0.582F, 0.556F, 2.887F, 0.5995F, 0.556F, 2.9045F, 0.6175F, 0.626F, 2.8695F, 0.547F, 0.5035F, 2.8695F, 0.5125F, 0.521F]
+    Float[] piece37Base = Float[3.155F, 0.0755F, 0.521F, 3.1725F, 0.11F, 0.5385F, 3.155F, 0.1275F, 0.521F, 3.1725F, 0.1975F, 0.5385F, 3.2075F, 0.2675F, 0.5735F, 3.1725F, 0.4595F, 0.5385F, 3.155F, 0.5125F, 0.521F, 3.155F, 0.582F, 0.521F, 3.155F, 0.582F, 0.731F, 3.155F, 0.582F, 0.626F, 3.4F, 0.582F, 0.521F, 3.4F, 0.582F, 0.731F, 3.4F, 0.582F, 0.626F, 3.26F, 0.582F, 0.556F, 3.26F, 0.582F, 0.8005F, 3.365F, 0.582F, 0.801F, 3.155F, 0.582F, 0.801F, 3.155F, 0.582F, 0.556F, 3.365F, 0.582F, 0.556F]
+
+# Functions - game lifecycle
+
+    newGame(Player player)
+    boardStartPos(Player player)
+    Int boardGet(Player player, Int sq)
+    boardSet(Player player, Int sq, Int piece)
+
+# Functions - move encoding
+
+    Int moveEncode(Int fromSq, Int toSq, Int promo, Int flags)
+    Int moveFrom(Int move)
+    Int moveTo(Int move)
+    Int movePromo(Int move)
+    Int moveFlags(Int move)
+
+# Functions - I/O helpers
+
+    String squareName(Int sq)
+    Int squareIndex(String name)
+    String pieceGlyph(Int piece)
+    displayBoard(Player player)
+    movePieceVisually(Int pieceCode, Int targetSq)
+    sinkPiece(Int pieceCode, Int currentSq)
+    applyMoveVisually(Player player, Int move)
+    Float[] lookupPieceBase(Int pieceCode)
+    applyTransform(Int pieceCode, Int sq, Float[] base, Float yOffset)
+    recolorPiece(Int pieceCode, String blockName)
+
+# Functions - phase 1 tests
+
+    Int[] buildList(Int n)
+    Int factorial(Int n)
+    Int recurseDepth(Int depth, Int target)
+
+    testPlayerKeyedArray(Player player)
+    testRecursion(Player player)
+    testReturnInLoop(Player player)
+
+# Functions - phase 2 tests
+
+    testMoveCodec(Player player)
+    testSquareNames(Player player)
+    testStartPosDisplay(Player player)
+
+# Functions - piece classification
+
+    Int pieceColor(Int piece)
+    Int pieceType(Int piece)
+    Int pieceContrib(Int piece, Int sq)
+
+# Functions - move generation (pseudo-legal, phase 3)
+
+    Int[] genPawnMoves(Player player, Int sq)
+    Int[] genKnightMoves(Player player, Int sq)
+    Int[] genBishopMoves(Player player, Int sq)
+    Int[] genRookMoves(Player player, Int sq)
+    Int[] genQueenMoves(Player player, Int sq)
+    Int[] genKingMoves(Player player, Int sq)
+    Int[] genAllPseudoLegal(Player player)
+
+# Functions - state transitions
+
+    makeMove(Player player, Int move)
+    unmakeMove(Player player, Int move)
+
+# Functions - legality (phase 4)
+
+    Int findKing(Player player, Int color)
+    Boolean isSquareAttacked(Player player, Int sq, Int byColor)
+    Boolean inCheck(Player player)
+    Int[] genLegalMoves(Player player)
+
+# Functions - perft
+
+    Int perft(Player player, Int depth)
+
+# Functions - engine (phase 5)
+
+    Int evaluate(Player player)
+    Int[] genOrderedLegalMoves(Player player)
+    Int qsearch(Player player, Int alpha, Int beta, Int recaptureSq, Int qsDepth)
+    Int searchInner(Player player, Int depth, Int alpha, Int beta)
+    Int chooseMove(Player player)
+    engineMove(Player player)
+
+# Functions - game termination & input (phase 6)
+
+    Boolean isCheckmate(Player player)
+    Boolean isStalemate(Player player)
+    Boolean checkGameOver(Player player)
+    Int parseMove(Player player, String moveStr)
+    play(Player player, Int humanColor)
+    interactEntity(Player player, Int square)
+    Boolean isLightSquare(Int sq)
+    highlightMoves(Player player, Int square)
+    clearHighlights(Player player)
+    resetAllBoardTextures(Player player)
+    playSelectSound(Player player)
+    playDeselectSound(Player player)
+    playMoveSound(Player player)
+    playCaptureSound(Player player)
+    playCheckSound(Player player)
+    playCheckmateSound(Player player)
+
+# Functions - phase 3 tests
+
+    testGenStartPos(Player player)
+    testMakeUnmake(Player player)
+
+# Functions - phase 4 tests
+
+    testPerft(Player player)
+
+# Functions - phase 5 tests
+
+    testEngineMove(Player player)
+
+@endnamespace

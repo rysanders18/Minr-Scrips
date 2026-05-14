@@ -1,0 +1,14 @@
+# Int[] buildList(Int n)
+# Phase 1 helper. Returns a fresh Int[] containing 0..n-1.
+# Used by testReturnInLoop to confirm a function returning Int[]
+# can be called inside a @for loop and the returned array can be
+# indexed and aggregated normally without state leaking between calls.
+
+@using rychess
+@fast
+
+@define Int[] result = Int[]
+@for Int i in list::range(0, n)
+    @var result.append(i)
+@done
+@return result

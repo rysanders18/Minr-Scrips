@@ -1,0 +1,115 @@
+# s1Titles(String title1text, String title1subtext, String[] textColors, String[] subtextColors, Int duration, Player player) https://paste.minr.org/iyopohugek
+
+@fast
+@using Harha
+
+@bypass /title {{player}} times 0 20 20
+@bypass /playsound minecraft:ambient.nether_wastes.mood master {{player}} ~ ~ ~ 1.0 0.8
+
+@var title1text = "0 " + title1text + " 0"
+
+# Text appears 1 char at a time
+@for Int i in list::range(1, title1text.length() + 1)
+    @define String text = ""
+    @define String subtext = ""
+    @for Int j in list::range(0, i)
+        @if title1text.length() >= j + 1
+            @define String char = title1text.substring(j, j + 1)
+            @if char == "0"
+                @var text += String("&#d4d4d4&l&k" + char)
+            @else
+                # Offset by 2 to account for "0 " prefix, add length to avoid negative index
+                @var text += String("&" + textColors[(j - 2 + textColors.length()) % textColors.length()] + "&l" + char)
+            @fi
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextColors[j % subtextColors.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    @bypass /playsound minecraft:ambient.basalt_deltas.additions master @s ~ ~ ~ 0.5 {{Float(i) / Float(title1text.length()) * 1.5 + 0.5}}
+    @bypass /playsound minecraft:block.cherry_wood_button.click_on master @s ~ ~ ~ 0.3 {{Float(i) / Float(title1text.length()) * 1.5 + 0.5}}
+@done
+
+# If subtext is longer than text, continue adding subtext characters
+@if title1subtext.length() > title1text.length()
+    # Build the full title text (already complete)
+    @define String fullTitleText = ""
+    @for Int j in list::range(0, title1text.length())
+        @define String char = title1text.substring(j, j + 1)
+        @if char == "0"
+            @var fullTitleText += String("&#d4d4d4&l&k" + char)
+        @else
+            @var fullTitleText += String("&" + textColors[(j - 2 + textColors.length()) % textColors.length()] + "&l" + char)
+        @fi
+    @done
+    
+    # Continue adding subtext characters
+    @for Int i in list::range(title1text.length() + 1, title1subtext.length() + 1)
+        @define String subtext = ""
+        @for Int j in list::range(0, i)
+            @if title1subtext.length() >= j + 1
+                @var subtext += String("&" + subtextColors[j % subtextColors.length()] + "&l" + title1subtext.substring(j, j + 1))
+            @fi
+        @done
+        @delay 1
+        @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+        @bypass /title @s title {{slytools::convertTextToTellraw(fullTitleText)}}
+        @bypass /playsound minecraft:ambient.basalt_deltas.additions master @s ~ ~ ~ 0.5 {{Float(i) / Float(title1subtext.length()) * 1.5 + 0.5}}
+        @bypass /playsound minecraft:block.cherry_wood_button.click_on master @s ~ ~ ~ 0.3 {{Float(i) / Float(title1subtext.length()) * 1.5 + 0.5}}
+    @done
+@fi
+
+# Text stays for duration
+@define String fullText = ""
+@define String fullSubtext = ""
+@for Int j in list::range(0, title1text.length())
+    @define String char = title1text.substring(j, j + 1)
+    @if char == "0"
+        @var fullText += String("&#d4d4d4&l&k" + char)
+    @else
+        # Offset by 2 to account for "0 " prefix, add length to avoid negative index
+        @var fullText += String("&" + textColors[(j - 2 + textColors.length()) % textColors.length()] + "&l" + char)
+    @fi
+@done
+@for Int j in list::range(0, title1subtext.length())
+    @var fullSubtext += String("&" + subtextColors[j % subtextColors.length()] + "&l" + title1subtext.substring(j, j + 1))
+@done
+
+@for Int i in list::range(0, duration)
+    @delay 1
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(fullSubtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(fullText)}}
+@done
+
+# # Text disappears 1 char at a time
+# @for Int i in list::range(0, title1text.length())
+#     @define Int disappearLength = title1text.length() - i - 1
+#     @define String text = ""
+#     @define String subtext = ""
+#     @for Int j in list::range(0, disappearLength)
+#         @if title1text.length() >= j + 1
+#             @define String char = title1text.substring(j, j + 1)
+#             @if char == "0"
+#                 @var text += String("&#d4d4d4&l&k" + char)
+#             @else
+#                 # Offset by 2 to account for "0 " prefix, add length to avoid negative index
+#                 @var text += String("&" + textColors[(j - 2 + textColors.length()) % textColors.length()] + "&l" + char)
+#             @fi
+#         @fi
+#         @if title1subtext.length() >= j + 1
+#             @var subtext += String("&" + subtextColors[j % subtextColors.length()] + "&l" + title1subtext.substring(j, j + 1))
+#         @fi
+#     @done
+#     @delay 1
+#     @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+#     @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+#     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{2.0 - (Float(i + 1) / Float(title1text.length()) * 1.5)}}
+# @done
+
+# @bypass /title @s subtitle [""]
+# @bypass /title @s title [""]
+
+

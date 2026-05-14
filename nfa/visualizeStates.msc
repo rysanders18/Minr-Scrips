@@ -1,0 +1,20 @@
+# visualizeStates(Player player, String[] states)
+
+# Highlights the given states with particles
+# Parameters:
+#   - player: The player to show particles to
+#   - states: Array of block coordinates to visualize
+
+@using nfa
+@fast
+
+@for String blockCoords in states
+    @define String[] coords = blockCoords.split(",")
+    @if coords.length() == 3
+        @define Double x = Double(coords[0]) + 0.5D
+        @define Double y = Double(coords[1]) + 0.5D
+        @define Double z = Double(coords[2]) + 0.5D
+        # @player DEBUG /particle minecraft:end_rod {{x}} {{y}} {{z}} 0.25 0.25 0.25 0.05 30
+        @bypass /particle minecraft:end_rod {{x}} {{y}} {{z}} 0.25 0.25 0.25 0.05 30
+    @fi
+@done

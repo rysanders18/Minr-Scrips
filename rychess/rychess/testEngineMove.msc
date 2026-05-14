@@ -1,0 +1,10 @@
+# testEngineMove(Player player)
+# Phase 5 smoke test: starts a fresh game and asks the engine to
+# play one move. Expected wall time around 2-3s under the depth-2
+# alpha-beta search with @delay yields between root moves.
+
+@using rychess
+@fast
+
+@var newGame(player)
+@var engineMove(player)

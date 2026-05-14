@@ -1,0 +1,216 @@
+@namespace mannequin
+
+# Per-player runtime state
+# curX/curY/curZ are absolute WORLD coords. groundY is the spawn-time Y as
+# a debugging fallback only — collision is now real (collideY sets curY by
+# clamping dy against block AABBs). onGround is the canonical grounded flag,
+# updated by collideY each tick.
+
+    relative Double curX = 0D
+    relative Double curY = 0D
+    relative Double curZ = 0D
+    relative Double groundY = 0D
+
+    relative Double velX = 0D
+    relative Double velY = 0D
+    relative Double velZ = 0D
+
+    relative Double curYawDeg = 0D
+    relative Double curPitchDeg = 0D
+
+    relative Double targetX = 0D
+    relative Double targetZ = 0D
+
+# World name for Block(...) lookups. Captured from the spawning player; if
+# the mannequin teleports between worlds, respawn it.
+    relative String world = "Theta"
+
+# Set true by collideY when a downward Y move was clamped (we landed on
+# something). cruiseTick reads this for sprint accel selection (ground vs
+# air) and the sprint-jump kick gate. False every tick the mannequin moves
+# freely vertically (rising arc, falling, etc.).
+    relative Boolean onGround = false
+
+# Optional final pose set by cruiseToFacing. While hasTargetFacing is true,
+# the coast phase eases curYawDeg and curPitchDeg toward (targetYaw,
+# targetPitch) instead of leaving them frozen. cruiseTo clears the flag so
+# the un-faced variant retains its old "freeze yaw on coast" behavior.
+    relative Double targetYaw = 0D
+    relative Double targetPitch = 0D
+    relative Boolean hasTargetFacing = false
+
+# isCruising: applying sprint-accel + sprint-jump kicks toward target.
+# isCoasting: tick loop running with NO input. Drag and gravity decay
+# whatever momentum is left until grounded+slow, then exit. The two are
+# mutually exclusive; (false, false) means idle.
+    relative Boolean isCruising = false
+    relative Boolean isCoasting = false
+    relative Boolean isSpawned = false
+
+# Tick-loop generation counter. cruiseTo bumps it on retarget so any
+# in-flight cruiseTick from a previous cruiseTo sees a stale gen and
+# returns; the new cruiseTo then starts a fresh loop. stopCruising does
+# NOT bump gen — it flips isCruising→isCoasting, leaving the existing
+# loop running so it can decay momentum naturally.
+    relative Int tickGen = 0
+
+# Ticks elapsed in the current cruise/coast session. Reset to 0 only on
+# idle → cruise transitions (cruiseTo[Facing] from a stopped state), so
+# mid-cruise retargets keep counting. Used by cruiseTick to delay the
+# first sprint-jump (player takes a stride or two before bunny-hopping).
+    relative Int cruiseTicks = 0
+
+# Per-tick input recordings. recordInputs resets these arrays at session
+# start and appends one element per recorded tick. All NINE arrays share
+# the same length and index alignment — array[N] is the state of all
+# seven keys + (yaw, pitch) at recording-tick N. Replay walks them in
+# lockstep.
+#
+# Yaw is the Minecraft yaw in degrees (0 = facing +Z south, 90 = -X west,
+# -90 = +X east, ±180 = -Z north). Pitch is degrees (-90 = straight up,
+# 0 = horizontal, +90 = straight down). Captured directly from
+# player.getYaw()/getPitch() — no predicate bridge needed since yaw/pitch
+# are readable synchronously. Replay should treat consecutive yaw samples
+# as the short-way-around delta (wrap to (-180, 180]) so a 359° → 1°
+# transition replays as +2°, not -358°.
+    relative Boolean[] inputForward = Boolean[]
+    relative Boolean[] inputBackward = Boolean[]
+    relative Boolean[] inputLeft = Boolean[]
+    relative Boolean[] inputRight = Boolean[]
+    relative Boolean[] inputJump = Boolean[]
+    relative Boolean[] inputSneak = Boolean[]
+    relative Boolean[] inputSprint = Boolean[]
+    relative Double[] inputYaw = Double[]
+    relative Double[] inputPitch = Double[]
+
+# Player pose at the start of the most recent recording session.
+# Captured before recordInputs's per-tick loop so that any future
+# playback can warp the mannequin to the player's exact start position
+# AND facing before applying recorded ticks.
+    relative Double recordStartX = 0D
+    relative Double recordStartY = 0D
+    relative Double recordStartZ = 0D
+    relative Double recordStartYaw = 0D
+    relative Double recordStartPitch = 0D
+
+# Constants - Minecraft physics on default slipperiness, sprint-jumping.
+# Per-tick (horizontal):
+#   v += (onGround ? sprintAccel : sprintAirAccel) * heading;
+#   if onGround also v += sprintJumpBoost * heading;
+#   pos += v;
+#   v *= (onGround ? groundDrag : airDrag).
+# The asymmetry is critical: in MC the input acceleration drops from
+# 0.13 (sprinting on ground) to ~0.026 (sprinting in air) because the
+# game uses jumpMovementFactor while airborne. Using 0.13 in both
+# states gives an air terminal velocity of 0.13/0.09 = 1.44 b/t (~29
+# b/s) - that's the bug that made the mannequin too fast.
+# Terminal sprint ≈ 0.286 b/t; terminal sprint-jump ≈ 0.357 b/t (7.13 b/s).
+    Double sprintAccel = 0.13D
+    Double sprintAirAccel = 0.026D
+    Double groundDrag = 0.546D
+    Double airDrag = 0.91D
+    Double sprintJumpBoost = 0.2D
+
+# Vertical: jumpVel kicks velY up on grounded ticks; gravity is then
+# subtracted each tick and a 0.98 air-drag multiplier dampens the result.
+# Cycle is ~12 ticks airborne, apex ~1.25 b above ground.
+    Double jumpVel = 0.42D
+    Double gravity = 0.08D
+    Double airDragVertical = 0.98D
+
+# Max yaw delta applied per tick (degrees). 15 = 300 deg/sec, snappy.
+# Used by clampTurn during cruise yaw tracking AND as the upper bound on
+# the per-tick step in the coast-phase facing ease.
+    Double maxTurnPerTickDeg = 15D
+
+# Coast facing ease: each tick, close this fraction of the remaining gap
+# to (targetYaw, targetPitch). 0.15 = 15% per tick → critically-damped
+# deceleration in the middle of a rotation. Bounded above by
+# maxTurnPerTickDeg (so big rotations don't spike) and below by
+# minFacingStepDeg (so the exponential tail doesn't drag). Three regimes:
+#   - Gap > 100°  → linear at maxTurnPerTickDeg (cap).
+#   - 13°…100°    → exponential, gap × facingEaseFactor.
+#   - Gap < 13°   → linear at minFacingStepDeg (floor).
+# 180° ≈ 24 ticks (~1.2 s); 90° ≈ 18; 30° ≈ 11. Without the floor the
+# last ~30° tail alone takes ~20 ticks of barely-moving creep, which is
+# what made the rotation feel slow at the end.
+    Double facingEaseFactor = 0.30D
+    Double minFacingStepDeg = 5D
+
+# Pitch the mannequin eases toward while cruising. +25° = looking 25°
+# down from horizontal, the natural head-tilt of a sprinting player. The
+# ease uses easeStep (same logic as the coast-phase facing ease), so the
+# mannequin starts a run by easing its head down rather than snapping.
+    Double cruisePitchDeg = 25D
+
+# Number of cruise ticks to wait before the first sprint-jump fires. The
+# mannequin still applies sprint acceleration during the delay (so it
+# takes a stride or two off the line), but doesn't kick into bunny-hopping
+# immediately. 4 ticks ≈ 0.2 s of windup before the first jump.
+    Int jumpDelayTicks = 4
+
+# Squared block distance at which cruising drops input and switches to
+# coasting. 2.25 = 1.5 b radius. Coasting from sprint-jump terminal velocity
+# can carry the mannequin 0.5-3 b further depending on where in the jump
+# arc the transition fires (mid-air = longer overshoot, grounded = shorter),
+# so 1.5 b is a compromise that lands near target on average. The sprint
+# kick is dropped on transition; gravity finishes any in-progress jump.
+    Double brakeDistSq = 2.25D
+
+# Coasting exits when the mannequin is grounded and horizontal speed is
+# below this threshold. 0.0001 = 0.01 b/t squared, ~6 ground-drag ticks
+# (300 ms) below sprint-jump terminal.
+    Double restSpeedSq = 0.0001D
+
+# Player AABB. Vanilla is 0.6 wide × 1.8 tall, anchored at feet center.
+# halfWidth (0.3) is the X/Z extent from curX/curZ in either direction;
+# height (1.8) is the Y extent above curY. We don't model sneak/swim/glide
+# resizes — the mannequin is always sprint-equivalent.
+    Double playerHalfWidth = 0.3D
+    Double playerHeight = 1.8D
+
+# Functions
+
+    spawnMannequin(Player player)
+    cruiseTo(Player player, Float tx, Float tz)
+    cruiseToFacing(Player player, Float tx, Float tz, Float yaw, Float pitch)
+    cruiseTick(Player player, Int gen)
+    teleportMannequin(Player player, Double x, Double z)
+    stopCruising(Player player)
+    setFacing(Player player, Double yaw, Double pitch)
+    Double clampTurn(Double curYaw, Double targetYaw)
+    Double easeStep(Double diff)
+
+# Collision primitives. getBlockBoxes is the world-query gate; it returns
+# the block at (bx,by,bz)'s collision shape as a flat list of LOCAL AABBs
+# (N*6 doubles per block, [minX,minY,minZ,maxX,maxY,maxZ] in [0, 1.5] —
+# Y can exceed 1 for fences/walls/fence_gates which extend 0.5 above
+# their cell, matching vanilla). Empty list = passable; [0,0,0,1,1,1] =
+# full unit cube. The function handles slabs (type), stairs (facing,
+# half, shape), trapdoors (open, half, facing), fences/panes (cardinal
+# connections), walls (up + cardinal none/low/tall), fence gates (open,
+# facing), and a handful of fixed thin shapes (beds, campfires, brewing
+# stand). Unknown block types fall through to a full unit cube.
+#
+# collideX/Y/Z return clamped per-axis deltas. collideY also has the
+# side-effect of updating onGround[player] each call.
+    Double[] getBlockBoxes(Int bx, Int by, Int bz, String world)
+    Double collideY(Player player, Double dy)
+    Double collideX(Player player, Double dx)
+    Double collideZ(Player player, Double dz)
+
+# Cosmetic: vanilla-equivalent sprint dust. cruiseTick calls this once
+# per cruise tick (skipped during coast — matches the sprint flag drop
+# when a real player releases the sprint key). Internally skips when
+# the block under the mannequin's feet is air, so mid sprint-jump arc
+# the dust correctly disappears without a separate ground check.
+    emitSprintParticle(Player player)
+
+# Input recording. recordInputs blocks the caller for durationTicks while
+# polling the player's live key state once per tick. recInputTrue is the
+# helper invoked by predicate-gated /execute commands inside that loop;
+# inputId 0..6 corresponds to forward/backward/left/right/jump/sneak/sprint.
+    recordInputs(Player player, Int durationTicks)
+    recInputTrue(Player player, Int inputId, Int tickIdx)
+
+@endnamespace

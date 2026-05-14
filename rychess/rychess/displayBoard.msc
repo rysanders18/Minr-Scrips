@@ -1,0 +1,31 @@
+# displayBoard(Player player)
+# Renders board[player] to the player's chat as 8 rank lines plus a
+# file header row. Rank 8 is shown at the top (white's perspective).
+# Pieces use pieceGlyph for color-coded letters; empty squares are
+# rendered as a gray dot. After the grid, prints whose turn it is.
+
+@using rychess
+@fast
+
+@define Int[] bd = board[player]
+
+@for Int rankFromTop in list::range(0, 8)
+    @define Int rank = 7 - rankFromTop
+    @define Int rankNum = rank + 1
+    @define String line = "&7" + String(rankNum) + " "
+    @for Int file in list::range(0, 8)
+        @define Int sq = rank * 8 + file
+        @define String glyph = pieceGlyph(bd[sq])
+        @var line = line + glyph + " "
+    @done
+    @player {{line}}
+@done
+
+@player &l &7 a b c d e f g h
+
+@define Int stm = sideToMove[player]
+@if stm == 0
+    @player &fSide to move: &l&fWhite
+@else
+    @player &fSide to move: &l&cBlack
+@fi

@@ -1,0 +1,30 @@
+# Int perft(Player player, Int depth)
+# Standard chess move-generator correctness probe. Counts the number
+# of leaf nodes reachable in exactly `depth` plies of legal play from
+# the current position. Compared against published perft values it
+# detects most move-generator and make/unmake bugs - if perft matches
+# at every tested depth, the move generator is almost certainly
+# correct.
+# Recurses depth times; recursion budget is 100, so practical max is
+# around depth 90 (safe under @fast, but in practice node count
+# explodes long before that).
+
+@using rychess
+@fast
+
+@if depth == 0
+    @return 1
+@fi
+
+@define Int total = 0
+@define Int[] moves = genLegalMoves(player)
+
+@for Int i in list::range(0, moves.length())
+    @define Int move = moves[i]
+    @var makeMove(player, move)
+    @define Int sub = perft(player, depth - 1)
+    @var total = total + sub
+    @var unmakeMove(player, move)
+@done
+
+@return total

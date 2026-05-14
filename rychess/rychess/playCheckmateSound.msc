@@ -1,0 +1,10 @@
+# playCheckmateSound(Player player)
+# Plays the "checkmate" sound. Fires from inside checkGameOver when
+# isCheckmate returns true. Plays at the same moment as the
+# "*** Checkmate! XXX wins. ***" chat message.
+# CHANGE the sound name below.
+
+@using rychess
+@fast
+
+@bypass /playsound minecraft:ui.toast.challenge_complete master @a[x=-9134.0,y=-61.0,z=9669.0,distance=..20] -9134.0 -61.0 9669.0 1 1

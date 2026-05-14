@@ -1,0 +1,82 @@
+# Int searchInner(Player player, Int depth, Int alpha, Int beta)
+# Negamax alpha-beta. Returns the score (centipawns, side-to-move
+# perspective) of the current position assuming both sides play
+# optimally for the given depth.
+# Terminal handling:
+#   - depth 0           -> static eval (no QS context here)
+#   - depth 1 leaves    -> recurse into qsearch with the moveTo of
+#                          the just-made move as the recapture
+#                          square (recapture-only quiescence)
+#   - no legal moves    -> -100000 if in check (mate), 0 if not (stalemate)
+# Move ordering: full-width nodes use genOrderedLegalMoves so the
+# best capture is searched first - critical for alpha-beta cutoffs.
+# Branching cap: maxBranches limits how many moves we explore at
+# each inner node. Combined with the same cap at the root, this
+# is what keeps total work bounded; without it depth-2 search
+# does ~900 leaf calls and tanks TPS. Risk: the opponent's best
+# reply might be ranked below the cap and get pruned, missing a
+# tactical defense. Mitigated by PST quiet-move ordering pulling
+# active-square moves high.
+# Mate-check guard: when moves.length() == 0 we still need to
+# return mate / stalemate scores, so that path is unaffected.
+# Standard fail-soft alpha-beta: bestScore can exceed beta.
+# TPS yielding: @delay 1 after genOrderedLegalMoves (the heaviest
+# call - sort + legal filter) and after each inner iteration, so
+# the server can process other ticks between bursts. Total delays
+# per chooseMove call: ~5 from chooseMove's root loop + ~5 from
+# this function's startup + ~25 from this function's inner loops
+# = ~35 ticks = ~1.75s of yields, on top of actual compute. Tune
+# by editing the @delay values here and in chooseMove.
+
+@using rychess
+@fast
+
+@var profSearchInner[player] = profSearchInner[player] + 1
+
+@define Int maxBranches = 5
+
+@if depth == 0
+    @return evaluate(player)
+@fi
+
+@define Int[] moves = genOrderedLegalMoves(player)
+@delay 1
+
+@if moves.length() == 0
+    @if inCheck(player)
+        @return -100000
+    @fi
+    @return 0
+@fi
+
+@define Int bestScore = -200000
+@define Int curAlpha = alpha
+
+@define Int limit = maxBranches
+@if moves.length() < limit
+    @var limit = moves.length()
+@fi
+
+@for Int i in list::range(0, limit)
+    @define Int move = moves[i]
+    @var makeMove(player, move)
+    @define Int score = 0
+    @if depth == 1
+        @var score = -qsearch(player, -beta, -curAlpha, moveTo(move), 0)
+    @else
+        @var score = -searchInner(player, depth - 1, -beta, -curAlpha)
+    @fi
+    @var unmakeMove(player, move)
+    @if score > bestScore
+        @var bestScore = score
+    @fi
+    @if bestScore > curAlpha
+        @var curAlpha = bestScore
+    @fi
+    @if curAlpha >= beta
+        @return bestScore
+    @fi
+    @delay 1
+@done
+
+@return bestScore

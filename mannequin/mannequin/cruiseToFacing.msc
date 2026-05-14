@@ -1,0 +1,36 @@
+# cruiseToFacing(Player player, Float tx, Float tz, Float yaw, Float pitch)
+# Like cruiseTo, but additionally interpolates head/body orientation toward
+# (yaw, pitch) during the coast phase. The ease starts the instant the
+# brake fires (cruise → coast transition) and continues until both physics
+# rest AND facing converges to within 1°, at which point the loop snaps
+# the final exact pose and exits.
+#
+# Yaw uses Minecraft convention (0 = +Z south, 90 = -X west, ±180 = -Z
+# north, -90 = +X east). Pitch: -90 up, 0 level, +90 down.
+#
+# Same retarget semantics as cruiseTo: bumps tickGen so any in-flight
+# tick loop bails out, then starts a fresh one. cruiseTicks is reset only
+# on idle entry (mid-cruise/coast retargets keep the counter). curPitchDeg
+# is NOT reset; cruiseTick eases it toward cruisePitchDeg during cruise
+# and toward targetPitch during coast.
+
+@using mannequin
+@fast
+
+@if !isSpawned[player]
+    @var mannequin::spawnMannequin(player)
+@fi
+
+@if !isCruising[player] && !isCoasting[player]
+    @var cruiseTicks[player] = 0
+@fi
+
+@var targetX[player] = Double(tx)
+@var targetZ[player] = Double(tz)
+@var targetYaw[player] = Double(yaw)
+@var targetPitch[player] = Double(pitch)
+@var hasTargetFacing[player] = true
+@var isCruising[player] = true
+@var isCoasting[player] = false
+@var tickGen[player] = tickGen[player] + 1
+@var mannequin::cruiseTick(player, tickGen[player])

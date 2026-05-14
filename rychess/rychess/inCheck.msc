@@ -1,0 +1,16 @@
+# Boolean inCheck(Player player)
+# True iff the side-to-move's king is currently attacked.
+
+@using rychess
+@fast
+
+@var profInCheck[player] = profInCheck[player] + 1
+
+@define Int stm = sideToMove[player]
+@define Int kingSq = findKing(player, stm)
+
+@if kingSq < 0
+    @return false
+@fi
+
+@return isSquareAttacked(player, kingSq, 1 - stm)

@@ -1,0 +1,25 @@
+# testGenStartPos(Player player)
+# Phase 3 test: from the starting position, generate all pseudo-legal
+# moves for white. Should be exactly 20: 8 pawn single-pushes + 8 pawn
+# double-pushes + 4 knight moves (Na3, Nc3, Nf3, Nh3).
+
+@using rychess
+@fast
+
+@var newGame(player)
+
+@define Int[] moves = genAllPseudoLegal(player)
+@define Int n = moves.length()
+
+@player &6=== Phase 3: Move Generation Test ===
+@player &eMoves from start: {{n}} &7(expected 20)
+
+@for Int i in list::range(0, n)
+    @define Int m = moves[i]
+    @define String fromName = squareName(moveFrom(m))
+    @define String toName = squareName(moveTo(m))
+    @define Int flags = moveFlags(m)
+    @player &7  {{i}}: {{fromName}} -> {{toName}} &8(flags={{flags}})
+@done
+
+@player &6=== Done ===

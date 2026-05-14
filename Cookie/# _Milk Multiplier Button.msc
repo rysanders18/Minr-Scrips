@@ -1,0 +1,46 @@
+# _Milk Multiplier Button
+@fast
+@using cookie
+
+# @define Int[] milkMultiplierPrices = Int[100000, 200000, 400000, 600000, 900000, 1200000, 1500000, 2000000, 3500000, 5000000, 7500000]
+# @define Long[] milkMultiplierMultipliers = Long[3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 12L, 15L, 20L]
+
+@if milkMultiplierStage[player] >= milkMultiplierMultipliers.length()
+    @player &#d4d4d4--------------------------------------
+    @player &cYou have reached the maximum upgrade for this button!
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @return
+@fi
+
+@if cookieCount[player] < milkMultiplierPrices[milkMultiplierStage[player]]
+    @player &#d4d4d4--------------------------------------
+    @player &f&lMilk Multiplier Button&#d4d4d4
+    @player &#d4d4d4● Current Milk Multiplier: &f{{milkMultiplier[player]}}x
+    @player &#d4d4d4● Next Upgrade: &f{{milkMultiplierMultipliers[milkMultiplierStage[player]]}}x
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l{{Harha::formatNumber(String(milkMultiplierPrices[milkMultiplierStage[player]]))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(milkMultiplierPrices[milkMultiplierStage[player]] - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &f&lMilk Multiplier Button&#d4d4d4
+    @player &#d4d4d4● New Upgrade: &f{{milkMultiplier[player]}}x → {{milkMultiplierMultipliers[milkMultiplierStage[player]]}}x
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(milkMultiplierPrices[milkMultiplierStage[player]])))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var milkMultiplier[player] = milkMultiplierMultipliers[milkMultiplierStage[player]]
+    @var cookieCount[player] -= Long(milkMultiplierPrices[milkMultiplierStage[player]])
+    
+    
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(milkMultiplierPrices[milkMultiplierStage[player]])
+    @done
+    @var milkMultiplierStage[player] += 1
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

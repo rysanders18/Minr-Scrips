@@ -1,0 +1,34 @@
+# checkpointPressurePlate(Int cp, Player player)
+@using endmap
+@fast
+
+@if cpnumber[player] < cp
+
+    # Define vars
+    @define Float[] musicNotes = Float[0.5, 0.53, 0.561, 0.595, 0.63, 0.667, 0.707, 0.749, 0.794, 0.841, 0.891, 0.944, 1.0, 1.059, 1.122, 1.189, 1.26, 1.335, 1.414, 1.498, 1.587, 1.682, 1.782, 1.888, 2.0]
+    
+    # Change players cp number to new cp
+    @var cpnumber[player] = cp
+
+    # Playsounds and text
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[13]}}
+    @bypass title {{player}} actionbar ["",{"text":"New ","bold":true,"color":"#a800a8"},{"text":"Checkpoint ","bold":true,"color":"#c045a3"},{"text":"Reached! ","bold":true,"color":"#cf71a5"},{"text":"({{cpnumber[player]}}/16)","bold":true,"color":"#df97c7"}]
+    @delay 1
+    @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[20]}}
+
+    # Location vars
+    @define Double x = pressurePlateLocations[cp - 1].getX()
+    @define Double y = pressurePlateLocations[cp - 1].getY()
+    @define Double z = pressurePlateLocations[cp - 1].getZ()
+
+    # Helix particles and playsound
+    @for Int i in list::range(0, 40)
+        @bypass /particle minecraft:landing_obsidian_tear {{0.5 * math::cos(Double(i * 20)) + x + 0.5}} {{y + 0.25 + Float(i) / 20}} {{0.5 * math::sin(Double(i * 20)) + z + 0.5}} 0 0 0 0 1
+        @bypass /particle minecraft:landing_obsidian_tear {{0.5 * math::cos(Double(i * 20 + 180)) + x + 0.5}} {{y + 0.25 + Float(i) / 20}} {{0.5 * math::sin(Double(i * 20 + 180)) + z + 0.5}} 0 0 0 0 1
+        @bypass /particle dust{color:[0.412,0.000,0.824],scale:1} {{0.5 * math::cos(Double(i * 20)) + x + 0.5}} {{y + 0.25 + Float(i) / 20}} {{0.5 * math::sin(Double(i * 20)) + z + 0.5}} 0 0 0 1 1
+        @bypass /particle dust{color:[0.412,0.000,0.824],scale:1} {{0.5 * math::cos(Double(i * 20 + 180)) + x + 0.5}} {{y + 0.25 + Float(i) / 20}} {{0.5 * math::sin(Double(i * 20 + 180)) + z + 0.5}} 0 0 0 1 1
+        
+        @bypass /playsound minecraft:block.dried_ghast.place_in_water master {{player}} {{x}} {{y}} {{z}} {{0.4 - (i / 200.0)}} {{i / 40.0 * 1.5 + 0.5}}
+        @delay 1
+    @done
+@fi

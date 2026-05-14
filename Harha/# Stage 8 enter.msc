@@ -1,0 +1,157 @@
+# Stage 8 enter
+# Title, Sound effects, and Splits
+
+@using Harha
+@fast
+
+@if player.getGameMode().toLowerCase() != "adventure"
+    @return
+@fi
+
+@define Long timeThisStage
+@define Boolean firstTime = false
+
+@define Boolean speedrunTeleportedRecentlyOld = speedrunTeleportedRecently[player]
+@var speedrunTeleportedRecently[player] = false
+
+@if stage[player] == 7
+    
+    @define String gradient1 = "#ff0000"
+    @define String gradient2 = "#fc0044"
+    @define String gradient3 = "#f10067"
+    @define String gradient4 = "#e50085"
+    @define String gradient5 = "#d500a5"
+    @define String gradient6 = "#bd00cf"
+    @define String gradient7 = "#870fff"
+    
+    # #ff0000
+    # #fc0044
+    # #f10067
+    # #e50085
+    # #d500a5
+    # #bd00cf
+    # #870fff
+    
+    @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4703 92 5049 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
+    # @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4708 92 5046 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+    # @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4705 94 5041 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+    
+    @var stage[player] += 1
+    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
+    @var startTime[player] = system::currentTimeMillis()
+    # @player {{timer::formatTime(timeThisStage)}}, {{timer::formatTime(stage5PB)}}, {{timer::formatTime(startTime[player])}}
+    # if this is First time entering Stage 8, PB = this time
+    @if stage8Entered[player] == false
+        @var stage7PB[player] = (timeThisStage)
+        @var top100Function(player, 24)
+        # Commented out because beating stage 8 is beating the map
+        # @if numberCompletions[player] >= 1
+            @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
+            @var top100Function(player, 25)
+        # @fi
+        @var stage8Entered[player] = true
+        @var firstTime = true
+        
+        @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
+    @else
+        
+        @if (timeThisStage) < stage7PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+            @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage7PB)}})
+            @var stage7PB[player] = (timeThisStage)
+            @var top100Function(player, 24)
+            
+            # This is different because its stage 8
+            @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
+            @var top100Function(player, 25)
+            
+            
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[7]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[11]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[14]}}
+            @delay 2
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[9]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[13]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[16]}}
+            @delay 2
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[11]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[15]}}
+            @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[18]}}
+            
+        @fi
+        
+        @if speedrunTeleportedRecentlyOld == false
+            @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage7PB[player])}}","bold":true,"color":"light_purple"}]
+        @else
+            @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+        @fi
+    @fi
+    
+    @bypass /title @s times 0 15 10
+    
+    @bypass /title @s subtitle ["",{"text":"Co","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Cong","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.122
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"},{"text":"h","bold":true,"color":"{{gradient2}}"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Congrat","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.26
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"},{"text":"h","bold":true,"color":"{{gradient2}}"},{"text":"e ","bold":true,"color":"{{gradient3}}"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Congratula","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.498
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"},{"text":"h","bold":true,"color":"{{gradient2}}"},{"text":"e ","bold":true,"color":"{{gradient3}}"},{"text":"E","bold":true,"color":"{{gradient4}}"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Congratulatio","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.682
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"},{"text":"h","bold":true,"color":"{{gradient2}}"},{"text":"e ","bold":true,"color":"{{gradient3}}"},{"text":"E","bold":true,"color":"{{gradient4}}"},{"text":"n","bold":true,"color":"{{gradient5}}"}]
+    @delay 1
+    
+    @bypass /title @s subtitle ["",{"text":"Congratulations!","color":"#d4d4d4"}]
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 2
+    @bypass /title @s title ["",{"text":"T","bold":true,"color":"{{gradient1}}"},{"text":"h","bold":true,"color":"{{gradient2}}"},{"text":"e ","bold":true,"color":"{{gradient3}}"},{"text":"E","bold":true,"color":"{{gradient4}}"},{"text":"n","bold":true,"color":"{{gradient5}}"},{"text":"d","bold":true,"color":"{{gradient6}}"},{"text":"!","bold":true,"color":"{{gradient7}}"}]
+    
+    
+    @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4708 92 5046 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
+    
+    @delay 5
+    
+    @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4705 94 5041 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
+    
+    @delay 10
+    @if firstTime == true
+        @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"}]
+    @else
+        @if speedrunTeleportedRecentlyOld == false
+            @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage7PB[player])}}","bold":true,"color":"light_purple"}]
+        @else
+            @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+        @fi
+    @fi
+    @delay 20
+    @if firstTime == true
+        @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"}]
+    @else
+        @if speedrunTeleportedRecentlyOld == false
+            @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage7PB[player])}}","bold":true,"color":"light_purple"}]
+        @else
+            @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+        @fi
+    @fi
+    @delay 20
+    @if firstTime == true
+        @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"}]
+    @else
+        @if speedrunTeleportedRecentlyOld == false
+            @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage7PB[player])}}","bold":true,"color":"light_purple"}]
+        @else
+            @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
+        @fi
+    @fi
+@fi

@@ -1,0 +1,30 @@
+type: particle_trail
+version: 3
+config:
+  name: Mr. Duck's Aura
+  rarity: Heroic
+  requires:
+    unobtainable: ""
+  shop:
+    item: RESIN_BRICK
+    stack_size: 1
+    description:
+      - Rewarded to the completionists
+      - of all Harder Hat Secrets.
+  particle_trail:
+    particle: TRIAL_SPAWNER_DETECTION
+    particle_count: 2
+    spawn_cycle_length: 2
+    offset:
+      x: 0.3
+      y: 0
+      z: 0.3
+    extra: 0.01
+    particle: TRIAL_SPAWNER_DETECTION_OMINOUS
+    particle_count: 2
+    spawn_cycle_length: 2
+    offset:
+      x: 0.3
+      y: 0
+      z: 0.3
+    extra: 0.01

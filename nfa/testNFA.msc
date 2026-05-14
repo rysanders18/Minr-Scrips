@@ -1,0 +1,33 @@
+# NFA Test Script
+# Tests if an input string is accepted by the player's NFA
+
+# Usage: Run this script with an input string as a variable
+# Example: Set inputString[player] = "010" before running
+
+@using nfa
+@fast
+
+@define String inputString = "0110"  # Test string - modify as needed
+
+# Get all start states
+@define String[] startStates = nfa::getStartStates(player)
+@player &e=== NFA String Processing ===
+@player &6Input String: &e{{inputString}}
+@player &6Start States: &a{{startStates.length()}}
+
+# Visualize start states
+@bypass nfa::visualizeStates(player, startStates)
+
+# Process the string
+@define Boolean accepted = nfa::processString(player, inputString)
+
+# Display result
+@if accepted
+    @player &a✓ String ACCEPTED!
+    @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 1 1.5
+@else
+    @player &c✗ String REJECTED!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 0.5
+@fi
+
+@player &e======================

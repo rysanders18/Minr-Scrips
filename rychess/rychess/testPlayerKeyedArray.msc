@@ -1,0 +1,35 @@
+# testPlayerKeyedArray(Player player)
+# Phase 1 driver, variant A: can we store an Int[] as a player-keyed
+# value and read/append to it later?
+#   testBoard[player] = Int[...]
+#   testBoard[player].length()
+#   testBoard[player][i]
+#   testBoard[player].append(x)
+# If this works, the per-player board is a single line of state per
+# player. If it fails, we fall back to 64 flat player-keyed Ints
+# (board0[player]..board63[player]) or to the 2-D variant tested
+# in testTwoDimArray.msc.
+
+@using rychess
+@fast
+
+@player &6=== Phase 1: Player-Keyed Array Test ===
+
+@define Int[] sample = Int[10, 20, 30, 40, 50]
+@var testBoard[player] = sample
+
+@define Int lenA = testBoard[player].length()
+@player &eStored length: {{lenA}} &7(expected 5)
+
+@define Int valA = testBoard[player][2]
+@player &eIndex 2: {{valA}} &7(expected 30)
+
+@var testBoard[player].append(60)
+
+@define Int lenAfter = testBoard[player].length()
+@player &eAfter append len: {{lenAfter}} &7(expected 6)
+
+@define Int valAfter = testBoard[player][5]
+@player &eIndex 5: {{valAfter}} &7(expected 60)
+
+@player &6=== Done ===

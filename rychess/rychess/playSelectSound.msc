@@ -1,0 +1,10 @@
+# playSelectSound(Player player)
+# Plays the "piece selected" sound for everyone within 20 blocks of
+# the chess board. CHANGE the sound name below to your preferred
+# sound effect; the rest (source category, target selector, position,
+# volume, pitch) stays the same across all six sound helpers.
+
+@using rychess
+@fast
+
+@bypass /playsound minecraft:ui.button.click master @a[x=-9134.0,y=-61.0,z=9669.0,distance=..20] -9134.0 -61.0 9669.0 1 1

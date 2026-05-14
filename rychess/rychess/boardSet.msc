@@ -1,0 +1,7 @@
+# boardSet(Player player, Int sq, Int piece)
+# Writes a piece code (0..12) to square sq (0..63) on the player's board.
+
+@using rychess
+@fast
+
+@var board[player][sq] = piece

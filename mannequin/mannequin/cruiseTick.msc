@@ -1,0 +1,314 @@
+# cruiseTick(Player player, Int gen)
+# Per-tick simulation loop. Two phases run through the same physics body:
+#
+#   CRUISING (isCruising)
+#     - Yaw tracks toward (targetX, targetZ).
+#     - Sprint acceleration applied each tick (+0.13 b/t on ground,
+#       +0.026 b/t in air, in heading direction).
+#     - Sprint-jump kick fires every grounded tick (velY = 0.42, velXZ
+#       += 0.2 in heading direction). This is the bunny-hop that lifts
+#       terminal speed from ~0.286 b/t to ~0.357 b/t.
+#
+#   COASTING (isCoasting)
+#     - Yaw frozen (a player who released keys keeps facing the same way).
+#     - No input acceleration. No jump kick.
+#     - Drag and gravity continue running. velX/velZ decay by groundDrag
+#       (×0.546) per ground tick or airDrag (×0.91) per air tick. velY
+#       decays via the standard (velY - gravity) * airDragVertical step.
+#     - In-progress jumps complete naturally; the mannequin lands and
+#       slides to a stop instead of snapping to ground.
+#     - Exits to idle when grounded AND horizontal speed² < restSpeedSq.
+#
+# The cruise→coast transition fires when distSq <= brakeDistSq. Coasting
+# from there lands the mannequin near (within ~1 b on average) the target;
+# overshoot variance comes from the jump-arc phase at trigger time and
+# is the natural cost of not aborting an in-progress jump (a real player
+# can't either).
+#
+# Collision: position updates go through collideY/collideX/collideZ. They
+# clamp the per-axis delta against any non-air block AABB in the swept
+# volume and (for collideY) update onGround[player]. The X/Z dominance
+# flip — Y-X-Z when |velZ| > |velX| else Y-Z-X — matches vanilla 1.14+
+# behavior and is the source of the well-known "corners feel different
+# from each side" MC parkour artifact. velocities are zeroed on the axis
+# that clamped, matching wall-slide / floor-stop / ceiling-bonk semantics.
+# Step-up assist (vanilla 0.6 b auto-step) is NOT yet implemented — small
+# obstacles like carpets or bottom slabs will fully stop the mannequin.
+#
+# Drag uses the START-OF-TICK onGround capture (onGroundStart), not the
+# post-collision flag. Vanilla LivingEntity.travel() snapshots the friction
+# factor before move() runs; on a jump tick that snapshot is "grounded"
+# (which is why the jump fired) → groundDrag. Reading the post-collision
+# flag instead inflates terminal speed because the jump tick would use
+# airDrag (post-jump = airborne) and bleed velocity ~70% less per cycle.
+#
+# gen is the tickGen value that was active when cruiseTo kicked us. If
+# another cruiseTo bumps tickGen mid-loop, gen no longer matches and we
+# exit cleanly so the new generation owns the entity. stopCruising does
+# NOT bump gen — it just flips the cruise/coast booleans, so the same
+# loop carries the mannequin through to rest.
+#
+# 1000 iterations = 50 seconds total budget. Plenty for any cruise + coast.
+#
+# Yaw quadrant block: MSC has math::arctan (single-arg, returns degrees)
+# but no atan2. Untitled-1 has the canonical correction; we mirror it
+# exactly with -dx as the numerator so the result is a Minecraft yaw
+# (0 = facing +Z south, 90 = facing -X west, -90 = facing +X east).
+
+@using mannequin
+@fast
+
+@for Int i in list::range(0, 1000)
+
+    @if !player.isOnline()
+        @return
+    @fi
+    @if !isCruising[player] && !isCoasting[player]
+        @return
+    @fi
+    @if gen != tickGen[player]
+        @return
+    @fi
+
+    # Tick budget for the current session. Used by the jump-delay gate
+    # below; reset to 0 in cruiseTo/cruiseToFacing only on idle entry.
+    @var cruiseTicks[player] = cruiseTicks[player] + 1
+
+    @define Double dx = targetX[player] - curX[player]
+    @define Double dz = targetZ[player] - curZ[player]
+    @define Double distSq = dx * dx + dz * dz
+
+    # Cruise → coast: within braking distance, drop input. Drag finishes
+    # the slide. We fall through and run the rest of this tick as a coast
+    # tick (no accel/jump applied below).
+    @if isCruising[player] && distSq <= brakeDistSq
+        @var isCruising[player] = false
+        @var isCoasting[player] = true
+    @fi
+
+    # Coast bookkeeping: ease facing toward final pose (if cruiseToFacing
+    # set one) and check exit. Loop terminates when physics is at rest
+    # (grounded + horizontal speed below restSpeedSq) AND, if facing was
+    # requested, both yaw and pitch are within 1° of target. velY oscillates
+    # 0 / -0.0784 between ticks while grounded (gravity step then collideY
+    # clamp), so onGround stays true once the mannequin has actually landed.
+    @if isCoasting[player]
+        @define Boolean grounded = onGround[player]
+        @define Double speedSq = velX[player] * velX[player] + velZ[player] * velZ[player]
+        @define Boolean physicsRest = grounded && speedSq < restSpeedSq
+        @define Boolean facingDone = true
+
+        @if hasTargetFacing[player]
+            # Yaw diff wrapped to (-180, 180] so the rotation always takes
+            # the short way around (mirrors clampTurn's convention).
+            @define Double yawDiff = targetYaw[player] - curYawDeg[player]
+            @var yawDiff = ((yawDiff + 180D) % 360D) - 180D
+            @if yawDiff <= -180D
+                @var yawDiff = yawDiff + 360D
+            @fi
+            @define Double pitchDiff = targetPitch[player] - curPitchDeg[player]
+
+            # easeStep applies exponential decay with a min/max floor and
+            # an overshoot guard. See easeStep.msc for the regimes.
+            @var curYawDeg[player] = curYawDeg[player] + mannequin::easeStep(yawDiff)
+            @var curPitchDeg[player] = curPitchDeg[player] + mannequin::easeStep(pitchDiff)
+
+            # Convergence: |yawDiff| <= 1 && |pitchDiff| <= 1. MSC has no
+            # math::abs, so check both signs inline.
+            @define Double absYaw = yawDiff
+            @if absYaw < 0D
+                @var absYaw = 0D - absYaw
+            @fi
+            @define Double absPitch = pitchDiff
+            @if absPitch < 0D
+                @var absPitch = 0D - absPitch
+            @fi
+            @if absYaw > 1D || absPitch > 1D
+                @var facingDone = false
+            @fi
+        @fi
+
+        @if physicsRest && facingDone
+            @var velX[player] = 0D
+            @var velY[player] = 0D
+            @var velZ[player] = 0D
+            # No curY snap — collideY has already placed the mannequin on
+            # whatever surface it actually landed on. groundY is informational
+            # only now; trusting it would teleport off real terrain back to
+            # the spawn Y.
+            # Snap to exact target pose to clear any residual ease error.
+            @if hasTargetFacing[player]
+                @var curYawDeg[player] = targetYaw[player]
+                @var curPitchDeg[player] = targetPitch[player]
+                @var hasTargetFacing[player] = false
+            @fi
+            @var isCoasting[player] = false
+            @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+            @return
+        @fi
+    @fi
+
+    # Yaw tracking: only while cruising. Released-keys player keeps facing
+    # the same direction; coasting preserves curYawDeg.
+    @if isCruising[player]
+        # Desired Minecraft yaw = atan2(-dx, dz), via single-arg arctan.
+        @define Double numer = -dx
+        @define Double desiredYaw = 0D
+        @if dz > 0D
+            @var desiredYaw = math::arctan(numer / dz)
+        @elseif dz < 0D
+            @if numer >= 0D
+                @var desiredYaw = math::arctan(numer / dz) + 180D
+            @else
+                @var desiredYaw = math::arctan(numer / dz) - 180D
+            @fi
+        @else
+            @if numer > 0D
+                @var desiredYaw = 90D
+            @elseif numer < 0D
+                @var desiredYaw = -90D
+            @else
+                @var desiredYaw = curYawDeg[player]
+            @fi
+        @fi
+
+        @var curYawDeg[player] = mannequin::clampTurn(curYawDeg[player], desiredYaw)
+
+        # Cruise pitch ease: a sprinting player tilts their head ~25° down,
+        # not straight forward. easeStep gives the same critically-damped
+        # ramp the coast phase uses, so the head tilts naturally rather
+        # than snapping at the start of a run.
+        @define Double cruisePitchDiff = cruisePitchDeg - curPitchDeg[player]
+        @var curPitchDeg[player] = curPitchDeg[player] + mannequin::easeStep(cruisePitchDiff)
+    @fi
+
+    @define Double hX = -math::sin(curYawDeg[player])
+    @define Double hZ =  math::cos(curYawDeg[player])
+
+    # Capture ground state from PREVIOUS tick's collideY result. Used to
+    # gate accel and the sprint-jump kick — both decisions need to be made
+    # against last-known ground state because this tick's collision hasn't
+    # run yet. Post-collision onGround is read again below for drag.
+    @define Boolean onGroundStart = onGround[player]
+
+    # Sprint input acceleration. MC uses a much smaller value (0.026) in
+    # the air, so velocity decays toward ~0.29 b/t in air rather than
+    # blowing up to 1.4 b/t the way a uniform 0.13 would. Coasting skips
+    # this entirely so drag bleeds velocity off naturally.
+    @if isCruising[player]
+        @if onGroundStart
+            @var velX[player] = velX[player] + sprintAccel * hX
+            @var velZ[player] = velZ[player] + sprintAccel * hZ
+        @else
+            @var velX[player] = velX[player] + sprintAirAccel * hX
+            @var velZ[player] = velZ[player] + sprintAirAccel * hZ
+        @fi
+    @fi
+
+    # Sprint-jump: only while cruising and grounded. Kicks horizontal
+    # velocity by sprintJumpBoost and sets velY = jumpVel. Coasting never
+    # triggers a new jump, so once an in-progress jump completes the
+    # mannequin stays grounded and ground drag rapidly bleeds velocity.
+    # Gated on cruiseTicks >= jumpDelayTicks so the first few ticks of a
+    # fresh cruise look like a stride before takeoff (sprint accel still
+    # applies, only the jump kick is delayed).
+    @if isCruising[player] && onGroundStart && cruiseTicks[player] >= jumpDelayTicks
+        @var velY[player] = jumpVel
+        @var velX[player] = velX[player] + sprintJumpBoost * hX
+        @var velZ[player] = velZ[player] + sprintJumpBoost * hZ
+    @fi
+
+    # === Collision-aware position update ===
+    # Vanilla per-axis sweep order: Y first, then whichever of X/Z has the
+    # larger absolute velocity, then the other. The X/Z dominance flip is
+    # what produces "corners feel different from each side" in MC parkour;
+    # we replicate it for fidelity.
+    #
+    # Each collide* call returns a clamped delta. If the clamp engaged
+    # (delta != requested) we zero that axis's velocity to match vanilla
+    # (sliding along walls, landing flat, head-bonk on ceiling).
+    #
+    # collideY also updates onGround[player] as a side effect; X and Z
+    # don't touch it.
+
+    @define Double dy = mannequin::collideY(player, velY[player])
+    @define Double dyOriginal = velY[player]
+    @var curY[player] = curY[player] + dy
+    @if dy != dyOriginal
+        @var velY[player] = 0D
+    @fi
+
+    @define Double absVx = velX[player]
+    @if absVx < 0D
+        @var absVx = 0D - absVx
+    @fi
+    @define Double absVz = velZ[player]
+    @if absVz < 0D
+        @var absVz = 0D - absVz
+    @fi
+
+    @if absVz > absVx
+        # Y-X-Z order
+        @define Double dxA = mannequin::collideX(player, velX[player])
+        @define Double dxAOrig = velX[player]
+        @var curX[player] = curX[player] + dxA
+        @if dxA != dxAOrig
+            @var velX[player] = 0D
+        @fi
+        @define Double dzA = mannequin::collideZ(player, velZ[player])
+        @define Double dzAOrig = velZ[player]
+        @var curZ[player] = curZ[player] + dzA
+        @if dzA != dzAOrig
+            @var velZ[player] = 0D
+        @fi
+    @else
+        # Y-Z-X order
+        @define Double dzB = mannequin::collideZ(player, velZ[player])
+        @define Double dzBOrig = velZ[player]
+        @var curZ[player] = curZ[player] + dzB
+        @if dzB != dzBOrig
+            @var velZ[player] = 0D
+        @fi
+        @define Double dxB = mannequin::collideX(player, velX[player])
+        @define Double dxBOrig = velX[player]
+        @var curX[player] = curX[player] + dxB
+        @if dxB != dxBOrig
+            @var velX[player] = 0D
+        @fi
+    @fi
+
+    # Horizontal drag uses START-OF-TICK onGround (captured into onGroundStart
+    # above), NOT the post-collision flag. This matches vanilla MC's
+    # LivingEntity.travel() which captures frictionFactor BEFORE move() runs
+    # and applies that captured factor as post-move drag. Critically, on the
+    # jump tick we WERE grounded at start (that's what allowed the jump),
+    # so we apply groundDrag — the heavy ×0.546 bleed that's responsible
+    # for sprint-jump's ~0.357 b/t terminal. Reading onGround[player] here
+    # would give airDrag on every jump tick (post-collision: just left
+    # ground), preserving way too much velocity per cycle and accelerating
+    # the mannequin past realistic speed.
+    @if onGroundStart
+        @var velX[player] = velX[player] * groundDrag
+        @var velZ[player] = velZ[player] * groundDrag
+    @else
+        @var velX[player] = velX[player] * airDrag
+        @var velZ[player] = velZ[player] * airDrag
+    @fi
+
+    # Vertical gravity + drag.
+    @var velY[player] = (velY[player] - gravity) * airDragVertical
+
+    # Sprint dust: vanilla emits every tick the sprint flag is on, with
+    # no walkDist gate. isCruising is our equivalent (coasting = sprint
+    # key released). emitSprintParticle itself skips when the block under
+    # the feet is air, so mid sprint-jump arc the dust correctly stops
+    # without a separate onGround check here.
+    @if isCruising[player]
+        @var mannequin::emitSprintParticle(player)
+    @fi
+
+    @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+
+    @delay 1
+
+@done

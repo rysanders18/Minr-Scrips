@@ -1,0 +1,47 @@
+# Int[] genRookMoves(Player player, Int sq)
+# Returns the pseudo-legal rook moves for the piece at sq. Rays are
+# cast in 4 orthogonal directions, walking outward until the ray hits
+# the board edge, an own piece (block, no move), or an enemy piece
+# (capture and stop). MSC has no `break`, so an explicit continueRay
+# flag is used to abandon the rest of a ray once it terminates.
+# Reused by genQueenMoves.
+
+@using rychess
+@fast
+
+@define Int[] moves = Int[]
+@define Int piece = board[player][sq]
+@define Int myColor = pieceColor(piece)
+@define Int srcFile = sq % 8
+@define Int srcRank = sq / 8
+
+@define Int[] dx = Int[0, 1, 0, -1]
+@define Int[] dy = Int[1, 0, -1, 0]
+
+@for Int dir in list::range(0, 4)
+    @define Int curFile = srcFile
+    @define Int curRank = srcRank
+    @define Int continueRay = 1
+    @for Int step in list::range(0, 7)
+        @if continueRay == 1
+            @var curFile = curFile + dx[dir]
+            @var curRank = curRank + dy[dir]
+            @if curFile < 0 || curFile > 7 || curRank < 0 || curRank > 7
+                @var continueRay = 0
+            @else
+                @define Int target = curRank * 8 + curFile
+                @define Int targetPiece = board[player][target]
+                @if targetPiece == 0
+                    @var moves.append(moveEncode(sq, target, 0, 0))
+                @else
+                    @var continueRay = 0
+                    @if pieceColor(targetPiece) != myColor
+                        @var moves.append(moveEncode(sq, target, 0, 1))
+                    @fi
+                @fi
+            @fi
+        @fi
+    @done
+@done
+
+@return moves

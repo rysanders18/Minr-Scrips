@@ -1,0 +1,38 @@
+# Int parseMove(Player player, String moveStr)
+# Parses a coordinate-notation move string ("e2e4") and finds the
+# matching move in the current legal-move list. Returns the
+# encoded move Int (with correct flags), or 0 if the input is
+# malformed or not legal at this position.
+# Castling is just "e1g1" / "e1c1" / "e8g8" / "e8c8" - the legal-
+# moves list contains the castling move with matching from/to
+# and the proper flag.
+# Promotion is automatic (always to queen) so the input is always
+# exactly 4 characters - the legal-move list already carries the
+# promo flag on back-rank-landing pawn moves, and from/to are
+# enough to identify the move uniquely.
+
+@using rychess
+@fast
+
+@if moveStr.length() != 4
+    @return 0
+@fi
+
+@define String fromStr = moveStr.substring(0, 2)
+@define String toStr = moveStr.substring(2, 4)
+@define Int fromSq = squareIndex(fromStr)
+@define Int toSq = squareIndex(toStr)
+
+@if fromSq < 0 || toSq < 0
+    @return 0
+@fi
+
+@define Int[] legal = genLegalMoves(player)
+@for Int i in list::range(0, legal.length())
+    @define Int m = legal[i]
+    @if moveFrom(m) == fromSq && moveTo(m) == toSq
+        @return m
+    @fi
+@done
+
+@return 0

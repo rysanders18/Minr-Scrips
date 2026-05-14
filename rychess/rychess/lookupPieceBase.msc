@@ -1,0 +1,79 @@
+# Float[] lookupPieceBase(Int pieceCode)
+# Returns the per-entity base (m03, m13, m23) translation triples for a
+# piece. The 32 piece*Base arrays are namespace constants extracted from
+# __init__.msc. They cannot be looked up dynamically by computed name in
+# MSC, so this dispatches with an explicit @if chain - one case per piece
+# identity (00..07, 10..17, 20..27, 30..37).
+# Returns an empty Float[] if pieceCode is unrecognized; callers should
+# check base.length() == 0 if they need to handle that case.
+
+@using rychess
+@fast
+
+@if pieceCode == 0
+    @return piece00Base
+@elseif pieceCode == 1
+    @return piece01Base
+@elseif pieceCode == 2
+    @return piece02Base
+@elseif pieceCode == 3
+    @return piece03Base
+@elseif pieceCode == 4
+    @return piece04Base
+@elseif pieceCode == 5
+    @return piece05Base
+@elseif pieceCode == 6
+    @return piece06Base
+@elseif pieceCode == 7
+    @return piece07Base
+@elseif pieceCode == 10
+    @return piece10Base
+@elseif pieceCode == 11
+    @return piece11Base
+@elseif pieceCode == 12
+    @return piece12Base
+@elseif pieceCode == 13
+    @return piece13Base
+@elseif pieceCode == 14
+    @return piece14Base
+@elseif pieceCode == 15
+    @return piece15Base
+@elseif pieceCode == 16
+    @return piece16Base
+@elseif pieceCode == 17
+    @return piece17Base
+@elseif pieceCode == 20
+    @return piece20Base
+@elseif pieceCode == 21
+    @return piece21Base
+@elseif pieceCode == 22
+    @return piece22Base
+@elseif pieceCode == 23
+    @return piece23Base
+@elseif pieceCode == 24
+    @return piece24Base
+@elseif pieceCode == 25
+    @return piece25Base
+@elseif pieceCode == 26
+    @return piece26Base
+@elseif pieceCode == 27
+    @return piece27Base
+@elseif pieceCode == 30
+    @return piece30Base
+@elseif pieceCode == 31
+    @return piece31Base
+@elseif pieceCode == 32
+    @return piece32Base
+@elseif pieceCode == 33
+    @return piece33Base
+@elseif pieceCode == 34
+    @return piece34Base
+@elseif pieceCode == 35
+    @return piece35Base
+@elseif pieceCode == 36
+    @return piece36Base
+@elseif pieceCode == 37
+    @return piece37Base
+@fi
+
+@return Float[]

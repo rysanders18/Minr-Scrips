@@ -1,0 +1,19 @@
+# portal2
+
+@using Harha
+@fast
+
+@if player.getGameMode() == "ADVENTURE"
+    @var player.teleport(Position(-9042.5, 91.0, 9674.5, -180.0, 10.0, "Theta"))
+    @bypass /effect clear @s
+    @var blockSelection[player] = blockSelectionStored[player]
+    @var ensureBlockSelection(60, player)
+    @var resetBlocks(player, 64)
+    
+    @delay 10
+    
+    @bypass /playsound minecraft:entity.creaking.death master @s ~ ~ ~ 0.75 0
+    @bypass /playsound minecraft:item.totem.use master @s ~ ~ ~ 0.75 {{math::random(1.1D, 1.4D)}}
+    @bypass /particle minecraft:trial_spawner_detection_ominous -9042.5 91.5 9674.5  0 0 0 00.25 50
+    @bypass /particle minecraft:trial_spawner_detection -9042.5 91.5 9674.5  0 0 0 00.25 50
+@fi

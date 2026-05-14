@@ -1,0 +1,12 @@
+# teleportMannequin(Player player, Double x, Double z)
+# Teleports the mannequin entity to absolute world (x, curY, z) using
+# the current yaw and pitch from per-player state. The mannequin is a
+# regular server-side entity, so /tp is the right tool here - we are
+# NOT writing transformation.translation (that's display-entity-only).
+# Smoothness comes from the 20 Hz teleport rate plus the server/client
+# interpolation of standard entity moves.
+
+@using mannequin
+@fast
+
+@bypass /minecraft:tp @e[tag=mannequin_{{player.getUniqueId()}},limit=1] {{x}} {{curY[player]}} {{z}} {{curYawDeg[player]}} {{curPitchDeg[player]}}

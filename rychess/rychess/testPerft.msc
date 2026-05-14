@@ -1,0 +1,37 @@
+# testPerft(Player player)
+# Phase 4 gate test: runs perft from the starting position at depths
+# 1..3 and compares against the canonical published values. Depth 3
+# (~9 seconds) is the safe upper bound under MSC's tick-thread model
+# - depth 4 (~3 minutes) blocks the server main thread and freezes
+# all other players. Do NOT add depth 4 here without first
+# converting perft into an incremental state machine that yields
+# with @delay between batches.
+# Depth 3 from the starting position already exercises move gen,
+# captures, and the legality filter; perft 1+2+3 matching is a
+# strong correctness signal even though ep, castling, and promotion
+# don't show up until depth 5+.
+
+@using rychess
+@fast
+
+@player &6=== Phase 4: Perft Test ===
+
+@var newGame(player)
+@define Long t1 = system::currentTimeMillis()
+@define Int p1 = perft(player, 1)
+@define Long e1 = system::currentTimeMillis() - t1
+@player &eDepth 1: {{p1}} &7(expected 20) &8[{{e1}}ms]
+
+@var newGame(player)
+@define Long t2 = system::currentTimeMillis()
+@define Int p2 = perft(player, 2)
+@define Long e2 = system::currentTimeMillis() - t2
+@player &eDepth 2: {{p2}} &7(expected 400) &8[{{e2}}ms]
+
+@var newGame(player)
+@define Long t3 = system::currentTimeMillis()
+@define Int p3 = perft(player, 3)
+@define Long e3 = system::currentTimeMillis() - t3
+@player &eDepth 3: {{p3}} &7(expected 8902) &8[{{e3}}ms]
+
+@player &6=== Done ===

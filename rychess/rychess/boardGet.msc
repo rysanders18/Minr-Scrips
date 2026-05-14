@@ -1,0 +1,7 @@
+# Int boardGet(Player player, Int sq)
+# Returns the piece code at square sq (0..63) on the player's board.
+
+@using rychess
+@fast
+
+@return board[player][sq]

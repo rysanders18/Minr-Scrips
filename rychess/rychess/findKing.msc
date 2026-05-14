@@ -1,0 +1,19 @@
+# Int findKing(Player player, Int color)
+# Returns the square (0..63) of the king of the given color, or -1
+# if not found. Linear scan since MSC has no constant-time lookup.
+
+@using rychess
+@fast
+
+@define Int kingCode = 6
+@if color == 1
+    @var kingCode = 12
+@fi
+
+@for Int sq in list::range(0, 64)
+    @if board[player][sq] == kingCode
+        @return sq
+    @fi
+@done
+
+@return -1

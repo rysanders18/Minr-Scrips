@@ -1,0 +1,30 @@
+# recolorPiece(Int pieceCode, String blockName)
+# Changes the block_state.Name of every block_display entity in a piece.
+# Used by the promotion flow: when a pawn reaches the back rank, the
+# engine swaps it to a queen on the board and we recolor its entities
+# from white_concrete_powder to light_blue_concrete_powder so the
+# player can tell at a glance.
+#
+# Iterates the same way applyTransform does: the per-entity tag is
+# rychess<tagRank><tagFile><NN>, and the entity count comes from
+# lookupPieceBase(pieceCode).length() / 3 (the per-piece base-translation
+# table is the source of truth for how many entities make up a piece).
+#
+# blockName must be a fully-qualified Minecraft block id, e.g.
+# "minecraft:light_blue_concrete_powder". Uses /data modify on the
+# block_state.Name path so other fields of block_state (Properties,
+# if any) are preserved - same surgical-edit reasoning as the
+# transformation.translation path in applyTransform.
+
+@using rychess
+@fast
+
+@define Int tagRank = pieceCode / 10
+@define Int tagFile = pieceCode % 10
+
+@define Float[] base = lookupPieceBase(pieceCode)
+@define Int numEntities = base.length() / 3
+
+@for Int i in list::range(0, numEntities)
+    @bypass /data modify entity @e[limit=1,tag=rychess{{tagRank}}{{tagFile}}{{i / 10}}{{i % 10}}] block_state.Name set value "{{blockName}}"
+@done

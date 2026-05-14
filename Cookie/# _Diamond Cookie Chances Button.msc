@@ -1,0 +1,44 @@
+# Diamond Cookie Chances Button
+@fast
+@using cookie
+
+# @define Int[] diamondPrices = Int[1000, 2000, 4000, 20000, 80000, 250000, 450000, 900000, 1600000, 3000000, 5000000, 7500000, 10000000]
+# @define Int[] diamondChances = Int[100, 75, 50, 40, 32, 25, 20, 15, 10, 7, 5, 4, 3]
+
+@if diamondCookieChanceStage[player] >= diamondChances.length()
+    @player &#d4d4d4--------------------------------------
+    @player &cYou have reached the maximum upgrade for this button!
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @return
+@fi
+
+@if cookieCount[player] < diamondPrices[diamondCookieChanceStage[player]]
+    @player &#d4d4d4--------------------------------------
+    @player &b&lDiamond Cookie Chances Button&#d4d4d4
+    @player &#d4d4d4● Current Portion of Golden Cookies: &b1/{{Int(diamondCookieChance[player])}}
+    @player &#d4d4d4● Next Upgrade: &b1/{{diamondChances[diamondCookieChanceStage[player]]}}
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l{{Harha::formatNumber(String(diamondPrices[diamondCookieChanceStage[player]]))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(diamondPrices[diamondCookieChanceStage[player]] - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &b&lDiamond Cookie Chances Button&#d4d4d4
+    @player &#d4d4d4● New Upgrade: &b1/{{diamondCookieChance[player]}} → 1/{{diamondChances[diamondCookieChanceStage[player]]}}
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(diamondPrices[diamondCookieChanceStage[player]])))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var diamondCookieChance[player] = diamondChances[diamondCookieChanceStage[player]]
+    @var cookieCount[player] -= Long(diamondPrices[diamondCookieChanceStage[player]])
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(diamondPrices[diamondCookieChanceStage[player]])
+    @done
+    @var diamondCookieChanceStage[player] += 1
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

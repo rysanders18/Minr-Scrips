@@ -1,0 +1,12 @@
+# Boolean isCheckmate(Player player)
+# True iff the side-to-move has no legal moves AND is currently
+# in check. Used by the game-over checker after each move.
+
+@using rychess
+@fast
+
+@define Int[] moves = genLegalMoves(player)
+@if moves.length() == 0 && inCheck(player)
+    @return true
+@fi
+@return false

@@ -1,0 +1,33 @@
+# ----------------------------------------------
+# spline::catmull(p0,p1,p2,p3,t)  (Catmull-Rom)
+# ----------------------------------------------
+@define Double[] a0 = spline::vecToXYZ(p0)
+@define Double[] a1 = spline::vecToXYZ(p1)
+@define Double[] a2 = spline::vecToXYZ(p2)
+@define Double[] a3 = spline::vecToXYZ(p3)
+
+@define Double t2 = t * t
+@define Double t3 = t2 * t
+
+@define Double x0 = a0[0]
+@define Double y0 = a0[1]
+@define Double z0 = a0[2]
+
+@define Double x1 = a1[0]
+@define Double y1 = a1[1]
+@define Double z1 = a1[2]
+
+@define Double x2 = a2[0]
+@define Double y2 = a2[1]
+@define Double z2 = a2[2]
+
+@define Double x3 = a3[0]
+@define Double y3 = a3[1]
+@define Double z3 = a3[2]
+
+@define Double hx = 0.5D * ((2D * x1) + (-x0 + x2) * t + (2D * x0 - 5D * x1 + 4D * x2 - x3) * t2 + (-x0 + 3D * x1 - 3D * x2 + x3) * t3)
+
+@define Double hy = 0.5D * ((2D * y1) + (-y0 + y2) * t + (2D * y0 - 5D * y1 + 4D * y2 - y3) * t2 + (-y0 + 3D * y1 - 3D * y2 + y3) * t3)
+@define Double hz = 0.5D * ((2D * z1) + (-z0 + z2) * t + (2D * z0 - 5D * z1 + 4D * z2 - z3) * t2 + (-z0 + 3D * z1 - 3D * z2 + z3) * t3)
+
+@return Vector3(hx, hy, hz)

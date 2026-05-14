@@ -1,0 +1,25 @@
+# Int evaluate(Player player)
+# Static evaluation in centipawns from the side-to-move's perspective.
+# This is now O(1): we just return the incrementally-maintained
+# runningScore (material + PST from white's POV) with a sign flip
+# when black is to move. runningScore is seeded in boardStartPos
+# and updated in makeMove/unmakeMove via pieceContrib() deltas.
+# The 64-square sweep that used to live here has been replaced by
+# this single read; that's the bulk of the eval-cost win.
+# VARIANT BONUS (lateral mobility): dropped from this version. The
+# old eval gave +3 cp per empty file-adjacent square to encourage
+# keeping pawns where they could move sideways, but tracking that
+# incrementally requires watching neighbor transitions on every
+# makeMove. The variant move rules themselves are unchanged - this
+# is a heuristic-only loss, max ~96 cp swing across all 16 pawns.
+
+@using rychess
+@fast
+
+@var profEvaluate[player] = profEvaluate[player] + 1
+
+@define Int score = runningScore[player]
+@if sideToMove[player] == 1
+    @var score = -score
+@fi
+@return score

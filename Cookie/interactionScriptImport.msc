@@ -1,0 +1,126 @@
+# room 0
+# cookie
+
+# buttons
+@for Int i in list::range(0, 5)
+     @bypass /s i i {{-9153 - (20 * i)}} 102 9302 Theta https://paste.minr.org/ezukobasug
+     @bypass /s i i {{-9153 - (20 * i)}} 101 9302 Theta https://paste.minr.org/nuhaxinodu
+     @bypass /s i i {{-9153 - (20 * i)}} 100 9302 Theta https://paste.minr.org/ikuzisesow
+     @bypass /s i i {{-9153 - (20 * i)}} 99 9302 Theta https://paste.minr.org/otohitinij
+     @bypass /s i i {{-9147 - (20 * i)}} 102 9302 Theta https://paste.minr.org/ivezaxaqip
+     @bypass /s i i {{-9147 - (20 * i)}} 101 9302 Theta https://paste.minr.org/urexibuhep
+     @bypass /s i i {{-9147 - (20 * i)}} 100 9302 Theta https://paste.minr.org/icifidisej
+     @bypass /s i i {{-9147 - (20 * i)}} 99 9302 Theta https://paste.minr.org/xozihagasu
+
+#     @bypass /s i w {{-9149 - (20 * i)}} 98 9317 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i w {{-9150 - (20 * i)}} 98 9317 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i w {{-9151 - (20 * i)}} 98 9317 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i w {{-9149 - (20 * i)}} 98 9318 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i w {{-9150 - (20 * i)}} 98 9318 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i w {{-9151 - (20 * i)}} 98 9318 Theta https://paste.minr.org/wacecirebu
+#     @bypass /s i i {{-9150 - (20 * i)}} 103 9316 Theta https://paste.minr.org/wacecirebu
+#     @bypass /summon text_display {{-9141.05 - (20 * i)}} 99.85 9306.5 {line_width:500,default_background:0b,shadow:1b,alignment:"left",Rotation:[90F,0F],Tags:["cookieClickerFAQ"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0.0f,0f,0f],scale:[0.6f,0.6f,0.8f]},text:[{"bold":true,"color":"#FFA53D","text":"   H"},{"color":"#FFA43F","text":"e"},{"color":"#FFA341","text":"l"},{"color":"#FEA343","text":"p"},{"color":"#FEA246","text":"f"},{"color":"#FEA148","text":"u"},{"color":"#FEA04A","text":"l "},{"color":"#FE9F4C","text":"I"},{"color":"#FD9E4E","text":"n"},{"color":"#FD9E50","text":"f"},{"color":"#FD9D52","text":"o"},{"color":"#FD9C54","text":"r"},{"color":"#FD9B57","text":"m"},{"color":"#FC9A59","text":"a"},{"color":"#FC995B","text":"t"},{"color":"#FC995D","text":"i"},{"color":"#FC985F","text":"o"},{"color":"#FB9761","text":"n "},{"color":"#FB9663","text":"B"},{"color":"#FB9565","text":"e"},{"color":"#FB9468","text":"l"},{"color":"#FB946A","text":"o"},{"color":"#FA936C","text":"w"},{"color":"#FA9170","text":"!"},{"bold":true,"color":"#D4D4D4","text":"\n\n"},{"bold":true,"color":"#FFD125","text":"Golden Cookies:                                                                               "},{"bold":false,"color":"#D4D4D4","text":" \n● When Golden Cookies try to spawn,\n  they check a random spot, and if\n  that spot is taken, it won't spawn.\n\n● Golden Cookies are worth 20x\n"},{"bold":true,"color":"#37FFE7","text":"\nDiamond Cookies:"},{"bold":false,"color":"#D4D4D4","text":"\n● Every time a Golden Cookie spawns,\n  it has a chance to spawn as a\n  Diamond Cookie instead.\n\n● Diamond Cookies are worth 200x\n\n"},{"bold":true,"color":"#F5F5ED","text":"Milk Ability:"},{"bold":false,"color":"#D4D4D4","text":" \n● When Milk is activated, ALL COOKIE\n  SOURCES are multiplied by your\n  Milk Multiplier.\n\n● Milk Cooldown is 45 seconds."}],background:16711680}
+@done
+
+
+# room 0-4 cookie
+# @bypass /s i e 0c1818f7-41d8-4a25-a786-193f5f0a2c03 https://paste.minr.org/ihapaninoq
+# @bypass /s i e 77694c0a-96a4-48cb-890f-81f21e46ef51 https://paste.minr.org/atewotidof
+# @bypass /s i e 7693170d-3686-4842-ab70-1a1836a14387 https://paste.minr.org/toxepetocu
+# @bypass /s i e 9ab412c3-637f-4792-9730-7260abb4b54b https://paste.minr.org/wocipumogu
+# @bypass /s i e eb1803a1-e86e-4c98-9cda-c3c6f9c889b8 https://paste.minr.org/emebiwiwac
+
+
+# room 0-4 milk (the same script)
+# @bypass /s i e 51eeb694-a31b-444e-aeb7-3bc17a1c78ca https://paste.minr.org/utagorokir
+# @bypass /s i e cc0556f5-707b-49a4-812c-158be753b773 https://paste.minr.org/utagorokir
+# @bypass /s i e 2a384a15-15e8-4163-9337-c3af8cbe501e https://paste.minr.org/utagorokir
+# @bypass /s i e 7fc7ec7d-d7f5-4c67-ac2e-6854b4e4649f https://paste.minr.org/utagorokir
+# @bypass /s i e bd2e9766-336b-4197-b9c2-5fb832950427 https://paste.minr.org/utagorokir
+
+# room 0 interaction scripts 
+# @bypass /s i e d4f57b18-684a-402a-abd5-cc010cd198f8 https://paste.minr.org/axesilolak
+# @bypass /s i e 0bdbcbd2-8806-4add-b0cb-fcb389cb747d https://paste.minr.org/orarupotew
+# @bypass /s i e 617ecaab-0bcd-419b-897f-e93e59298b72 https://paste.minr.org/arinurakuf
+# @bypass /s i e dcd22868-84b7-4616-860a-3dced09c1f6f https://paste.minr.org/efetetosab
+# @bypass /s i e 47675f14-fd03-43aa-9a9b-4efd1760fe44 https://paste.minr.org/fowokobowa
+# @bypass /s i e b8368ac4-0534-4d83-aafc-9f88378e59a9 https://paste.minr.org/wotizuwaci
+# @bypass /s i e 183e0df2-21c2-425c-ac25-86e945f25d1a https://paste.minr.org/aciboxorid
+# @bypass /s i e 2e0cbd2d-f41a-48c0-aa5f-2c9df81ee357 https://paste.minr.org/wezosubeho
+
+# @bypass /s i e 75e31603-ed4d-490b-9fc9-e105395278d9 https://paste.minr.org/ibuhaqomom
+# @bypass /s i e 4527e220-0177-4ba1-877b-e81f4e2c0d20 https://paste.minr.org/qevezepoyi
+# @bypass /s i e 839b0b70-d802-470f-aea4-6916a6b44755 https://paste.minr.org/ovagoxugij
+# @bypass /s i e e11d0df1-74f7-4b1e-b9fc-051239805a80 https://paste.minr.org/hezizitaqi
+# @bypass /s i e 8a01051d-9af4-4682-8659-ff9fdac11fd7 https://paste.minr.org/nadoriyiqo
+# @bypass /s i e fabcdb93-cb80-4114-aa7a-cbe6196470da https://paste.minr.org/qoyebaliyi
+
+# @bypass /s i e 28fe3517-d171-4899-bd82-409f7fc6a91a https://paste.minr.org/retacajayo
+# @bypass /s i e 872b6c0b-b6de-41da-b86f-596a7945b41f https://paste.minr.org/diyufamote
+# @bypass /s i e 5b7a3c15-cf87-49cc-bda1-e51d4151409f https://paste.minr.org/udaxurimap
+# @bypass /s i e 30d63e6b-f462-45e9-bb38-b63d1c2cb5af https://paste.minr.org/zatageposu
+# @bypass /s i e dc50037b-b4b8-40e8-a175-fe0fd1d8e50c https://paste.minr.org/iwehexoqef
+# @bypass /s i e a09178fb-19a8-4105-a684-fc3ba240fb1a https://paste.minr.org/cimuhakixo
+# @bypass /s i e 0afd0fff-f434-445f-8e4b-c063d31e399d https://paste.minr.org/ogayoyukuk
+# @bypass /s i e 16b483c5-56f2-4555-ab64-93be3bcc66d2 https://paste.minr.org/dasosupuli
+
+# @bypass /s i e 8ac67103-1eb3-4162-9f2b-b722128c260a https://paste.minr.org/idosigifib
+# @bypass /s i e 6b9fc95d-17aa-48c5-823b-0494dce47ccc https://paste.minr.org/eworegofuv
+# @bypass /s i e 5182995e-e560-4cd6-96a0-94299aca78b8 https://paste.minr.org/otecojiwap
+# @bypass /s i e e32e45e2-d5f3-493d-a9c7-fa5a47234731 https://paste.minr.org/tijawitiza
+# @bypass /s i e 40f45bce-6dce-40f4-bca8-c5761aad6548 https://paste.minr.org/enegewayiz
+# @bypass /s i e 721ae4e2-00a3-4179-87d3-c4cb8b139eb9 https://paste.minr.org/nigexubiyo
+
+
+# @bypass /s i e 35b70d5d-b7f4-488e-9b0c-2b99da9f4dc2 https://paste.minr.org/nopowacino
+# @bypass /s i e 7ac1d9bc-8a06-4eac-be26-bedf67f4be62 https://paste.minr.org/ucozecelav
+# @bypass /s i e ed0946b0-329c-492b-8e63-8217ae5fc784 https://paste.minr.org/qewubitosi
+# @bypass /s i e 6b05dbc4-b596-4021-bece-5722899156ec https://paste.minr.org/acibimizuy
+# @bypass /s i e dc9c9673-4c3e-4a88-b4b7-f1065c3b9ea1 https://paste.minr.org/acutolefov
+# @bypass /s i e 252d2585-317c-4735-8a87-855a9d94e6a0 https://paste.minr.org/yavofajaxa
+# @bypass /s i e 866c8b48-829e-4f8e-a192-62a52607f88e https://paste.minr.org/wanovitilu
+# @bypass /s i e a62f61c5-f642-4fb1-a0ad-a2d320e2ee83 https://paste.minr.org/ibovukuhof
+
+# @bypass /s i e ff6804bc-544d-40e4-ae57-e753443801dc https://paste.minr.org/dakiveyuqi
+# @bypass /s i e e1422465-ec9c-4b26-97ec-2282ae600c73 https://paste.minr.org/okoyeqaxiq
+# @bypass /s i e 75560749-6a9e-47ea-aea6-925e439dfddd https://paste.minr.org/iqucumupey
+# @bypass /s i e 2b2541a3-5816-406e-b32c-c46311143a98 https://paste.minr.org/iwocemeziz
+# @bypass /s i e 843fa451-d8eb-4afd-8f3d-59899ac552b3 https://paste.minr.org/woyiricexo
+# @bypass /s i e 4522a587-e7c2-4e21-901d-a5685b9d42b7 https://paste.minr.org/awamecolik
+
+
+# @bypass /s i e 1ad584a5-47ab-4ccd-be28-15556e8a1cd7 https://paste.minr.org/duzibesezu
+# @bypass /s i e 11c5f507-8076-43f0-96de-fa6f9dee22f3 https://paste.minr.org/acuvatokes
+# @bypass /s i e 915f25b3-c3bf-40ee-9d59-06b8ca70145e https://paste.minr.org/ovonetezuy
+# @bypass /s i e e71b6dbb-700b-4934-9cab-0072f0901ef0 https://paste.minr.org/zihiboselu
+# @bypass /s i e ece6d925-d0fc-4585-b89d-6f153331563a https://paste.minr.org/ililonoteb
+# @bypass /s i e abda664f-033a-4f7d-83b7-cdc4a0e922ce https://paste.minr.org/oqegupujiy
+# @bypass /s i e 83c532ec-9b7d-4eea-a1ae-bca762c2a2bd https://paste.minr.org/imecozapim
+# @bypass /s i e 1daa1de5-c70a-45fe-87c2-b9ae3be0af87 https://paste.minr.org/inewajoguf
+
+# @bypass /s i e 007dd642-7328-4c98-ad30-5889348052bb https://paste.minr.org/olutugumug
+# @bypass /s i e 276ca813-1fe4-4405-8eea-2ab77c0fae97 https://paste.minr.org/udukumosoz
+# @bypass /s i e 1a852d97-078e-4718-9532-f6554b3e3c40 https://paste.minr.org/iditabudox
+# @bypass /s i e 1cdec963-a78f-4583-9fd6-53344148b736 https://paste.minr.org/ugoyofucif
+# @bypass /s i e 01f7a25b-b7f5-4be8-8384-0fa07cf6403a https://paste.minr.org/asuqibubik
+# @bypass /s i e 938330f2-76e5-40b1-9fb0-093e37f7b009 https://paste.minr.org/ezepuwenaj
+
+
+# @bypass /s i e 427c5004-ce30-4a0f-a32f-2d3ab1af2963 https://paste.minr.org/sunacalaqu
+# @bypass /s i e 2bddf848-667a-4641-af5c-e7822c2cd397 https://paste.minr.org/owikirigom
+# @bypass /s i e a661c766-f29b-47ec-8c9c-77bfeaa4e016 https://paste.minr.org/pisegihoyi
+# @bypass /s i e dae31235-6926-48a6-9a91-0fb21dbb8618 https://paste.minr.org/ubatigikeg
+# @bypass /s i e 02ddc3d4-c184-4cc2-a384-195f08c9422d https://paste.minr.org/apudayibad
+# @bypass /s i e 1f80a2c0-563a-4328-9f14-dbc65ca33e68 https://paste.minr.org/zaluyujoko
+# @bypass /s i e f38794c1-6453-4926-8799-9579e7292bed https://paste.minr.org/gapebosidi
+# @bypass /s i e 9c4feb6b-f62f-4d2a-9b51-1d39adba45dd https://paste.minr.org/ubimoxofaz
+
+# @bypass /s i e f213bf32-bc44-4662-b2a6-52fd557fda14 https://paste.minr.org/agosaletoc
+# @bypass /s i e cb61db3d-d43e-4b7f-8592-f35efdecfe60 https://paste.minr.org/agawupaqen
+# @bypass /s i e bd6ac374-12c6-4743-a04b-d9b7411e0434 https://paste.minr.org/tayulawuzi
+# @bypass /s i e 7e47d336-23f4-4f30-8f19-ba4f20ee17ee https://paste.minr.org/edelosagin
+# @bypass /s i e dbbed9c8-e5ec-46ac-8803-013e54c46477 https://paste.minr.org/ivifewokow
+# @bypass /s i e 0f17c705-10d1-4339-9303-02a24014d226 https://paste.minr.org/gibuguqedi
+
+
+@bypass s r i {{block.getX()}} {{block.getY()}} {{block.getZ()}} {{block.getWorld()}}

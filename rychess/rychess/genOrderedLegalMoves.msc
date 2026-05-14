@@ -1,0 +1,111 @@
+# Int[] genOrderedLegalMoves(Player player)
+# Legal moves sorted best-first for search pruning. Two-tier scoring:
+#   - Captures get MVV/LVA scores with a +10000 baseline so they
+#     always sort above quiet moves (victim*100 - attacker, where
+#     pieceValue is the standard {0,100,320,330,500,900,20000} list).
+#   - Quiet moves are scored by the piece-square-table value of the
+#     destination, with the black/white square-flip applied to match
+#     evaluate.msc. This gives "good development" moves (knights to
+#     central squares, bishops to long diagonals) priority over
+#     random pawn shuffles, so a top-K cap actually picks the K
+#     positionally-strongest candidates instead of the K
+#     board-scan-earliest pawn moves.
+# IMPORTANT MSC quirk: `@var localArr[i] = value` is NOT supported
+# for local arrays - that syntax is only valid on per-player
+# relative arrays (board[player][i] etc.). Doing it on a local
+# array corrupts shared MSC state and breaks unrelated code that
+# reads relative arrays later. So we cannot do an in-place sort.
+# Instead we sort by repeatedly finding the next-best entry from
+# the unsorted score array and appending to a result array. Cost
+# is still O(n*n) but uses only `.append()` and indexed reads.
+# Ties are broken by original index, so the sort is stable.
+
+@using rychess
+@fast
+
+@var profGenOrdered[player] = profGenOrdered[player] + 1
+
+# Search uses pseudo-legal moves (skip the king-safety filter).
+# An "illegal" move that leaves our king in check will be punished
+# in the search itself: the opponent's response captures our king,
+# which carries the king's huge material value (20000), so alpha-
+# beta naturally avoids those lines. Mate/stalemate at game-end
+# is still detected by checkGameOver, which goes through the full
+# genLegalMoves path. Stalemate-during-search is misvalued as a
+# king-loss for the stalemated side (a real but rare bug).
+@define Int[] values = Int[0, 100, 320, 330, 500, 900, 20000]
+@define Int[] all = genAllPseudoLegal(player)
+@define Int[] scores = Int[]
+
+@for Int i in list::range(0, all.length())
+    @define Int move = all[i]
+    @define Int fromSq = moveFrom(move)
+    @define Int toSq = moveTo(move)
+    @define Int flags = moveFlags(move)
+    @define Int piece = board[player][fromSq]
+    @define Int type = pieceType(piece)
+    @define Int color = pieceColor(piece)
+    @define Int score = 0
+
+    @if flags == 1 || flags == 3
+        @define Int victim = 1
+        @if flags == 1
+            @var victim = pieceType(board[player][toSq])
+        @fi
+        @var score = 10000 + values[victim] * 100 - values[type]
+    @else
+        @define Int pstSq = toSq
+        @if color == 1
+            @var pstSq = (7 - toSq / 8) * 8 + (toSq % 8)
+        @fi
+        @if type == 1
+            @var score = pawnPST[pstSq]
+        @elseif type == 2
+            @var score = knightPST[pstSq]
+        @elseif type == 3
+            @var score = bishopPST[pstSq]
+        @elseif type == 4
+            @var score = rookPST[pstSq]
+        @elseif type == 5
+            @var score = queenPST[pstSq]
+        @elseif type == 6
+            @var score = kingPST[pstSq]
+        @fi
+    @fi
+
+    @var scores.append(score)
+@done
+
+@define Int n = all.length()
+@define Int[] ordered = Int[]
+@define Int prevScore = 999999999
+@define Int prevIdx = -1
+
+@for Int rank in list::range(0, n)
+    @define Int bestIdx = -1
+    @define Int bestVal = -999999999
+    @for Int j in list::range(0, n)
+        @define Int s = scores[j]
+        @define Int qualifies = 0
+        @if s < prevScore
+            @var qualifies = 1
+        @elseif s == prevScore
+            @if j > prevIdx
+                @var qualifies = 1
+            @fi
+        @fi
+        @if qualifies == 1
+            @if s > bestVal
+                @var bestIdx = j
+                @var bestVal = s
+            @fi
+        @fi
+    @done
+    @if bestIdx >= 0
+        @var ordered.append(all[bestIdx])
+        @var prevScore = bestVal
+        @var prevIdx = bestIdx
+    @fi
+@done
+
+@return ordered

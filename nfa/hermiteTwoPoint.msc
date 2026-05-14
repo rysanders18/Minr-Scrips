@@ -1,0 +1,99 @@
+# Vector3[] hermiteTwoPoint( Vector3 p0, Vector3 p1, Vector3 n0, Vector3 n1, Int steps, Double alpha)
+
+# ------------------------------------------------------------
+# nfa::hermiteTwoPoint(p0,p1,n0,n1,steps,alpha)  (Hermite)
+# ------------------------------------------------------------
+
+@fast
+@using nfa
+
+@if steps < 1
+    @var steps = 1
+@fi
+
+# decent default: tangents are half the endpoint distance
+@if alpha <= 0D
+    @var alpha = 0.5D   
+@fi
+
+@define Double[] p0Arr = nfa::vecToXYZ(p0)
+@define Double[] p1Arr = nfa::vecToXYZ(p1)
+@define Double[] n0Arr = nfa::vecToXYZ(n0)
+@define Double[] n1Arr = nfa::vecToXYZ(n1)
+
+@define Double x0 = p0Arr[0]
+@define Double y0 = p0Arr[1]
+@define Double z0 = p0Arr[2]
+
+@define Double x1 = p1Arr[0]
+@define Double y1 = p1Arr[1]
+@define Double z1 = p1Arr[2]
+
+# Distance len = ||p1 - p0||
+@define Double dx = x1 - x0
+@define Double dy = y1 - y0
+@define Double dz = z1 - z0
+@define Double len  = math::sqrt(dx*dx + dy*dy + dz*dz)
+
+# Normalize n0, n1 (avoid divide-by-zero)
+@define Double n0x = n0Arr[0]
+@define Double n0y = n0Arr[1]
+@define Double n0z = n0Arr[2]
+@define Double n0L = math::sqrt(n0x*n0x + n0y*n0y + n0z*n0z)
+@if n0L == 0D
+    @var n0x = 0D
+    @var n0y = 1D
+    @var n0z = 0D
+    @var n0L = 1D
+@fi
+@var n0x = n0x / n0L
+@var n0y = n0y / n0L
+@var n0z = n0z / n0L
+
+@define Double n1x = n1Arr[0]
+@define Double n1y = n1Arr[1]
+@define Double n1z = n1Arr[2]
+@define Double n1L = math::sqrt(n1x*n1x + n1y*n1y + n1z*n1z)
+@if n1L == 0D
+    @var n1x = 0D
+    @var n1y = 1D
+    @var n1z = 0D
+    @var n1L = 1D
+@fi
+@var n1x = n1x / n1L
+@var n1y = n1y / n1L
+@var n1z = n1z / n1L
+
+# Tangent magnitudes (tune alpha!)
+@define Double s = alpha * len
+
+# Tangents m0, m1
+@define Double m0x = n0x * s
+@define Double m0y = n0y * s
+@define Double m0z = n0z * s
+
+@define Double m1x = n1x * s
+@define Double m1y = n1y * s
+@define Double m1z = n1z * s
+
+@define Vector3[] out = Vector3[]
+
+@for Int k in list::range(0, steps + 1)
+    @define Double t  = Double(k) / Double(steps)
+    @define Double t2 = t * t
+    @define Double t3 = t2 * t
+
+    # Hermite basis
+    @define Double h00 =  2D*t3 - 3D*t2 + 1D
+    @define Double h10 =      t3 - 2D*t2 + t
+    @define Double h01 = -2D*t3 + 3D*t2
+    @define Double h11 =      t3 -     t2
+
+    @define Double x = h00*x0 + h10*m0x + h01*x1 + h11*m1x
+    @define Double y = h00*y0 + h10*m0y + h01*y1 + h11*m1y
+    @define Double z = h00*z0 + h10*m0z + h01*z1 + h11*m1z
+
+    @var out.append(Vector3(x, y, z))
+@done
+
+@return out

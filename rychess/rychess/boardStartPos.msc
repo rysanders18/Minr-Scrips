@@ -1,0 +1,20 @@
+# boardStartPos(Player player)
+# Sets board[player] to the standard chess starting position.
+# Squares: 0=a1, 7=h1, 56=a8, 63=h8 (file = sq % 8, rank = sq / 8).
+# Pieces: 0=empty, 1-6 = white P/N/B/R/Q/K, 7-12 = black P/N/B/R/Q/K.
+# Also seeds runningScore from the freshly-set board so the
+# incremental eval starts from a correct baseline. From a symmetric
+# start position the seed is 0, but we compute it from scratch
+# anyway so this function stays correct if the start position is
+# ever changed (e.g. Chess960 or a custom FEN).
+
+@using rychess
+@fast
+
+@var board[player] = Int[4, 2, 3, 5, 6, 3, 2, 4, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 10, 8, 9, 11, 12, 9, 8, 10]
+
+@define Int total = 0
+@for Int sq in list::range(0, 64)
+    @var total = total + pieceContrib(board[player][sq], sq)
+@done
+@var runningScore[player] = total

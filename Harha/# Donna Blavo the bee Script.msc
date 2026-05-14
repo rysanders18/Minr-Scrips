@@ -1,0 +1,236 @@
+# Donna Blavo the bee Script
+@cooldown 30s
+
+@fast
+@using Harha
+
+@if donnaDone
+
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+
+    @player &#d4d4d4--------------------------------------
+    @player &#FFF59D&lH&#FFF176&lo&#FFEE58&ln&#FFEB3B&le&#FDD835&ly&#FBC02D&lc&#F9A825&lo&#F57F17&lm&#F9A825&lb &#FBC02D&lB&#FDD835&ll&#FFEB3B&lo&#FFEE58&lc&#FFF176&lk&#FFF59D&ls
+    @player
+    @player &#d4d4d4● Glows with the warmth of a thousand hives! &l Credit: BeeKeeperPete
+    @player
+    @player &#d4d4d4● Unlocked through unwavering focus.
+    @player
+    @player &aBlock selected!
+    @player &#d4d4d4--------------------------------------
+
+    @bypass /item replace entity @p armor.chest with golden_chestplate[trim={material:"minecraft:resin",pattern:"minecraft:silence"},custom_name=[{"bold":true,"color":"#FFAD08","italic":true,"text":"D"},{"color":"#FFB108","text":"o"},{"color":"#FEB407","text":"n"},{"color":"#FEB807","text":"n"},{"color":"#FEBC07","text":"a "},{"color":"#FDC006","text":"B"},{"color":"#FDC306","text":"l"},{"color":"#FCC705","text":"a"},{"color":"#FCCB05","text":"v"},{"color":"#FCCF05","text":"o"},{"color":"#FBD204","text":"'"},{"color":"#FBD604","text":"s "},{"color":"#FBDA04","text":"C"},{"color":"#FADD03","text":"h"},{"color":"#FAE103","text":"e"},{"color":"#FAE503","text":"s"},{"color":"#F9E902","text":"t"},{"color":"#F9EC02","text":"p"},{"color":"#F8F001","text":"l"},{"color":"#F8F401","text":"a"},{"color":"#F8F801","text":"t"},{"color":"#F7FF00","text":"e"}],enchantment_glint_override=false,enchantments={"binding_curse":1,"vanishing_curse":1},lore=[{"color":"gray","text":"Earned by completing Donna Blavo's"},{"color":"gray","text":"absurd test of willpower and persistence"}," ",[{"color":"gray","text":"Good job unlocking "},{"bold":true,"color":"#FFAD08","text":"D"},{"bold":true,"color":"#FFB108","text":"o"},{"bold":true,"color":"#FEB407","text":"n"},{"bold":true,"color":"#FEB807","text":"n"},{"bold":true,"color":"#FEBC07","text":"a "},{"bold":true,"color":"#FDC006","text":"B"},{"bold":true,"color":"#FDC306","text":"l"},{"bold":true,"color":"#FCC705","text":"a"},{"bold":true,"color":"#FCCB05","text":"v"},{"bold":true,"color":"#FCCF05","text":"o"},{"bold":true,"color":"#FBD204","text":"'"},{"bold":true,"color":"#FBD604","text":"s "},{"bold":true,"color":"#FBDA04","text":"C"},{"bold":true,"color":"#FADD03","text":"h"},{"bold":true,"color":"#FAE103","text":"e"},{"bold":true,"color":"#FAE503","text":"s"},{"bold":true,"color":"#F9E902","text":"t"},{"bold":true,"color":"#F9EC02","text":"p"},{"bold":true,"color":"#F8F001","text":"l"},{"bold":true,"color":"#F8F401","text":"a"},{"bold":true,"color":"#F8F801","text":"t"},{"bold":true,"color":"#F7FF00","text":"e"}],{"bold":true,"color":"gray","text":"Your determination is commendable."}],tooltip_display={hidden_components:["enchantments","trim"]}] 1
+
+    @var blockSelection[player] = "honeycomb_block"
+    @var blockSelectionStored[player] = "honeycomb_block"
+    @var copperGrate[player] = false
+    @var grateNumber[player] = 0
+    @var woolNumber[player] = 0
+    @var glassNumber[player] = 0
+    @var pumpkinNumber[player] = 0
+    @var lastPumpkinNumber[player] = 0
+    @var spongeNumber[player] = 0
+    @var lastSpongeNumber[player] = 0
+    @var obsidianNumber[player] = 0
+    @var lastObsidianNumber[player] = 0
+    @var oreNumber[player] = 0
+    @var lastOreNumber[player] = 0
+    @var coolGlassNumber[player] = 0
+    @var lastCoolGlassNumber[player] = 0
+    @var coralNumber[player] = 0
+    @var lastCoralNumber[player] = 0
+    @var froglightNumber[player] = 0
+    @var coolGlass = false
+
+    @var cosmeticSwap[player] = true
+    @var cosmeticSwap100[player] = false
+
+    @var resetBlocks(player, 64)
+
+    @return
+@fi
+
+# Hourly cooldown
+@if donnaTalk[player] == true
+    # @player DEBUG: (({{system::currentTimeMillis()}} - {{beecd}}) > 3600000) == {{(system::currentTimeMillis() - beecd)}} < 3600000?
+    @if ((system::currentTimeMillis() - beecd) < 3600000)
+        @player &e&lDonna&e: Bzzz!
+        @bypass /playsound minecraft:entity.bee.loop master @p ~ ~ ~ 10 1.3
+        @delay 3s
+        # @player DEBUG: 3600000 - {{system::currentTimeMillis()}} - {{beecd}}
+        @player &#d4d4d4&o(It will be &l{{timer::formatTime(3600000 - (system::currentTimeMillis() - beecd))}}&#d4d4d4&o before &e&oDonna &#d4d4d4&oreturns to her hive.)
+        @return
+    @fi
+@fi
+
+# Variable sets
+@define String beeprompt
+@define Int beenum = math::floor(math::random(1D,1001D))
+
+# Set beecd
+@var beecd = system::currentTimeMillis()
+
+# First time speaking
+@if !donnaTalk
+    @var donnaTalk = true
+@fi
+
+# Bee Speak
+@bypass /playsound minecraft:entity.bee.loop master @p ~ ~ ~ 10 1.3
+
+@player &e&lDonna&e: Bzzz!
+@delay 3s
+@player &#d4d4d4&oWhat a strange bee... its hum carries the weight of a hundred hives. I wonder if it has much to share.
+@bypass /playsound minecraft:entity.allay.item_thrown master @s ~ ~ ~ 10 0.9
+@delay 3s
+# @fi
+
+# Normal speaking
+@player &6&l&kB &#d4d4d4&lActivating Bee Translation Device . . . &6&l&kB
+
+# Bee Translation Device Effects
+@bypass /particle minecraft:wax_off ~ ~ ~ 1 1 1 2 75 normal
+
+@bypass /playsound minecraft:item.armor.equip_gold master @s ~ ~ ~ 5 1.2
+@bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 5 0.5
+@bypass /playsound minecraft:block.beehive.drip master @s ~ ~ ~ 5 0.8
+@delay 4
+@bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 5 1.0
+@delay 4
+@bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 5 1.5
+@delay 4
+@bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 5 2.0
+
+@bypass /particle minecraft:falling_nectar ~ ~1 ~ 1 1 1 0 75 normal
+
+
+@delay 2s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+
+@player &e&lDonna&e: Bzzz. &#d4d4d4&o(Ah, mia cara! You flutter into my grove with curious intent. I see the dust of far meadows clinging to your boots.)
+@delay 3s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@player &e&lDonna&e: Bzzt? &#d4d4d4&o(I would crown your visit with a gift — a trinket from an old queen — but first, I must be certain your wit is as sharp as my sting.)
+@delay 3s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@player &e&lDonna&e: Bzzz. &#d4d4d4&o(This shall be a riddle of the highest order, bravissimo! A test to separate the bumbling from the brilliant.)
+@delay 3s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@player &e&lDonna&e: Bzzz! &#d4d4d4&o(Take heed! My wings tire swiftly, and the royal jelly that fuels my voice is near spent. Should you fail to correctly answer within &#d4d4d4&o&l20 seconds&#d4d4d4&o, you must wait a full hour before I find my strength again!)
+@delay 4s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@player &e&lDonna&e: Bzzz. &#d4d4d4&o(Basta! No more prelude. I am thinking of a whole number from 1 to 1000!)
+@delay 3s
+
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@player &e&lDonna&e: Bzzz?! &#d4d4d4&l(What number hums within my mind, mia cara?!)
+@player &#d4d4d4[Type your answer in chat]
+
+# Prompt
+@prompt 20s beeprompt Drat, I ran out of time...
+
+# If wrong
+@if beeprompt != String(beenum)
+
+    @player &e&lDonna&e: Bzz..... bzn&e&onnnn..... zzzz...... &l{{beenum}}&e...
+
+    # Sleepy Bee
+    @bypass /playsound minecraft:entity.bee.death master @p ~ ~ ~ 5 0.5
+    @delay 3
+    @bypass /playsound minecraft:entity.fox.sleep master @s ~ ~ ~ 5 0.8
+
+    @delay 2s
+    @player &#d4d4d4&oShe's... drifted off. Tucked her head under her wing. I guess I didn't get it right.
+
+    @return
+@fi
+
+
+# If right
+# Bee Speak
+@bypass /playsound minecraft:item.bottle.fill_dragonbreath master @p ~ ~ ~ 5 2.0
+@delay 2
+@bypass /playsound minecraft:entity.bee.pollinate master @p ~ ~ ~ 5 1.3
+
+@if !donnaDone
+    @player &e&lDonna&e: Bzzz?! &#d4d4d4&o(Mamma mia! You have divined it, mia cara! Bravissimo! Let your inner bee take flight!)
+
+    @player &e&lDonna&e: Bzzz. &#d4d4d4&o(Accept this honeyed comb as a token — may it sweeten your every step.)
+
+    @delay 3s
+
+    @bypass /particle minecraft:falling_nectar ~ ~1 ~ 1 1 1 0 100 normal
+    @bypass /particle minecraft:happy_villager ~ ~1 ~ 1 1 1 0 50 normal
+    @bypass /playsound minecraft:block.beehive.drip master @s ~ ~ ~ 5 1.2
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+
+    @player &#d4d4d4--------------------------------------
+    @player &#FFF59D&lH&#FFF176&lo&#FFEE58&ln&#FFEB3B&le&#FDD835&ly&#FBC02D&lc&#F9A825&lo&#F57F17&lm&#F9A825&lb &#FBC02D&lB&#FDD835&ll&#FFEB3B&lo&#FFEE58&lc&#FFF176&lk&#FFF59D&ls
+    @player
+    @player &#d4d4d4● Glows with the warmth of a thousand hives! &l Credit: BeeKeeperPete
+    @player
+    @player &#d4d4d4● Unlocked through unwavering focus.
+    @player
+    @player &aBlock selected!
+    @player &#d4d4d4--------------------------------------
+
+    @bypass /item replace entity @p armor.chest with golden_chestplate[trim={material:"minecraft:resin",pattern:"minecraft:silence"},custom_name=[{"bold":true,"color":"#FFAD08","italic":true,"text":"D"},{"color":"#FFB108","text":"o"},{"color":"#FEB407","text":"n"},{"color":"#FEB807","text":"n"},{"color":"#FEBC07","text":"a "},{"color":"#FDC006","text":"B"},{"color":"#FDC306","text":"l"},{"color":"#FCC705","text":"a"},{"color":"#FCCB05","text":"v"},{"color":"#FCCF05","text":"o"},{"color":"#FBD204","text":"'"},{"color":"#FBD604","text":"s "},{"color":"#FBDA04","text":"C"},{"color":"#FADD03","text":"h"},{"color":"#FAE103","text":"e"},{"color":"#FAE503","text":"s"},{"color":"#F9E902","text":"t"},{"color":"#F9EC02","text":"p"},{"color":"#F8F001","text":"l"},{"color":"#F8F401","text":"a"},{"color":"#F8F801","text":"t"},{"color":"#F7FF00","text":"e"}],enchantment_glint_override=false,enchantments={"binding_curse":1,"vanishing_curse":1},lore=[{"color":"gray","text":"Earned by completing Donna Blavo's"},{"color":"gray","text":"absurd test of willpower and persistence"}," ",[{"color":"gray","text":"Good job unlocking "},{"bold":true,"color":"#FFAD08","text":"D"},{"bold":true,"color":"#FFB108","text":"o"},{"bold":true,"color":"#FEB407","text":"n"},{"bold":true,"color":"#FEB807","text":"n"},{"bold":true,"color":"#FEBC07","text":"a "},{"bold":true,"color":"#FDC006","text":"B"},{"bold":true,"color":"#FDC306","text":"l"},{"bold":true,"color":"#FCC705","text":"a"},{"bold":true,"color":"#FCCB05","text":"v"},{"bold":true,"color":"#FCCF05","text":"o"},{"bold":true,"color":"#FBD204","text":"'"},{"bold":true,"color":"#FBD604","text":"s "},{"bold":true,"color":"#FBDA04","text":"C"},{"bold":true,"color":"#FADD03","text":"h"},{"bold":true,"color":"#FAE103","text":"e"},{"bold":true,"color":"#FAE503","text":"s"},{"bold":true,"color":"#F9E902","text":"t"},{"bold":true,"color":"#F9EC02","text":"p"},{"bold":true,"color":"#F8F001","text":"l"},{"bold":true,"color":"#F8F401","text":"a"},{"bold":true,"color":"#F8F801","text":"t"},{"bold":true,"color":"#F7FF00","text":"e"}],{"bold":true,"color":"gray","text":"Your determination is commendable."}],tooltip_display={hidden_components:["enchantments","trim"]}] 1
+
+    @var blockSelection[player] = "honeycomb_block"
+    @var blockSelectionStored[player] = "honeycomb_block"
+    @var copperGrate[player] = false
+    @var grateNumber[player] = 0
+    @var woolNumber[player] = 0
+    @var glassNumber[player] = 0
+    @var pumpkinNumber[player] = 0
+    @var lastPumpkinNumber[player] = 0
+    @var spongeNumber[player] = 0
+    @var lastSpongeNumber[player] = 0
+    @var obsidianNumber[player] = 0
+    @var lastObsidianNumber[player] = 0
+    @var oreNumber[player] = 0
+    @var lastOreNumber[player] = 0
+    @var coolGlassNumber[player] = 0
+    @var lastCoolGlassNumber[player] = 0
+    @var coralNumber[player] = 0
+    @var lastCoralNumber[player] = 0
+    @var froglightNumber[player] = 0
+    @var coolGlass = false
+
+    @var cosmeticSwap[player] = true
+    @var cosmeticSwap100[player] = false
+
+    @var resetBlocks(player, 64)
+
+    @var donnaDone = true
+@fi
+
+# Note for RY - reward here

@@ -1,0 +1,29 @@
+@fast
+
+@define Int x1 = -9081
+@define Int y1 = 63
+@define Int z1 = 10083
+
+@define Int x2 = -9077
+@define Int y2 = 66
+@define Int z2 = 10087
+
+@define String world = "Theta"
+
+@define BlockLocation[] blockList1 = BlockLocation[]
+@define String[] blockTypeList1 = String[]
+@define Block thisBlock 
+
+@for Int i in list::range(x1, x2 + 1)
+    @for Int j in list::range(y1, y2 + 1)
+        @for Int k in list::range(z1, z2 + 1)
+            @var thisBlock = Block(i, j, k, world)
+            @player {{Block(i, j, k, world)}}
+            @var blockList1.append(BlockLocation(i, j, k, world))   
+            @var blockTypeList1.append((Block(i, j, k, world)))
+        @done
+    @done
+@done
+
+@player {{blockList1}}
+@player {{blockTypeList1}}

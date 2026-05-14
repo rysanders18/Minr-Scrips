@@ -1,0 +1,103 @@
+# set blockSelection to rainbow glass
+@using Harha
+@fast
+
+@cooldown 1s
+
+# ========================================================
+@if pbFalls[player] > 100
+    @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 1 1
+    
+    @player &#d4d4d4--------------------------------------
+    @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&l&nG&#0AA7B8&l&nl&#1397E3&l&na&#4C76D5&l&ns&#865CCD&l&ns&#FA6EFF&l&n:
+    @player
+    @player &#d4d4d4● Custom order of &lwhichever colors you want!
+    @player
+    @if pbFalls[player] == 1000000000
+        @player &#d4d4d4● Unlocked by beating the map in &l100 or less &#d4d4d4falls.
+    @else
+        @player &#d4d4d4● Unlocked by beating the map in &l100 or less &#d4d4d4falls. (Best = {{pbFalls[player]}})
+    @fi
+    @player
+    @player &#d4d4d4● Type your &lcustom color order&#d4d4d4 in a comma-seperated list.
+    @player &#d4d4d4&l &#d4d4d4&l &#d4d4d4Example: "lime, light_blue, magenta, light_gray, brown"
+    @player
+    @player &cYou haven't unlocked this yet.
+    @player &#d4d4d4--------------------------------------
+    
+@elseif pbFalls[player] <= 100
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+    
+    @player &#d4d4d4--------------------------------------
+    @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm &#1AAE70&l&nG&#0AA7B8&l&nl&#1397E3&l&na&#4C76D5&l&ns&#865CCD&l&ns&#FA6EFF&l&n:
+    @player
+    @player &#d4d4d4● Custom order of &lwhichever colors you want!
+    @player
+    @player &#d4d4d4● Unlocked by beating the map in &l100 or less &#d4d4d4falls. (Best = {{pbFalls[player]}})
+    @player
+    @player &#d4d4d4● Type your &lcustom color order&#d4d4d4 in a comma-seperated list.
+    @player &#d4d4d4&l &#d4d4d4&l &#d4d4d4Example: "lime, light_blue, magenta, light_gray, brown"
+    @player
+    @player &aBlock selected!
+    @player &#d4d4d4--------------------------------------
+    @player &eType your custom order:
+    
+    
+    @define String customGlass
+    @define String[] customGlassList
+    @prompt 40s customGlass You took too long!
+    
+    # List of blocks that it checks
+    @define String[] possibleGlass = String["red_stained_glass", "orange_stained_glass", "yellow_stained_glass", "lime_stained_glass", "light_blue_stained_glass", "cyan_stained_glass", "blue_stained_glass", "purple_stained_glass", "magenta_stained_glass", "pink_stained_glass", "black_stained_glass", "gray_stained_glass", "light_gray_stained_glass", "white_stained_glass", "brown_stained_glass", "green_stained_glass"]
+    @define String[] possibleOutput = String["&c&lRed&c, ", "&6&lOrange&6, ", "&e&lYellow&e, ", "&a&lLime&a, ", "&b&lLight Blue&b, ", "&3&lCyan&3, ", "&9&lBlue&9, ", "&5&lPurple&5, ", "&d&lMagenta&d, ", "&#FF7AC1&lPink&#FF7AC1, ", "&#1F1F1F&lBlack&#1F1F1F, ", "&8&lGray&8, ", "&7&lLight Gray&7, ", "&f&lWhite&f, ", "&#8A5928&lBrown&#8A5928, ", "&2&lGreen&2, "]
+    @define String endOutput = ""
+    
+    @var customGlass = customGlass.toLowerCase()
+    @var customGlassList = customGlass.split(", ")
+    
+    # Splits up the prompt into a string list and checks each value if its in the list of possible blocks
+    @for Int i in list::range(0, customGlassList.length())
+        @var customGlassList[i] = customGlassList[i] + "_stained_glass"
+        @if possibleGlass.contains(customGlassList[i]) == false
+            @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 1
+            @player &cInvalid format! &l{{customGlassList[i].substring(0, customGlassList[i].length() - 14)}} &cis not a valid color.
+            @return
+        @fi
+        
+        # builds end string
+        @var endOutput += possibleOutput[possibleGlass.find(customGlassList[i])]
+    @done
+    
+    @var glassList[player] = customGlassList
+
+    # removes the first comma and space, 4 because color code "&f, "
+    @var endOutput = endOutput.substring(0, endOutput.length() - 2)
+    @player &#d4d4d4Custom order = {{endOutput}}
+    @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 1 1
+    
+    
+    @var blockSelection[player] = glassList[0]
+    @var blockSelectionStored[player] = glassList[0]
+    @var copperGrate[player] = false
+    @var grateNumber[player] = 0
+    @var woolNumber[player] = 0
+    @var glassNumber[player] = 0
+    @var pumpkinNumber[player] = 0
+    @var lastPumpkinNumber[player] = 0
+    @var spongeNumber[player] = 0
+    @var lastSpongeNumber[player] = 0
+    @var obsidianNumber[player] = 0
+    @var lastObsidianNumber[player] = 0
+    @var oreNumber[player] = 0
+    @var lastOreNumber[player] = 0
+    @var coolGlassNumber[player] = 0
+    @var lastCoolGlassNumber[player] = 0
+    @var coolGlass[player] = false
+    @var numberOfBlocksToGive[player] = 63
+    
+    @var cosmeticSwap[player] = true
+    @var cosmeticSwap100[player] = false
+    
+    @var resetBlocks(player, 64)
+    
+@fi

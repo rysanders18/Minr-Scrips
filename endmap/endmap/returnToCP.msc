@@ -1,0 +1,9 @@
+# returnToCP(Int cp, Player player) https://paste.minr.org/eqaxevahir
+
+@using endmap
+@fast
+
+@if cpnumber[player] == cp && player.getY() != 49D
+    @var player.teleport(respawnPositions[cp])
+    @bypass /playsound minecraft:entity.enderman.teleport master {{player}} ~ ~ ~ 0.1 1.3
+@fi

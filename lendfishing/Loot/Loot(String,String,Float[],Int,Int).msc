@@ -1,0 +1,13 @@
+# lendfishing::Loot(String item, String name, Float[] weightRange, Int basePrice, Int rarity)
+
+@var this.item = item
+@var this.name = name
+@var this.minWeight = weightRange[0]
+@var this.maxWeight = weightRange[1]
+@var this.basePrice = basePrice
+@var this.rarity = rarity
+@var this.rarityName = rarityNames[rarity]
+@var this.commandColor = commandColors[rarity]
+@var this.particleColor = particleColors[rarity]
+
+@return this

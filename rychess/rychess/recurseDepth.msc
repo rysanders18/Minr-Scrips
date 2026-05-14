@@ -1,0 +1,14 @@
+# Int recurseDepth(Int depth, Int target)
+# Phase 1 helper. Recurses (target - depth) times then returns the
+# final depth reached. Used to probe how deep the call stack can go
+# before MSC bails. Run with progressively larger targets from the
+# driver to find the practical limit.
+
+@using rychess
+@fast
+
+@if depth >= target
+    @return depth
+@fi
+
+@return recurseDepth(depth + 1, target)

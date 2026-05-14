@@ -1,0 +1,51 @@
+# Double easeStep(Double diff)
+# One tick of the coast-phase facing ease. Given a signed gap (in degrees)
+# between current and target angle, returns the signed step to apply this
+# tick. Three regimes layered on top of each other:
+#
+#   1. Exponential base: step = diff * facingEaseFactor. Decelerates
+#      naturally as the gap shrinks.
+#   2. Floor: |step| >= minFacingStepDeg once the gap is non-trivial. Stops
+#      the exponential tail from creeping at fractions of a degree.
+#   3. Cap: |step| <= maxTurnPerTickDeg. Big rotations (≥100° gap) move
+#      at max turn rate until the gap shrinks below the cap.
+#
+# Final clamp is the overshoot guard: |step| <= |diff|, so on the last
+# tick we land exactly on (or one step short of) the target instead of
+# whipping past. Combined with the convergence check in cruiseTick (1°),
+# this means at most a 1° residual that the exit snap cleans up.
+#
+# Caller is expected to apply mod-360 wrap-to-(-180, 180] to yaw diffs
+# before calling. Pitch needs no wrap.
+
+@using mannequin
+@fast
+
+@define Double step = diff * facingEaseFactor
+
+# Floor: only fires when |step| > 0 (don't kick a zero gap).
+@if step > 0D && step < minFacingStepDeg
+    @var step = minFacingStepDeg
+@fi
+@if step < 0D && step > 0D - minFacingStepDeg
+    @var step = 0D - minFacingStepDeg
+@fi
+
+# Cap.
+@if step > maxTurnPerTickDeg
+    @var step = maxTurnPerTickDeg
+@fi
+@if step < 0D - maxTurnPerTickDeg
+    @var step = 0D - maxTurnPerTickDeg
+@fi
+
+# Overshoot guard. After the floor, a small gap (e.g. 0.5°) would otherwise
+# get bumped to a full minFacingStepDeg step and whip past target.
+@if diff > 0D && step > diff
+    @var step = diff
+@fi
+@if diff < 0D && step < diff
+    @var step = diff
+@fi
+
+@return step

@@ -1,0 +1,38 @@
+# String[] move(Player player, String[] states, String symbol)
+
+# Gets all states reachable from given states on input symbol (0 or 1)
+# Parameters:
+#   - player: The player whose connection list to search
+#   - states: Array of block coordinates to start from
+#   - symbol: "0" for gold transitions, "1" for diamond transitions
+# Returns: String[] of block coordinates reachable on the symbol
+
+@using nfa
+@fast
+
+@define String[] result = String[]
+@define String targetBlockType = "minecraft:gold_block"
+@if symbol == "1"
+    @var targetBlockType = "minecraft:diamond_block"
+@fi
+
+# For each state in current set
+@for String state in states
+    # Find all transitions with the target symbol
+    @for String connection in listOfConnections[player]
+        @define String[] parts = connection.split(";")
+        @if parts.length() == 6 && parts[0] == "connection" && parts[3] == targetBlockType
+            # Check if current state is the source (parts[1] is FROM, parts[2] is TO)
+            # Connections are DIRECTED: block1 -> block2
+            @if parts[1] == state
+                @define String nextBlock = parts[2]
+                # Add to result if not already present
+                @if !result.contains(nextBlock)
+                    @var result.append(nextBlock)
+                @fi
+            @fi
+        @fi
+    @done
+@done
+
+@return result

@@ -1,0 +1,36 @@
+# Int[] genLegalMoves(Player player)
+# Filters genAllPseudoLegal down to fully-legal moves: makes each
+# pseudo-legal move, checks whether the moving side's king is
+# attacked after, and discards the move if so. Castling moves are
+# generated already-filtered by genKingMoves (king-not-in-check and
+# not-passing-through-check are checked there because the post-move
+# scan would not catch a castle through check).
+# After filtering each move it is unmade so the board is identical
+# to the pre-call state on return.
+
+@using rychess
+@fast
+
+@var profGenLegal[player] = profGenLegal[player] + 1
+
+@define Int[] pseudo = genAllPseudoLegal(player)
+@define Int[] legal = Int[]
+
+@for Int i in list::range(0, pseudo.length())
+    @define Int move = pseudo[i]
+    @define Int moverColor = sideToMove[player]
+    @var makeMove(player, move)
+    @define Int kingSq = findKing(player, moverColor)
+    @define Int illegal = 0
+    @if kingSq >= 0
+        @if isSquareAttacked(player, kingSq, sideToMove[player])
+            @var illegal = 1
+        @fi
+    @fi
+    @var unmakeMove(player, move)
+    @if illegal == 0
+        @var legal.append(move)
+    @fi
+@done
+
+@return legal

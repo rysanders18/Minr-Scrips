@@ -1,0 +1,16 @@
+# Int moveEncode(Int fromSq, Int toSq, Int promo, Int flags)
+# Packs a chess move into a single Int. MSC has no bitwise operators,
+# so we use multiplication and modulo by powers of two instead of
+# shifts and masks. The bit layout is:
+#   bits  0-5  : fromSq    (0..63)
+#   bits  6-11 : toSq      (0..63)
+#   bits 12-14 : promo     (0=none, 1=N, 2=B, 3=R, 4=Q)
+#   bits 15-17 : flags     (0=quiet, 1=capture, 2=double-push,
+#                           3=ep-capture, 4=castle-K, 5=castle-Q)
+# i.e. move = fromSq + toSq*64 + promo*4096 + flags*32768.
+# Decoders: moveFrom, moveTo, movePromo, moveFlags.
+
+@using rychess
+@fast
+
+@return fromSq + toSq * 64 + promo * 4096 + flags * 32768

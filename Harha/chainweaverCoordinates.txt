@@ -1,0 +1,133 @@
+/setblock 6928 145 2551 minecraft:purple_stained_glass
+/setblock 6928 145 2550 minecraft:purple_stained_glass
+/setblock 6928 145 2549 minecraft:purple_stained_glass
+
+/setblock 6926 146 2551 minecraft:blue_stained_glass
+/setblock 6927 146 2551 minecraft:red_stained_glass
+/setblock 6928 146 2551 minecraft:purple_stained_glass
+
+/setblock 6925 146 2550 minecraft:purple_stained_glass
+/setblock 6926 146 2550 minecraft:blue_stained_glass
+/setblock 6928 146 2550 minecraft:purple_stained_glass
+/setblock 6929 146 2550 minecraft:purple_stained_glass
+/setblock 6931 146 2550 minecraft:red_stained_glass
+
+/setblock 6925 146 2549 minecraft:green_stained_glass
+
+/setblock 6931 146 2548 minecraft:cyan_stained_glass
+
+/setblock 6925 146 2546 minecraft:green_stained_glass
+/setblock 6926 146 2546 minecraft:red_stained_glass
+/setblock 6930 146 2546 minecraft:red_stained_glass
+
+/setblock 6927 146 2544 minecraft:purple_stained_glass
+
+
+/setblock 6926 147 2551 minecraft:blue_stained_glass
+
+/setblock 6927 147 2550 minecraft:purple_stained_glass
+/setblock 6929 147 2550 minecraft:blue_stained_glass
+
+/setblock 6926 147 2548 minecraft:blue_stained_glass
+/setblock 6929 147 2548 minecraft:blue_stained_glass
+/setblock 6931 147 2548 minecraft:cyan_stained_glass
+
+/setblock 6928 147 2546 minecraft:blue_stained_glass
+
+/setblock 6927 147 2545 minecraft:red_stained_glass
+/setblock 6930 147 2545 minecraft:green_stained_glass
+
+/setblock 6925 147 2544 minecraft:purple_stained_glass
+/setblock 6931 147 2544 minecraft:red_stained_glass
+
+
+/setblock 6928 148 2550 minecraft:blue_stained_glass
+/setblock 6930 148 2550 minecraft:pink_stained_glass
+
+/setblock 6928 148 2549 minecraft:green_stained_glass
+/setblock 6930 148 2549 minecraft:pink_stained_glass
+
+/setblock 6925 148 2548 minecraft:purple_stained_glass
+/setblock 6926 148 2548 minecraft:red_stained_glass
+/setblock 6927 148 2548 minecraft:red_stained_glass
+/setblock 6928 148 2548 minecraft:green_stained_glass
+/setblock 6929 148 2548 minecraft:brown_stained_glass
+/setblock 6930 148 2548 minecraft:pink_stained_glass
+/setblock 6931 148 2548 minecraft:cyan_stained_glass
+
+/setblock 6928 148 2547 minecraft:blue_stained_glass
+/setblock 6930 148 2547 minecraft:pink_stained_glass
+/setblock 6931 148 2547 minecraft:red_stained_glass
+
+/setblock 6926 148 2546 minecraft:blue_stained_glass
+/setblock 6930 148 2546 minecraft:pink_stained_glass
+
+/setblock 6930 148 2545 minecraft:green_stained_glass
+
+/setblock 6928 148 2544 minecraft:orange_stained_glass
+/setblock 6929 148 2544 minecraft:orange_stained_glass
+/setblock 6930 148 2544 minecraft:pink_stained_glass
+
+
+/setblock 6929 149 2551 minecraft:blue_stained_glass
+
+/setblock 6929 149 2550 minecraft:green_stained_glass
+
+/setblock 6926 149 2549 minecraft:green_stained_glass
+
+/setblock 6927 149 2548 minecraft:green_stained_glass
+/setblock 6929 149 2548 minecraft:brown_stained_glass
+/setblock 6931 149 2548 minecraft:cyan_stained_glass
+/setblock 6932 149 2548 minecraft:red_stained_glass
+
+/setblock 6929 149 2547 minecraft:green_stained_glass
+
+/setblock 6928 149 2546 minecraft:purple_stained_glass
+/setblock 6930 149 2546 minecraft:green_stained_glass
+
+/setblock 6925 149 2545 minecraft:purple_stained_glass
+
+/setblock 6929 149 2544 minecraft:orange_stained_glass
+/setblock 6930 149 2544 minecraft:pink_stained_glass
+
+
+/setblock 6927 150 2551 minecraft:blue_stained_glass
+/setblock 6930 150 2551 minecraft:orange_stained_glass
+
+/setblock 6925 150 2550 minecraft:green_stained_glass
+/setblock 6932 150 2550 minecraft:orange_stained_glass
+
+/setblock 6929 150 2548 minecraft:brown_stained_glass
+/setblock 6931 150 2548 minecraft:cyan_stained_glass
+/setblock 6932 150 2548 minecraft:orange_stained_glass
+
+/setblock 6926 150 2545 minecraft:blue_stained_glass
+/setblock 6929 150 2545 minecraft:orange_stained_glass
+
+
+/setblock 6929 151 2550 minecraft:green_stained_glass
+
+/setblock 6925 151 2548 minecraft:purple_stained_glass
+/setblock 6929 151 2548 minecraft:brown_stained_glass
+/setblock 6931 151 2548 minecraft:cyan_stained_glass
+
+/setblock 6928 151 2546 minecraft:purple_stained_glass
+/setblock 6930 151 2546 minecraft:green_stained_glass
+
+/setblock 6926 151 2545 minecraft:red_stained_glass
+/setblock 6930 151 2545 minecraft:green_stained_glass
+
+
+/setblock 6928 152 2550 minecraft:purple_stained_glass
+
+/setblock 6926 152 2549 minecraft:blue_stained_glass
+
+/setblock 6926 152 2548 minecraft:purple_stained_glass
+/setblock 6928 152 2548 minecraft:purple_stained_glass
+/setblock 6929 152 2548 minecraft:brown_stained_glass
+/setblock 6931 152 2548 minecraft:red_stained_glass
+
+/setblock 6926 152 2547 minecraft:red_stained_glass
+/setblock 6927 152 2547 minecraft:purple_stained_glass
+
+/setblock 6924 146 2546 minecraft:sea_lantern

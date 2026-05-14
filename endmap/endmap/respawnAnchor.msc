@@ -1,0 +1,73 @@
+# respawnAnchor
+@using endmap
+@global_cooldown 1
+@fast
+
+@define Int x = block.getX()
+@define Int y = block.getY()
+@define Int z = block.getZ()
+
+# 1s of Portal Particles and sounds
+@for Int i in list::range(0, 20)
+    @bypass /particle minecraft:portal {{x + 0.5}} {{y}} {{z + 0.5}} 0 0 0 1 10
+    @bypass /playsound minecraft:item.armor.equip_leather master @a[distance=..20] {{x + 0.5}} {{y}} {{z + 0.5}} 0.45 {{i / 40.0 * 1.5 + 0.5}}
+    @delay 1
+@done
+
+# Another 1s of more intense particles and sounds
+@for Int j in list::range(0, 20)
+    @bypass /playsound minecraft:item.armor.equip_leather master @a[distance=..20] {{x + 0.5}} {{y}} {{z + 0.5}} 0.45 {{(j + 20) / 40.0 * 1.5 + 0.5}}
+    @if j == 15
+        @bypass /playsound minecraft:item.bottle.fill_dragonbreath master @a[distance=..20] {{x + 0.5}} {{y - 1}} {{z + 0.5}} 0.5 {{math::random(1.0D, 1.4D)}}
+    @fi
+    @delay 1
+
+
+    @if j == 14
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=10] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.166}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.166}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.166}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.166}} {{z}}.0 0 0 0 0 1
+    @fi
+    @if j == 15
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=11] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.333}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.333}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.333}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.333}} {{z}}.0 0 0 0 0 1
+    @fi
+    @if j == 16
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=12] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.5}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.5}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.5}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.5}} {{z}}.0 0 0 0 0 1
+    @fi
+    @if j == 17
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=13] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.666}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.666}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.666}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.666}} {{z}}.0 0 0 0 0 1
+    @fi
+    @if j == 18
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=14] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.833}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 0.833}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.833}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 0.833}} {{z}}.0 0 0 0 0 1
+    @fi
+    @if j == 19
+        @console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:light[level=15] strict
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 1}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x}}.0 {{y + 1}} {{z}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 1}} {{z + 1}}.0 0 0 0 0 1
+        @bypass /particle minecraft:firework {{x + 1}}.0 {{y + 1}} {{z}}.0 0 0 0 0 1
+    @fi
+@done
+
+# Setblock 
+@console /execute in minecraft:theta_the_end run setblock {{Int(x)}} {{Int(y)}} {{Int(z)}} minecraft:respawn_anchor[charges=4] strict
+
+

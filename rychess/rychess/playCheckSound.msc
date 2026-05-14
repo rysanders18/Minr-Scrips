@@ -1,0 +1,12 @@
+# playCheckSound(Player player)
+# Plays the "in check" sound. Fires after a move when the side-to-
+# move (the side that just received the check) is currently in
+# check but NOT in checkmate. Checkmate plays playCheckmateSound
+# instead - the two are mutually exclusive at the interactEntity /
+# play call sites.
+# CHANGE the sound name below.
+
+@using rychess
+@fast
+
+@bypass /playsound minecraft:block.cherry_wood_button.click_on master @a[x=-9134.0,y=-61.0,z=9669.0,distance=..20] -9134.0 -61.0 9669.0 1 1

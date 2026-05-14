@@ -1,0 +1,28 @@
+# testRecursion(Player player)
+# Phase 1 driver: confirm MSC supports recursion and find the
+# practical depth ceiling. If factorial returns wrong values, MSC
+# does not support recursion and the framework needs an explicit
+# stack design instead. If recurseDepth crashes or hangs at some
+# value, that value caps usable search depth in the future engine.
+
+@using rychess
+@fast
+
+@player &6=== Phase 1: Recursion Test ===
+
+@define Int fact5 = factorial(5)
+@player &eFactorial(5) = {{fact5}} &7(expected 120)
+
+@define Int fact10 = factorial(10)
+@player &eFactorial(10) = {{fact10}} &7(expected 3628800)
+
+@define Int depth100 = recurseDepth(0, 100)
+@player &eRecurse 100 -> {{depth100}} &7(expected 100)
+
+@define Int depth500 = recurseDepth(0, 500)
+@player &eRecurse 500 -> {{depth500}} &7(expected 500)
+
+@define Int depth1000 = recurseDepth(0, 1000)
+@player &eRecurse 1000 -> {{depth1000}} &7(expected 1000)
+
+@player &6=== Done ===

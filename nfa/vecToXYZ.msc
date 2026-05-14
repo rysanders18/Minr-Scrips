@@ -1,0 +1,10 @@
+# Double[] vecToXYZ(Vector3 v) 
+
+@fast
+@using nfa
+
+@define String s = "{{v}}"
+@define String[] parts = s.split(" ")
+
+
+@return Double[Double(parts[0]), Double(parts[1]), Double(parts[2])]

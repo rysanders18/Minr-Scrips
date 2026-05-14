@@ -1,0 +1,44 @@
+# Golden Cookie Chances Button
+@fast
+@using cookie
+
+@define Int[] goldenPrices = Int[100, 250, 1000, 3000, 7000, 12000, 25000, 50000, 125000, 250000, 500000, 1000000, 2500000, 5000000, 10000000, 25000000]
+@define Int[] goldenChances = Int[40, 30, 25, 20, 17, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+
+@if goldenCookieChanceStage[player] >= goldenChances.length()
+    @player &#d4d4d4--------------------------------------
+    @player &cYou have reached the maximum upgrade for this button!
+    @player &#d4d4d4--------------------------------------
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @return
+@fi
+
+@if cookieCount[player] < goldenPrices[goldenCookieChanceStage[player]]
+    @player &#d4d4d4--------------------------------------
+    @player &e&lGolden Cookie Chances Button&#d4d4d4
+    @player &#d4d4d4● Current Chance: &e1/{{goldenCookieChance[player]}}
+    @player &#d4d4d4● Next Upgrade: &e1/{{goldenChances[goldenCookieChanceStage[player]]}}
+    @player
+    @player &#d4d4d4● Price: &#ff9523&l{{Harha::formatNumber(String(goldenPrices[goldenCookieChanceStage[player]]))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &cYou need &l{{Harha::formatNumber(String(goldenPrices[goldenCookieChanceStage[player]] - cookieCount[player]))}}&c more Cookies to purchase this!
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+@else
+    @player &#d4d4d4--------------------------------------
+    @player &e&lGolden Cookie Chances Button&#d4d4d4
+    @player &#d4d4d4● New Upgrade: &e1/{{goldenCookieChance[player]}} → 1/{{goldenChances[goldenCookieChanceStage[player]]}}
+    @player
+    @player &#d4d4d4● Cookies Remaining: &#ff9523&l{{Harha::formatNumber(String(cookieCount[player]))}} → {{Harha::formatNumber(String(cookieCount[player] - Long(goldenPrices[goldenCookieChanceStage[player]])))}} Cookies
+    @player &#d4d4d4--------------------------------------
+    @player &aUpgrade Purchased Successfully!
+    @bypass playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1.0
+    @var goldenCookieChance[player] = goldenChances[goldenCookieChanceStage[player]]
+    @var cookieCount[player] -= Long(goldenPrices[goldenCookieChanceStage[player]])
+    @for Int i in list::range(0, 99)
+        @var cookieLog[player][i] -= Long(goldenPrices[goldenCookieChanceStage[player]])
+    @done
+    @var goldenCookieChanceStage[player] += 1
+@fi
+
+@var upgradeTextUpdate(player, roomNumber[player])
+@var cookieTextUpdate(player, roomNumber[player])

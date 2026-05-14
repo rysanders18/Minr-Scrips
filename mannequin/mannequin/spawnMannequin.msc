@@ -1,0 +1,41 @@
+# spawnMannequin(Player player)
+# Summons a custom Minr mannequin entity tagged mannequin_<UUID> at the
+# caller's current world position. The mannequin carries a text_display
+# passenger as a floating nameplate showing the calling player's name,
+# and uses the skin profile from the example template (swap the texture
+# value to change appearance). Idempotent: if already spawned, kills the
+# old entity first so re-running effectively warps the mannequin to the
+# caller. Initialises all per-player cruise state (world coords, zero
+# velocity, current yaw from the player).
+
+@using mannequin
+@fast
+
+@if isSpawned[player]
+    @bypass minecraft:kill @e[tag=mannequinUsername_{{player.getUniqueId()}}]
+    @bypass minecraft:kill @e[tag=mannequin_{{player.getUniqueId()}}]
+@fi
+
+@var curX[player] = player.getX()
+@var curY[player] = player.getY()
+@var curZ[player] = player.getZ()
+@var groundY[player] = player.getY()
+@var world[player] = player.getWorld()
+@var velX[player] = 0D
+@var velY[player] = 0D
+@var velZ[player] = 0D
+@var curYawDeg[player] = Double(player.getYaw())
+@var curPitchDeg[player] = 0D
+@var targetX[player] = 0D
+@var targetZ[player] = 0D
+@var isCruising[player] = false
+@var isCoasting[player] = false
+@var hasTargetFacing[player] = false
+@var cruiseTicks[player] = 0
+# Assume spawn-on-ground (caller stands on the same surface). collideY
+# corrects this within 1-2 ticks if the mannequin is actually mid-air.
+@var onGround[player] = true
+
+@bypass /summon mannequin {{curX[player]}} {{curY[player]}} {{curZ[player]}} {pose:"standing",Tags:["mannequin_{{player.getUniqueId()}}"],Passengers:[{id:"minecraft:text_display",billboard:"center",Tags:["mannequinUsername_{{player.getUniqueId()}}"],teleport_duration:1,shadow:0b,Motion:[0.0,0.3,0.0],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[1f,1f,1f]},text:{"color":"green","text":"{{player.getName()}}"}}],profile:{"id":[I;-118533046,-1659876403,-1351387569,742009199],"properties":[{"name":"textures","value":"ewogICJ0aW1lc3RhbXAiIDogMTc3ODA5ODc1MjU1NiwKICAicHJvZmlsZUlkIiA6ICJmOGVmNTQ0YTlkMTA0YmNkYWY3Mzc2NGYyYzNhMjk2ZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJSWWdhbWVyMSIsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNDQ2NzA5NzM2ZWEyZWFkMzk3NTIzNzU2MmQ2ZmQ3OTRhMTNiOGI3YzIzYjQyYzQ4ZjUzODEzYzEwYTc5YWM2IgogICAgfQogIH0KfQ=="}]}}
+
+@var isSpawned[player] = true

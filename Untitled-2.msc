@@ -1,0 +1,189 @@
+# getBlockTypes(Position pos1, Position pos2)
+# Gets block types between two positions and stores them in a list
+@fast
+@using guac
+
+@define Location pos1 = Location(-9073, 84, 9803, "Theta")
+@define Location pos2 = Location(-9052, 89, 9824, "Theta")
+
+# Get coordinates from positions
+@define Int x1 = Int(pos1.getX())
+@define Int y1 = Int(pos1.getY())
+@define Int z1 = Int(pos1.getZ())
+@define Int x2 = Int(pos2.getX())
+@define Int y2 = Int(pos2.getY())
+@define Int z2 = Int(pos2.getZ())
+@define String world = pos1.getWorld()
+
+# Ensure min/max ordering for X
+@define Int minX = x1
+@define Int maxX = x2
+@if x1 > x2
+    @var minX = x2
+    @var maxX = x1
+@fi
+
+# Ensure min/max ordering for Y
+@define Int minY = y1
+@define Int maxY = y2
+@if y1 > y2
+    @var minY = y2
+    @var maxY = y1
+@fi
+
+# Ensure min/max ordering for Z
+@define Int minZ = z1
+@define Int maxZ = z2
+@if z1 > z2
+    @var minZ = z2
+    @var maxZ = z1
+@fi
+
+# Initialize lists to store block types (1000 item limit per list)
+@define Int currentList = 0
+@define Int itemCount = 0
+
+# Iterate through all positions between pos1 and pos2
+@for Int x in list::range(minX, maxX + 1)
+    @for Int y in list::range(minY, maxY + 1)
+        @for Int z in list::range(minZ, maxZ + 1)
+            @bypass /data modify entity @e[limit=1,tag=coordsx{{x}}y{{y}}z{{z}}] {interpolation_duration:30,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}
+        @done
+        @delay 1
+    @done
+@done
+
+# # blockTypes0-4 now contain all block types in the region (up to 5000 blocks)
+# # for example CraftBlock{pos=BlockPos{x=-9060, y=88, z=9823},type=SANDSTONE_WALL,data=Block{minecraft:sandstone_wall}[east=low,north=none,south=low,up=true,waterlogged=false,west=none],fluid=net.minecraft.world.level.material.EmptyFluid@11e7da7} would be
+# # /summon block_display -9060.0 88 9823.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"minecraft:sandstone_wall",Properties:{north:"none",south:"low",east:"low",west:"none",up:"true",waterlogged:"false"}}}
+
+# # Summon block_displays for all stored blocks
+# # Block string format: CraftBlock{...,data=Block{minecraft:name}[prop=val,...],fluid=...}
+# # Some blocks have no properties: CraftBlock{...,data=Block{minecraft:name},fluid=...}
+# @for String b in blockTypes0
+#     # Parse coordinates from string: CraftBlock{pos=BlockPos{x=-9060, y=88, z=9823},type=...
+#     @define Int bx = Int(b.split("x=")[1].split(",")[0])
+#     @define Int by = Int(b.split("y=")[1].split(",")[0])
+#     @define Int bz = Int(b.split("z=")[1].split("\\}")[0])
+#     # Parse block type from string: type=SANDSTONE_WALL,data=...
+#     @define String blockName = "minecraft:" + b.split("type=")[1].split(",")[0].toLowerCase()
+
+#     # Check if block has properties (contains "[")
+#     @if b.contains("[")
+#         # Extract properties string between [ and ] from block data
+#         @define String propsSection = b.split("\\[")[1].split("\\]")[0]
+
+#         # Convert properties from "key=val,key=val" to JSON format {key:"val",key:"val"}
+#         @define String[] propPairs = propsSection.split(",")
+#         @define String propsJson = "{"
+#         @for Int i in list::range(0, propPairs.length())
+#             @define String[] keyVal = propPairs[i].split("=")
+#             @if i > 0
+#                 @var propsJson = propsJson + ","
+#             @fi
+#             @var propsJson = propsJson + keyVal[0] + ":\"" + keyVal[1] + "\""
+#         @done
+#         @var propsJson = propsJson + "}"
+
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}",Properties:{{propsJson}}}}
+#     @else
+#         # No properties, summon without Properties field
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}"}}
+#     @fi
+# @done
+
+# @for String b in blockTypes1
+#     @define Int bx = Int(b.split("x=")[1].split(",")[0])
+#     @define Int by = Int(b.split("y=")[1].split(",")[0])
+#     @define Int bz = Int(b.split("z=")[1].split("\\}")[0])
+#     @define String blockName = "minecraft:" + b.split("type=")[1].split(",")[0].toLowerCase()
+
+#     @if b.contains("[")
+#         @define String propsSection = b.split("\\[")[1].split("\\]")[0]
+#         @define String[] propPairs = propsSection.split(",")
+#         @define String propsJson = "{"
+#         @for Int i in list::range(0, propPairs.length())
+#             @define String[] keyVal = propPairs[i].split("=")
+#             @if i > 0
+#                 @var propsJson = propsJson + ","
+#             @fi
+#             @var propsJson = propsJson + keyVal[0] + ":\"" + keyVal[1] + "\""
+#         @done
+#         @var propsJson = propsJson + "}"
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}",Properties:{{propsJson}}}}
+#     @else
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}"}}
+#     @fi
+# @done
+
+# @for String b in blockTypes2
+#     @define Int bx = Int(b.split("x=")[1].split(",")[0])
+#     @define Int by = Int(b.split("y=")[1].split(",")[0])
+#     @define Int bz = Int(b.split("z=")[1].split("\\}")[0])
+#     @define String blockName = "minecraft:" + b.split("type=")[1].split(",")[0].toLowerCase()
+
+#     @if b.contains("[")
+#         @define String propsSection = b.split("\\[")[1].split("\\]")[0]
+#         @define String[] propPairs = propsSection.split(",")
+#         @define String propsJson = "{"
+#         @for Int i in list::range(0, propPairs.length())
+#             @define String[] keyVal = propPairs[i].split("=")
+#             @if i > 0
+#                 @var propsJson = propsJson + ","
+#             @fi
+#             @var propsJson = propsJson + keyVal[0] + ":\"" + keyVal[1] + "\""
+#         @done
+#         @var propsJson = propsJson + "}"
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}",Properties:{{propsJson}}}}
+#     @else
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}"}}
+#     @fi
+# @done
+
+# @for String b in blockTypes3
+#     @define Int bx = Int(b.split("x=")[1].split(",")[0])
+#     @define Int by = Int(b.split("y=")[1].split(",")[0])
+#     @define Int bz = Int(b.split("z=")[1].split("\\}")[0])
+#     @define String blockName = "minecraft:" + b.split("type=")[1].split(",")[0].toLowerCase()
+
+#     @if b.contains("[")
+#         @define String propsSection = b.split("\\[")[1].split("\\]")[0]
+#         @define String[] propPairs = propsSection.split(",")
+#         @define String propsJson = "{"
+#         @for Int i in list::range(0, propPairs.length())
+#             @define String[] keyVal = propPairs[i].split("=")
+#             @if i > 0
+#                 @var propsJson = propsJson + ","
+#             @fi
+#             @var propsJson = propsJson + keyVal[0] + ":\"" + keyVal[1] + "\""
+#         @done
+#         @var propsJson = propsJson + "}"
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}",Properties:{{propsJson}}}}
+#     @else
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}"}}
+#     @fi
+# @done
+
+# @for String b in blockTypes4
+#     @define Int bx = Int(b.split("x=")[1].split(",")[0])
+#     @define Int by = Int(b.split("y=")[1].split(",")[0])
+#     @define Int bz = Int(b.split("z=")[1].split("\\}")[0])
+#     @define String blockName = "minecraft:" + b.split("type=")[1].split(",")[0].toLowerCase()
+
+#     @if b.contains("[")
+#         @define String propsSection = b.split("\\[")[1].split("\\]")[0]
+#         @define String[] propPairs = propsSection.split(",")
+#         @define String propsJson = "{"
+#         @for Int i in list::range(0, propPairs.length())
+#             @define String[] keyVal = propPairs[i].split("=")
+#             @if i > 0
+#                 @var propsJson = propsJson + ","
+#             @fi
+#             @var propsJson = propsJson + keyVal[0] + ":\"" + keyVal[1] + "\""
+#         @done
+#         @var propsJson = propsJson + "}"
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}",Properties:{{propsJson}}}}
+#     @else
+#         @bypass /summon minecraft:block_display {{bx}}.0 {{by}} {{bz}}.0 {Tags:["guac","coords{{bx}},{{by}},{{bz}}"],transformation:{left_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],right_rotation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],translation:[{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}},{{math::random(-1D, 1D)}}],scale:[1f,1f,1f]},block_state:{Name:"{{blockName}}"}}
+#     @fi
+# @done

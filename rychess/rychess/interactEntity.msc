@@ -1,0 +1,111 @@
+# interactEntity(Player player, Int square)
+# Click handler for the 64 board-square interaction entities. Implements
+# chess.com-style two-click selection:
+#
+#   State 1 - nothing selected (selectedSquare[player] == -1):
+#     - Click own piece     -> select it (set selectedSquare = square)
+#     - Click empty/enemy   -> ignore (silent)
+#
+#   State 2 - own piece selected:
+#     - Click own piece     -> switch selection to that square
+#                              (clicking the SAME square is a no-op,
+#                              not a deselect - per the spec, the only
+#                              ways out of "selected" are switching to
+#                              another own piece or making a move)
+#     - Click legal target  -> make the move, clear selection,
+#                              run engineMove for the bot reply
+#     - Click illegal target-> @player error in chat, selection stays
+#
+# Clicks during the engine's think (sideToMove != playerColor) are
+# ignored - the human's pieces don't match sideToMove during that
+# window so the per-piece check would already filter them, but the
+# early return makes the intent explicit.
+
+@using rychess
+@fast
+
+# @player DEBUG: clicked square {{square}} ({{squareName(square)}}), piece={{board[player][square]}}, selectedSquare={{selectedSquare[player]}}
+
+@if sideToMove[player] != playerColor[player]
+    @return
+@fi
+
+@define Int piece = board[player][square]
+@define Int selected = selectedSquare[player]
+@define Int myColor = playerColor[player]
+
+@if selected == -1
+    @if piece != 0 && pieceColor(piece) == myColor
+        @var selectedSquare[player] = square
+        @var highlightMoves(player, square)
+        @var playSelectSound(player)
+    @fi
+    @return
+@fi
+
+@if piece != 0 && pieceColor(piece) == myColor
+    @if square == selected
+        @var playDeselectSound(player)
+        @var clearHighlights(player)
+        @var selectedSquare[player] = -1
+    @else
+        @var playDeselectSound(player)
+        @var clearHighlights(player)
+        @var selectedSquare[player] = square
+        @var highlightMoves(player, square)
+        @var playSelectSound(player)
+    @fi
+    @return
+@fi
+
+@define Int[] legal = genLegalMoves(player)
+@define Int matchedMove = 0
+@for Int i in list::range(0, legal.length())
+    @define Int m = legal[i]
+    @if moveFrom(m) == selected && moveTo(m) == square
+        @var matchedMove = m
+    @fi
+@done
+
+@if matchedMove == 0
+    @player &cThat piece can't move there.
+    @player &7---- DEBUG ----
+    @player &7from={{selected}} ({{squareName(selected)}}) to={{square}} ({{squareName(square)}})
+    @player &7piece on from: {{board[player][selected]}}  piece on to: {{board[player][square]}}
+    @player &7sideToMove: {{sideToMove[player]}}  playerColor: {{playerColor[player]}}
+    @player &7total legal moves: {{legal.length()}}
+    @define Int fromMoveCount = 0
+    @for Int i in list::range(0, legal.length())
+        @define Int m = legal[i]
+        @if moveFrom(m) == selected
+            @var fromMoveCount = fromMoveCount + 1
+            @player &7  legal: {{squareName(moveFrom(m))}} -> {{squareName(moveTo(m))}} (toSq={{moveTo(m)}}, flags={{moveFlags(m)}})
+        @fi
+    @done
+    @player &7legal moves from {{squareName(selected)}}: {{fromMoveCount}}
+    @return
+@fi
+
+@var clearHighlights(player)
+@var makeMove(player, matchedMove)
+@var applyMoveVisually(player, matchedMove)
+@var displayBoard(player)
+@var selectedSquare[player] = -1
+
+@if checkGameOver(player)
+    @return
+@fi
+
+@if inCheck(player)
+    @var playCheckSound(player)
+@fi
+
+@var engineMove(player)
+
+@if checkGameOver(player)
+    @return
+@fi
+
+@if inCheck(player)
+    @var playCheckSound(player)
+@fi

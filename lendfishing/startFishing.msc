@@ -1,0 +1,42 @@
+# startFishing(Player player, Float catchChanceHalfSecond, Int maxTimeSeconds, Int initialDelaySeconds)
+# Triggers after the player casts their fishing rod
+@using lendfishing
+
+@var isFishing = true
+
+@for Int i in list::range(0, initialDelaySeconds)
+    @delay 1s
+    @bypass /experience set {{player}} 0 points
+@done
+
+@for Int i in list::range(0, maxTimeSeconds*2)
+    @if (!isFishing)
+        @var readyToCatch = false
+        @var isFishing = false
+        @var isCatching = false
+        @return
+    @fi
+    @if (math::randomDouble() <= catchChanceHalfSecond)
+        @var readyToCatch = true
+        @var spawnFish(player)
+        @delay 20
+        @var readyToCatch = false
+        @if (isCatching)
+            @var isFishing = false
+            @var isCatching = false
+            @return
+        @fi
+        @delay 30
+    
+    @fi
+    @delay 10
+@done
+
+# Fallback when the loop doesn't make you get a fish
+@var readyToCatch = true
+@var spawnFish(player)
+@delay 20
+@var readyToCatch = false
+
+@var isFishing = false
+@var isCatching = false

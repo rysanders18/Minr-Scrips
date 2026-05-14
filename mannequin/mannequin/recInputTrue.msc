@@ -1,0 +1,42 @@
+# recInputTrue(Player player, Int inputId, Int tickIdx)
+# Helper invoked by recordInputs's predicate-gated /execute commands.
+# Sets inputXxx[player][tickIdx] = true for the input identified by
+# inputId. Called once per pressed input per tick; an unpressed input
+# never fires this and its slot stays at the false default appended by
+# recordInputs.
+#
+# inputId mapping (matches recordInputs's emit order):
+#   0 = forward    (W)
+#   1 = backward   (S)
+#   2 = left       (A)
+#   3 = right      (D)
+#   4 = jump       (space)
+#   5 = sneak      (shift)
+#   6 = sprint     (ctrl)
+#
+# tickIdx is the per-tick array index recordInputs allocated by appending
+# `false` before issuing the predicate-gated command. By the time this
+# helper runs, the slot exists.
+#
+# No-op on out-of-range inputId — defensive; recordInputs only emits 0..6.
+# Out-of-bounds tickIdx would error in the array write; we trust
+# recordInputs not to misalign.
+
+@using mannequin
+@fast
+
+@if inputId == 0
+    @var inputForward[player][tickIdx] = true
+@elseif inputId == 1
+    @var inputBackward[player][tickIdx] = true
+@elseif inputId == 2
+    @var inputLeft[player][tickIdx] = true
+@elseif inputId == 3
+    @var inputRight[player][tickIdx] = true
+@elseif inputId == 4
+    @var inputJump[player][tickIdx] = true
+@elseif inputId == 5
+    @var inputSneak[player][tickIdx] = true
+@elseif inputId == 6
+    @var inputSprint[player][tickIdx] = true
+@fi

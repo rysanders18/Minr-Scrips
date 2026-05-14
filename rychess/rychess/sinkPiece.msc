@@ -1,0 +1,19 @@
+# sinkPiece(Int pieceCode, Int currentSq)
+# Animates a captured piece downward into the board instead of
+# removing it - the entities stay alive (so newGame can resurrect
+# them by sliding them back to spawn) but drop below the slab.
+# Wraps applyTransform with yOffset = sinkDepth so the y component
+# of the new translation is base_m13 + sinkDepth, while x/z stay at
+# the piece's current square.
+#
+# The piece's identity (pieceCode) stays the same - we don't kill or
+# re-tag entities here. After sinking, they remain at currentSq with
+# negative y until something resets them (e.g. newGame).
+
+@using rychess
+@fast
+
+@define Float sinkDepth = -1.3F
+
+@define Float[] base = lookupPieceBase(pieceCode)
+@var applyTransform(pieceCode, currentSq, base, sinkDepth)

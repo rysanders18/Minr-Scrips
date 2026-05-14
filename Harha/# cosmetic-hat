@@ -1,0 +1,17 @@
+type: hat
+version: 3
+config:
+  name: Bedrock Helmet
+  rarity: EPIC
+  requires:
+    unobtainable: ""
+  shop:
+    item: PLAYER_HEAD
+    stack_size: 1
+    skull_skin: http://textures.minecraft.net/texture/3faaaed9b98096427a0062636447ccbf58cd90b853d69d432360d57cbb505db3
+    description:
+      - Rewarded to the completionists
+      - of Hardest Hat.
+  hat:
+    item: PLAYER_HEAD
+    skull_skin: http://textures.minecraft.net/texture/3faaaed9b98096427a0062636447ccbf58cd90b853d69d432360d57cbb505db3

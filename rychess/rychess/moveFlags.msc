@@ -1,0 +1,10 @@
+# Int moveFlags(Int move)
+# Decodes the flags field from a packed move Int.
+# 0 = quiet, 1 = capture, 2 = double-push, 3 = en-passant capture,
+# 4 = castle king-side, 5 = castle queen-side.
+# See moveEncode.msc for the bit layout.
+
+@using rychess
+@fast
+
+@return (move / 32768) % 8

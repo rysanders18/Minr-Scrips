@@ -1,0 +1,29 @@
+# engineMove(Player player)
+# Convenience wrapper: ask the engine to pick a move, play it, show
+# the new board state and how long it took. If chooseMove returns 0
+# (no legal moves), reports checkmate or stalemate and exits without
+# mutating the board.
+
+@using rychess
+@fast
+
+@define Long t = system::currentTimeMillis()
+@define Int move = chooseMove(player)
+@define Long elapsed = system::currentTimeMillis() - t
+
+@if move == 0
+    @if inCheck(player)
+        @player &c&lCheckmate.
+    @else
+        @player &e&lStalemate.
+    @fi
+    @return
+@fi
+
+@define String fromName = squareName(moveFrom(move))
+@define String toName = squareName(moveTo(move))
+@player &aEngine plays: &f{{fromName}} -> {{toName}} &8[{{elapsed}}ms]
+
+@var makeMove(player, move)
+@var applyMoveVisually(player, move)
+@var displayBoard(player)

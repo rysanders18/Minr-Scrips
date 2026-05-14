@@ -1,0 +1,8 @@
+# screenDisplay(String[] arrayJSON, Int frame, String[] entityTags)
+
+@using rytools
+@fast
+
+@for String entityTag in entityTags
+    @bypass execute in minecraft:theta run data merge entity @e[tag={{entityTag}},limit=1] {"text":[{{arrayJSON[frame]}}]}
+@done

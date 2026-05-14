@@ -1,0 +1,12 @@
+# Int pieceType(Int piece)
+# Returns the color-stripped type of a piece code:
+#   1=pawn, 2=knight, 3=bishop, 4=rook, 5=queen, 6=king, 0=empty.
+# Useful when logic only cares about what the piece is, not its color.
+
+@using rychess
+@fast
+
+@if piece >= 7
+    @return piece - 6
+@fi
+@return piece

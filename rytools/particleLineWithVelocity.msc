@@ -1,0 +1,43 @@
+# particleLine(Location startLocation, Location endLocation, Int points, Int delay, String particleType, String world, Location velocity, Double speed)
+
+# startLocation: The coordinates of the start of the particle line
+# endLocation: The coordinates of the end of the particle line
+# points: The number of particles to spawn along the line
+# delay: The delay in ticks between each particle spawn (0 for instant)
+# particleType: The type of particle to spawn (e.g., "minecraft:happy_villager")
+# world: The world in which to spawn the particles
+
+# ADDITIONAL VARS since this is particleLineWITHVELOCITY
+
+# velocity: The velocity vector for the particles
+# speed: The speed multiplier for the particles
+
+@fast
+@using rytools
+
+# Extract start coordinates
+@var Double startX = startLocation.x()
+@var Double startY = startLocation.y()
+@var Double startZ = startLocation.z()
+
+# Extract end coordinates
+@var Double endX = endLocation.x()
+@var Double endY = endLocation.y()
+@var Double endZ = endLocation.z()
+
+# Spawn particles along the line
+@for Int i in list::range(0, points)
+    @var Double t = Double(i) / Double(points - 1)
+    @var Double particleX = startX + (endX - startX) * t
+    @var Double particleY = startY + (endY - startY) * t
+    @var Double particleZ = startZ + (endZ - startZ) * t
+
+    # Spawn the particle at the calculated position
+    @bypass /execute in {{world}} run particle {{particleType}} {{particleX}} {{particleY}} {{particleZ}} {{velocity.x()}} {{velocity.y()}} {{velocity.z()}} {{speed}} 1
+
+    @if delay > 0 && i < points - 1
+        @var rytools::delay(delay)
+    @fi
+@done
+
+

@@ -1,0 +1,16 @@
+# cosmetic100(Player player) https://paste.minr.org/igevibemas
+
+@fast
+@using Harha
+
+@if totalNumber[player] >= totalList.length() - 1
+    @var totalNumber[player] = 0
+@else
+    @var totalNumber[player] += 1
+@fi
+
+@var blockSelection[player] = totalList[totalNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1

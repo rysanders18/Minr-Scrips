@@ -1,0 +1,35 @@
+# testMoveCodec(Player player)
+# Phase 2 test: encode a move with known fields and confirm each
+# decoder pulls the right piece back out. Two cases cover the typical
+# range: a quiet move with no promo, and a capture with queen promo.
+
+@using rychess
+@fast
+
+@player &6=== Phase 2: Move Codec Test ===
+
+@define Int from1 = 12
+@define Int to1 = 28
+@define Int promo1 = 0
+@define Int flags1 = 2
+
+@define Int m1 = moveEncode(from1, to1, promo1, flags1)
+@player &eEncoded m1: {{m1}}
+@player &eDecoded from: {{moveFrom(m1)}} &7(expected {{from1}})
+@player &eDecoded to: {{moveTo(m1)}} &7(expected {{to1}})
+@player &eDecoded promo: {{movePromo(m1)}} &7(expected {{promo1}})
+@player &eDecoded flags: {{moveFlags(m1)}} &7(expected {{flags1}})
+
+@define Int from2 = 50
+@define Int to2 = 58
+@define Int promo2 = 4
+@define Int flags2 = 1
+
+@define Int m2 = moveEncode(from2, to2, promo2, flags2)
+@player &eEncoded m2: {{m2}}
+@player &eDecoded from: {{moveFrom(m2)}} &7(expected {{from2}})
+@player &eDecoded to: {{moveTo(m2)}} &7(expected {{to2}})
+@player &eDecoded promo: {{movePromo(m2)}} &7(expected {{promo2}})
+@player &eDecoded flags: {{moveFlags(m2)}} &7(expected {{flags2}})
+
+@player &6=== Done ===

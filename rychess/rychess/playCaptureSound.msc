@@ -1,0 +1,11 @@
+# playCaptureSound(Player player)
+# Plays the "piece captured" sound for capture moves (flag=1
+# ordinary capture, flag=3 en-passant capture). Non-capture moves
+# play playMoveSound instead - applyMoveVisually picks one or the
+# other based on the move's flag.
+# CHANGE the sound name below.
+
+@using rychess
+@fast
+
+@bypass /playsound minecraft:block.stone.break master @a[x=-9134.0,y=-61.0,z=9669.0,distance=..20] -9134.0 -61.0 9669.0 1 1

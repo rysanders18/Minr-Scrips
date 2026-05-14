@@ -1,0 +1,13 @@
+# theCubeShellAnimation()
+# Animates the cube by shell groups: entities pre-tagged rycube_d0 .. rycube_d24
+# get reset to identity transform one shell at a time, 4 ticks apart.
+@using endmap
+@fast
+
+@define Int[] size = Int[1,3,6,10,15,21,27,33,39,43,45,48,49,48,45,43,39,33,27,21,15,10,6,3,1]
+@for Int d in list::range(0, 25)
+    @for Int i in list::range(0, size[d])
+        @bypass /data merge entity @e[tag=rycube_d{{d}}_i{{i}},limit=1] {start_interpolation:0,interpolation_duration:30,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}}
+    @done
+    @delay 4
+@done

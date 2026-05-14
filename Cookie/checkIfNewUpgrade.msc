@@ -1,0 +1,65 @@
+# checkIfNewUpgrade(Player player, Int roomNumber, Long cookieCountPrevious)
+
+@using cookie
+@fast
+
+@define Int[] costList = Int[]
+
+@if diamondCookieChanceStage[player] < diamondPrices.length() 
+    @var costList.append(diamondPrices[diamondCookieChanceStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@if goldenCookieChanceStage[player] < goldenPrices.length() 
+    @var costList.append(goldenPrices[goldenCookieChanceStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@if multiplierStage[player] < multiplierPrices.length() 
+    @var costList.append(multiplierPrices[multiplierStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@if cooldownStage[player] < cooldownPrices.length() 
+    @var costList.append(cooldownPrices[cooldownStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@var costList.append(netheritePrice)
+
+@if milkDurationStage[player] < milkDurationPrices.length() 
+    @var costList.append(milkDurationPrices[milkDurationStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@if milkMultiplierStage[player] < milkMultiplierPrices.length() 
+    @var costList.append(milkMultiplierPrices[milkMultiplierStage[player]])
+@else
+    @var costList.append(0)
+@fi
+
+@if milkUnlocked[player] == false
+    @var costList.append(milkUnlockPrice)
+@else
+    @var costList.append(0)
+@fi
+
+
+# @define Int[] costList = Int[diamondPrices[diamondCookieChanceStage[player]], goldenPrices[goldenCookieChanceStage[player]], multiplierPrices[multiplierStage[player]], cooldownPrices[cooldownStage[player]], netheritePrice, milkDurationPrices[milkDurationStage[player]], milkMultiplierPrices[milkMultiplierStage[player]], milkUnlockPrice]
+@define Location[] locationList = Location[Location(-9152.00 - (20 * roomNumber), 102.50, 9302.00, "Theta"), Location(-9152.00 - (20 * roomNumber), 101.50, 9302.00, "Theta"), Location(-9152.00 - (20 * roomNumber), 100.50, 9302.00, "Theta"), Location(-9152.00 - (20 * roomNumber), 99.50, 9302.00, "Theta"), Location(-9147.00 - (20 * roomNumber), 102.50, 9302.00, "Theta"), Location(-9147.00 - (20 * roomNumber), 101.50, 9302.00, "Theta"), Location(-9147.00 - (20 * roomNumber), 100.50, 9302.00, "Theta"), Location(-9147.00 - (20 * roomNumber), 99.50, 9302.00, "Theta")]
+
+# Check for each upgrade if the player has crossed the cost threshold
+# If so, play particle effects and sounds to indicate a new upgrade is available
+@for Int i in list::range(0, costList.length())
+    @if cookieCountPrevious < costList[i] && cookieCount[player] >= costList[i]
+        # @player DEBUG: {{cookieCountPrevious}} < {{costList[i]}} < {{cookieCount[player]}}
+        @var rytools::particleLine(Location(-9149.50 - (20 * roomNumber), 100.5, 9301.00, "Theta"), locationList[i], 20, 0, "minecraft:egg_crack", 1)
+        # @bypass playsound minecraft:block.note_block.bell master @s ~ ~ ~ 0.8 {{Harha::musicNotes[12]}}
+        @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 0.8 {{Harha::musicNotes[17]}}
+    @fi
+@done

@@ -1,0 +1,38 @@
+# String[] getStartStates(Player player)
+
+# Returns all sea lantern block coordinates (start states)
+# Parameters:
+#   - player: The player to check blocks for
+# Returns: String[] of block coordinates that are sea lanterns
+
+@using nfa
+@fast
+
+@define String[] startStates = String[]
+
+# Collect all unique block coordinates from connections
+@define String[] allBlocks = String[]
+@for String connection in listOfConnections[player]
+    @define String[] parts = connection.split(";")
+    @if parts.length() == 6 && parts[0] == "connection"
+        @if !allBlocks.contains(parts[1])
+            @var allBlocks.append(parts[1])
+        @fi
+        @if !allBlocks.contains(parts[2])
+            @var allBlocks.append(parts[2])
+        @fi
+    @fi
+@done
+
+# Check which blocks are sea lanterns
+@for String blockCoords in allBlocks
+    @define String[] coords = blockCoords.split(",")
+    @if coords.length() == 3
+        @define Block block = Block(Int(coords[0]), Int(coords[1]), Int(coords[2]), "Theta")
+        @if block.getBlockType() == "SEA_LANTERN" || block.getBlockType() == "VERDANT_FROGLIGHT"
+            @var startStates.append(blockCoords)
+        @fi
+    @fi
+@done
+
+@return startStates

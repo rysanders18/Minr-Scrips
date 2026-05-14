@@ -1,0 +1,32 @@
+# theCubeShellParticles(Player player)
+# Animates the cube by shell groups: entities pre-tagged rycube_d0 .. rycube_d24
+# get reset to identity transform one shell at a time, 4 ticks apart.
+@using endmap
+@fast
+
+@for Int d in list::range(0, 25)
+    @bypass /execute in minecraft:theta_the_end run execute at @e[tag=rycube_d{{d}}] run particle dust{color:[0.412,0.000,0.824],scale:1} ~0.5 ~.25 ~0.5 .3 .3 .3 0 100 force @a[distance=..30]
+    @for Int i in list::range(0, 4)
+        @bypass /execute in minecraft:theta_the_end run playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 0.08 {{(Float(d) / 25) * 1.5 + 0.5 + (Float(i) / 100)}} 1
+        @delay 1
+    @done
+    # @bypass /execute in minecraft:theta_the_end run playsound minecraft:entity.illusioner.prepare_blindness master {{player}} ~ ~ ~ 0.2 {{(Float(d) / 25) * 1.5 + 0.5}} 1
+    @bypass /execute in minecraft:theta_the_end run playsound minecraft:entity.ender_eye.death master {{player}} ~ ~ ~ 0.003 {{(Float(d) / 25) * 1.5 + 0.5}} 1
+    # @delay 4
+@done
+
+@delay 1
+
+# @bypass /tellraw RYgamer1 DEBUG{{String(system::currentTimeMillis())}}
+@for Int d in list::range(0, 25)
+    @bypass /execute in minecraft:theta_the_end run playsound minecraft:block.conduit.deactivate master {{player}} ~ ~ ~ 0.08 {{(Float(d) / 25) * 1.5 + 0.5}} 1
+    # @delay 4
+@done
+
+# @for Int y in list::range(0, 10)
+#     @for Int z in list::range(0, 10)
+#         @bypass /execute in minecraft:theta_the_end run execute at @e[tag=rycube_x0_y{{y}}_z{{z}}] run particle dust{color:[0.412,0.000,0.824],scale:1} ~0.5 ~.25 ~0.5 .3 .3 .3 0 100 force @a[distance=..30]
+#     @done
+# @done
+
+

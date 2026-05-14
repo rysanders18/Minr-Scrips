@@ -1,0 +1,6 @@
+# String[] getLootCommandData(Player player)
+@using lendfishing
+
+@define Loot loot = this.getLoot(player)
+
+@return loot.getLootInstanceCommandData(player)

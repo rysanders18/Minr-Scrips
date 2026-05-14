@@ -1,0 +1,73 @@
+# applyMoveVisually(Player player, Int move)
+# Animates the visual board to reflect a chess move that was just
+# played. Reads pieceCodeAt[player] to find which piece-identity is
+# moving, drives movePieceVisually for the main slide, calls
+# sinkPiece for any captured piece (drops it into the board instead
+# of removing it), and orchestrates the secondary translation for
+# the rook on castling.
+# Also updates pieceCodeAt[player] in place so subsequent moves
+# look up the right identities.
+# Should be called from engineMove and from the player's move branch
+# in play(), NOT from inside the search (search uses makeMove/
+# unmakeMove on positions thousands of times - we don't want any
+# of that flickering on screen).
+
+@using rychess
+@fast
+
+@define Int from = moveFrom(move)
+@define Int to = moveTo(move)
+@define Int flags = moveFlags(move)
+@define Int movingCode = pieceCodeAt[player][from]
+
+@if flags == 1
+    @define Int capturedCode = pieceCodeAt[player][to]
+    @if capturedCode >= 0
+        @var sinkPiece(capturedCode, to)
+    @fi
+@elseif flags == 3
+    @define Int forward = 8
+    @if (movingCode / 10) == 2
+        @var forward = -8
+    @fi
+    @define Int capturedSq = to - forward
+    @define Int capturedCode = pieceCodeAt[player][capturedSq]
+    @if capturedCode >= 0
+        @var sinkPiece(capturedCode, capturedSq)
+        @var pieceCodeAt[player][capturedSq] = -1
+    @fi
+@fi
+
+@var movePieceVisually(movingCode, to)
+@var pieceCodeAt[player][from] = -1
+@var pieceCodeAt[player][to] = movingCode
+
+@if movePromo(move) != 0
+    @var recolorPiece(movingCode, "minecraft:light_blue_concrete_powder")
+@fi
+
+@if flags == 4
+    @define Int rookFrom = to + 1
+    @define Int rookTo = to - 1
+    @define Int rookCode = pieceCodeAt[player][rookFrom]
+    @if rookCode >= 0
+        @var movePieceVisually(rookCode, rookTo)
+        @var pieceCodeAt[player][rookFrom] = -1
+        @var pieceCodeAt[player][rookTo] = rookCode
+    @fi
+@elseif flags == 5
+    @define Int rookFrom = to - 2
+    @define Int rookTo = to + 1
+    @define Int rookCode = pieceCodeAt[player][rookFrom]
+    @if rookCode >= 0
+        @var movePieceVisually(rookCode, rookTo)
+        @var pieceCodeAt[player][rookFrom] = -1
+        @var pieceCodeAt[player][rookTo] = rookCode
+    @fi
+@fi
+
+@if flags == 1 || flags == 3
+    @var playCaptureSound(player)
+@else
+    @var playMoveSound(player)
+@fi

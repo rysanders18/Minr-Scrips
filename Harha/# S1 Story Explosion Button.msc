@@ -1,0 +1,75 @@
+# S1 Story Explosion Button
+@using Harha
+@fast
+
+@var player.teleport(Position(-9431.5, 1.0, 9957.5, player.getYaw(), player.getPitch(), "Theta"))
+
+@bypass /particle minecraft:explosion_emitter -9434.00 1.99 9957.53 0 0 0 1 10
+@bypass /playsound minecraft:entity.generic.explode master @s -9432.5 1.0 9957.5 1 0.8
+@delay 1
+@bypass setblock -9431 4 9958 air
+@bypass setblock -9431 4 9957 air
+@bypass setblock -9431 4 9956 air
+@bypass setblock -9432 4 9958 air
+@bypass setblock -9432 4 9957 air
+@bypass setblock -9432 4 9956 air
+@bypass setblock -9433 4 9958 air
+@bypass setblock -9433 4 9957 air
+@bypass setblock -9433 4 9956 air
+
+@bypass playsound block.wood.break master @s -9430.5 4.00 9958.5 1 1
+@bypass playsound block.wood.break master @s -9430.5 4.00 9957.5 1 1
+@bypass playsound block.wood.break master @s -9430.5 4.00 9956.5 1 1
+@bypass playsound block.wood.break master @s -9431.5 4.00 9958.5 1 1
+@bypass playsound block.wood.break master @s -9431.5 4.00 9957.5 1 1
+@bypass playsound block.wood.break master @s -9431.5 4.00 9956.5 1 1
+@bypass playsound block.wood.break master @s -9432.5 4.00 9958.5 1 1
+@bypass playsound block.wood.break master @s -9432.5 4.00 9957.5 1 1
+@bypass playsound block.wood.break master @s -9432.5 4.00 9956.5 1 1
+
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9431 4.5 9958 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9431 4.5 9957 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9431 4.5 9956 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9432 4.5 9958 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9432 4.5 9957 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9432 4.5 9956 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9433 4.5 9958 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9433 4.5 9957 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+@bypass execute in minecraft:theta run particle block{block_state:"minecraft:spruce_planks"} -9433 4.5 9956 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+
+@delay 3
+
+@for Int i in list::range(0, 3)
+    @if player.getY() <= 999.0
+        @bypass /rocket {{player}} 0 10 0
+    @fi
+    @delay 2
+@done
+
+
+@bypass /effect give {{player}} darkness 4 1 true
+@for Int i in list::range(0, 13)
+    @if player.getY() <= 999.0
+        @bypass /rocket {{player}} 0 10 0
+    @fi
+    @delay 2
+@done
+
+@bypass setblock -9431 4 9958 spruce_planks
+@bypass setblock -9431 4 9957 spruce_planks
+@bypass setblock -9431 4 9956 spruce_planks
+@bypass setblock -9432 4 9958 spruce_planks
+@bypass setblock -9432 4 9957 spruce_planks
+@bypass setblock -9432 4 9956 spruce_planks
+@bypass setblock -9433 4 9958 spruce_planks
+@bypass setblock -9433 4 9957 spruce_planks
+@bypass setblock -9433 4 9956 spruce_planks
+
+# @bypass /effect give {{player}} slow_falling 2 1 true
+# @player DEBUG: {{player.getX() - -9431.5}}, {{player.getZ() - 9957.5}}
+@if player.getX() - -9431.5 < 5 && player.getZ() - 9957.5 < 5
+    @var player.teleport(Position(-9355.5, 270.0, 9807.5, 0.0, 10.0, "Theta"))
+    @delay 1
+    @bypass /rocket {{player}} 0 -5 0
+@fi
+

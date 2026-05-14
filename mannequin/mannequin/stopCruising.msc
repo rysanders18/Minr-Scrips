@@ -1,0 +1,22 @@
+# stopCruising(Player player)
+# Releases the keyboard. Flips state from cruising to coasting so the
+# already-running cruiseTick continues with no input applied — drag and
+# gravity decay momentum naturally over ~6-15 ticks. Returns immediately
+# (the actual halt happens asynchronously inside the tick loop).
+#
+# Critically does NOT bump tickGen and does NOT zero velocity. Bumping
+# gen would kill the running cruiseTick, leaving nothing to run the
+# coast physics. Zeroing velocity reproduces the old jolt-to-stop bug.
+#
+# Idempotent and safe to call from idle: if neither cruising nor coasting,
+# do nothing. Safe to call mid-coast: also a no-op (already coasting).
+
+@using mannequin
+@fast
+
+@if !isCruising[player]
+    @return
+@fi
+
+@var isCruising[player] = false
+@var isCoasting[player] = true
