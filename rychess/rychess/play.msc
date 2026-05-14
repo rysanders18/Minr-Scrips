@@ -23,6 +23,15 @@
 @fi
 @player &7Type &fresign&7 to end the game.
 
+# Spawn the mannequin (the visible engine player) and start it wandering
+# on a random prerecording. spawnMannequin places it at the caller's
+# current position; startRandomPrerecording is a no-op if no recordings
+# have been captured yet, in which case the mannequin just stands until
+# engineMove takes over. The wandering loop runs in parallel with the
+# @prompt below thanks to its /function execute dispatch.
+@var mannequin::spawnMannequin(player)
+@var mannequin::startRandomPrerecording(player)
+
 @if humanColor == 1
     @var engineMove(player)
     @if checkGameOver(player)

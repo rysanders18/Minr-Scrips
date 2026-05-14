@@ -1,0 +1,18 @@
+# stopPrerecording(Player player)
+# Flips prerecordingActive[player] false so the playPrerecording tick
+# loop bails on its next iteration, then forces Pose back to "standing"
+# so any subsequent cruise / navigate doesn't inherit a sneaking pose.
+#
+# Idempotent: safe to call when no recording is playing. The Pose data
+# modify is a no-op on a non-existent mannequin entity (the @e selector
+# matches nothing) but won't error.
+#
+# Note: this does NOT bump tickGen or touch isCruising — those belong
+# to the physics path. A mannequin currently mid-cruise should be
+# stopped via mannequin::stopCruising instead.
+
+@using mannequin
+@fast
+
+@var prerecordingActive[player] = false
+@bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"

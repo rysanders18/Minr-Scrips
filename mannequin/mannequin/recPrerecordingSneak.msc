@@ -1,0 +1,36 @@
+# recPrerecordingSneak(Player player, Int recordingIndex, Int tickIdx)
+# Helper invoked by recordPrerecording's predicate-gated /execute commands
+# when the player is currently holding sneak. Flips
+# prerecordingSneaking<recordingIndex>[tickIdx] from false to true.
+#
+# Mirrors recInputTrue's role for recordInputs: the slot was already
+# appended as false by recordPrerecording, so this is a single bit flip.
+#
+# No-op on out-of-range recordingIndex — recordPrerecording's caller
+# is trusted to pass 0..9. Out-of-bounds tickIdx would error in the
+# array write; we trust recordPrerecording's index alignment.
+
+@using mannequin
+@fast
+
+@if recordingIndex == 0
+    @var prerecordingSneaking0[tickIdx] = true
+@elseif recordingIndex == 1
+    @var prerecordingSneaking1[tickIdx] = true
+@elseif recordingIndex == 2
+    @var prerecordingSneaking2[tickIdx] = true
+@elseif recordingIndex == 3
+    @var prerecordingSneaking3[tickIdx] = true
+@elseif recordingIndex == 4
+    @var prerecordingSneaking4[tickIdx] = true
+@elseif recordingIndex == 5
+    @var prerecordingSneaking5[tickIdx] = true
+@elseif recordingIndex == 6
+    @var prerecordingSneaking6[tickIdx] = true
+@elseif recordingIndex == 7
+    @var prerecordingSneaking7[tickIdx] = true
+@elseif recordingIndex == 8
+    @var prerecordingSneaking8[tickIdx] = true
+@elseif recordingIndex == 9
+    @var prerecordingSneaking9[tickIdx] = true
+@fi

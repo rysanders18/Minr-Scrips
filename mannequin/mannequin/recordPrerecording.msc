@@ -1,0 +1,53 @@
+# recordPrerecording(Player player, Int recordingIndex)#@using mannequin
+@fast
+
+@define Position[] tempRecording = Position[]
+@define Boolean[] tempSneaking = Boolean[]
+
+@bypass /tp -9133.0 -61.00 9668.75 -0 72.64
+@delay 2
+
+@player &3Recording prerecording &f{{recordingIndex}} &3for 1000 ticks...
+
+@for Int i in list::range(0, 1000)
+    @var tempRecording.append(player.getPosition())
+    @var tempSneaking.append(util::executeAndQuerySuccess("/execute as {{player}} if predicate {condition:\"minecraft:entity_properties\",entity:\"this\",predicate:{type_specific:{type:\"minecraft:player\",input:{sneak:true} } } }"))
+    @delay 1
+    @if i % 100 == 0
+        @player &3Recorded &f{{i}} &3ticks...
+    @fi
+@done
+
+@if recordingIndex == 0
+    @var prerecording0 = tempRecording
+    @var prerecordingSneaking0 = tempSneaking
+@elseif recordingIndex == 1
+    @var prerecording1 = tempRecording
+    @var prerecordingSneaking1 = tempSneaking
+@elseif recordingIndex == 2
+    @var prerecording2 = tempRecording
+    @var prerecordingSneaking2 = tempSneaking
+@elseif recordingIndex == 3
+    @var prerecording3 = tempRecording
+    @var prerecordingSneaking3 = tempSneaking
+@elseif recordingIndex == 4
+    @var prerecording4 = tempRecording
+    @var prerecordingSneaking4 = tempSneaking
+@elseif recordingIndex == 5
+    @var prerecording5 = tempRecording
+    @var prerecordingSneaking5 = tempSneaking
+@elseif recordingIndex == 6
+    @var prerecording6 = tempRecording
+    @var prerecordingSneaking6 = tempSneaking
+@elseif recordingIndex == 7
+    @var prerecording7 = tempRecording
+    @var prerecordingSneaking7 = tempSneaking
+@elseif recordingIndex == 8
+    @var prerecording8 = tempRecording
+    @var prerecordingSneaking8 = tempSneaking
+@elseif recordingIndex == 9
+    @var prerecording9 = tempRecording
+    @var prerecordingSneaking9 = tempSneaking
+@fi
+
+

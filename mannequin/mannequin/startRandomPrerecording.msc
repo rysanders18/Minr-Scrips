@@ -1,0 +1,35 @@
+# startRandomPrerecording(Player player)
+# Picks a random prerecording slot (0..9) and dispatches playPrerecording
+# for it via /function execute — non-blocking, so the caller continues
+# running while the mannequin wanders.
+#
+# Assumes every slot 0..9 has a non-empty recording. Caller is
+# responsible for populating them before invoking this.
+#
+# Auto-spawn: cruiseTo's auto-spawn pattern. If the mannequin hasn't
+# been summoned yet, do it now so the /tp targets in playPrerecording
+# have something to hit.
+
+@using mannequin
+@fast
+
+@if !isSpawned[player]
+    @var mannequin::spawnMannequin(player)
+@fi
+
+@define Int idx = Int(math::random(0D, 10D))
+@if idx >= 10
+    @var idx = 9
+@fi
+@if idx < 0
+    @var idx = 0
+@fi
+
+# /function execute path is the standard async dispatch (see
+# endmap/theCubeAnimation.msc:54 for the same pattern). Use @console
+# rather than @bypass — @console queues the command through the
+# console-execute path, which is what releases this caller while the
+# dispatched MSC function continues to tick on its own @delay loop.
+# playPrerecording's @delay 1 yields each tick, so it runs in parallel
+# with whatever the caller does next.
+@console /function execute mannequin::playPrerecording(Player("{{player.getName()}}"), {{idx}})

@@ -1,0 +1,141 @@
+# playPrerecording(Player player, Int idx)
+# Drives the mannequin along prerecording<idx> + prerecordingSneaking<idx>,
+# one teleport per tick. Reads yaw/pitch off each Position (Minr Position
+# carries them). Sneak state changes are emitted as /data modify Pose
+# transitions. Sprint dust fires when the per-tick horizontal delta is
+# large enough that the recorded player must have been running.
+#
+# Interruptable: each tick checks prerecordingActive[player]; stop-
+# Prerecording flips it false and the loop exits cleanly on the next
+# tick boundary. The mannequin freezes at whatever frame was last
+# played — no warp-back, matching the user's "stop moving NATURALLY"
+# intent.
+#
+# Non-blocking from the caller's POV when launched via /function execute
+# (see startRandomPrerecording), because the @delay 1 here yields to the
+# server tick while the originating script continues.
+#
+# Pose reset: ends in "standing" so a subsequent navigate/cruise doesn't
+# inherit a sneaking pose. stopPrerecording also forces standing for the
+# interrupt path.
+#
+# Sprint-dust threshold: 0.04 b²/tick² ≈ 0.2 b/tick — well above standing
+# jitter, just below a brisk walk. Matches when vanilla would have the
+# isSprinting flag set on a real player on the same frame.
+#
+# No-op on empty slot — caller (startRandomPrerecording) skips empty
+# slots, but if a slot is wiped mid-playback this just exits.
+
+@using mannequin
+@fast
+
+@define Position[] rec = Position[]
+@define Boolean[] snk = Boolean[]
+@if idx == 0
+    @var rec = prerecording0
+    @var snk = prerecordingSneaking0
+@elseif idx == 1
+    @var rec = prerecording1
+    @var snk = prerecordingSneaking1
+@elseif idx == 2
+    @var rec = prerecording2
+    @var snk = prerecordingSneaking2
+@elseif idx == 3
+    @var rec = prerecording3
+    @var snk = prerecordingSneaking3
+@elseif idx == 4
+    @var rec = prerecording4
+    @var snk = prerecordingSneaking4
+@elseif idx == 5
+    @var rec = prerecording5
+    @var snk = prerecordingSneaking5
+@elseif idx == 6
+    @var rec = prerecording6
+    @var snk = prerecordingSneaking6
+@elseif idx == 7
+    @var rec = prerecording7
+    @var snk = prerecordingSneaking7
+@elseif idx == 8
+    @var rec = prerecording8
+    @var snk = prerecordingSneaking8
+@elseif idx == 9
+    @var rec = prerecording9
+    @var snk = prerecordingSneaking9
+@fi
+
+@if rec.length() == 0
+    @return
+@fi
+@if !isSpawned[player]
+    @return
+@fi
+
+@var prerecordingActive[player] = true
+@define Boolean prevSneak = false
+
+@for Int i in list::range(0, rec.length())
+    @if !prerecordingActive[player]
+        @return
+    @fi
+    @if !player.isOnline()
+        @var prerecordingActive[player] = false
+        @return
+    @fi
+    @if !isSpawned[player]
+        @var prerecordingActive[player] = false
+        @return
+    @fi
+
+    @define Position p = rec[i]
+    @define Double px = p.getX()
+    @define Double py = p.getY()
+    @define Double pz = p.getZ()
+    @define Float yawF = Float(p.getYaw())
+    @define Float pitchF = Float(p.getPitch())
+
+    # Per-frame horizontal delta drives the sprint-dust gate AND becomes
+    # the velocity that emitSprintParticle reads to compute the backward-
+    # kick vector. Same units (blocks/tick) as the cruise physics path,
+    # so the dust looks identical to a cruiseTo run.
+    @define Double dx = px - curX[player]
+    @define Double dz = pz - curZ[player]
+
+    @var curX[player] = px
+    @var curY[player] = py
+    @var curZ[player] = pz
+    @var curYawDeg[player] = Double(yawF)
+    @var curPitchDeg[player] = Double(pitchF)
+    @var velX[player] = dx
+    @var velY[player] = 0D
+    @var velZ[player] = dz
+
+    @define Boolean curSneak = false
+    @if i < snk.length()
+        @var curSneak = snk[i]
+    @fi
+    # Only emit /data modify when the pose actually changes — saves
+    # ~20 cmds/s on a non-sneaking recording and avoids stuck-pose
+    # animation hiccups some clients show when Pose is rewritten every
+    # tick to the same value.
+    @if i == 0 || curSneak != prevSneak
+        @if curSneak
+            @bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "sneaking"
+        @else
+            @bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"
+        @fi
+    @fi
+    @var prevSneak = curSneak
+
+    @define Double speedSq = dx * dx + dz * dz
+    @if speedSq > 0.04D
+        @var mannequin::emitSprintParticle(player)
+    @fi
+
+    @bypass /minecraft:tp @e[tag=mannequin_{{player.getUniqueId()}},limit=1] {{px}} {{py}} {{pz}} {{yawF}} {{pitchF}}
+
+    @delay 1
+@done
+
+# Natural-end cleanup: clear the active flag and snap to standing.
+@var prerecordingActive[player] = false
+@bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"

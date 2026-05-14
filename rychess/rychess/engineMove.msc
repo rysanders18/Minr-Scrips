@@ -1,8 +1,31 @@
 # engineMove(Player player)
-# Convenience wrapper: ask the engine to pick a move, play it, show
-# the new board state and how long it took. If chooseMove returns 0
-# (no legal moves), reports checkmate or stalemate and exits without
-# mutating the board.
+# Engine turn with a "thinking mannequin" performance layered on top:
+#
+#   1. chooseMove runs immediately and the move is stashed locally —
+#      legality check (move == 0 ⇒ checkmate/stalemate) happens here so
+#      we don't perform the whole charade just to report no-moves.
+#   2. Realisation delay, random 10–60 ticks (0.5–3 s), during which the
+#      mannequin keeps playing whatever prerecording was running. This
+#      is the "didn't notice it's my turn yet" beat.
+#   3. stopPrerecording: the playback loop sees prerecordingActive=false
+#      next tick and exits, freezing the mannequin in place. Pose snaps
+#      back to standing.
+#   4. Settle pause, random 3–9 ticks. Mannequin just stands there.
+#   5. cruiseToFacing to the play position (-9133.0, 9668.75) with
+#      yaw=0 (facing +Z south, into the board) and pitch=72.64 (head
+#      tilted down to look at the squares). cruiseToFacing blocks until
+#      the cruise+coast pipeline finishes, so step 6 only fires once
+#      the mannequin has physically arrived. Y is implicit: collideY
+#      drops the mannequin onto the chess-room floor (y ≈ -61).
+#   6. Contemplation pause, ~2 s (35–45 ticks). The mannequin is at
+#      the board, looking at the position, before "reaching for the
+#      piece" — keeps successive moves from feeling instant.
+#   7. Apply the move: makeMove + applyMoveVisually + displayBoard.
+#   8. Resume wandering with a fresh random prerecording.
+#
+# When the chosen prerecording slot set is empty, step 7 is a no-op and
+# the mannequin just stands at the play position until the next
+# engineMove call.
 
 @using rychess
 @fast
@@ -20,6 +43,44 @@
     @return
 @fi
 
+# math::random on Doubles is exclusive on the upper bound; widen by 1
+# and clamp to get inclusive ranges that match the spec's "0.5 to 3s"
+# and "3 to 9 ticks".
+@define Int realiseDelay = Int(math::random(10D, 61D))
+@if realiseDelay > 60
+    @var realiseDelay = 60
+@fi
+@if realiseDelay < 10
+    @var realiseDelay = 10
+@fi
+@var Harha::delay(realiseDelay)
+
+@var mannequin::stopPrerecording(player)
+
+@define Int settleDelay = Int(math::random(3D, 10D))
+@if settleDelay > 9
+    @var settleDelay = 9
+@fi
+@if settleDelay < 3
+    @var settleDelay = 3
+@fi
+@var Harha::delay(settleDelay)
+
+@var mannequin::cruiseToFacing(player, -9133.0F, 9668.75F, 0.0F, 72.64F)
+
+# Contemplation pause once the mannequin has arrived at the board.
+# Looks like the engine is "reading the position" before reaching for
+# the piece. ~2 s; the small ±5 tick jitter keeps repeated moves from
+# feeling metronomic.
+@define Int contemplate = Int(math::random(35D, 46D))
+@if contemplate > 45
+    @var contemplate = 45
+@fi
+@if contemplate < 35
+    @var contemplate = 35
+@fi
+@var Harha::delay(contemplate)
+
 @define String fromName = squareName(moveFrom(move))
 @define String toName = squareName(moveTo(move))
 @player &aEngine plays: &f{{fromName}} -> {{toName}} &8[{{elapsed}}ms]
@@ -27,3 +88,5 @@
 @var makeMove(player, move)
 @var applyMoveVisually(player, move)
 @var displayBoard(player)
+
+@var mannequin::startRandomPrerecording(player)
