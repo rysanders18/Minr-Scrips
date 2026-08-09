@@ -1,0 +1,14 @@
+START POSITIONS (seed 13) - one per entry corridor
+A fall teleports the player above a random one of the 3 of
+these furthest from the fall point (see fall.msc).
+
+start  1: 4875 300 2841   (spawn at 4875 304 2841, yaw -49.1)
+start  2: 4988 300 2997   (spawn at 4988 304 2997, yaw -4.1)
+start  3: 4838 300 3081   (spawn at 4838 304 3081, yaw -4.1)
+start  4: 4855 300 3015   (spawn at 4855 304 3015, yaw 130.9)
+start  5: 4916 300 2814   (spawn at 4916 304 2814, yaw 130.9)
+start  6: 4770 300 2807   (spawn at 4770 304 2807, yaw 175.9)
+start  7: 4905 300 2824   (spawn at 4905 304 2824, yaw 85.9)
+start  8: 5032 300 2942   (spawn at 5032 304 2942, yaw 40.9)
+start  9: 4973 300 2932   (spawn at 4973 304 2932, yaw -139.1)
+start 10: 4993 300 2862   (spawn at 4993 304 2862, yaw -94.1)
