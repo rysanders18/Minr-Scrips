@@ -253,11 +253,23 @@ Open problem (measured, not guessed): **landing-volume saturation**. Cadence
 fixes fork density at ~1 per 15 blocks, so termination demand = corridor
 mass / 15 ≈ 450+, while the maze's capacity for new landing corridors
 saturates ~250 (the copy must sit just above a stable corridor — inside the
-dense cloud). Next levers, in order: walk-time terminal merges at sweet-spot
-gap ≤ 10 aimed at blocks just above stable forks; full window sharing;
-reserving pre-verified landing volume at fork-spawn time (the true
-skeleton-first move); a solve-based braid search (current one costs 20s of
-the runtime).
+dense cloud).
+
+**Continuation session update (commits `58b2dce`, `b4513b5`):** found and
+fixed the biggest single source — `landing_for_tail` never checked the
+forkless run *below* its junction, so every landing (arriving with 9+m
+bounces) could mint violation runs on the destination corridor. That guard
+plus fork redundancy (doomed timer 8–12), the landing-extension band (gap
+17–25), funnel stub tightening, and precious-arm boosts brought the 4-seed
+viol to **98/61/119/130** (from ~250–320), with ~200 splices/seed, ~2 min/
+seed, and every other verify check clean. Tried and rejected: walk-time
+sweet-spot merges (~1/4400 yield — unsteered merges never land, the old v2
+lesson), suffix window matching (~1/4500 — full fork-free suffixes are rare
+at rescue positions), widened precious (A/B worse). The remaining viol is
+repair-resistant residue concentrated in the funnel zone (no landing
+headroom above the maze top) — closing it needs either fork-site/landing
+co-reservation at spawn time (the real skeleton move) or a user-owned rule
+change (cap 24, or funnel-zone down-splices).
 
 ## Open items for the user
 
