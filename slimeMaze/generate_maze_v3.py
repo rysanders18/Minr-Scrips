@@ -253,6 +253,21 @@ SPLICE_BOOST = 3     # try-budget multiplier for gap-repair arms, whose
                      # most arc/copy placements are blocked
 SPLICE_BAND = 8      # doomed corridors start trying to splice this many
                      # bounces before their life runs out
+FARM_ZONES = ((240, 288), (FORK_FLOOR, 20))
+                     # WINDOW FARM (build-time co-reservation): root-y
+                     # bands for pre-built window corridors, set from
+                     # the measured viol distribution of the 98-viol
+                     # baseline (y quartiles [-44, 15, 245, 277, 293]):
+                     # the funnel zone and the deep band are where
+                     # dying arms find no landing volume - so shareable
+                     # window capacity is manufactured there at build
+                     # time, while the annulus is still empty
+FARM_GAP_LO, FARM_GAP_HI = 5, 9   # levels between farm roots along a
+                                  # static corridor
+FARM_TOP_CAP = START_Y - 2   # no farm block above this: corridors must
+                             # never poke out of the maze dome
+FARM_WALK_TRIES = 10  # upward-wander attempts per farm root (each try
+                      # samples a different drift bearing)
 MERGE_RANGE = 30.0   # max Chebyshev tip distance to attempt a pair-merge
 MERGE_K_MIN, MERGE_K_MAX = 6, 9   # bounces down to a merge junction
 MERGE_PER_LEVEL = 6  # pair-merge attempts per level
@@ -325,6 +340,16 @@ BUILD_REGION = 128      # placement bucket (8 chunks): the build/remove
 # ---- separation rules (tunnel-aware) --------------------------------------
 SEP_CHEB = 11.0
 SEP_DY = AIR_UP + AIR_DOWN + 1
+
+
+def chord_int_ok(ax, az, bx, bz):
+    # verify() checks chords between INTEGER block coords (5.0..7.6);
+    # a float-solved 6.3 chord can stretch to ~7.7 once both endpoints
+    # round (observed live: 7.62 on a connector arrival). Every
+    # placement from float-solved points must run this guard and treat
+    # overflow as a placement failure
+    c = math.hypot(ax - bx, az - bz)
+    return 5.0 <= c <= 7.6
 
 
 def rnd(v):
@@ -1809,6 +1834,234 @@ class Sim:
         return True
 
     # ---- splice windows -----------------------------------------------------
+    # ---- window farm (build-time co-reservation) ---------------------------
+    def farm_at(self, J, K):
+        # try to erect one window corridor rooted at static-corridor
+        # block J (continuation kid K): an exactly-solved junction
+        # arrival (same shape as landing_for_tail's connector) plus a
+        # free UPWARD wander - both endpoints are never constrained at
+        # once, so no exact solve can fail; only clear() can. The top
+        # WINDOW+1 stretches register as shareable 'farm' windows
+        jb, kb = self.blocks[J], self.blocks[K]
+        if jb is None or kb is None or jb['h'] is None \
+                or jb['px'] is None or kb['h'] is None \
+                or jb['prev2'] is not None or kb['prev2'] is not None:
+            return False
+        jy = jb['y']
+        if not any(lo <= jy <= hi for lo, hi in FARM_ZONES):
+            return False
+        kids = [k for k in self.kids.get(J, ())
+                if self.blocks[k] is not None]
+        if len(kids) != 1 or J in self.win_used \
+                or kids[0] in self.win_used or self.is_multi(kids[0]):
+            return False
+        pv = jb['prev']
+        if pv is not None and (self.blocks[pv] is None
+                               or self.is_multi(pv)
+                               or pv in self.win_used):
+            return False
+        t = hwrap(hn(kb['h']) - hn(jb['h']))
+        if abs(t) != 1:
+            return False
+        # the farm ride arrives at J carrying WINDOW+1+m bounces from
+        # its leaf top, and a junction resets nothing - same guard as
+        # landings: the run below J must still fit in the cap
+        slack = self.down_slack(J)
+        m_max = min(8, FORK_GAP_MAX - WINDOW - 2 - slack,
+                    FARM_TOP_CAP - jy - WINDOW - 1)
+        if m_max < 3:
+            self.rstats['farm_slack'] += 1
+            return False
+        arr2 = jb['h'] + 2 * t * TURN
+        sx = jb['px'] - CHORD * math.cos(arr2)
+        sz = jb['pz'] - CHORD * math.sin(arr2)
+        # free space around a root is a narrow wedge between the
+        # parent corridor's own outward ascent and the neighbor
+        # funnel corridors (~2*pi*r/10 apart): blind drift bearings
+        # walked into walls ~85% of the time (farm_clear0). Measure
+        # instead: grid-probe the swept slab along 12 bearings and
+        # walk only into the emptiest wedges
+        ux = jb['px'] - kb['px']
+        uz = jb['pz'] - kb['pz']
+        un = math.hypot(ux, uz) or 1.0
+        ux, uz = ux / un, uz / un
+        bearings = []
+        taken = [(fx, fz, ftx, ftz)
+                 for fx, fz, ftx, ftz in getattr(self, 'farm_dirs', ())
+                 if max(abs(fx - jb['px']), abs(fz - jb['pz'])) < 48]
+        for k in range(12):
+            ang = math.tau * k / 12.0
+            bx_, bz_ = math.cos(ang), math.sin(ang)
+            if bx_ * ux + bz_ * uz > 0.7:
+                continue      # the parent's own ascent cone
+            if any(bx_ * ftx + bz_ * ftz > 0.5 for _, _, ftx, ftz
+                   in taken):
+                continue      # a nearby farm already owns this wedge:
+                              # parallel farms a few levels apart sit
+                              # inside SEP_DY and always collide (the
+                              # one-farm-per-corridor plateau)
+            n = 0
+            for step in (16, 32, 48):
+                cxp = rnd(jb['px'] + bx_ * step)
+                czp = rnd(jb['pz'] + bz_ * step)
+                if math.hypot(cxp - START_X, czp - START_Z) \
+                        > max_r(jy) + LAND_R_EXTRA - 8:
+                    n += 30   # bearing exits the buildable disk
+                    continue
+                for gx in range((cxp - 10) >> 3, ((cxp + 10) >> 3) + 1):
+                    for gz in range((czp - 10) >> 3,
+                                    ((czp + 10) >> 3) + 1):
+                        for i in self.grid.get((gx, gz), ()):
+                            b2 = self.blocks[i]
+                            if b2 is not None \
+                                    and jy - 4 <= b2['y'] <= jy + 20:
+                                n += 1
+            bearings.append((n + self.rng.random(), bx_, bz_))
+        if not bearings:
+            self.rstats['farm_fail'] += 1
+            return False
+        bearings.sort()
+        for _try in range(FARM_WALK_TRIES):
+            m = self.rng.randint(3, m_max)
+            L = m + WINDOW + 1
+            _, tx, tz = bearings[_try % len(bearings)]
+            # the arrival block's own heading is one turn short of the
+            # arrival chord (the player turns +-1 onto J's slot)
+            ta = self.rng.choice((-1, 1))
+            chain = [(sx, sz, arr2 - ta * TURN, jy + 1)]
+            ok = True
+            while len(chain) < L:
+                px, pz, h, y = chain[-1]
+                ppx = px - CHORD * math.cos(h)
+                ppz = pz - CHORD * math.sin(h)
+                if math.hypot(ppx - START_X, ppz - START_Z) \
+                        > max_r(y + 1) + LAND_R_EXTRA:
+                    self.rstats['farm_rad'] += 1
+                    ok = False
+                    break
+                # turn INTO this block = heading of the block above.
+                # The initial heading is fixed by the junction arrival
+                # and usually points at the crowded interior; a fixed
+                # drift target cannot see the walls on the way there
+                # (the 22.5deg/step swing takes up to 8 bounces). Probe
+                # instead: two-step lookahead per heading choice, pick
+                # the emptier side, drift target only as tiebreak
+                sc = []
+                for hp in (h - TURN, h + TURN):
+                    qx = rnd(ppx - CHORD * 1.6 * math.cos(hp))
+                    qz = rnd(ppz - CHORD * 1.6 * math.sin(hp))
+                    n = 0
+                    for gx in range((qx - 8) >> 3, ((qx + 8) >> 3) + 1):
+                        for gz in range((qz - 8) >> 3,
+                                        ((qz + 8) >> 3) + 1):
+                            for i3 in self.grid.get((gx, gz), ()):
+                                b3 = self.blocks[i3]
+                                if b3 is not None \
+                                        and abs(b3['y'] - (y + 2)) \
+                                        <= SEP_DY:
+                                    n += 1
+                    o = -(math.cos(hp) * tx + math.sin(hp) * tz)
+                    sc.append((n, -o, hp))
+                sc.sort()
+                hp = sc[0][2] if self.rng.random() > 0.1 else sc[-1][2]
+                chain.append((ppx, ppz, hp, y + 1))
+            if not ok:
+                continue
+            placed = []
+            last = None
+            for i2, (px, pz, h, y) in enumerate(reversed(chain)):
+                bx, bz = rnd(px), rnd(pz)
+                if last is not None and not chord_int_ok(
+                        bx, bz, self.blocks[last]['x'],
+                        self.blocks[last]['z']):
+                    self.rstats['farm_chord'] += 1
+                    ok = False
+                    break
+                if i2 == L - 1 and not chord_int_ok(
+                        bx, bz, jb['x'], jb['z']):
+                    self.rstats['farm_chord'] += 1
+                    ok = False
+                    break
+                if not self.clear(bx, bz, y, last,
+                                  extra=[(J, L - i2)]):
+                    self.rstats['farm_clear%d' % (3 * i2 // L)] += 1
+                    if os.environ.get('GM_FARMDBG') \
+                            and self.rstats.get('farm_dbg', 0) < 12:
+                        self.rstats['farm_dbg'] += 1
+                        near = []
+                        for gx in range((bx - 14) >> 3,
+                                        ((bx + 14) >> 3) + 1):
+                            for gz in range((bz - 14) >> 3,
+                                            ((bz + 14) >> 3) + 1):
+                                for i3 in self.grid.get((gx, gz), ()):
+                                    b3 = self.blocks[i3]
+                                    if b3 is None or abs(b3['y'] - y) \
+                                            > SEP_DY:
+                                        continue
+                                    d3 = max(abs(b3['x'] - bx),
+                                             abs(b3['z'] - bz))
+                                    if d3 < 14:
+                                        near.append(
+                                            (d3, b3['y'] - y, b3['br']))
+                        near.sort()
+                        print('[farmdbg] jy=%d i2=%d/%d blockers=%s'
+                              % (jy, i2, L, near[:4]), flush=True)
+                    ok = False
+                    break
+                last = self.place(bx, y, bz, last, -3, f=(px, pz, h))
+                placed.append(last)
+            if not ok:
+                for i2 in reversed(placed):
+                    self.pop_block(i2)
+                continue
+            lastb = self.blocks[last]
+            lb = self.new_branch(lastb['px'], lastb['pz'], lastb['h'],
+                                 ta, lastb['y'], last)
+            lb['alive'] = False
+            lb['landing'] = True
+            lb['merged'] = True
+            lb['blocks'] = list(placed)
+            for i2 in placed:
+                self.blocks[i2]['br'] = lb['id']
+            self.set_prev(J, last)
+            jb['h2'] = arr2
+            wins = []
+            self.scan_seq_windows(lb['blocks'], wins)
+            for w in wins:
+                w['farm'] = True
+            self.windows.extend(wins)
+            self.rstats['farm_ok'] += 1
+            self.rstats['farm_ok_hi' if jy >= FARM_ZONES[0][0]
+                        else 'farm_ok_lo'] += 1
+            self.rstats['farm_win'] += len(wins)
+            if not hasattr(self, 'farm_dirs'):
+                self.farm_dirs = []
+            self.farm_dirs.append((jb['px'], jb['pz'], tx, tz))
+            return True
+        self.rstats['farm_fail'] += 1
+        return False
+
+    def build_window_farm(self):
+        # pre-build shareable window corridors along the static maze,
+        # in the zones where the 98-viol baseline measured zero
+        # termination capacity (FARM_ZONES). Runs at build time, right
+        # after the cadence stubs (down_slack must see them), while
+        # the world is ~1000 blocks: placement almost never fails, and
+        # every farm bought here is a termination that does not have
+        # to fight the saturated mid-band later
+        seqs = ([self.branches[0]['blocks']] + self.funnel_seqs
+                + self.braid_seqs)
+        for seq in seqs:
+            timer = self.rng.randint(FARM_GAP_LO, FARM_GAP_HI)
+            for n in range(len(seq) - 1):
+                timer -= 1
+                if timer > 0:
+                    continue
+                if self.farm_at(seq[n], seq[n + 1]):
+                    timer = self.rng.randint(FARM_GAP_LO, FARM_GAP_HI)
+                else:
+                    timer = 1
+
     def scan_seq_windows(self, seq, dest):
         for i in range(len(seq) - WINDOW):
             w = seq[i:i + WINDOW + 1]
@@ -2005,6 +2258,7 @@ class Sim:
         d_tip = self.bounces_since_fork(tip_idx)
         novel_first = self.rng.random() < NOVEL_P
         cands.sort(key=lambda w: ((w['blocks'][0] in anc) == novel_first,
+                                  not w.get('farm'),
                                   not doomed_win(w),
                                   w['y'] > TRUNK_TOP))
         tried = 0
@@ -2095,6 +2349,9 @@ class Sim:
                 bx, bz = rnd(px), rnd(pz)
                 y -= 1
                 if (math.hypot(px - START_X, pz - START_Z) > max_r(y)
+                        or not chord_int_ok(
+                            bx, bz, self.blocks[last]['x'],
+                            self.blocks[last]['z'])
                         or not self.clear(bx, bz, y, last)):
                     self.rstats[self.sp_ctx + 'sp_arc_blocked'] += 1
                     ok = False
@@ -2177,6 +2434,10 @@ class Sim:
                 # corridors the player has never ridden
                 self.register_branch_windows(br)
                 self.rstats[self.sp_ctx + 'sp_ok'] += 1
+                if w.get('farm'):
+                    self.rstats[self.sp_ctx + 'sp_farm'] += 1
+                if tip_y >= FARM_ZONES[0][0]:
+                    self.rstats[self.sp_ctx + 'sp_hi'] += 1
                 return True
             for i in reversed(placed):
                 self.pop_block(i)
@@ -2503,6 +2764,14 @@ class Sim:
                             yy = c7['y'] + dy - si - 1
                             if (math.hypot(fx - START_X, fz - START_Z)
                                     > max_r(yy) + LAND_R_EXTRA
+                                    or not chord_int_ok(
+                                        rnd(fx), rnd(fz),
+                                        self.blocks[last]['x'],
+                                        self.blocks[last]['z'])
+                                    or (si == m - 1
+                                        and not chord_int_ok(
+                                            rnd(fx), rnd(fz),
+                                            jb['x'], jb['z']))
                                     or not self.clear(
                                         rnd(fx), rnd(fz), yy, last,
                                         extra=[(J, m - si)])):
@@ -2895,6 +3164,14 @@ class Sim:
                         yy = tip['y'] - si - 1
                         if (math.hypot(fx - START_X, fz - START_Z)
                                 > max_r(yy)
+                                or not chord_int_ok(
+                                    rnd(fx), rnd(fz),
+                                    self.blocks[last]['x'],
+                                    self.blocks[last]['z'])
+                                or (si == m - 1
+                                    and not chord_int_ok(
+                                        rnd(fx), rnd(fz),
+                                        jb['x'], jb['z']))
                                 or not self.clear(
                                     rnd(fx), rnd(fz), yy, last,
                                     extra=[(J, m - si)])):
@@ -3174,7 +3451,10 @@ class Sim:
                     if br['gap'] >= FORK_GAP_MAX + WINDOW - 2:
                         self.end_branch(br)
                     elif br['gap'] >= FORK_LAND_AT:
-                        if self.splice_landing(br):
+                        # farm windows serve the extension band too:
+                        # in the farm zones a landing rarely fits, but
+                        # a pre-built window almost always does
+                        if self.splice_landing(br) or self.splice_tail(br):
                             br['spliced'] = True
                             br['alive'] = False
 
@@ -3403,6 +3683,7 @@ class Sim:
             self.reserve_along(seq[1:-1], gap_lo=4, gap_hi=6)
         for seq in self.braid_seqs:
             self.reserve_along(seq[3:-3])
+        self.build_window_farm()
         self.scan_windows()
         tick('stubs+wins')
 
