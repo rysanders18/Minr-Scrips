@@ -284,7 +284,8 @@ single-seed conclusions). Four levers built and measured 4-seed:
 | Window farm (pre-built shareable windows in the dead zones) | 107/124/151/116 | **rejected** — ~17 uses/seed don't pay the interior congestion; default OFF (`GM_FARM=1`) |
 | Steered suffix termination (arm rides onto a window) | 3/59 conversion | **rejected** — the ride hits the same arm-side congestion as a splice arc and rounds worse than a translation; gated (`GM_STEER=1`) |
 | Funnel stub relaxation 4-6 → 7-10 | 134/127/97/115 | **rejected** — removes redundancy without removing the failure mode |
-| **Bubble braids** (build-time pre-terminated funnel forks) | **94/43/89/57 (mean 71)** | **new best, default ON** (`GM_BUBBLE=0` reverts) |
+| **Bubble braids** (build-time pre-terminated funnel forks) | 94/43/89/57 (mean 71) | works — funnel bucket collapses |
+| **Bubble braids + close-retries** (commit `21b5e15`) | **70/33/65/63 (mean 58)** | **new best, default ON** (`GM_BUBBLE=0` reverts) |
 
 The unifying measurement: every mechanism that leaves speculative
 arms in the funnel zone loses. The stub pads (12.5-14 Chebyshev
