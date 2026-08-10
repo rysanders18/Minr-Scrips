@@ -654,6 +654,10 @@ class Sim:
         # higher, where the local geometry differs. Only when that is
         # exhausted fall back to the chew (which itself retries a
         # landing at every position on the way up)
+        # tier 0: suffix window match - free (no blocks placed)
+        if self.splice_suffix(br):
+            br['spliced'] = True
+            return
         boost = self.precious(br)
         for _attempt in range(6 if boost else 4):
             if boost:
@@ -727,6 +731,10 @@ class Sim:
             # long its own suffix serves as the copy source, so the
             # call is one (cheap) junction search - and an early rescue
             # stops the erasure cascade before it eats the arm's forks
+            if self.splice_suffix(br, tip_idx=i):
+                br['spliced'] = True
+                tail_ends.add(self.splices[-1]['copy'][-1])
+                continue
             if self.precious(br):
                 self.land_boost = True
             try:
@@ -2577,6 +2585,148 @@ class Sim:
                     best = n + 1
                 stack.append((k, n + 1))
         return best
+
+    def win_signature(self, idxs):
+        # chord-heading signature of a WINDOW+1 block chain: the tuple
+        # of quantized headings of its WINDOW chords. Two chains with
+        # equal signatures are exact translations of each other up to
+        # an integer delta (all chords match in heading, hence in
+        # rounded x/z step) - the basis of the suffix window match
+        hs = []
+        for a, b in zip(idxs, idxs[1:]):
+            bb = self.blocks[b]
+            if bb is None or bb['h'] is None:
+                return None
+            hs.append(hn(bb['h']))
+        return tuple(hs)
+
+    def splice_suffix(self, br, tip_idx=None):
+        # SUFFIX WINDOW MATCH (v3 capacity tier 0): terminate a dying
+        # arm by matching its own last WINDOW+1 blocks against a
+        # registered window with the IDENTICAL chord-heading signature.
+        # The arm's suffix becomes the replica tail verbatim - zero new
+        # blocks are placed, so this tier is immune to the volume
+        # saturation that limits landings. Costs only the tail tube
+        # registration.
+        self.rstats['sx_call'] += 1
+        if tip_idx is None:
+            tip_idx = br['last']
+        tip = self.blocks[tip_idx]
+        if tip is None or tip['h'] is None or tip['px'] is None:
+            return False
+        # suffix extraction identical to splice_landing's, but the
+        # FULL length is required (nothing is grown here)
+        suffix = [tip_idx]
+        blocks_ = br['blocks']
+        if tip_idx not in blocks_:
+            return False
+        pos = len(blocks_) - 1 - blocks_[::-1].index(tip_idx)
+        j = pos
+        while len(suffix) < WINDOW + 1 and j > 0:
+            cand = blocks_[j - 1]
+            cb = self.blocks[cand]
+            nb = self.blocks[suffix[0]]
+            if (cb is None or cb['h'] is None or cb['px'] is None
+                    or cb['prev2'] is not None
+                    or nb['prev'] != cand
+                    or cand in self.win_used
+                    or sum(1 for k in self.kids.get(cand, ())
+                           if self.blocks[k] is not None) > 1
+                    or abs(hwrap(hn(nb['h']) - hn(cb['h']))) != 1):
+                break
+            suffix.insert(0, cand)
+            j -= 1
+        if len(suffix) < WINDOW + 1:
+            self.rstats['sx_short'] += 1
+            return False
+        if self.bounces_since_fork(suffix[1]) > FORK_GAP_MAX:
+            self.rstats['sx_guard'] += 1
+            return False
+        sig = self.win_signature(suffix)
+        if sig is None:
+            return False
+        # signature index over self.windows, rebuilt when it grows
+        if getattr(self, '_wsig_n', -1) != len(self.windows):
+            idx = {}
+            for w in self.windows:
+                s2 = self.win_signature(w['blocks'])
+                if s2 is not None:
+                    idx.setdefault(s2, []).append(w)
+            self._wsig = idx
+            self._wsig_n = len(self.windows)
+        cands = self._wsig.get(sig, ())
+        if not cands:
+            self.rstats['sx_nomatch'] += 1
+            return False
+        sb = [self.blocks[i] for i in suffix]
+        tails = {c for sp in self.splices for c in sp['copy']}
+        cpts = self.tube_pts(suffix)
+        cbox = self.tube_box(cpts)
+        for w in cands:
+            wbs = [self.blocks[i] for i in w['blocks']]
+            if any(b is None or b['h'] is None for b in wbs):
+                continue
+            # window must still be fork-free / merge-free and live
+            if any(len([k for k in self.kids.get(i, ())
+                        if self.blocks[k] is not None]) > 1
+                   for i in w['blocks'][:-1]):
+                continue
+            if any(b['prev2'] is not None for b in wbs):
+                continue
+            if any(i in tails for i in w['blocks']):
+                continue      # SPLICE_SUPPRESS: never land on a tail
+            if any(i in self.win_used for i in w['blocks']):
+                continue
+            if any(i in suffix for i in w['blocks']):
+                continue      # never map the suffix onto itself
+            dx = wbs[1]['x'] - sb[1]['x']
+            dy = wbs[1]['y'] - sb[1]['y']
+            dz = wbs[1]['z'] - sb[1]['z']
+            if not (MIN_RISE <= dy <= SPLICE_MAX_RISE):
+                self.rstats['sx_rise'] += 1
+                continue
+            if max(abs(dx), abs(dz)) > SPLICE_MAX_D:
+                self.rstats['sx_far'] += 1
+                continue
+            if max(abs(dx), abs(dz)) < 14 and abs(dy) < 20:
+                self.rstats['sx_sep'] += 1
+                continue
+            # exact translation check over the whole copy
+            if any((wb['x'] - cb2['x'], wb['y'] - cb2['y'],
+                    wb['z'] - cb2['z']) != (dx, dy, dz)
+                   for wb, cb2 in zip(wbs[1:], sb[1:])):
+                self.rstats['sx_mismatch'] += 1
+                continue
+            wpts = self.tube_pts(w['blocks'])
+            wbox = self.tube_box(wpts)
+            wset = set(w['blocks'][1:])
+            if any(not wset <= tcopy
+                   and self.tubes_clash(wpts, wbox, tpts, tbox)
+                   for tpts, tbox, tcopy in self.tail_tubes):
+                self.rstats['sx_wintube'] += 1
+                continue
+            if any(self.tubes_clash(cpts, cbox, tpts, tbox)
+                   for tpts, tbox, _ in self.tail_tubes) \
+                    or any(self.tubes_clash(cpts, cbox, op, ob)
+                           for op, ob in self.win_tubes):
+                self.rstats['sx_tailtube'] += 1
+                continue
+            copy = suffix[1:]
+            self.tail_tubes.append((cpts, cbox, set(copy) | {suffix[0]}))
+            self.win_tubes.append((wpts, wbox))
+            anc = self.ancestors_of(suffix[0])
+            self.splices.append({
+                'branch': br['id'],
+                'delta': (dx, dy, dz),
+                'w0': w['blocks'][0],
+                'novel': w['blocks'][0] not in anc,
+                'doomed_dest': False,
+                'copy': copy, 'win': list(w['blocks'])})
+            self.win_used.update(w['blocks'])
+            self.rstats['sx_ok'] += 1
+            return True
+        self.rstats['sx_nofit'] += 1
+        return False
 
     def precious(self, br):
         # an arm rooted on a FINAL corridor - static (trunk/funnel/
