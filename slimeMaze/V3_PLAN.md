@@ -271,6 +271,49 @@ headroom above the maze top) — closing it needs either fork-site/landing
 co-reservation at spawn time (the real skeleton move) or a user-owned rule
 change (cap 24, or funnel-zone down-splices).
 
+## Session update (2026-08-09/10, commits `f39fdaf`, `8fb56df`)
+
+Baseline re-measured (viol 98 seed 1, bimodal y-quartiles
+[-44, 15, 245, 277, 293]: funnel zone + deep band, both with zero
+landing capacity; seed-1 noise band for one config spans ±30 — no
+single-seed conclusions). Four levers built and measured 4-seed:
+
+| Lever | 4-seed viol | Verdict |
+|---|---|---|
+| b4513b5 baseline (stubs 4-6) | 98/61/119/130 (mean 102) | prior best |
+| Window farm (pre-built shareable windows in the dead zones) | 107/124/151/116 | **rejected** — ~17 uses/seed don't pay the interior congestion; default OFF (`GM_FARM=1`) |
+| Steered suffix termination (arm rides onto a window) | 3/59 conversion | **rejected** — the ride hits the same arm-side congestion as a splice arc and rounds worse than a translation; gated (`GM_STEER=1`) |
+| Funnel stub relaxation 4-6 → 7-10 | 134/127/97/115 | **rejected** — removes redundancy without removing the failure mode |
+| **Bubble braids** (build-time pre-terminated funnel forks) | **94/43/89/57 (mean 71)** | **new best, default ON** (`GM_BUBBLE=0` reverts) |
+
+The unifying measurement: every mechanism that leaves speculative
+arms in the funnel zone loses. The stub pads (12.5-14 Chebyshev
+× ±15 y each, every 4-6 levels × 10 corridors) blanket the zone and
+starve *arm-side* placement for every termination flavor — GM_FARMDBG
+nearest-blocker dumps proved the blockers are `br=-1` stub blocks.
+Bubble braids remove the speculation: spawn mirror-turn fork arms
+(pass 1 — the fork exists immediately), then terminate each arm **at
+build time** via `splice_tail` in the near-empty world (pass 2; entry
+corridors above are fresh window supply, no tails to chain-reject).
+Merge-based closing measured ~0/63 (exact-solve arrival too sparse —
+the v2 unsteered-merge lesson again); the splice's translation delta
+is the free variable that makes closing high-yield. Funnel-bucket
+viol collapsed 64-115 → 18-63; the residue is now mid-band `spliced`
+runs (chew erasures near spliced arms).
+
+Also fixed (latent, live-observed): float-solved connector/arc
+placements can round a 6.3 chord past verify's 7.6 cap —
+`chord_int_ok()` guards farm/landing/merge/braid/arc placement incl.
+the arrival→J chord. `verify_direct.py` (committed) runs the full
+independent verify bypassing the stats gate; structural errors = 0.
+
+Next levers for the remaining ~70: raise bubble-close conversion
+(seed 5's funnel residue 63 tracks its low `bub_ok`), then attack the
+mid-band `spliced` bucket — its runs come from chew erasures whose
+rescue splices fail in the dense end-state maze; the bubble lesson
+(terminate at build time / while sparse) suggests scheduling walk-arm
+terminations earlier in the sweep rather than at death.
+
 ## Open items for the user
 
 - Confirm WINDOW=7 as the v3 default (requested last session, never measured; 6–7

@@ -1455,28 +1455,27 @@ class Sim:
         return False
 
     # ---- bubble braids (pre-terminated cadence forks) -----------------------
-    def bubble_at(self, seq, n):
-        # BUBBLE BRAID: fork at seq[n] whose decoy arm wanders a few
-        # bounces and rejoins the SAME corridor at seq[n+depth]'s
-        # second arrival slot (braid_connect exact solve) - a
-        # build-time island. Cadence gets its fork, but the arm is
-        # BORN TERMINATED: no doomed walk, no termination demand, no
-        # chew, no repair, no pad reservation. Replaces the funnel
-        # stubs, whose arms were the largest unpayable termination
-        # bill (2026-08-09 4-seed evidence: farms, steering and
+    def bubble_at(self, B, K):
+        # BUBBLE spawn: fork at static-corridor block B (continuation
+        # kid K) whose decoy arm will be terminated AT BUILD TIME
+        # (bubble_close). Cadence gets its fork the moment the
+        # child's first block lands, and the arm never joins the
+        # runtime termination economy: no doomed walk, no chew, no
+        # repair, no pad reservation. Replaces the funnel stubs,
+        # whose arms were the largest unpayable termination bill
+        # (2026-08-09 4-seed evidence: farms, steering and
         # pad-relaxation all failed to pay it; per-type viol was
         # dominated by stub-loss runs on funnel corridors)
-        B, K = seq[n], seq[n + 1]
         bb, kb = self.blocks[B], self.blocks[K]
         if bb is None or kb is None or bb['h'] is None \
                 or bb['px'] is None or kb['h'] is None \
                 or bb['prev2'] is not None or kb['prev2'] is not None \
                 or B in self.win_used or self.is_multi(B) \
                 or self.is_multi(K):
-            return False
+            return None
         t = hwrap(hn(kb['h']) - hn(bb['h']))
         if abs(t) != 1:
-            return False
+            return None
         # decoy first bounce mirrors the corridor turn (try_fork
         # shape) plus a short natural wander. The rejoin happens in a
         # SECOND pass (bubble_close): a rejoin is an ARRIVAL, and
@@ -1556,7 +1555,7 @@ class Sim:
             timer -= 1
             if timer > 0:
                 continue
-            ch = self.bubble_at(seq, n)
+            ch = self.bubble_at(seq[n], seq[n + 1])
             if ch is not None:
                 out.append((ch, seq[n], seq[n + 1]))
                 timer = self.rng.randint(gap_lo, gap_hi)
@@ -3982,7 +3981,18 @@ class Sim:
             for seq in self.funnel_seqs:
                 spawned.extend(self.bubble_along(seq[1:-1]))
             for ch, B, K in spawned:
-                if self.bubble_close(ch):
+                done = self.bubble_close(ch)
+                # a close failure is usually THIS arm's local splice
+                # geometry - respawn with a fresh wander before
+                # surrendering the site to a stub promise
+                for _r in range(2):
+                    if done:
+                        break
+                    ch2 = self.bubble_at(B, K)
+                    if ch2 is None:
+                        break
+                    done = self.bubble_close(ch2)
+                if done:
                     continue
                 # stub-promise fallback so the fork site is not lost
                 bb, kb = self.blocks[B], self.blocks[K]
