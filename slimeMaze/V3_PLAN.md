@@ -315,6 +315,48 @@ rescue splices fail in the dense end-state maze; the bubble lesson
 (terminate at build time / while sparse) suggests scheduling walk-arm
 terminations earlier in the sweep rather than at death.
 
+## Phase 5 first run (2026-08-10) — emit works, decoration does not
+
+Phase 5 had never been executed. Run on seed 2 (viol 33, the sweep's best)
+via `emit_sandbox.py` (new; bypasses main()'s seed gate, emits to an
+explicit sandbox — the gate had kept every v3 maze from ever reaching
+emit). Results:
+
+| Check | Result |
+|---|---|
+| `emit()` to sandbox | **works** — 68 files, 0.7s, all chains + splices/starts/solution |
+| `verify_build.py` | **PASS** (chains, part caps, unique setblocks, splice deltas vs splices.txt, .nms declarations) |
+| `gm.verify()` structural | **0 non-fork-gap errors** |
+| `wall_test.py` against a v3 sim | **completes** — 251 wall/dome/floor/decor chains emitted |
+| wall_test too-close audit | **REGRESSION: 96 (30 unannotated) vs v2's 3 (1 unannotated)** |
+
+`wall_test.py` hardcodes `import generate_maze` (v2) — a v3 run needs that
+line pointed at `generate_maze_v3`. It was never a v3-aware script.
+
+**The open defect.** The too-close audit reports built wall columns whose
+run bottom sits within 3.5 blocks of a corridor centerline. v2's cached
+world (`wt_debug.pkl`, Aug 4 — a *larger* world, 523k cells) yields 3 such
+columns, 1 outside the two documented-benign classes. v3 seed 2 yields 96,
+30 outside them — and 29 of those 30 cluster tightly at **dy ≈ +2.7..+3.7**,
+i.e. a wall column rising from ~3 levels below a corridor it stands
+1.4–3.5 blocks away from. Attribution (nearest 3 corridor blocks per
+column): **69 spliced + 18 unterminated-arm blocks, 0 junction blocks** —
+so this is *not* the landing/junction geometry, it is v3's much denser
+population of splice-tail and leftover-arm corridors stacking ~3 levels
+apart at sub-wall-thickness horizontal distance. `clear()` permits it
+(kin exemption), the wall shell cannot.
+
+Consequence: decoration blocks intrude into corridor air the player
+bounces through. Slime geometry is unaffected — the maze is *structurally*
+fine and *cosmetically* not.
+
+Fix directions (untried): raise the wall-prune rule to cover the
+dy +2..+4 band; or add a wall-clearance term to `clear()` for
+non-junction pairs (a corridor-vs-corridor vertical separation floor
+around ±4 levels rather than relying on Chebyshev alone); or accept
+and prune at stamp time. Whichever, re-run this audit as the gate —
+the v2 numbers (3 / 1) are the target.
+
 ## Open items for the user
 
 - Confirm WINDOW=7 as the v3 default (requested last session, never measured; 6–7
