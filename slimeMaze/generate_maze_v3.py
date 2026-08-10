@@ -1429,6 +1429,11 @@ class Sim:
                 bx, bz = rnd(px), rnd(pz)
                 yy = br['y'] - si - 1
                 if (math.hypot(px - START_X, pz - START_Z) > max_r(yy)
+                        or not chord_int_ok(
+                            bx, bz, self.blocks[last]['x'],
+                            self.blocks[last]['z'])
+                        or (si == m - 1 and not chord_int_ok(
+                            bx, bz, jb['x'], jb['z']))
                         or not self.clear(bx, bz, yy, last,
                                           extra=[(J, m - si)])):
                     self.rstats['bc_place'] += 1
@@ -1448,6 +1453,116 @@ class Sim:
             for i in reversed(placed):
                 self.pop_block(i)
         return False
+
+    # ---- bubble braids (pre-terminated cadence forks) -----------------------
+    def bubble_at(self, seq, n):
+        # BUBBLE BRAID: fork at seq[n] whose decoy arm wanders a few
+        # bounces and rejoins the SAME corridor at seq[n+depth]'s
+        # second arrival slot (braid_connect exact solve) - a
+        # build-time island. Cadence gets its fork, but the arm is
+        # BORN TERMINATED: no doomed walk, no termination demand, no
+        # chew, no repair, no pad reservation. Replaces the funnel
+        # stubs, whose arms were the largest unpayable termination
+        # bill (2026-08-09 4-seed evidence: farms, steering and
+        # pad-relaxation all failed to pay it; per-type viol was
+        # dominated by stub-loss runs on funnel corridors)
+        B, K = seq[n], seq[n + 1]
+        bb, kb = self.blocks[B], self.blocks[K]
+        if bb is None or kb is None or bb['h'] is None \
+                or bb['px'] is None or kb['h'] is None \
+                or bb['prev2'] is not None or kb['prev2'] is not None \
+                or B in self.win_used or self.is_multi(B) \
+                or self.is_multi(K):
+            return False
+        t = hwrap(hn(kb['h']) - hn(bb['h']))
+        if abs(t) != 1:
+            return False
+        # decoy first bounce mirrors the corridor turn (try_fork
+        # shape) plus a short natural wander. The rejoin happens in a
+        # SECOND pass (bubble_close): a rejoin is an ARRIVAL, and
+        # down_slack demands forks below the junction - which are
+        # exactly what this pass is still creating top-down
+        # (me_slack 1749 killed the single-pass version)
+        child = self.new_branch(bb['px'], bb['pz'], bb['h'], -t,
+                                bb['y'], B)
+        child['flip'] = max(child['flip'], FORK_TURN_LOCK)
+        ok = self.step(child, forced=-t) is not None
+        walked = 1
+        wmax = self.rng.randint(3, 7)
+        while ok and walked < wmax:
+            ok = self.step(child) is not None
+            walked += 1
+        if not ok and walked >= 2:
+            ok = True      # a shorter wrong corridor still splices
+        if ok:
+            self.forks.append({
+                'br': bb['br'], 'decoy': child['id'],
+                'parent_idx': B, 'cont_idx': K,
+                'decoy_idx': child['blocks'][0], 'y': bb['y'],
+                'golden': False})
+            return child
+        for i in reversed(child['blocks']):
+            if self.blocks[i] is not None:
+                self.pop_block(i)
+        self.branches.pop()
+        self.rstats['bub_nospawn'] += 1
+        return None
+
+    def bubble_close(self, child):
+        # pass 2: terminate the spawned arm IN THE EMPTY WORLD, where
+        # every runtime killer is absent. splice_tail first - its
+        # translation delta is a free variable, so unlike a merge it
+        # needs no half-block-precise arrival (merge closers measured
+        # ~0/63: the exact-solve reach set is too sparse - the old v2
+        # unsteered-merge lesson). At build time arc placement is
+        # nearly free, no tails exist to chain-reject, and the entry
+        # corridors above are fresh window supply. merge_end stays as
+        # a rare lucky fallback. Failure erases the arm (non-LIFO -
+        # later spawns sit above it in the store) and reports False
+        # so the caller can fall back to a classic stub promise
+        prev_boost = getattr(self, 'splice_boost', False)
+        self.splice_boost = True
+        try:
+            if self.splice_tail(child):
+                child['spliced'] = True
+                child['alive'] = False
+                self.rstats['bub_ok'] += 1
+                return True
+        finally:
+            self.splice_boost = prev_boost
+        if self.merge_end(child):
+            child['funnel'] = True
+            self.rstats['bub_ok'] += 1
+            return True
+        for i in reversed(child['blocks']):
+            if self.blocks[i] is not None:
+                self.erase_block(i)
+        child['blocks'] = []
+        child['alive'] = False
+        self.forks = [f for f in self.forks
+                      if f['decoy'] != child['id']]
+        self.rstats['bub_fail'] += 1
+        return False
+
+    def bubble_along(self, seq, gap_lo=6, gap_hi=10):
+        # pass 1: spawn bubble fork arms every gap_lo..gap_hi levels.
+        # The fork exists the moment the child's first block lands -
+        # cadence is served immediately; the rejoins wait for
+        # bubble_close once every corridor's forks are down.
+        # Returns (child, forkblock, contblock) triples
+        out = []
+        timer = self.rng.randint(gap_lo, gap_hi)
+        for n in range(len(seq) - 1):
+            timer -= 1
+            if timer > 0:
+                continue
+            ch = self.bubble_at(seq, n)
+            if ch is not None:
+                out.append((ch, seq[n], seq[n + 1]))
+                timer = self.rng.randint(gap_lo, gap_hi)
+            else:
+                timer = 1
+        return out
 
     def make_braid(self, D0, D1, used):
         # one braid: fork OFF the golden trunk at depth D0, wander
@@ -2042,6 +2157,12 @@ class Sim:
         return False
 
     def build_window_farm(self):
+        # default OFF (GM_FARM=1 re-enables): 4-seed A/B measured
+        # 107/124/151/116 vs 98/61/119/130 baseline - the ~17
+        # window uses per seed do not pay for the interior congestion
+        # the farm connectors add near their roots
+        if os.environ.get('GM_FARM') != '1':
+            return
         # pre-build shareable window corridors along the static maze,
         # in the zones where the 98-viol baseline measured zero
         # termination capacity (FARM_ZONES). Runs at build time, right
@@ -2997,6 +3118,123 @@ class Sim:
         self.rstats['sx_nofit'] += 1
         return False
 
+    # ---- steered suffix termination ----------------------------------------
+    def sim_steer(self, br, g, w):
+        # exact dry-run of the forced ride: |g| alignment bounces
+        # (constant turn sign(g)) then the window's own 7-turn
+        # sequence, replicating step()'s float/round arithmetic
+        # bounce for bounce. Returns the forced-turn list iff the
+        # ridden suffix would be an EXACT integer translation of the
+        # window inside every splice rule - selection-time certainty
+        # is what lets the walk commit 8-15 bounces to the plan
+        wbs = [self.blocks[i] for i in w['blocks']]
+        turns = [1 if g > 0 else -1] * abs(g) + [w['dw']] \
+            + [hwrap(hn(b2['h']) - hn(b1['h']))
+               for b1, b2 in zip(wbs[1:], wbs[2:])]
+        px, pz, h, y = br['px'], br['pz'], br['h'], br['y']
+        tb = self.blocks[br['last']]
+        ints = [(tb['x'], tb['y'], tb['z'])]
+        pts = [(px, pz, y)]
+        for t in turns:
+            h += t * TURN
+            px += CHORD * math.cos(h)
+            pz += CHORD * math.sin(h)
+            y -= 1
+            if math.hypot(px - START_X, pz - START_Z) > max_r(y):
+                return None
+            ints.append((rnd(px), y, rnd(pz)))
+            pts.append((px, pz, y))
+        suf = ints[abs(g):]
+        dx = wbs[1]['x'] - suf[1][0]
+        dy = wbs[1]['y'] - suf[1][1]
+        dz = wbs[1]['z'] - suf[1][2]
+        if not (MIN_RISE <= dy <= SPLICE_MAX_RISE):
+            return None
+        if max(abs(dx), abs(dz)) > SPLICE_MAX_D:
+            return None
+        if max(abs(dx), abs(dz)) < 14 and abs(dy) < 20:
+            return None
+        if any((wb['x'] - c[0], wb['y'] - c[1], wb['z'] - c[2])
+               != (dx, dy, dz) for wb, c in zip(wbs[1:], suf[1:])):
+            self.rstats['steer_round'] += 1
+            return None       # rounding diverged: not a translation
+        # the suffix tube must not clash existing stamps (pre-check
+        # what splice_suffix will demand, or the ride is wasted)
+        spts = []
+        for (ax, az, ay), (bx2, bz2, by2) in zip(
+                pts[abs(g):], pts[abs(g) + 1:]):
+            steps = max(1, int(math.hypot(bx2 - ax, bz2 - az) / 2))
+            for s in range(steps + 1):
+                f = s / steps
+                spts.append((ax + f * (bx2 - ax), az + f * (bz2 - az),
+                             ay + f * (by2 - ay)))
+        sbox = self.tube_box(spts)
+        if any(self.tubes_clash(spts, sbox, tp, tb2)
+               for tp, tb2, _ in self.tail_tubes) \
+                or any(self.tubes_clash(spts, sbox, op, ob)
+                       for op, ob in self.win_tubes):
+            self.rstats['steer_tube'] += 1
+            return None
+        return turns
+
+    def pick_steer(self, br):
+        # choose a window this arm can ride onto. Windows are the
+        # cheap resource (farms + every spliced corridor); the ride
+        # is the arm's own corridor, so this termination needs NO new
+        # volume on either side - immune to both measured walls
+        # (landing saturation, arm-side arc placement)
+        self.rstats['steer_call'] += 1
+        gap = br['gap']
+        tip_y = br['y']
+        h_tip = br['h']
+        tails = {c for sp in self.splices for c in sp['copy']}
+        cands = []
+        for w in self.windows:
+            wb1 = self.blocks[w['blocks'][1]]
+            wb0 = self.blocks[w['blocks'][0]]
+            if wb0 is None or wb1 is None or wb1['h'] is None:
+                continue
+            g = hwrap(hn(wb1['h']) - w['dw'] - hn(h_tip))
+            if gap + abs(g) + 1 > FORK_GAP_MAX:
+                continue      # trigger would land past the cap
+            ride = abs(g) + WINDOW
+            if tip_y - ride < MORTAL_FLOOR + 2:
+                continue
+            dy = wb1['y'] - (tip_y - abs(g) - 1)
+            if not (MIN_RISE <= dy <= SPLICE_MAX_RISE):
+                continue
+            if max(abs(wb0['x'] - self.blocks[br['last']]['x']),
+                   abs(wb0['z'] - self.blocks[br['last']]['z'])) \
+                    > SPLICE_MAX_D:
+                continue
+            cands.append((g, w))
+        if not cands:
+            self.rstats['steer_nocand'] += 1
+            return None
+        self.rng.shuffle(cands)
+        cands.sort(key=lambda gw: (not gw[1].get('farm'),
+                                   abs(gw[0])))
+        tried = 0
+        for g, w in cands:
+            if tried >= 16:
+                break
+            wbs = [self.blocks[i] for i in w['blocks']]
+            if any(b is None or b['h'] is None for b in wbs) \
+                    or any(b['prev2'] is not None for b in wbs) \
+                    or any(i in self.win_used or i in tails
+                           for i in w['blocks']) \
+                    or any(len([k for k in self.kids.get(i, ())
+                                if self.blocks[k] is not None]) > 1
+                           for i in w['blocks'][:-1]):
+                continue
+            tried += 1
+            turns = self.sim_steer(br, g, w)
+            if turns is not None:
+                self.rstats['steer_pick'] += 1
+                return {'turns': turns, 'k': 0}
+        self.rstats['steer_nofit'] += 1
+        return None
+
     def precious(self, br):
         # an arm rooted on a FINAL corridor - static (trunk/funnel/
         # braid/stub/port) or already terminated (spliced/merged/
@@ -3379,6 +3617,32 @@ class Sim:
                     if br['doomed']:
                         br['life'] -= 1
                     continue
+                # steered suffix termination: mid-ride arms are
+                # committed - forced turns, no forks, and the life /
+                # wander-floor rules are suspended (the plan already
+                # proved the ride stays above MORTAL_FLOOR and ends
+                # in a legal splice)
+                if br.get('steer') is not None:
+                    st = br['steer']
+                    d = self.step(br, forced=st['turns'][st['k']])
+                    if d is None:
+                        br['steer'] = None
+                        self.rstats['steer_blocked'] += 1
+                        br['gap'] = self.bounces_since_fork(br['last'])
+                        continue
+                    st['k'] += 1
+                    br['gap'] += 1
+                    if st['k'] == len(st['turns']):
+                        br['steer'] = None
+                        if self.splice_suffix(br):
+                            br['spliced'] = True
+                            br['alive'] = False
+                            self.rstats['steer_ok'] += 1
+                        else:
+                            self.rstats['steer_lost'] += 1
+                            br['gap'] = self.bounces_since_fork(
+                                br['last'])
+                    continue
                 # v3: no early splice band - landings are reliable, so
                 # every arm lives its full life and terminates at death
                 if br['doomed'] and (br['life'] <= 0
@@ -3438,6 +3702,27 @@ class Sim:
                         and self.rng.random() < 0.3):
                     if self.merge_end(br, targets=self._mt):
                         continue
+                # steering trigger: doomed arms whose forced forks
+                # failed (cadence band) or that approach the wander
+                # floor pick a window and ride onto it. gap is
+                # re-synced exact first - the plan's trigger-cadence
+                # guarantee depends on it
+                # (A/B 2026-08-09: 59 rides -> 3 splices on seed 1 -
+                # the ride suffers the same arm-side congestion as a
+                # splice_tail arc and rounds worse than an exact
+                # translation. Default OFF, GM_STEER=1 to re-test)
+                if (os.environ.get('GM_STEER') == '1'
+                        and not forked and br['alive'] and br['doomed']
+                        and br.get('steer') is None
+                        and (br['gap'] >= FORK_FORCE_AT + 1
+                             or (br['y'] <= WANDER_FLOOR + 18
+                                 and br['gap'] >= 4))):
+                    br['gap'] = self.bounces_since_fork(br['last'])
+                    if br['gap'] + 1 < FORK_GAP_MAX:
+                        st = self.pick_steer(br)
+                        if st is not None:
+                            br['steer'] = st
+                            continue
                 if not forked and br['gap'] >= FORK_FORCE_AT:
                     # cadence backstop: pay for the exact gap. From
                     # FORK_LAND_AT on, the arm enters the LANDING
@@ -3551,7 +3836,8 @@ class Sim:
             if TRUNK_TOP - 5 > y > WANDER_FLOOR + 20:
                 pool = [b for b in self.branches
                         if b['alive'] and b['doomed'] and b['skip'] == 0
-                        and b['pending'] is None and b['life'] >= 12]
+                        and b['pending'] is None and b['life'] >= 12
+                        and b.get('steer') is None]
                 self.rng.shuffle(pool)
                 tries = 0
                 while len(pool) >= 2 and tries < MERGE_PER_LEVEL:
@@ -3670,21 +3956,53 @@ class Sim:
                 self.funnel_seqs.append(br['blocks'])
         self.build_braids()
         tick('braids')
-        # build-time cadence stubs (reserve_along) on every static
-        # junction-free stretch: funnel corridors (incl. port climbs)
-        # and braid arms. Placed after the braids so the braid steering
-        # never has to dodge stub bubbles; before scan_windows so
-        # stub-forked blocks are never scanned as fork-free windows
-        for seq in self.funnel_seqs:
-            # tighter stub spacing than the trunk (4-6 vs 6-9): the
-            # funnel zone is where arm terminations are least reliable
-            # (no landing headroom above the maze top), so its fork
-            # redundancy must absorb more losses
-            self.reserve_along(seq[1:-1], gap_lo=4, gap_hi=6)
+        # static windows scanned BEFORE the funnel forks: bubble_close
+        # splices its arms onto them at build time. Blocks forked
+        # later inside a scanned window go stale, which is safe -
+        # splice_tail re-validates every window at use
+        self.scan_windows()
+        # build-time cadence forks on every static junction-free
+        # stretch: funnel corridors (incl. port climbs) get bubbles
+        # (below), braid arms keep classic reserve_along stubs
+        # funnel-zone cadence forks. Default: BUBBLE BRAIDS (pre-
+        # terminated, no arm to pay for later - the stub arms were
+        # the funnel zone's unpayable termination bill). Two passes:
+        # spawn every corridor's fork arms first, THEN rejoin them -
+        # a rejoin is an arrival and its down_slack guard needs the
+        # forks below already in place. GM_BUBBLE=0 restores the
+        # classic stub blanket (GM_STUBGAP=a,b tunes it) for A/B
+        if os.environ.get('GM_BUBBLE') == '0':
+            for seq in self.funnel_seqs:
+                sg = os.environ.get('GM_STUBGAP')
+                lo, hi = (int(v) for v in sg.split(',')) if sg \
+                    else (4, 6)
+                self.reserve_along(seq[1:-1], gap_lo=lo, gap_hi=hi)
+        else:
+            spawned = []
+            for seq in self.funnel_seqs:
+                spawned.extend(self.bubble_along(seq[1:-1]))
+            for ch, B, K in spawned:
+                if self.bubble_close(ch):
+                    continue
+                # stub-promise fallback so the fork site is not lost
+                bb, kb = self.blocks[B], self.blocks[K]
+                if bb is None or kb is None or bb['h'] is None \
+                        or kb['h'] is None or bb['px'] is None \
+                        or bb['prev2'] is not None \
+                        or self.is_multi(B):
+                    continue
+                t = hwrap(hn(kb['h']) - hn(bb['h']))
+                if abs(t) != 1:
+                    continue
+                res = self.reserve_decoy(
+                    (bb['px'], bb['pz'], bb['h'], bb['y'], B), t, K)
+                if res is not None:
+                    res['golden'] = False
+                    self.reserved.append(res)
+                    self.rstats['bub_stub'] += 1
         for seq in self.braid_seqs:
             self.reserve_along(seq[3:-3])
         self.build_window_farm()
-        self.scan_windows()
         tick('stubs+wins')
 
         def viol_now():
