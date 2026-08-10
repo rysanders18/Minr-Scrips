@@ -654,8 +654,15 @@ class Sim:
         # higher, where the local geometry differs. Only when that is
         # exhausted fall back to the chew (which itself retries a
         # landing at every position on the way up)
-        for _attempt in range(4):
-            if self.splice_landing(br):
+        boost = self.precious(br)
+        for _attempt in range(6 if boost else 4):
+            if boost:
+                self.land_boost = True
+            try:
+                landed = self.splice_landing(br)
+            finally:
+                self.land_boost = False
+            if landed:
                 br['spliced'] = True
                 return
             # fallback tiers, cheapest capacity first: a v2-style
@@ -720,7 +727,13 @@ class Sim:
             # long its own suffix serves as the copy source, so the
             # call is one (cheap) junction search - and an early rescue
             # stops the erasure cascade before it eats the arm's forks
-            if self.splice_landing(br, tip_idx=i):
+            if self.precious(br):
+                self.land_boost = True
+            try:
+                rescued = self.splice_landing(br, tip_idx=i)
+            finally:
+                self.land_boost = False
+            if rescued:
                 br['spliced'] = True
                 tail_ends.add(self.splices[-1]['copy'][-1])
                 continue
@@ -2193,9 +2206,7 @@ class Sim:
         tip = self.blocks[tip_idx]
         if tip is None or tip['h'] is None or tip['px'] is None:
             return False
-        if self.bounces_since_fork(tip_idx) + 1 > FORK_GAP_MAX:
-            self.rstats['ld_guard'] += 1
-            return False
+        g_tip = self.bounces_since_fork(tip_idx)
         # HYBRID TAIL (postmortem fix plan #1, generalized): the copy
         # source is WINDOW+1 consecutive fork-free blocks ending at the
         # dead end. Reuse the longest valid SUFFIX of the arm's own
@@ -2226,6 +2237,14 @@ class Sim:
                 suffix.insert(0, cand)
                 j -= 1
         need = WINDOW + 1 - len(suffix)
+        # cadence guard on the TRIGGER, not the tip: the trigger is
+        # copy[0] = S[1], which for a full suffix sits WINDOW-1 bounces
+        # ABOVE the tip - so an arm may walk to gap ~26 and still land
+        # legally (the copy past the trigger is exempt). The old
+        # tip-based guard threw away ~7 retry levels per arm
+        if g_tip - (len(suffix) - 2) > FORK_GAP_MAX:
+            self.rstats['ld_guard'] += 1
+            return False
         if tip['y'] - need < MORTAL_FLOOR:
             self.rstats['ld_mortal'] += 1
             return False
@@ -2347,9 +2366,13 @@ class Sim:
                             if n > 14:
                                 return False
             return True
-        # boosted budget only for load-bearing positions (land_boost)
-        jmax = 72 if getattr(self, 'land_boost', False) else 24
-        smax = 32 if getattr(self, 'land_boost', False) else 16
+        # boosted budget only for load-bearing positions (land_boost).
+        # NOTE: connectors cannot get longer than m~8 - the landing
+        # arrives at J carrying 9 + m bounces and the down_slack guard
+        # needs that within the cap, so m >= 10 can never pass
+        boost = getattr(self, 'land_boost', False)
+        jmax = 72 if boost else 24
+        smax = 32 if boost else 16
         ms = list(range(3, 9))
         self.rng.shuffle(ms)
         for m in ms:
@@ -2394,6 +2417,18 @@ class Sim:
                     continue
                 if not roomy(jb, m):
                     self.rstats['ld_j_crowd'] += 1
+                    continue
+                # THE down_slack GUARD (the missing check that minted
+                # most of the fork-gap violations): the landing's ride
+                # arrives at J carrying d = 9 + m bounces (its root is
+                # a fresh path start), and a junction resets nothing -
+                # so J's remaining forkless run below must fit in the
+                # cap or the landing itself creates a violation run on
+                # the DESTINATION corridor (measured: viol runs on
+                # landing/funnel/golden corridors, y-quartiles at the
+                # funnel zone)
+                if WINDOW + 2 + m + self.down_slack(J) > FORK_GAP_MAX:
+                    self.rstats['ld_j_slack'] += 1
                     continue
                 tried_j += 1
                 arr2 = jb['h'] + 2 * t * TURN
@@ -2543,7 +2578,58 @@ class Sim:
                 stack.append((k, n + 1))
         return best
 
-    def merge_end(self, br, tip_idx=None):
+    def precious(self, br):
+        # an arm rooted on a FINAL corridor - static (trunk/funnel/
+        # braid/stub/port) or already terminated (spliced/merged/
+        # landing): losing its root fork permanently scars kept maze,
+        # so always worth the boosted landing budget. Arms rooted on
+        # still-alive or doomed-unterminated parents are not: those
+        # parents' own cadence tracking (or their chew) handles it
+        if not br['blocks']:
+            return False
+        b0 = self.blocks[br['blocks'][0]]
+        p = b0['prev'] if b0 else None
+        if p is None or self.blocks[p] is None:
+            return False
+        bid = self.blocks[p]['br']
+        if bid in (-1, -2):
+            return True
+        if isinstance(bid, int) and 0 <= bid < len(self.branches):
+            b2 = self.branches[bid]
+            # NOTE: widening this to spliced/merged/landing parents was
+            # A/B-tested (2 seeds) and made things worse - the extra
+            # boosted calls shift every downstream RNG draw and the
+            # static-rooted definition measured best
+            return b2['golden'] or b2['funnel'] or b2.get('braid')
+        return False
+
+    def build_merge_targets(self):
+        # blocks 1-5 upstream of a fork on a STABLE corridor, indexed
+        # by y: a merge arriving just above a fork has minimal
+        # down_slack, so walk-time sweet-spot merges aim only there
+        idx = {}
+        for f in self.forks:
+            b = self.blocks[f['parent_idx']]
+            if b is None:
+                continue
+            bid = b['br']
+            if not (isinstance(bid, int)
+                    and 0 <= bid < len(self.branches)):
+                continue
+            b2 = self.branches[bid]
+            if not ((b2['golden'] or b2['funnel'] or b2.get('braid')
+                     or b2.get('landing') or b2['spliced'])
+                    and not b2['alive']):
+                continue
+            j = b['prev']
+            for _ in range(5):
+                if j is None or self.blocks[j] is None:
+                    break
+                idx.setdefault(self.blocks[j]['y'], []).append(j)
+                j = self.blocks[j]['prev']
+        return idx
+
+    def merge_end(self, br, tip_idx=None, targets=None):
         # TERMINAL MERGE (v3): a dying arm connects INTO a stable
         # corridor with the standard junction shape - the landing's
         # exactly-solved connector with no copy to build: the arm just
@@ -2592,7 +2678,10 @@ class Sim:
         for m in ms:
             if g_tip + m + 1 > FORK_GAP_MAX - 1:
                 continue
-            rows = list(self.by_y.get(tip['y'] - m - 1, ()))
+            if targets is not None:
+                rows = list(targets.get(tip['y'] - m - 1, ()))
+            else:
+                rows = list(self.by_y.get(tip['y'] - m - 1, ()))
             self.rng.shuffle(rows)
             tried_j = 0
             for J in rows:
@@ -2808,7 +2897,8 @@ class Sim:
             self.branches.pop()
             br['fork'] = 1
             return False
-        br['fork'] = self.rng.randint(FORK_MIN, FORK_MAX)
+        br['fork'] = (self.rng.randint(8, 12) if br['doomed']
+                      else self.rng.randint(FORK_MIN, FORK_MAX))
         br['flip'] = max(br['flip'], FORK_TURN_LOCK)
         br['forked'] = True
         br['lfl'] = len(br['blocks']) - 1
@@ -2833,7 +2923,15 @@ class Sim:
                    'timer': self.rng.randint(FORK_MIN, FORK_MAX)}
                   for seq in self.funnel_seqs + self.braid_seqs]
 
+        self._mt = {}
+        mt_age = 0
         for y in range(START_Y - 1, BOTTOM_Y - 1, -1):
+            # refresh the sweet-spot merge target index every few
+            # levels (forks/stability change as branches splice)
+            if mt_age <= 0:
+                self._mt = self.build_merge_targets()
+                mt_age = 8
+            mt_age -= 1
             cohort = sorted([b for b in self.branches if b['alive']],
                             key=lambda b: len(b['blocks'])
                             if len(b['blocks']) < MIN_STUB else 999)
@@ -2865,13 +2963,17 @@ class Sim:
                     continue
                 if br['doomed']:
                     br['life'] -= 1
-                # v3 arm economics: doomed arms fork ONLY when their own
-                # cadence requires it (every ~12-17 bounces), not on the
-                # 5-9 random timer - the timer bred an exponential arm
-                # cascade (~3900 branches, ~2000 terminations wanted,
-                # far beyond landing capacity)
-                do_fork = (((br['fork'] <= 1 and not br['doomed'])
+                # v3 arm economics: doomed arms fork on a SLOWER timer
+                # (8-12) than winners (5-9) - fast timers bred an arm
+                # cascade far beyond termination capacity, but pure
+                # cadence-forced forks (12-17 spacing) had ZERO
+                # redundancy: terminations fail ~half the time, and one
+                # lost fork on a 12-17 spacing is an automatic
+                # violation. Oversample so safe-erase can absorb the
+                # losses
+                do_fork = ((br['fork'] <= 1
                             or br['gap'] + 1 >= FORK_FORCE_AT)
+                           and br['gap'] + 1 < FORK_LAND_AT
                            and br['y'] - 1 > FORK_FLOOR
                            and (not br['doomed']
                                 or br['life'] >= MIN_STUB))
@@ -2879,7 +2981,13 @@ class Sim:
                 pre = (br['px'], br['pz'], br['h'], br['y'], br['last'])
                 d = self.step(br)
                 if d is None:
-                    d = self.rewind_retry(br)
+                    # funnel-zone precious arms get extra rewind
+                    # persistence: an arm that escapes the crowded
+                    # entry disk dies lower, where landings fit -
+                    # dying high strands its static fork forever
+                    d = self.rewind_retry(
+                        br, tries=6 if (br['y'] > TRUNK_TOP - 8
+                                        and self.precious(br)) else 3)
                     if d is not None:
                         # rewind erased tail blocks: hint is stale, and
                         # the fork pre-state is gone - resync and apply
@@ -2893,17 +3001,32 @@ class Sim:
                     continue
                 br['gap'] += 1
                 forked = do_fork and self.try_fork(br, pre, d)
+                # walk-time sweet-spot merges: while the gap is still
+                # small a terminal merge just above a stable fork is
+                # cadence-cheap (down_slack tiny, arrival low) - drain
+                # the termination queue BEFORE arms are in trouble
+                if (not forked and br['doomed'] and br['alive']
+                        and 4 <= br['gap'] <= 9
+                        and getattr(self, '_mt', None)
+                        and self.rng.random() < 0.3):
+                    if self.merge_end(br, targets=self._mt):
+                        continue
                 if not forked and br['gap'] >= FORK_FORCE_AT:
-                    # cadence backstop: the hint says the forkless run
-                    # is getting long - pay for the exact value, and if
-                    # no fork could be planted in time terminate the
-                    # arm HERE with a landing splice (the trigger then
-                    # sits at gap + 1 <= FORK_LAND_AT + 1 < cap + 1,
-                    # always legal). This is what makes viol = 0 a
-                    # construction invariant instead of a repair target
+                    # cadence backstop: pay for the exact gap. From
+                    # FORK_LAND_AT on, the arm enters the LANDING
+                    # EXTENSION band: forks are off (do_fork gate), and
+                    # a landing is attempted at every level - the
+                    # trigger is the suffix top (WINDOW-1 above the
+                    # tip), so landings stay legal up to gap ~26. Only
+                    # an arm that exhausts the whole band dies the hard
+                    # way (full tiers + chew)
                     br['gap'] = self.bounces_since_fork(br['last'])
-                    if br['gap'] >= FORK_LAND_AT:
+                    if br['gap'] >= FORK_GAP_MAX + WINDOW - 2:
                         self.end_branch(br)
+                    elif br['gap'] >= FORK_LAND_AT:
+                        if self.splice_landing(br):
+                            br['spliced'] = True
+                            br['alive'] = False
 
             # decoy forks off the static funnel corridors
             for fs in fspawn:
@@ -3123,7 +3246,11 @@ class Sim:
         # never has to dodge stub bubbles; before scan_windows so
         # stub-forked blocks are never scanned as fork-free windows
         for seq in self.funnel_seqs:
-            self.reserve_along(seq[1:-1])
+            # tighter stub spacing than the trunk (4-6 vs 6-9): the
+            # funnel zone is where arm terminations are least reliable
+            # (no landing headroom above the maze top), so its fork
+            # redundancy must absorb more losses
+            self.reserve_along(seq[1:-1], gap_lo=4, gap_hi=6)
         for seq in self.braid_seqs:
             self.reserve_along(seq[3:-3])
         self.scan_windows()
@@ -3150,11 +3277,44 @@ class Sim:
                   flush=True)
         self.run_decoys()
         tick('decoys')
+        if dbg:
+            d = self.fork_gap_map()
+            ex = self.fork_gap_exempt()
+            runs = {}
+            ys = []
+            for i, v in d.items():
+                if v > FORK_GAP_MAX and i not in ex:
+                    b = self.blocks[i]
+                    bid = b['br']
+                    br2 = (self.branches[bid]
+                           if isinstance(bid, int)
+                           and 0 <= bid < len(self.branches) else None)
+                    key = ('sentinel' if br2 is None else
+                           'golden' if br2['golden'] else
+                           'funnel' if br2['funnel'] else
+                           'braid' if br2.get('braid') else
+                           'landing' if br2.get('landing') else
+                           'spliced' if br2['spliced'] else
+                           'merged' if br2['merged'] else
+                           'alive' if br2['alive'] else 'dead-other')
+                    runs[key] = runs.get(key, 0) + 1
+                    ys.append(b['y'])
+            ys.sort()
+            print('[viol] by branch type: %s | y quartiles %s'
+                  % (runs, [ys[k * (len(ys) - 1) // 4]
+                            for k in range(5)] if ys else []),
+                  flush=True)
         self.gap_stages = {'sweep': viol_now()}
         self.fix_leaves()
         tick('fix_leaves')
         self.gap_stages['fix_leaves'] = viol_now()
-        self.enforce_fork_gaps()
+        # final repair runs with the boosted landing budget - a few
+        # hundred calls at most, and these are the last-chance spots
+        self.land_boost = True
+        try:
+            self.enforce_fork_gaps()
+        finally:
+            self.land_boost = False
         tick('final')
         self.gap_stages['final'] = viol_now()
         if dbg:
