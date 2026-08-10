@@ -233,6 +233,32 @@ produce illegal leaves; if it does, that's a bug to fix, not chew).
 - **Emit/wall_test drift** → treat their input contract (Sim fields, splice record
   shape) as frozen; any change there must come with a same-session wall_test run.
 
+## Build status (2026-08-09, session 94f9b144 — commit 512c134)
+
+`generate_maze_v3.py` exists and runs end-to-end (~2.5–3 min/seed on seed 1;
+was: never finished). Independent `verify()` on the v3 maze: **zero structural
+errors** — exact-translation landings, reachability, separation, no visible
+dead ends, and the SPLICE_SUPPRESS=5 rule all pass. The one open defect class
+is the fork-gap count: **viol ~220 vs the target 0**.
+
+Done: spatial-hash `clear()`; hybrid landing tails (arm's own suffix as copy
+source); the postmortem's infinite-rewind hang found live and fixed; static
+pre-pass to viol 0 in <1s; walk-time cadence (forced forks at gap 12, landing
+termination at 17); termination tiers landing → window splice → terminal
+merge → safe-erase-classified chew; landing search made ~10× cheaper
+(horizontal prefilter, free-space prescreen, edge bias into the LAND_R_EXTRA
+annulus).
+
+Open problem (measured, not guessed): **landing-volume saturation**. Cadence
+fixes fork density at ~1 per 15 blocks, so termination demand = corridor
+mass / 15 ≈ 450+, while the maze's capacity for new landing corridors
+saturates ~250 (the copy must sit just above a stable corridor — inside the
+dense cloud). Next levers, in order: walk-time terminal merges at sweet-spot
+gap ≤ 10 aimed at blocks just above stable forks; full window sharing;
+reserving pre-verified landing volume at fork-spawn time (the true
+skeleton-first move); a solve-based braid search (current one costs 20s of
+the runtime).
+
 ## Open items for the user
 
 - Confirm WINDOW=7 as the v3 default (requested last session, never measured; 6–7
