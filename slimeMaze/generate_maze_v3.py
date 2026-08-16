@@ -42,8 +42,10 @@
 #   corridor dies, it is extended with an ALIGNMENT arc (constant turns
 #   until its heading matches the window's entry turn) plus an exact
 #   TRANSLATED COPY of a "window" somewhere higher up: WINDOW consecutive
-#   bounces of a live corridor that contain no fork (turn direction may
-#   vary inside the window). Because the copy is
+#   bounces of a live corridor that contain no fork and turn in ONE
+#   CONSTANT direction (user rule 2026-08-15: the tail past the trigger
+#   may never flip, or its own dead end could swing into view before
+#   the teleport fires). Because the copy is
 #   a pure integer translation, a single relative `tp ~dx ~dy ~dz` while
 #   the player is anywhere on the copied stretch moves them onto the real
 #   corridor with position, facing, view and momentum all consistent -
@@ -126,11 +128,14 @@ H0 = math.atan2(-2.0, -6.0)                 # reference-arc base heading
 # ---- maze shape ----------------------------------------------------------
 MAX_R_TOP, MAX_R_BOT = 198.0, 198.0
 SOFT_MARGIN = 40.0   # inside the hard bound, prefer turns that curve inward
-W_MAX = 40           # target concurrent (non-doomed) paths near the bottom
+W_MAX = 30           # target concurrent (non-doomed) paths near the bottom
                      # (v3: 70 -> 40 - termination demand scales with
                      # corridor mass at ~1 fork per 15 blocks, and the
                      # maze's landing/merge capacity is ~250: total mass
-                     # must stay near v2's ~4800 blocks for viol 0)
+                     # must stay near v2's ~4800 blocks for viol 0.
+                     # 40 -> 30 with the turn-run rule: constant-window
+                     # scarcity cut termination capacity again, so the
+                     # corridor mass follows it down)
 W_MID_BOOST = 0.2    # mid-depth bump on the live-path width curve: the
                      # middle of the maze reads several corridors wide
                      # instead of one trunk plus stubs (v3: 0.45 -> 0.2,
@@ -172,10 +177,22 @@ SPLICE_SUPPRESS = 5  # user rule (2026-08-09): after a splice fires the
                      # instant chains (windows overlapping replica tails,
                      # teleporting straight onto another trigger) are
                      # rejected in splice_tail
-FLIP_MIN, FLIP_MAX = 5, 18    # bounces between turn-direction flips; the
+FLIP_MIN, FLIP_MAX = 7, 18    # bounces between turn-direction flips; the
                               # max exceeds a full 16-bounce circle, so some
                               # stretches are descending helixes that return
-                              # over their own start (kills dead reckoning)
+                              # over their own start (kills dead reckoning).
+                              # (5 -> 8 with the turn-run rule: windows and
+                              # splice suffixes must be WINDOW=7 constant
+                              # turns now, so wander runs must reach 8+
+                              # bounces or the termination tiers starve)
+TURN_RUN_MIN = 3     # user rule (2026-08-15): after a turn-direction
+                     # change, the next TURN_RUN_MIN-1 bounces must keep
+                     # the new direction - no second change within two
+                     # blocks of the first, on ANY traversable route
+                     # (forced fallback flips, connector sequences and
+                     # fork mirrors included, not just the flip timer).
+                     # Enforced by turn_ok/down_turn_ok/flips_ok at
+                     # every placement site and re-checked in verify()
 FORK_TURN_LOCK = 4   # levels after a fork before a branch may flip its turn
 LIFE_MIN, LIFE_MAX = 6, 16    # (v3: 8,24 -> 6,16 - arm economics)
                               # bounces a doomed branch survives (at the
@@ -198,7 +215,9 @@ FORK_FLOOR = -46     # no new forks below this. build_golden FORCES a
                      # its alignment arc at 1-2 turns
 DOOM_ALL_AT = -30    # every surviving mortal is doomed at this level
 MIN_STUB = 5         # dead-end tails shorter than this are erased
-BACKTRACK_MAX = 12000  # phase-1 backtrack budget per seed
+BACKTRACK_MAX = 30000  # phase-1 backtrack budget per seed (12000 ->
+                       # 30000: the turn-run rule prunes step options,
+                       # so legal trunks need deeper backtracking)
 MAX_KIN = 3          # tree distance up to which blocks are exempt
 JUNC_KIN = MAX_KIN + 3  # exemption depth across fork/junction nodes
 
@@ -210,11 +229,16 @@ FUNNELS = 3                    # tunnels at the funnel waist: the entries
                                # merge junctions created directly on the
                                # golden trunk (inverted forks), so every
                                # entry keeps a physical route down
-PORT_MIN, PORT_MAX = 10, 32    # depth below TRUNK_TOP of the ports; the
+PORT_MIN, PORT_MAX = 10, 64    # depth below TRUNK_TOP of the ports; the
                                # port funnel stays junction-free until
                                # above TRUNK_TOP, so this is also the
-                               # visible length of the extra tunnels
-PORT_SEP = 6                   # min level gap between two ports
+                               # visible length of the extra tunnels.
+                               # (10,32 -> 10,64 with the turn-run rule:
+                               # a port needs the trunk to flip right
+                               # below the junction - or hold its turn
+                               # for 3 stub-free bounces - which thinned
+                               # the eligible depths severely)
+PORT_SEP = 4                   # min level gap between two ports
 FUNNEL_DEPTH = 45              # levels the funnel needs to merge them
 TRUNK_TOP = START_Y - FUNNEL_DEPTH   # golden trunk starts here
 FUNNEL_GAP_MIN, FUNNEL_GAP_MAX = 7, 12   # levels between funnel merges
@@ -222,15 +246,19 @@ FUNNEL_GAP_MIN, FUNNEL_GAP_MAX = 7, 12   # levels between funnel merges
 # ---- dead-end handling ----------------------------------------------------
 WANDER_FLOOR = -38   # doomed corridors stop wandering here so that...
 WINDOW = 7           # ...their splice tails (<= ALIGN_MAX + WINDOW deeper)
-ALIGN_MAX = 6        #    stay above MORTAL_FLOOR. The teleport triggers
+ALIGN_MAX = 8        #    stay above MORTAL_FLOOR (-38-15=-53 >= -55 ok;
+                     #    6 -> 8 buys back window reach lost to the
+                     #    constant-direction window rule). The teleport triggers
                      #    sit on the first two tail blocks, so 6-7
                      #    bounces continue past whichever trigger fires -
                      #    long enough that the corridor's end is never in
-                     #    sight before the splice. Windows this long are
-                     #    plentiful only because turn direction may vary
-                     #    inside a window (the copy is an exact
-                     #    translation either way; only the entry turn
-                     #    matters for the alignment arc)
+                     #    sight before the splice. Windows are CONSTANT
+                     #    turn direction (user rule 2026-08-15): a tail
+                     #    that flipped past the trigger could curl back
+                     #    and show its own dead end. That makes windows
+                     #    scarcer (only runs >= WINDOW+1 bounces long
+                     #    qualify), paid for by the turn-run rule keeping
+                     #    runs long everywhere
 MIN_RISE = 8         # a splice must send the player at least this far up
 SPLICE_MAX_RISE = 128  # max vertical tp rise: seamless teleports never
                        # jump more than this many blocks up (user-
@@ -293,13 +321,20 @@ BRAID_LEN_MIN = 12             # trunk levels between fork and rejoin
 BRAID_LEN_MAX = 24
 BRAID_TOP_Y = TRUNK_TOP - 34   # braid forks start below the port zone
 BRAID_FLOOR_Y = -20            # braid arms never descend below this
-BRAID_LOCK = 4                 # diverging bounces after a braid fork
+BRAID_LOCK = 3                 # diverging bounces after a braid fork
+                               # (4 -> 3 = TURN_RUN_MIN: the shortest
+                               # legal mirror run - one bounce earlier
+                               # into steering, where flips are legal)
 BRAID_SPACING = 4              # min trunk-level gap between braid ends
 BRAID_CONNECT = 12             # start trying to land this many levels up
 BRAID_HUG = 15.0               # steering floor: stay at least this far
                                # from the slot until the landing (just
                                # outside the trunk's separation alley)
-BRAID_TRIES = 400              # (fork, rejoin) pairs tried per maze
+BRAID_TRIES = 1000             # (fork, rejoin) pairs tried per maze
+                               # (400 -> 1000: the turn-run rule kills
+                               # most arms in the diverge lock or the
+                               # alley steering, so more pairs must be
+                               # rolled to land one braid)
 
 # ---- splice destinations --------------------------------------------------
 NOVEL_P = 0.85        # chance a dead end prefers a window OFF its own
@@ -368,6 +403,22 @@ def hwrap(n):
     return (n + 8) % 16 - 8
 
 
+def flips_ok(turns):
+    # TURN_RUN_MIN user rule on a ride-ordered turn list: every
+    # direction change must be followed by at least TURN_RUN_MIN-1
+    # turns of the new direction. Truncated windows at either end of
+    # the list are legal - the caller extends the list with whatever
+    # boundary turns exist (upstream history, junction arrivals,
+    # existing downstream corridor) and the stateful checks
+    # (turn_ok/down_turn_ok) own anything beyond the list
+    for i in range(1, len(turns)):
+        if turns[i] != turns[i - 1]:
+            for j in range(i + 1, min(i + TURN_RUN_MIN, len(turns))):
+                if turns[j] != turns[i]:
+                    return False
+    return True
+
+
 def target_width(y):
     if y >= TRUNK_TOP:
         return 3            # a few early decoys in the funnel zone
@@ -396,6 +447,19 @@ def turn_seqs(m, gap):
         for p in plus:
             seq[p] = 1
         yield seq
+
+
+def run_comps(n, lo=TURN_RUN_MIN):
+    # ordered compositions of n into parts >= lo: the maximal-run
+    # lengths of every turn sequence that satisfies the turn-run rule
+    # internally (signs alternate between consecutive runs)
+    if n == 0:
+        yield ()
+        return
+    for p in range(lo, n + 1):
+        if n - p == 0 or n - p >= lo:
+            for rest in run_comps(n - p, lo):
+                yield (p,) + rest
 
 
 class Sim:
@@ -585,6 +649,164 @@ class Sim:
                         return False
         return True
 
+    # ---- turn-run rule (TURN_RUN_MIN) --------------------------------------
+    def _turn_hist(self, j, ho, n):
+        # ride-ordered turn history (newest first, up to n turns) made
+        # at block j and its ancestors, where ho is the chord heading
+        # leaving j on the ride being checked. Junction blocks have
+        # two incoming chords (h from prev, h2 from prev2) and the
+        # player may have ridden either, so every arrival path yields
+        # its own tuple. Paths end early (shorter tuple) at path
+        # starts, None headings or non-lattice chords - unknown
+        # history never constrains
+        out = []
+
+        def rec(i, hout, acc):
+            if len(acc) >= n or i is None or self.blocks[i] is None:
+                out.append(acc)
+                return
+            b = self.blocks[i]
+            ext = False
+            for p, hin in ((b['prev'], b['h']),
+                           (b['prev2'], b.get('h2'))):
+                if hin is None:
+                    continue
+                t = hwrap(hn(hout) - hn(hin))
+                if abs(t) != 1:
+                    continue
+                ext = True
+                rec(p, hin, acc + (t,))
+            if not ext:
+                out.append(acc)
+        rec(j, ho, ())
+        return out
+
+    def hist_into(self, idx, depth=TURN_RUN_MIN):
+        # turn tuples (newest first) made strictly BEFORE the bounce
+        # at block idx, one per arrival path - the upstream prefix for
+        # flips_ok checks on freshly constructed turn sequences.
+        # depth must be >= TURN_RUN_MIN: with less context a run of
+        # exactly two turns is indistinguishable from a settled run
+        # and a second flip slips through (found by verify())
+        jb = self.blocks[idx]
+        if jb is None:
+            return [()]
+        out = []
+        for p, hin in ((jb['prev'], jb['h']),
+                       (jb['prev2'], jb.get('h2'))):
+            if hin is None:
+                continue
+            out.extend(self._turn_hist(p, hin, depth))
+        return out or [()]
+
+    def turn_ok(self, idx, h_next):
+        # would a bounce leaving block idx with chord heading h_next
+        # obey the turn-run rule on EVERY arrival path into idx? A
+        # path forbids the bounce when a direction change happened
+        # within its last two turns and h_next does not continue the
+        # new direction; a non-lattice bend on any real arrival is
+        # always illegal
+        jb = self.blocks[idx]
+        if jb is None:
+            return True
+        for p, hin in ((jb['prev'], jb['h']),
+                       (jb['prev2'], jb.get('h2'))):
+            if hin is None:
+                continue
+            t_tip = hwrap(hn(h_next) - hn(hin))
+            if abs(t_tip) != 1:
+                return False
+            for ts in self._turn_hist(p, hin, TURN_RUN_MIN):
+                if ts and ts[0] != t_tip \
+                        and any(t != ts[0] for t in ts[1:]):
+                    return False
+        return True
+
+    def down_turn_ok(self, top_idx, arr, prev_turn=None):
+        # upward mirror of turn_ok: a parent is about to arrive above
+        # block top_idx along chord heading `arr` (parent -> top),
+        # fixing the downward turn AT top_idx on every ride below.
+        # Check the run rule for the changes this creates: at top_idx
+        # itself (vs prev_turn, the turn made one bounce earlier on
+        # the arriving ride, when the caller knows it) and at the kid
+        # below (whose own turn is already fixed). Deeper changes were
+        # validated when they were created
+        def hold(j, hin, base, need):
+            # every ride below block j (incoming chord hin) keeps
+            # turning `base` for `need` more bounces; rides that end
+            # sooner are truncated runs and legal
+            if need <= 0:
+                return True
+            for k in self.kids.get(j, ()):
+                kb = self.blocks[k]
+                if kb is None:
+                    continue
+                hk = kb['h'] if kb['prev'] == j else kb.get('h2')
+                if hk is None:
+                    continue
+                if hwrap(hn(hk) - hn(hin)) != base \
+                        or not hold(k, hk, base, need - 1):
+                    return False
+            return True
+
+        for k in self.kids.get(top_idx, ()):
+            kb = self.blocks[k]
+            if kb is None:
+                continue
+            hk = kb['h'] if kb['prev'] == top_idx else kb.get('h2')
+            if hk is None:
+                continue
+            t_top = hwrap(hn(hk) - hn(arr))
+            if abs(t_top) != 1:
+                return False
+            if prev_turn is not None and t_top != prev_turn \
+                    and not hold(k, hk, t_top, TURN_RUN_MIN - 1):
+                return False
+            for k2 in self.kids.get(k, ()):
+                k2b = self.blocks[k2]
+                if k2b is None:
+                    continue
+                hk2 = k2b['h'] if k2b['prev'] == k else k2b.get('h2')
+                if hk2 is None:
+                    continue
+                d1 = hwrap(hn(hk2) - hn(hk))
+                if abs(d1) != 1:
+                    continue
+                if d1 != t_top \
+                        and not hold(k2, hk2, d1, TURN_RUN_MIN - 1):
+                    return False
+        return True
+
+    def down_seq(self, j, hin, n):
+        # ride-ordered downward turn lists (up to n turns) below block
+        # j, one per kid path, using arrival-correct chords; hin is
+        # the chord heading into j on the ride being checked. The
+        # suffix for flips_ok checks on connector sequences that end
+        # on existing corridor
+        out = []
+
+        def rec(i, hi, acc):
+            if len(acc) >= n:
+                out.append(acc)
+                return
+            ext = False
+            for k in self.kids.get(i, ()):
+                kb = self.blocks[k]
+                if kb is None:
+                    continue
+                hk = kb['h'] if kb['prev'] == i else kb.get('h2')
+                if hk is None:
+                    continue
+                t = hwrap(hn(hk) - hn(hi))
+                if abs(t) != 1:
+                    continue
+                ext = True
+                rec(k, hk, acc + [t])
+            if not ext:
+                out.append(acc)
+        rec(j, hin, [])
+        return out
+
     # ---- branches ----
     def new_branch(self, px, pz, h, d, y, last, golden=False):
         br = {'id': len(self.branches), 'px': px, 'pz': pz, 'h': h, 'dir': d,
@@ -607,6 +829,11 @@ class Sim:
         rlim = max_r(br['y'] - 1)
         if forced is not None:
             cands = [forced]
+        elif br.get('noflip'):
+            # death-band commitment: no fallback flip either - a
+            # blocked committed arm ends instead, carrying a clean
+            # constant suffix into the termination tiers
+            cands = [br['dir'] if br['flip'] > 0 else -br['dir']]
         else:
             want = -br['dir'] if br['flip'] <= 0 else br['dir']
             cands = [want, -want]
@@ -617,6 +844,11 @@ class Sim:
                     br['pz'] + CHORD * math.sin(br['h'] + d * TURN) - START_Z))
         for d in cands:
             h2 = br['h'] + d * TURN
+            # turn-run rule: a flip (scheduled OR the blocked-bounce
+            # fallback) within two bounces of the previous direction
+            # change is illegal on every arrival path into the tip
+            if not self.turn_ok(br['last'], h2):
+                continue
             nx = br['px'] + CHORD * math.cos(h2)
             nz = br['pz'] + CHORD * math.sin(h2)
             if math.hypot(nx - START_X, nz - START_Z) > rlim:
@@ -911,13 +1143,14 @@ class Sim:
                 if D is not None:
                     used.append(D)
         for D0, D1 in pairs[:60]:
-            if not self.make_braid(D0, D1, used):
+            Dj = self.make_braid(D0, used)
+            if not Dj:
                 continue
             arm = self.branches[-1]
             self.braid_seqs.append(list(arm['blocks']))
             self.braid_list.append({
-                'arm': arm['id'], 'fork_idx': g0[D0], 'join_idx': g0[D1],
-                'fy': TRUNK_TOP - D0, 'jy': TRUNK_TOP - D1})
+                'arm': arm['id'], 'fork_idx': g0[D0], 'join_idx': g0[Dj],
+                'fy': TRUNK_TOP - D0, 'jy': TRUNK_TOP - Dj})
             cont = next(k for k in self.kids.get(g0[D0], ())
                         if self.blocks[k] is not None
                         and k != arm['blocks'][0])
@@ -962,6 +1195,11 @@ class Sim:
             return False
         y = bb['y'] - 1
         hd = bb['h'] - t_used * TURN
+        if not self.turn_ok(B, hd):
+            # the mirror turn would flip within two bounces of an
+            # upstream direction change (turn-run rule)
+            self.rstats['if_runrule'] += 1
+            return False
         nx = bb['px'] + CHORD * math.cos(hd)
         nz = bb['pz'] + CHORD * math.sin(hd)
         bx, bz = rnd(nx), rnd(nz)
@@ -1177,6 +1415,10 @@ class Sim:
     def reserve_decoy(self, pre, d, cont_idx):
         px, pz, h, y, last = pre
         h2 = h - d * TURN
+        # the stub's mirror turn is a direction change on the decoy
+        # route - the turn-run rule must allow one here
+        if not self.turn_ok(last, h2):
+            return None
         nx = px + CHORD * math.cos(h2)
         nz = pz + CHORD * math.sin(h2)
         if math.hypot(nx - START_X, nz - START_Z) > max_r(y - 1):
@@ -1217,6 +1459,12 @@ class Sim:
         meta = [{'snap': snap(), 'res': None}]
         backtracks = 0
         while g['y'] > BOTTOM_Y:
+            # port-band flip pacing: a port junction is only turn-run
+            # legal where the trunk flips right below it (stubs break
+            # the 3-bounce hold anywhere else), so keep runs short in
+            # the band to manufacture flip points for make_port
+            if PORT_MIN - 2 <= TRUNK_TOP - g['y'] <= PORT_MAX + 2:
+                g['flip'] = min(g['flip'], TURN_RUN_MIN + 2)
             pre_snap = snap()
             pre = (g['px'], g['pz'], g['h'], g['y'], g['last'])
             # a fork is also FORCED at the deepest legal level so the
@@ -1341,6 +1589,7 @@ class Sim:
         self.rng.shuffle(depths)
         for D in depths:
             if not self.trunk_junc_free(D, 1):
+                self.rstats['port_junc'] += 1
                 continue      # a fork right beside the port junction
                               # would interweave its decoy with the slot
             J = g[D]
@@ -1351,6 +1600,7 @@ class Sim:
             kids_live = [kk for kk in self.kids.get(J, ())
                          if self.blocks[kk] is not None]
             if len(kids_live) != 1:
+                self.rstats['port_kids'] += 1
                 continue          # golden fork or reserved decoy at J
             kb = self.blocks[kids_live[0]]
             if kb['h'] is None:
@@ -1359,22 +1609,57 @@ class Sim:
             if abs(t) != 1:
                 continue
             arr2 = jb['h'] + 2 * t * TURN
+            # turn-run rule: the port ride turns -t at J; if the trunk
+            # below J does not continue with two more -t bounces this
+            # depth cannot host a port
+            if not self.down_turn_ok(J, arr2):
+                self.rstats['port_runrule'] += 1
+                continue
             sx = jb['px'] - CHORD * math.cos(arr2)
             sz = jb['pz'] - CHORD * math.sin(arr2)
             u = jb['y'] + 1
             if not self.clear(rnd(sx), rnd(sz), u, None,
                               extra=[(J, 1)]):
+                self.rstats['port_clear'] += 1
                 continue
+            # escape probe, turn-run aware: the funnel's first climb
+            # turn tt is legal only when it continues the junction's
+            # -t turn, or when the trunk itself runs -t below J (the
+            # hold case). Probe 3 bounces up the legal direction(s) -
+            # a port whose only legal escape is walled is dead on
+            # arrival and must be rejected here, not after 6 failed
+            # grow attempts
+            k1 = k2t = None
+            kk = [k for k in self.kids.get(kids_live[0], ())
+                  if self.blocks[k] is not None]
+            if len(kk) == 1 and self.blocks[kk[0]]['h'] is not None:
+                k1 = hwrap(hn(self.blocks[kk[0]]['h']) - hn(kb['h']))
+                kk2 = [k for k in self.kids.get(kk[0], ())
+                       if self.blocks[k] is not None]
+                if len(kk2) == 1 \
+                        and self.blocks[kk2[0]]['h'] is not None:
+                    k2t = hwrap(hn(self.blocks[kk2[0]]['h'])
+                                - hn(self.blocks[kk[0]]['h']))
+            legal = [-t]
+            if k1 == -t and k2t == -t:
+                legal.append(t)
             esc = False
-            for tt in (-1, 1):
-                arr = arr2 - tt * TURN
-                ex = sx - CHORD * math.cos(arr)
-                ez = sz - CHORD * math.sin(arr)
-                if self.clear(rnd(ex), rnd(ez), u + 1, None,
-                              extra=[(J, 2)]):
+            for tt in legal:
+                ok3 = True
+                arr, ex, ez = arr2, sx, sz
+                for li in range(1, TURN_RUN_MIN + 1):
+                    arr -= tt * TURN
+                    ex -= CHORD * math.cos(arr)
+                    ez -= CHORD * math.sin(arr)
+                    if not self.clear(rnd(ex), rnd(ez), u + li, None,
+                                      extra=[(J, 1 + li)]):
+                        ok3 = False
+                        break
+                if ok3:
                     esc = True
                     break
             if not esc:
+                self.rstats['port_esc'] += 1
                 continue
             slot = self.place(rnd(sx), u, rnd(sz), None, -2,
                               f=(sx, sz, None))
@@ -1392,68 +1677,6 @@ class Sim:
         self.erase_block(slot)
 
     # ---- phase 1c: braids (alternate winning routes) ------------------------
-    def braid_connect(self, br, J, arr2, sx, sz, m):
-        # land the braid arm back on the trunk: find a +-22.5-turn
-        # sequence of length m from the arm tip that arrives exactly at
-        # the slot (one chord back from J along arr2, one level above) -
-        # the same inverted-fork junction shape pair-merges and ports
-        # produce. All cross-branch lattice gaps go through hwrap()
-        # (branch windings differ)
-        jb = self.blocks[J]
-        if math.hypot(br['px'] - sx, br['pz'] - sz) > CHORD * m * 0.95:
-            self.rstats['bc_far'] += 1
-            return False
-        cands = []
-        for fin_off in (-1, 1):
-            gap = hwrap(hn(arr2) + fin_off - hn(br['h']))
-            for seq in turn_seqs(m, gap):
-                px, pz, h = br['px'], br['pz'], br['h']
-                pts = []
-                for t2 in seq:
-                    h += t2 * TURN
-                    px += CHORD * math.cos(h)
-                    pz += CHORD * math.sin(h)
-                    pts.append((px, pz, h))
-                err = math.hypot(px - sx, pz - sz)
-                if err <= MERGE_TOL:
-                    cands.append((err, pts))
-        if not cands:
-            self.rstats['bc_noseq'] += 1
-            return False
-        cands.sort(key=lambda c: c[0])
-        for err, pts in cands[:10]:
-            placed = []
-            last = br['last']
-            ok = True
-            for si, (px, pz, h) in enumerate(pts):
-                bx, bz = rnd(px), rnd(pz)
-                yy = br['y'] - si - 1
-                if (math.hypot(px - START_X, pz - START_Z) > max_r(yy)
-                        or not chord_int_ok(
-                            bx, bz, self.blocks[last]['x'],
-                            self.blocks[last]['z'])
-                        or (si == m - 1 and not chord_int_ok(
-                            bx, bz, jb['x'], jb['z']))
-                        or not self.clear(bx, bz, yy, last,
-                                          extra=[(J, m - si)])):
-                    self.rstats['bc_place'] += 1
-                    ok = False
-                    break
-                last = self.place(bx, yy, bz, last, br['id'],
-                                  f=(px, pz, h))
-                placed.append(last)
-            if ok:
-                self.set_prev(J, placed[-1])
-                jb['h2'] = arr2
-                br['blocks'].extend(placed)
-                br['last'] = placed[-1]
-                br['y'] -= m
-                br['merged'] = True
-                return True
-            for i in reversed(placed):
-                self.pop_block(i)
-        return False
-
     # ---- bubble braids (pre-terminated cadence forks) -----------------------
     def bubble_at(self, B, K):
         # BUBBLE spawn: fork at static-corridor block B (continuation
@@ -1485,9 +1708,16 @@ class Sim:
         child = self.new_branch(bb['px'], bb['pz'], bb['h'], -t,
                                 bb['y'], B)
         child['flip'] = max(child['flip'], FORK_TURN_LOCK)
+        # constant-arc walk to a full WINDOW+1 suffix: an arm carrying
+        # its whole copy stretch lands with need=0, so the landing
+        # places only the translated copy (out in the empty annulus) -
+        # no growth in the crowded funnel disk. noflip matters: a
+        # fallback flip mid-walk would break the constant suffix and
+        # the arm could never host a trigger (user rule)
+        child['noflip'] = True
         ok = self.step(child, forced=-t) is not None
         walked = 1
-        wmax = self.rng.randint(3, 7)
+        wmax = self.rng.randint(WINDOW + 1, WINDOW + 4)
         while ok and walked < wmax:
             ok = self.step(child) is not None
             walked += 1
@@ -1529,6 +1759,19 @@ class Sim:
                 return True
         finally:
             self.splice_boost = prev_boost
+        # LANDING tier for bubbles (turn-run rework): windows legal
+        # for splice_tail are scarcer now (constant-direction only),
+        # but a landing BUILDS its destination and the world is at its
+        # thinnest here - placement is nearly free
+        self.land_boost = True
+        try:
+            if self.splice_landing(child):
+                child['spliced'] = True
+                child['alive'] = False
+                self.rstats['bub_ok'] += 1
+                return True
+        finally:
+            self.land_boost = False
         if self.merge_end(child):
             child['funnel'] = True
             self.rstats['bub_ok'] += 1
@@ -1563,135 +1806,178 @@ class Sim:
                 timer = 1
         return out
 
-    def make_braid(self, D0, D1, used):
-        # one braid: fork OFF the golden trunk at depth D0, wander
-        # parallel on the outside of the trunk's local turn, and land
-        # back ON the trunk at depth D1 - an alternate winning route.
-        # Both trunk ends must be junction-free (trunk_junc_free): a
-        # junction beside a junction hangs its side arms within a few
-        # blocks of each other, which the separation grading forbids.
-        # The arm's mid blocks are far-kin from the mid-trunk, so
-        # clear() keeps the two corridors >= SEP_CHEB apart until the
-        # sanctioned landing shape
-        if any(abs(D0 - u) < BRAID_SPACING or abs(D1 - u) < BRAID_SPACING
-               for u in used):
+    def braid_join_at(self, D1c, used):
+        # slot data for a candidate braid rejoin at trunk depth D1c,
+        # or None if the junction there would be illegal. Split out of
+        # make_braid so a descending arm can try EVERY legal join in
+        # its band: the turn-run rule thins connector shapes so much
+        # that a single pre-chosen slot almost never matches
+        if any(abs(D1c - u) < BRAID_SPACING for u in used):
+            return None
+        if not self.trunk_junc_free(D1c, 1):
+            return None
+        g0 = self.branches[0]['blocks']
+        J = g0[D1c]
+        jb = self.blocks[J]
+        if jb is None or jb['h'] is None or jb['prev2'] is not None:
+            return None
+        jkids = [k for k in self.kids.get(J, ())
+                 if self.blocks[k] is not None]
+        if len(jkids) != 1:
+            return None
+        kb = self.blocks[jkids[0]]
+        if kb['h'] is None:
+            return None
+        t_j = hwrap(hn(kb['h']) - hn(jb['h']))
+        if abs(t_j) != 1:
+            return None
+        # (the old steer-era same-side requirement t_j == t_c is gone:
+        # the shape solver can approach a slot from either side)
+        arr2 = jb['h'] + 2 * t_j * TURN
+        return (D1c, J,
+                arr2,
+                jb['px'] - CHORD * math.cos(arr2),
+                jb['pz'] - CHORD * math.sin(arr2),
+                jb['y'] + 1)
+
+    def make_braid(self, D0, used):
+        # one braid: fork OFF the golden trunk at depth D0 and land
+        # back ON the trunk at some legal join in the braid band - an
+        # alternate winning route. Returns the ACTUAL join depth or
+        # False. Both trunk ends must be junction-free
+        # (trunk_junc_free): a junction beside a junction hangs its
+        # side arms within a few blocks of each other, which the
+        # separation grading forbids. The arm's mid blocks are far-kin
+        # from the mid-trunk, so clear() keeps the corridors apart
+        if any(abs(D0 - u) < BRAID_SPACING for u in used):
             self.bstats['spacing'] += 1
             return False
-        if not (self.trunk_junc_free(D0, 1) and self.trunk_junc_free(D1, 1)):
+        if not self.trunk_junc_free(D0, 1):
             self.bstats['junction'] += 1
             return False
         g0 = self.branches[0]['blocks']
-        F, J = g0[D0], g0[D1]
-        fb, jb = self.blocks[F], self.blocks[J]
-        if fb is None or jb is None or fb['h'] is None \
-                or jb['h'] is None or jb['prev2'] is not None:
+        F = g0[D0]
+        fb = self.blocks[F]
+        if fb is None or fb['h'] is None or fb['prev2'] is not None:
             self.bstats['geometry'] += 1
             return False
         fkids = [k for k in self.kids.get(F, ())
                  if self.blocks[k] is not None]
-        jkids = [k for k in self.kids.get(J, ())
-                 if self.blocks[k] is not None]
-        if len(fkids) != 1 or len(jkids) != 1:
+        if len(fkids) != 1:
             self.bstats['kids'] += 1
             return False
-        cb, kb = self.blocks[fkids[0]], self.blocks[jkids[0]]
-        if cb['h'] is None or kb['h'] is None:
+        cb = self.blocks[fkids[0]]
+        if cb['h'] is None:
             self.bstats['geometry'] += 1
             return False
         t_c = hwrap(hn(cb['h']) - hn(fb['h']))
-        t_j = hwrap(hn(kb['h']) - hn(jb['h']))
-        if abs(t_c) != 1 or abs(t_j) != 1 or t_j != t_c:
-            self.bstats['side'] += 1
-            return False          # slot must open on the arm's side
-        arr2 = jb['h'] + 2 * t_j * TURN
-        sx = jb['px'] - CHORD * math.cos(arr2)
-        sz = jb['pz'] - CHORD * math.sin(arr2)
-        sy = jb['y'] + 1
-        n_b = len(self.blocks)
-        br = self.new_branch(fb['px'], fb['pz'], fb['h'], -t_c,
-                             fb['y'], F)
-        br['alive'] = False
-        br['braid'] = True
-
-        def fail():
-            for i in range(len(self.blocks) - 1, n_b - 1, -1):
-                self.pop_block(i)
-            assert self.branches[-1] is br
-            self.branches.pop()
+        if abs(t_c) != 1:
+            self.bstats['geometry'] += 1
             return False
-
-        # diverge: the first bounce is the fork mirror (forced away
-        # from the continuation); the rest of the lock keeps dir=-t_c
-        # via the fresh flip counter but may fall back inward around a
-        # blocking decoy stub (the upward mirror of FORK_TURN_LOCK)
-        for k in range(BRAID_LOCK):
-            if br['y'] - 1 <= sy + 2 or self.step(
-                    br, forced=-t_c if k == 0 else None) is None:
-                self.bstats['lock'] += 1
-                return fail()
-        # steer along the alley beside the trunk: outside the trunk's
-        # separation ring and the reserved-stub bubbles, inside landing
-        # reach of the slot. On a double-blocked bounce, rewind a few
-        # bounces and try the other family (the funnel growth pattern)
-        tpts = [(self.blocks[g]['px'], self.blocks[g]['pz'])
-                for g in self.branches[0]['blocks'][D0:D1 + 1]]
-        hist, taken = [], []
-        attempts = 0
-        while True:
-            m = br['y'] - sy
-            if m < 3:
-                self.bstats['overshoot'] += 1
-                return fail()
-            if m <= BRAID_CONNECT:
-                if self.braid_connect(br, J, arr2, sx, sz, m):
-                    break
-                if m <= 3:
-                    self.bstats['no_landing'] += 1
-                    return fail()
-            cap = CHORD * (m - 1) * 0.92
-            opts = []
-            for t in (br['dir'], -br['dir']):
-                h2 = br['h'] + t * TURN
-                nx = br['px'] + CHORD * math.cos(h2)
-                nz = br['pz'] + CHORD * math.sin(h2)
-                nd = math.hypot(nx - sx, nz - sz)
-                if nd > cap:
-                    opts.append((1e9, t))
-                    continue          # would leave landing range
-                lat = min(math.hypot(nx - tx, nz - tz)
-                          for tx, tz in tpts)
-                pen = max(0.0, nd - cap * 0.9)
-                if lat < 13.0:
-                    pen += (13.0 - lat) * 3.0
-                elif lat > 26.0:
-                    pen += (lat - 26.0) * 0.5
-                opts.append((pen, t))
-            opts.sort(key=lambda o: o[0])
-            snap = {k: br[k] for k in ('px', 'pz', 'h', 'dir', 'flip',
-                                       'y', 'last')}
-            stepped = None
-            for pen, t in opts:
-                if pen >= 1e9:
-                    continue
-                if self.step(br, forced=t) is not None:
-                    stepped = t
-                    break
-            if stepped is None:
-                attempts += 1
-                if attempts > 40 or not hist:
-                    self.bstats['blocked'] += 1
-                    return fail()
-                r = min(len(hist), self.rng.randint(2, 3 + attempts))
-                for _ in range(r):
-                    self.pop_block(br['blocks'].pop())
-                br.update(hist[-r])
-                br['dir'] = -taken[-r]
-                del hist[-r:], taken[-r:]
+        # every legal join slot in the band; the shape solver connects
+        # to whichever slot a run-legal arm actually reaches
+        joins = []
+        for D1c in range(D0 + BRAID_LEN_MIN,
+                         min(D0 + BRAID_LEN_MAX, len(g0) - 2) + 1):
+            jn = self.braid_join_at(D1c, used)
+            if jn is not None:
+                joins.append(jn)
+        if not joins:
+            self.bstats['nojoin'] += 1
+            return False
+        # SOLVER (turn-run rework): the old steer-then-connect walk got
+        # zero braids under the run rule - legal connector shapes are
+        # too sparse for a blind approach ride to ever line up with
+        # one. Enumerate the arm SHAPES directly instead: every
+        # run-legal turn sequence is a composition of the bounce count
+        # into maximal runs >= TURN_RUN_MIN, signs alternating from
+        # the fork mirror (-t_c). Filter by final heading (mod 16),
+        # boundary legality (flips_ok incl. trunk turns above F and
+        # below J), then a float walk with an exact arrival check, and
+        # only then place blocks (LIFO rollback)
+        if not self.turn_ok(F, fb['h'] - t_c * TURN):
+            self.bstats['lock'] += 1
+            return False
+        pre_hists = [list(reversed(ts)) for ts in self.hist_into(F)]
+        self.rng.shuffle(joins)
+        for D1c, Jc, arr2c, sxc, szc, syc in joins:
+            jb2 = self.blocks[Jc]
+            L = fb['y'] - syc
+            if L < 4:
                 continue
-            hist.append(snap)
-            taken.append(stepped)
-        self.bstats['ok'] += 1
-        return True
+            gaps = {}
+            for fin_off in (-1, 1):
+                gaps[(hn(arr2c) + fin_off - hn(fb['h'])) % 16] = fin_off
+            ds = self.down_seq(Jc, arr2c, 4)
+            for comp in run_comps(L):
+                s_alt = sum(p * (1, -1)[i % 2]
+                            for i, p in enumerate(comp))
+                fin_off = gaps.get((-t_c * s_alt) % 16)
+                if fin_off is None:
+                    continue
+                turns = []
+                sgn = -t_c
+                for p in comp:
+                    turns.extend([sgn] * p)
+                    sgn = -sgn
+                if not all(flips_ok(ph + turns + [-fin_off] + d2)
+                           for ph in pre_hists for d2 in ds):
+                    continue
+                # float walk + exact arrival check, no blocks placed
+                px, pz, h = fb['px'], fb['pz'], fb['h']
+                pts = []
+                ok = True
+                for tt in turns:
+                    h += tt * TURN
+                    px += CHORD * math.cos(h)
+                    pz += CHORD * math.sin(h)
+                    if math.hypot(px - START_X, pz - START_Z) \
+                            > max_r(fb['y'] - len(pts) - 1):
+                        ok = False
+                        break
+                    pts.append((px, pz, h))
+                if not ok or math.hypot(px - sxc, pz - szc) > MERGE_TOL:
+                    self.bstats['miss'] += 1
+                    continue
+                br = self.new_branch(fb['px'], fb['pz'], fb['h'], -t_c,
+                                     fb['y'], F)
+                br['alive'] = False
+                br['braid'] = True
+                placed = []
+                last = F
+                for si, (qx, qz, qh) in enumerate(pts):
+                    bx, bz = rnd(qx), rnd(qz)
+                    yy = fb['y'] - si - 1
+                    if (not chord_int_ok(bx, bz,
+                                         self.blocks[last]['x'],
+                                         self.blocks[last]['z'])
+                            or (si == L - 1 and not chord_int_ok(
+                                bx, bz, jb2['x'], jb2['z']))
+                            or not self.clear(bx, bz, yy, last,
+                                              extra=[(Jc, L - si)])):
+                        break
+                    last = self.place(bx, yy, bz, last, br['id'],
+                                      f=(qx, qz, qh))
+                    placed.append(last)
+                if len(placed) != L:
+                    for i in reversed(placed):
+                        self.pop_block(i)
+                    assert self.branches[-1] is br
+                    self.branches.pop()
+                    self.bstats['place'] += 1
+                    self.bstats['place_%d' % (3 * len(placed) // L)] += 1
+                    continue
+                br['blocks'] = placed
+                br['last'] = last
+                br['px'], br['pz'], br['h'] = pts[-1]
+                br['y'] = syc
+                br['merged'] = True
+                self.set_prev(Jc, last)
+                jb2['h2'] = arr2c
+                self.bstats['ok'] += 1
+                return D1c
+        self.bstats['nofit'] += 1
+        return False
 
     def build_braids(self):
         # phase 1c: alternate winning routes through the middle of the
@@ -1721,54 +2007,24 @@ class Sim:
             t = hwrap(hn(kb['h']) - hn(b['h']))
             if abs(t) == 1:
                 tdir[D] = t
-        # alley pre-screen: a braid arm rides ~15 blocks outside the
-        # trunk. Where the trunk S-curves back, that offset point sits
-        # closer than the separation minimum to some other trunk block
-        # and every arm through the span dies - skip those spans
-        # without placing a single block
-        span_ok = {}
-        for d in range(dmin, dmax + 1):
-            b = self.blocks[g0[d]]
-            if b is None or b['h'] is None:
-                span_ok[d] = {-1: False, 1: False}
-                continue
-            span_ok[d] = {}
-            for s in (-1, 1):
-                px = b['px'] + 15.0 * math.cos(b['h'] + s * math.pi / 2)
-                pz = b['pz'] + 15.0 * math.sin(b['h'] + s * math.pi / 2)
-                ok = math.hypot(px - START_X, pz - START_Z) \
-                    <= max_r(b['y'])
-                if ok:
-                    for e in range(max(0, d - SEP_DY),
-                                   min(len(g0), d + SEP_DY + 1)):
-                        if abs(e - d) <= 3:
-                            continue
-                        eb = self.blocks[g0[e]]
-                        if eb is None:
-                            continue
-                        if math.hypot(px - eb['px'],
-                                      pz - eb['pz']) < 11.5:
-                            ok = False
-                            break
-                span_ok[d][s] = ok
-        pairs = [(D0, D1) for D0 in tdir for D1 in tdir
-                 if BRAID_LEN_MIN <= D1 - D0 <= BRAID_LEN_MAX
-                 and tdir[D0] == tdir[D1]
-                 and all(span_ok[d][-tdir[D0]]
-                         for d in range(D0 + 2, D1 - 1))]
-        self.rng.shuffle(pairs)
+        # (the steer-era alley pre-screen is gone: the shape solver
+        # does not hug a 15-block alley, and placement clear() is the
+        # real arbiter)
+        d0s = sorted(tdir)
+        self.rng.shuffle(d0s)
         used = []
-        for D0, D1 in pairs[:BRAID_TRIES]:
+        for D0 in d0s[:BRAID_TRIES]:
             if len(self.braid_list) >= BRAIDS:
                 break
-            if not self.make_braid(D0, D1, used):
+            Dj = self.make_braid(D0, used)
+            if not Dj:
                 continue
-            used += [D0, D1]
+            used += [D0, Dj]
             arm = self.branches[-1]
             self.braid_seqs.append(list(arm['blocks']))
             self.braid_list.append({
-                'arm': arm['id'], 'fork_idx': g0[D0], 'join_idx': g0[D1],
-                'fy': TRUNK_TOP - D0, 'jy': TRUNK_TOP - D1})
+                'arm': arm['id'], 'fork_idx': g0[D0], 'join_idx': g0[Dj],
+                'fy': TRUNK_TOP - D0, 'jy': TRUNK_TOP - Dj})
             cont = next(k for k in self.kids.get(g0[D0], ())
                         if self.blocks[k] is not None
                         and k != arm['blocks'][0])
@@ -1837,9 +2093,11 @@ class Sim:
             while True:
                 budget -= 1
                 if budget <= 0:
+                    self.fstats['grow_budget'] += 1
                     return False
                 if cor['y'] >= START_Y:
                     if cor['quota'] != 1:
+                        self.fstats['grow_quota'] += 1
                         return False
                     self.entry_tips.append(cor['top'])
                     break
@@ -1859,8 +2117,16 @@ class Sim:
                         bx, bz = rnd(nx), rnd(nz)
                         seeds = [(cor['top'], 1)] + [(t[4], 2)
                                                      for t in tops]
-                        if (math.hypot(nx - START_X, nz - START_Z)
-                                > max_r(u)
+                        # turn-run rule: each arrival fixes a new
+                        # downward turn at the junction top - the
+                        # corridor's last turns below must be able to
+                        # absorb the change (down_turn_ok)
+                        if not self.down_turn_ok(cor['top'], arr):
+                            self.rstats['fun_jrunrule'] += 1
+                            got = False
+                            break
+                        if (math.hypot(nx - START_X,
+                                       nz - START_Z) > max_r(u)
                                 or not self.clear(bx, bz, u, None,
                                                   extra=seeds)):
                             got = False
@@ -1908,8 +2174,32 @@ class Sim:
                 if cor['flip'] <= 0:
                     # commit to a fresh same-direction run toward the
                     # corridor's sector - long runs create splice windows
+                    # (8..12: runs must span WINDOW+1 blocks now that
+                    # windows are constant-direction)
                     cor['dir'] = max((-1, 1), key=sector_score)
-                    cor['flip'] = self.rng.randint(6, 10)
+                    cor['flip'] = self.rng.randint(8, 12)
+                # the corridor's current downward run direction: the
+                # turn at its top kid (None right after a junction).
+                # Chords must be ARRIVAL-CORRECT: a port slot's kid is
+                # the trunk junction, whose slot-side chord is h2, not
+                # h (reading h deadlocked every port funnel)
+                t_run = None
+                kid0 = next((k for k in self.kids.get(cor['top'], ())
+                             if self.blocks[k] is not None), None)
+                if kid0 is not None:
+                    kb0 = self.blocks[kid0]
+                    h_k0 = kb0['h'] if kb0['prev'] == cor['top'] \
+                        else kb0.get('h2')
+                    k2 = next((k for k in self.kids.get(kid0, ())
+                               if self.blocks[k] is not None), None)
+                    if k2 is not None and h_k0 is not None:
+                        k2b = self.blocks[k2]
+                        h_k2 = k2b['h'] if k2b['prev'] == kid0 \
+                            else k2b.get('h2')
+                        if h_k2 is not None:
+                            tr = hwrap(hn(h_k2) - hn(h_k0))
+                            if abs(tr) == 1:
+                                t_run = tr
                 order = (cor['dir'], -cor['dir'])
                 stepped = False
                 for t in order:
@@ -1917,10 +2207,39 @@ class Sim:
                     nx = cor['px'] - CHORD * math.cos(arr)
                     nz = cor['pz'] - CHORD * math.sin(arr)
                     bx, bz = rnd(nx), rnd(nz)
-                    if (math.hypot(nx - START_X, nz - START_Z) > max_r(u)
+                    # turn-run rule (upward mirror): the new parent
+                    # fixes the downward turn at the current top -
+                    # a change there must keep the run below intact
+                    if not self.down_turn_ok(cor['top'], arr):
+                        self.rstats['fun_runrule'] += 1
+                        continue
+                    if (math.hypot(nx - START_X,
+                                   nz - START_Z) > max_r(u)
                             or not self.clear(bx, bz, u, None,
                                               extra=[(cor['top'], 1)])):
+                        self.rstats['fun_clear'] += 1
                         continue
+                    # a direction change commits the next
+                    # TURN_RUN_MIN-1 bounces to the same turn -
+                    # prescreen those positions so doomed changes are
+                    # pruned before they cost blocks and rewinds
+                    if t_run is not None and t != t_run:
+                        la_ok = True
+                        lx, lz, lh = nx, nz, arr
+                        for li in range(1, TURN_RUN_MIN):
+                            lh -= t * TURN
+                            lx -= CHORD * math.cos(lh)
+                            lz -= CHORD * math.sin(lh)
+                            if (math.hypot(lx - START_X, lz - START_Z)
+                                    > max_r(u + li)
+                                    or not self.clear(
+                                        rnd(lx), rnd(lz), u + li, None,
+                                        extra=[(cor['top'], 1 + li)])):
+                                la_ok = False
+                                break
+                        if not la_ok:
+                            self.rstats['fun_lookahead'] += 1
+                            continue
                     pidx = self.place(bx, u, bz, None, cor['br']['id'],
                                       f=(nx, nz, None))
                     self.set_prev(cor['top'], pidx)
@@ -1939,7 +2258,8 @@ class Sim:
                     break
                 if not stepped:
                     attempts += 1
-                    if attempts > 250:
+                    if attempts > 400:
+                        self.fstats['grow_attempts'] += 1
                         return False
                     depth = min(2 + attempts // 3, 14)
                     if not rewind(cor, self.rng.randint(2, depth)):
@@ -2035,6 +2355,7 @@ class Sim:
             self.rstats['farm_fail'] += 1
             return False
         bearings.sort()
+        ds0 = self.down_seq(J, arr2, 3)
         for _try in range(FARM_WALK_TRIES):
             m = self.rng.randint(3, m_max)
             L = m + WINDOW + 1
@@ -2043,6 +2364,13 @@ class Sim:
             # arrival chord (the player turns +-1 onto J's slot)
             ta = self.rng.choice((-1, 1))
             chain = [(sx, sz, arr2 - ta * TURN, jy + 1)]
+            # turn-run rule bookkeeping: tl[i] = downward turn at
+            # chain[i], seeded with the junction turn and the trunk
+            # turns below so boundary changes keep their runs; the top
+            # WINDOW+1 blocks must additionally be CONSTANT-turn (they
+            # are the registered farm windows)
+            seed = (list(reversed(ds0[0])) if ds0 else []) + [-t]
+            tl = list(seed) + [ta]
             ok = True
             while len(chain) < L:
                 px, pz, h, y = chain[-1]
@@ -2062,6 +2390,15 @@ class Sim:
                 # the emptier side, drift target only as tiebreak
                 sc = []
                 for hp in (h - TURN, h + TURN):
+                    tn = 1 if hp == h - TURN else -1
+                    # run rule: a differing turn is only legal after
+                    # three settled bounces; the window section (the
+                    # top WINDOW+1 blocks) never changes direction
+                    if tn != tl[-1]:
+                        if len(chain) >= L - WINDOW:
+                            continue
+                        if any(v != tl[-1] for v in tl[-3:]):
+                            continue
                     qx = rnd(ppx - CHORD * 1.6 * math.cos(hp))
                     qz = rnd(ppz - CHORD * 1.6 * math.sin(hp))
                     n = 0
@@ -2076,10 +2413,21 @@ class Sim:
                                     n += 1
                     o = -(math.cos(hp) * tx + math.sin(hp) * tz)
                     sc.append((n, -o, hp))
+                if not sc:
+                    ok = False
+                    break
                 sc.sort()
                 hp = sc[0][2] if self.rng.random() > 0.1 else sc[-1][2]
+                tl.append(1 if hp == h - TURN else -1)
                 chain.append((ppx, ppz, hp, y + 1))
             if not ok:
+                continue
+            # full-ride re-check over every trunk path below the
+            # junction (the greedy seed used only the first path)
+            ride = list(reversed(tl[len(seed):])) + [-t]
+            if any(not flips_ok(ride + ds)
+                   for ds in self.down_seq(J, arr2, 3)):
+                self.rstats['farm_runrule'] += 1
                 continue
             placed = []
             last = None
@@ -2207,10 +2555,17 @@ class Sim:
                      for b1, b2 in zip(bs, bs[1:])]
             if any(abs(t) != 1 for t in turns):
                 continue
+            # user rule (2026-08-15): windows are CONSTANT-direction.
+            # The replica tail is an exact copy of the window, and the
+            # player rides it past the trigger blocks - if it flipped
+            # direction it could S-bend back and bring its own dead
+            # end into view before the teleport fires
+            if any(t != turns[0] for t in turns):
+                continue
             # 'dw' is the window's ENTRY turn (the turn into its first
-            # copied block): the alignment arc must end one turn short
-            # of the first copy chord. Turns INSIDE the window may vary
-            # freely - the replica is an exact translation either way
+            # copied block, equal to every other turn now): the
+            # alignment arc must end one turn short of the first copy
+            # chord
             dest.append({'blocks': w, 'y': bs[0]['y'], 'dw': turns[0]})
 
     def scan_windows(self):
@@ -2439,6 +2794,17 @@ class Sim:
             if d_tip + abs(g) + 1 > FORK_GAP_MAX:
                 self.rstats[self.sp_ctx + 'sp_guard'] += 1
                 continue          # trigger would land past the cap
+            # turn-run rule over the whole tail: recent turns into the
+            # tip, then the constant alignment arc, then the window's
+            # constant turns (dw x WINDOW). Rejects arcs that flip too
+            # close to an upstream change AND arc->window boundaries
+            # that S-bend right before the trigger
+            tail_turns = [1 if g > 0 else -1] * abs(g) \
+                + [w['dw']] * WINDOW
+            if any(not flips_ok(list(reversed(ts)) + tail_turns)
+                   for ts in self.hist_into(tip_idx)):
+                self.rstats[self.sp_ctx + 'sp_runrule'] += 1
+                continue
             depth = abs(g) + WINDOW
             if tip_y - depth < MORTAL_FLOOR:
                 self.rstats[self.sp_ctx + 'sp_mortal'] += 1
@@ -2607,6 +2973,8 @@ class Sim:
         # times per seed in the busy band - 7 clear bounces rarely
         # exist there, but 0-3 usually do
         suffix = [tip_idx]
+        t_suf = None       # the copy stretch must be CONSTANT-turn
+                           # (user rule: no flips past the trigger)
         blocks_ = br['blocks']
         if tip_idx in blocks_:
             pos = len(blocks_) - 1 - blocks_[::-1].index(tip_idx)
@@ -2620,9 +2988,12 @@ class Sim:
                         or nb['prev'] != cand
                         or cand in self.win_used
                         or sum(1 for k in self.kids.get(cand, ())
-                               if self.blocks[k] is not None) > 1
-                        or abs(hwrap(hn(nb['h']) - hn(cb['h']))) != 1):
+                               if self.blocks[k] is not None) > 1):
                     break
+                t = hwrap(hn(nb['h']) - hn(cb['h']))
+                if abs(t) != 1 or (t_suf is not None and t != t_suf):
+                    break
+                t_suf = t
                 suffix.insert(0, cand)
                 j -= 1
         need = WINDOW + 1 - len(suffix)
@@ -2646,13 +3017,18 @@ class Sim:
             return False
         dir0 = br['dir'] if br['dir'] in (-1, 1) \
             else self.rng.choice((-1, 1))
-        # candidate shapes for the grown part: constant arc and weave,
-        # both chiralities. Turn direction may vary inside a window;
-        # only the entry turn matters (dw)
-        seqs_tail = [[dir0] * need,
-                     [-dir0] * need,
-                     [dir0 * (1, -1)[k % 2] for k in range(need)],
-                     [-dir0 * (1, -1)[k % 2] for k in range(need)]]
+        # candidate shapes for the grown part: CONSTANT arcs only
+        # (user rule: the copy stretch may never flip direction). A
+        # suffix with a known turn fixes the direction; a bare tip may
+        # try either chirality, subject to the turn-run rule upstream
+        if t_suf is not None:
+            dirs = [t_suf]
+        else:
+            dirs = [dir0, -dir0]
+        seqs_tail = [[t] * need for t in dirs
+                     if self.turn_ok(tip_idx, tip['h'] + t * TURN)]
+        if not seqs_tail:
+            self.rstats['ld_noseq'] += 1
         for st in seqs_tail:
             placed = []
             px, pz, h, y, last = (tip['px'], tip['pz'], tip['h'],
@@ -2666,6 +3042,7 @@ class Sim:
                 bx, bz = rnd(px), rnd(pz)
                 if (math.hypot(px - START_X, pz - START_Z) > max_r(y)
                         or not self.clear(bx, bz, y, last)):
+                    self.rstats['ld_growblk'] += 1
                     ok = False
                     break
                 last = self.place(bx, y, bz, last, br['id'],
@@ -2694,6 +3071,9 @@ class Sim:
         sb = [self.blocks[i] for i in S]
         c7 = sb[-1]
         h_end = c7['h']
+        # the copy stretch is constant-turn (user rule); its direction
+        # is the ride prefix for the connector's turn-run check
+        t_cs = hwrap(hn(sb[1]['h']) - hn(sb[0]['h']))
         cpts = self.tube_pts(S)
         cbox = self.tube_box(cpts)
         # the new tail tube must not fight any existing stamp tube
@@ -2824,12 +3204,21 @@ class Sim:
                 sx = jb['px'] - CHORD * math.cos(arr2)
                 sz = jb['pz'] - CHORD * math.sin(arr2)
                 dy = (jb['y'] + 1 + m) - c7['y']
+                # turn-run rule at the junction: validate the full
+                # ride - window prefix (constant t_cs), connector,
+                # the -fin_off turn into J, and the existing turns
+                # below J via the second-arrival chord (down_seq)
+                dtails = self.down_seq(J, arr2, 4)
                 seqs = []
                 for fin_off in (-1, 1):
                     gap = hwrap(hn(arr2) + fin_off - hn(h_end))
-                    seqs.extend(turn_seqs(m, gap))
+                    seqs.extend(
+                        (fin_off, seq) for seq in turn_seqs(m, gap)
+                        if all(flips_ok([t_cs, t_cs] + seq
+                                        + [-fin_off] + ds)
+                               for ds in dtails))
                 self.rng.shuffle(seqs)
-                for seq in seqs[:smax]:
+                for fin_off, seq in seqs[:smax]:
                     offx = offz = 0.0
                     h = h_end
                     pts = []
@@ -3004,8 +3393,11 @@ class Sim:
         if tip is None or tip['h'] is None or tip['px'] is None:
             return False
         # suffix extraction identical to splice_landing's, but the
-        # FULL length is required (nothing is grown here)
+        # FULL length is required (nothing is grown here). Constant
+        # turn direction is required too (user rule) - non-constant
+        # suffixes could never match a registered window anyway
         suffix = [tip_idx]
+        t_suf = None
         blocks_ = br['blocks']
         if tip_idx not in blocks_:
             return False
@@ -3020,9 +3412,12 @@ class Sim:
                     or nb['prev'] != cand
                     or cand in self.win_used
                     or sum(1 for k in self.kids.get(cand, ())
-                           if self.blocks[k] is not None) > 1
-                    or abs(hwrap(hn(nb['h']) - hn(cb['h']))) != 1):
+                           if self.blocks[k] is not None) > 1):
                 break
+            t = hwrap(hn(nb['h']) - hn(cb['h']))
+            if abs(t) != 1 or (t_suf is not None and t != t_suf):
+                break
+            t_suf = t
             suffix.insert(0, cand)
             j -= 1
         if len(suffix) < WINDOW + 1:
@@ -3130,6 +3525,13 @@ class Sim:
         turns = [1 if g > 0 else -1] * abs(g) + [w['dw']] \
             + [hwrap(hn(b2['h']) - hn(b1['h']))
                for b1, b2 in zip(wbs[1:], wbs[2:])]
+        # turn-run rule over the whole forced ride incl. the arm's
+        # recent turns (windows are constant-direction now, so only
+        # the arc boundaries can flip)
+        if any(not flips_ok(list(reversed(ts)) + turns)
+               for ts in self.hist_into(br['last'])):
+            self.rstats['steer_runrule'] += 1
+            return None
         px, pz, h, y = br['px'], br['pz'], br['h'], br['y']
         tb = self.blocks[br['last']]
         ints = [(tb['x'], tb['y'], tb['z'])]
@@ -3305,6 +3707,7 @@ class Sim:
             return False
         g_tip = self.bounces_since_fork(tip_idx)
         h_end = tip['h']
+        pre_hists = [list(reversed(ts)) for ts in self.hist_into(tip_idx)]
         tails = {c for sp in self.splices for c in sp['copy']}
         triggers = {sp['copy'][0] for sp in self.splices}
         # a junction within 5 bounces upstream of a replica tail would
@@ -3379,12 +3782,18 @@ class Sim:
                 if math.hypot(tip['px'] - sx, tip['pz'] - sz) \
                         > CHORD * m * 0.95:
                     continue
+                # turn-run rule: whole-ride validation (tip history +
+                # connector + junction arrival + existing turns below)
+                dtails = self.down_seq(J, arr2, 4)
                 seqs = []
                 for fin_off in (-1, 1):
                     gap = hwrap(hn(arr2) + fin_off - hn(h_end))
-                    seqs.extend(turn_seqs(m, gap))
+                    seqs.extend(
+                        (fin_off, seq) for seq in turn_seqs(m, gap)
+                        if all(flips_ok(ph + seq + [-fin_off] + ds)
+                               for ph in pre_hists for ds in dtails))
                 self.rng.shuffle(seqs)
-                for seq in seqs[:12]:
+                for fin_off, seq in seqs[:24]:
                     px, pz, h = tip['px'], tip['pz'], h_end
                     pts = []
                     for tt in seq:
@@ -3488,6 +3897,8 @@ class Sim:
         # trigger sits one bounce further: arrival <= cap - 2)
         if self.bounces_since_fork(d2['last']) + m + 1 > FORK_GAP_MAX - 2:
             return False
+        pre_hists = [list(reversed(ts))
+                     for ts in self.hist_into(d2['last'])]
         for t in (d1['dir'], -d1['dir']):
             arr_b = arr_a + 2 * t * TURN
             tgt_x = jb['px'] - CHORD * math.cos(arr_b)
@@ -3499,6 +3910,13 @@ class Sim:
             for fin_off in (-1, 1):
                 gap = hwrap(hn(arr_b) + fin_off - hn(d2['h']))
                 for seq in turn_seqs(m, gap):
+                    # turn-run rule: d2's history + connector + the
+                    # -fin_off turn into J + the -t turn at J onto
+                    # d1's (forced) continuation; d1's later bounces
+                    # are guarded by turn_ok once the junction exists
+                    if not all(flips_ok(ph + seq + [-fin_off, -t])
+                               for ph in pre_hists):
+                        continue
                     px, pz, h = d2['px'], d2['pz'], d2['h']
                     pts = []
                     for t2 in seq:
@@ -3653,6 +4071,16 @@ class Sim:
                     continue
                 if br['doomed']:
                     br['life'] -= 1
+                    # death-band run commitment: an arm close to its
+                    # splice stops flipping ALTOGETHER (scheduled and
+                    # fallback - 'noflip'), so its last WINDOW+1
+                    # blocks form one constant arc: a legal copy
+                    # stretch (user rule) feeding the zero-cost
+                    # suffix/landing tiers
+                    if br['life'] <= WINDOW + 2 \
+                            or br['gap'] + 1 >= FORK_FORCE_AT:
+                        br['flip'] = max(br['flip'], WINDOW + 2)
+                        br['noflip'] = True
                 # v3 arm economics: doomed arms fork on a SLOWER timer
                 # (8-12) than winners (5-9) - fast timers bred an arm
                 # cascade far beyond termination capacity, but pure
@@ -3778,7 +4206,9 @@ class Sim:
                 nx = bb['px'] + CHORD * math.cos(hd)
                 nz = bb['pz'] + CHORD * math.sin(hd)
                 bx, bz = rnd(nx), rnd(nz)
-                if (math.hypot(nx - START_X, nz - START_Z) <= max_r(y)
+                if (self.turn_ok(B, hd)
+                        and math.hypot(nx - START_X,
+                                       nz - START_Z) <= max_r(y)
                         and self.clear(bx, bz, y, B)):
                     child = self.new_branch(bb['px'], bb['pz'], hd,
                                             -t_used, y + 1, B)
@@ -3921,7 +4351,12 @@ class Sim:
         # cannot climb out is unmade and re-rolled at another depth
         self.ports = []
         used = []
-        for k in range(FUNNELS):
+        # ports grow FIRST (v3 turn-run rule): run-legal corridors
+        # cannot zigzag through gaps narrower than a 3-bounce weave,
+        # so the port funnels must thread the central disk while it
+        # is still empty; funnel 0 (trunk top) has always been the
+        # robust grower and routes around them fine
+        for k in list(range(1, FUNNELS)) + [0]:
             if k == 0:
                 grown = self.grow_funnel(0, float(START_X),
                                          float(START_Z), H0,
@@ -3932,6 +4367,7 @@ class Sim:
                 for _p in range(8):
                     port = self.make_port(used)
                     if port is None:
+                        self.rstats['port_none'] += 1
                         break
                     slot, sx, sz, arr2, ak, y0 = port[:6]
                     if self.grow_funnel(slot, sx, sz, arr2, ak, y0,
@@ -3940,6 +4376,7 @@ class Sim:
                         used.append(port[6])
                         grown = True
                         break
+                    self.rstats['port_grow'] += 1
                     self.unmake_port(port)
             if not grown:
                 self.fail = 'funnel %d could not grow' % k
@@ -3985,7 +4422,7 @@ class Sim:
                 # a close failure is usually THIS arm's local splice
                 # geometry - respawn with a fresh wander before
                 # surrendering the site to a stub promise
-                for _r in range(2):
+                for _r in range(4):
                     if done:
                         break
                     ch2 = self.bubble_at(B, K)
@@ -4240,6 +4677,10 @@ def verify(sim):
         if any(abs(t) != 1 for t in turns):
             errs.append('splice for branch %d: window contains an '
                         'illegal turn' % sp['branch'])
+        elif any(t != turns[0] for t in turns):
+            errs.append('splice for branch %d: window flips turn '
+                        'direction (user rule: the tail past the '
+                        'trigger must be constant)' % sp['branch'])
         if any(len([k for k in sim.kids.get(j, ())
                     if blks[k] is not None]) > 1 for j in sp['win'][:-1]):
             errs.append('splice for branch %d: window contains a fork'
@@ -4250,6 +4691,61 @@ def verify(sim):
         if dy > SPLICE_MAX_RISE:
             errs.append('splice for branch %d rises %d > %d'
                         % (sp['branch'], dy, SPLICE_MAX_RISE))
+
+    # turn-run rule (user, 2026-08-15): on every traversable route a
+    # turn-direction change is followed by at least TURN_RUN_MIN-1
+    # bounces of the new direction. Enumerate every ride window of
+    # TURN_RUN_MIN+1 turns via arrival-correct chords (a junction
+    # block stores h for its prev chord and h2 for its prev2 chord)
+    # and re-run flips_ok independently of the generation-side checks
+    def chord_pc(p, c):
+        cb = blks[c]
+        return cb['h'] if cb['prev'] == p else cb.get('h2')
+
+    def ride_dfs(i, hprev, acc):
+        if len(acc) == TURN_RUN_MIN + 1:
+            if not flips_ok(acc):
+                errs.append('turn-run rule violated at block %d '
+                            '(%d,%d,%d): turns %s'
+                            % (i, blks[i]['x'], blks[i]['y'],
+                               blks[i]['z'], acc))
+            return
+        ks = [k for k in sim.kids.get(i, ()) if blks[k] is not None]
+        if not ks:
+            if not flips_ok(acc):
+                errs.append('turn-run rule violated at leaf %d '
+                            '(%d,%d,%d): turns %s'
+                            % (i, blks[i]['x'], blks[i]['y'],
+                               blks[i]['z'], acc))
+            return
+        for k in ks:
+            hk = chord_pc(i, k)
+            if hk is None:
+                if not flips_ok(acc):
+                    errs.append('turn-run rule violated at block %d: '
+                                'turns %s' % (i, acc))
+                continue
+            if hprev is None:
+                ride_dfs(k, hk, acc)
+                continue
+            t = hwrap(hn(hk) - hn(hprev))
+            if abs(t) != 1:
+                errs.append('non-lattice turn %d at block %d (%d,%d,%d)'
+                            % (t, i, blks[i]['x'], blks[i]['y'],
+                               blks[i]['z']))
+                continue
+            ride_dfs(k, hk, acc + [t])
+
+    for i in live:
+        if len(errs) > 400:
+            break             # flood guard: something is very wrong
+        b = blks[i]
+        arrs = [h for h in (b['h'], b.get('h2')) if h is not None]
+        if arrs:
+            for a in arrs:
+                ride_dfs(i, a, [])
+        else:
+            ride_dfs(i, None, [])
 
     # SPLICE_SUPPRESS (v3 user rule): once a splice fires, no other
     # trigger may sit within SPLICE_SUPPRESS bounces of where the

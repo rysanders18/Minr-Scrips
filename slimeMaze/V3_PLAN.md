@@ -357,6 +357,198 @@ around ±4 levels rather than relying on Chebyshev alone); or accept
 and prune at stamp time. Whichever, re-run this audit as the gate —
 the v2 numbers (3 / 1) are the target.
 
+## Phase 5 second run (2026-08-11) — defect closed, datapack shipped
+
+All three fix directions above were wrong about the *culprit*. Provenance
+instrumentation (tag every wall column with slit-refill / gap-fill / path
+origin, then diff the audit offenders against `pre_stamp_world`) showed
+**44 of the 48 unannotated columns never came from the wall painter at
+all — the splice stamp created them**; the other 4 were the documented
+benign `dy −12` class. The painter's prune has enough margin (4.3 vs the
+audit's 3.5, > the 0.71 worst-case rounding gain) that it cannot produce
+an offender; but it *opens* those cells, and then the stamp copies the
+window's solid wall back over them to preserve tail == window.
+
+**Fix — stamp intrusion repair** (`wall_test.py`, immediately after the
+stamp overwrite repair, sharing its `restored` list): a tail is an exact
+integer translation of its window, so the tail's own corridor scores an
+identical distance-to-nearest-centerline on both sides. Only a bystander
+can make a cell measurably closer at the tail (`dt < dw − INTRUDE_MARGIN`,
+carved-space window `INTRUDE_LO..INTRUDE_HI` = −4..+13). Those cells revert
+to their pre-stamp value — the painter's opening wins over identity, the
+same call the floor-overwrite repair already makes. A boolean "is a
+corridor near" test does NOT work here: the tail's own corridor answers
+yes for every cell of its own tube, which is why the distance *profile*
+(not a predicate) is the operative idea.
+
+Also: the audit gained a third benign annotation class, *base above that
+corridor's vault* (`yb ≥ sy + 10`) — the old `dy −12` rows, hand-verified
+in-world 2026-08-05. It reclassifies 18 of the original 48. The v2 number
+below was re-derived under the identical rule, so the comparison is fair.
+
+| audit | total | unannotated |
+|---|---|---|
+| v3 seed 2, before | 96 | 30 |
+| v3 seed 2, after | **67** | **3** |
+| v2 cached world (same rules) | 3 | 1 |
+
+The 3 residuals (`dy +3.4/+3.5`, d 3.31–3.49) are the same marginal class
+as v2's single residual (`dy +3.8`, d 3.48) — cells the *window itself*
+carries that close to a centerline, so the bystander test correctly
+declines them. The 67-vs-3 total gap is almost entirely the benign
+stacked-corridor classes, which scale with corridor density.
+
+Cost: 773 cells (≈4 per splice) now deliberately differ between window and
+tail — at those spots the tail shows an opening into the neighbouring
+corridor where the window shows wall. They are registered in
+`restored_set`, so the shell verify still reports **0 visible mismatches**.
+The alternative (constrain generation so tails never run that close to a
+bystander) costs splice supply and was not attempted.
+
+Everything else at its v2 end state: 0 visible mismatches, 0 band-edge
+remnants, 184/184 tails capped, 0 floating lanterns, prismarine joints 5,
+ore joints 10. `verify_build.py` **PASS** (5598 blocks, 184 splices, 3312
+splice triggers, 47070 slimeblock triggers).
+
+**REVERTED 2026-08-12 — the repair was the wrong trade.** The user walked
+the build and reported wall/dome errors. Reverting a stamped cell to its
+pre-stamp value means reverting it to *air*, which is by construction a
+HOLE in the tail's shell (see-through into the neighbouring corridor).
+Measured by diffing the two dumps — tail cells that are air where the
+window is solid: **with the repair 605 wall + 102 dome + 14 floor; without
+it, zero.** The repair traded an intrusion for a hole; both are wall
+errors, and the audit metric it optimized could not see the hole because
+the cells were registered in `restored_set` as sanctioned divergences.
+
+The repair is now behind `WT_INTRUDE=1`, **off by default**, and the
+painter is byte-identical to the committed baseline (verified: with the
+gate off, deletion repair 12340, overwrite repair 175, 15389
+deletion-repair blocks, joints 6/10, too-close 96/30 — every figure
+matches the pre-change run). There has only ever been ONE wall/dome
+painter, shared by every generator; "v1/v2/v3" name maze-construction
+generations, not painter versions. Anything that changes it changes the
+in-world-validated build too, so it stays opt-in.
+
+The stamp-intrusion detector itself (distance profile, tail vs window)
+is still the correct way to FIND these, and stays in the file for that.
+The fix belongs on the generation side: keep tail tubes away from
+bystander corridors so the painter never has to choose between an
+intrusion and a hole.
+
+Tooling: `wall_test.py` now selects its generator with `WT_GM`
+(default `generate_maze`, so the standing v2 world still regenerates
+byte-identically); `make_datapack.py` gained `--src` / `--out` so a
+sandbox emit can be packed without touching the repo's v2 scripts.
+
+**Shipped for feedback:** seed 2 (5598 blocks, 178 forks, 184 splices /
+175 novel, 101 landings, viol 33, WINDOW=8), emitted to a sandbox and
+installed as a datapack into the `Slimemaze` singleplayer world
+(403,916 build commands). The repo's emitted v2 scripts are untouched;
+the standing Minr world is still seed-13 v2.
+
+## Wall/dome layer audit (2026-08-12) — bands and the lantern backdrop
+
+User asked to verify two properties of the FINAL product: no gaps in the
+deepslate-tiles / polished-deepslate bands, and an uninterrupted sea-lantern
+layer around the walls. Both were audited against the emitted world model
+(`WT_DUMP=1` dump), with the identical audit replayed against a
+reconstructed v1/v2 seed-13 world (`backup_pre_decorfix/gen_v2.py`) to
+separate "inherent to the painter" from "v3 regression". Neither property
+held, and both predate v3.
+
+**Bands.** Per wall run, checking the foot and top courses, netherite
+excluded (the palette slice ring is *designed* to override bands):
+
+| | v3 seed 2 | v1/v2 seed 13 |
+|---|---|---|
+| runs | 25,523 | 20,401 |
+| band gaps | 1,274 (4.99%) | 517 (2.53%) |
+| of those, AIR (a real hole) | 783 | 49 |
+| AIR gaps outside a splice tail | **0** | **0** |
+
+`band_paint` is not at fault. EVERY air gap sits inside a splice tail:
+the stamp forces tail == window, so a window whose wall shell was pruned
+open (a bystander corridor near the WINDOW) copies that hole onto every
+tail that lands on it, with no local reason for it. v3's rate is 16x v2's
+because its tails and windows crowd bystanders far more often — the same
+root cause as the stamp-intrusion problem above.
+
+**Lantern layer.** Void cells beside a wall, visible diagonally from
+corridor air (i.e. darkness seen through a thinning crack): v3 25,029,
+v2 14,562 (0.98 vs 0.71 per wall run). Two mechanisms, both in the
+layer's own definition: (1) the suppression radius `CLEAR + 1.0` = 5.3
+was tested against ALL centerlines including the wall's OWN, and the wall
+line sits at `WALL_D` = 5.0 — so every cell at the wall line, which is
+exactly where corner thinning removes blocks, was vetoed, contradicting
+the header's claim that "diagonal thinning cracks show lantern";
+(2) the layer is one cell thick, so a crack sees past it. The post-stamp
+backdrop heal only fills behind corridor-facing GLASS, which is 6% of
+these cells.
+
+### Fixes (2026-08-12) — ALL REVERTED at user request the same day
+
+The three changes below were implemented, measured and shipped, then
+reverted on the user's instruction. The AUDIT FINDINGS above stand (they
+describe the painter as it is today); the fixes do not exist in the code
+any more. `generate_maze_v3.py` is back at HEAD (WINDOW=7, no shell
+preference) and `wall_test.py` keeps only the earlier-round changes
+(`WT_GM` generator switch, the `WT_INTRUDE`-gated stamp intrusion repair,
+the audit's third annotation class). Kept here as the record of what was
+tried, what it cost, and what it bought.
+
+1. **Own corridor can no longer veto its own backdrop** (`wall_test.py`).
+   Two tiers now: never inside ANY corridor's air tube (`CLEAR`), and
+   never in a NEIGHBOURING corridor's margin (`CLEAR + 1.0`, blind to the
+   wall's own streams). Needed stream identity on the wall paths:
+   `sid_grid` mirrors `grid` with the owning stream index, `cols['sids']`
+   carries it, and `near_center_foreign()` consumes it. `grid` itself
+   keeps its 3-tuple shape — every other consumer and the debug dump
+   unpack 3-tuples.
+2. **Backdrop crack seal** (`wall_test.py`, right after the pre-stamp
+   open-air flood): any empty cell touching a wall, not itself reachable
+   corridor air, but visible diagonally from reachable air becomes
+   lantern. Iterates to a fixed point (cap 6) — 76% of what 2 passes left
+   sat directly behind the seal's own outer face. Runs PRE-stamp on
+   purpose, so tails inherit the seal by copy and splice fidelity holds
+   by construction: **0 visible mismatches** on both v3 and v2.
+3. **Intact-shell window preference** (`generate_maze_v3.py`):
+   `shell_ok()` rejects windows with a foreign corridor inside
+   `SHELL_REACH` = 9.3 (`WALL_D` 5.0 + `CLEAR` 4.3); `shell_waves()`
+   yields clear-shell windows first and falls back to pruned ones so
+   splice supply cannot collapse. Probe budget `SHELL_TRIES` = 40 per
+   splice; `GM_SHELL=0` disables. 3-seed viol mean 106 -> 86 at WINDOW=8
+   (better on 2 of 3), so it pays for itself on cadence as well.
+
+Measured effect on the v1/v2 standing maze (the shared painter, seed 13):
+crack-visible voids **14,562 -> 8,833**, 0 visible mismatches, 153/153
+tails capped, joints 1->2 prismarine / 6->5 ore. NOTE: both v2 painter
+runs die at chain emission with `gen_v2 has no attribute DONE_SOUND` —
+a pre-existing incompatibility between the current wall_test and the
+Aug-6 generator reconstruction, identical before and after, so the world
+model comparison is valid but chain emission is unverified on v2.
+
+A band-gap class that LOOKS new is not: ~400 top-course cells reading
+`sea_lantern` outside tails are buried cells (no corridor-facing
+neighbour) that the pre-existing glass-depth rule folds into the lantern
+layer. Invisible from any corridor; the audit metric has no visibility
+model.
+
+### WINDOW = 7 -> 8 (user-set 2026-08-12, then REVERTED to 7)
+
+v3 had been forked at `WINDOW = 7` while v1/v2 use 8; the seed-2 build
+shipped on 2026-08-11 was 7, not 8 as reported at the time. Set to 8 per
+the user. Measured cost at WINDOW=8 (shell preference on):
+
+| seed | WINDOW=7 | WINDOW=8 |
+|---|---|---|
+| 1 | 70 | 78 |
+| 2 | 33 | 78 |
+| 5 | 63 | 102 |
+| 3 | builds | **fails: funnel 2 could not grow** |
+
+Roughly double the violations plus a loss of buildable seeds, in exchange
+for 6-7 bounces past the trigger instead of 5-6. One-line revert.
+
 ## Open items for the user
 
 - Confirm WINDOW=7 as the v3 default (requested last session, never measured; 6–7
@@ -365,3 +557,62 @@ the v2 numbers (3 / 1) are the target.
   ~150+ terminations) unless you want a different density.
 - Whether the emitted v3 replaces the world immediately (Phase 6) or v3 is validated
   offline first while seed-13 v2 keeps standing. Plan assumes offline-first.
+
+### TURN-RUN RULE + CONSTANT WINDOWS (user rules, 2026-08-15)
+
+Two hard curvature rules, enforced at every placement site and
+re-verified independently in `verify()`:
+
+1. **Turn-run rule** (`TURN_RUN_MIN = 3`): after a turn-direction
+   change, the next two bounces keep the new direction - on EVERY
+   traversable route (junction second arrivals ride through `h2`
+   chords and are checked path-by-path). Enforced by `turn_ok`
+   (downward walkers, incl. forced fork mirrors), `down_turn_ok`
+   (upward walkers: funnels, ports, farm chains), and `flips_ok`
+   over every constructed turn sequence (splice arcs, connectors,
+   steered rides) with upstream history (depth 3 - depth 2 provably
+   leaks `[a,-a,-a,a]`) and downstream junction turns appended.
+2. **Constant-direction windows**: splice windows (and therefore every
+   replica tail past a trigger) never flip direction - a flipping
+   tail could S-bend and bring its own dead end into view before the
+   teleport fires. `scan_seq_windows` rejects mixed windows; landing
+   suffixes/growth are constant arcs; weave tail shapes removed.
+
+Verification: `verify()` gained a ride-DFS turn-rule check (all
+4-turn windows over arrival-correct chords) and a window-constancy
+check per splice. All build-able seeds pass with **0 rule errors**.
+
+Knock-on effects and what was rebuilt to absorb them:
+
+- Window supply needs runs >= WINDOW+1: `FLIP_MIN 5 -> 7`, funnel
+  commit runs 8..12, doomed arms get a death-band `noflip` commitment
+  (constant final arc = legal copy stretch).
+- Ports: a port junction is only legal where the trunk flips right
+  below it or holds its turn 3 stub-free bounces; `PORT_MIN,MAX ->
+  10,64`, `PORT_SEP -> 4`, port-band flip pacing in `build_golden`,
+  run-aware 3-bounce escape probe, ports grow BEFORE funnel 0.
+- Funnel growth: `down_turn_ok` per upward step + 3-bounce lookahead
+  prune on direction changes (a change commits 2 more bounces).
+- Braids: the steer-then-connect walk got ZERO braids under the rule
+  (legal connector shapes too sparse to hit blind). Replaced with a
+  shape SOLVER: enumerate run-compositions (`run_comps`) of the exact
+  bounce count fork->join over every legal join slot in the band,
+  filter by heading mod 16 + flips_ok + float-walk arrival, then
+  place. Lands ~1 braid on roughly half the buildable seeds.
+- Bubbles walk constant arcs to a full WINDOW+1 suffix (`noflip`),
+  close via splice_tail -> splice_landing -> merge_end. Success is
+  still only ~13% in the funnel disk - an 8-bounce constant arc
+  rarely fits there. This is the main open cadence hole.
+- `ALIGN_MAX 6 -> 8`, `W_MAX 40 -> 30`, `BACKTRACK_MAX -> 30000`,
+  merge/braid candidate caps raised.
+
+**Measured state (seeds 1-20)**: ~40-50% of seeds build (rest die in
+golden trunk backtracking or port-funnel growth); builders show
+forkgap_viol ~60-185 vs the pre-rule ~30-130 and the viol=0 ship
+gate. `merges` collapsed to ~0-3 (exact-arrival connectors have
+almost no run-legal shapes; landings/suffix tiers carry
+terminations). The rules themselves hold everywhere; the OPEN work
+is termination capacity: funnel-zone bubbles, repair-arm landings
+(`ld_j_slack`, `ld_growblk`), or a user decision to relax
+FORK_GAP_MAX / maze size. Window farms (GM_FARM=1) measured worse
+and have a residual rule bug - leave off.
