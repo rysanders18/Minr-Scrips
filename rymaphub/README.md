@@ -53,7 +53,7 @@ The pixel south of a transparent pixel is compared with the void: it always
 renders light and is not a step in the staircase. The web page restricts it
 to light tones, and both sides treat it as a level step.
 
-## Encoding contract (protocol v5)
+## Encoding contract (protocol v6)
 
 Shared with `script.js`. Change one side only together with the other.
 
@@ -74,9 +74,14 @@ Shared with `script.js`. Change one side only together with the other.
   `s / K` then `s % K`). Symbol `s >= base` is a run code: repeat the
   previous PLAIN SYMBOL `s - base + 1` more times, at most 499 per code.
   Runs may span columns and messages.
-- **Header** (message 1): `RYMH` + `A[N-1-nMsgs]` + `A[P]` + skip(check),
-  with `check = (P + nMsgs) % (N-1)`. Always 7 characters.
-- **Data** (messages 2..nMsgs): `A[N-1-i]` + payload + skip(check) for
+- **Message 1**: `RYMH` + `A[P]` + `A[N-1-nMsgs]` + payload + skip(check),
+  with `check = (P + nMsgs + sum(payload values)) % (N-1)`. The header rides
+  in front of message 1's own payload instead of taking a message to
+  itself, so it costs 6 characters rather than a whole line, and an image
+  small enough to fit is a single message. `nMsgs` is the field next to the
+  payload because its value sits near the top of the alphabet, far above
+  any symbol value, so those two characters can never be equal.
+- **Messages 2..nMsgs**: `A[N-1-i]` + payload + skip(check) for
   i = 1..nMsgs-1, `check = (i + sum(payload values)) % (N-1)`.
 - **skip(v)** writes the checksum as `A[v]` when `v` is below the preceding
   character's value and `A[v+1]` otherwise, so it can never equal that
@@ -101,7 +106,9 @@ every generated message including solid-colour images:
 1. Every repeat becomes a run code, and consecutive run codes are forced to
    differ, so a payload never repeats a character.
 2. `nMsgs` and the message index are written from the top of the alphabet,
-   far above any symbol value, so they cannot equal a neighbour.
+   far above any symbol value, so they cannot equal a neighbour. `P` is the
+   one small field, and it is kept away from the payload by putting `nMsgs`
+   between them.
 3. The checksum skips the preceding character's value.
 
 ## Sizes
@@ -110,15 +117,15 @@ From `test_roundtrip.js` on the site repo (synthetic images):
 
 | Image | Messages | Colours | Tallest column |
 |---|---|---|---|
-| Photo-like gradient, Valley, Floyd-Steinberg, max height 32 | 58 | 139 | 32 |
-| Same, unlimited height | 59 | 136 | 104 |
-| Same, flat, Floyd-Steinberg | 52 | 50 | 0 |
-| Flat logo, Valley, Atkinson | 21 | 9 | 32 |
-| Solid colour, flat | 2 | 1 | 0 |
+| Photo-like gradient, Valley, Floyd-Steinberg, max height 32 | 56 | 139 | 32 |
+| Same, unlimited height | 56 | 136 | 104 |
+| Same, flat, Floyd-Steinberg | 50 | 50 | 0 |
+| Flat logo, Valley, Atkinson | 20 | 9 | 32 |
+| Solid colour, flat | 1 | 1 | 0 |
 
 Message counts scale with the message-length setting. For the dithered
-photo above: 57 messages at 256 characters, 58 at 250, 72 at 200, 96 at
-150, 144 at 100, 181 at 80, 243 at 60.
+photo above: 56 messages at 256 characters, 57 at 250, 71 at 200, 95 at
+150, 143 at 100, 180 at 80, 242 at 60.
 
 ## Verified in game (2026-09-01)
 
@@ -141,15 +148,18 @@ Two red herrings were ruled out along the way. Chat is not truncating: a
 not substituting characters outside the alphabet either, or the check would
 report a foreign character rather than a checksum mismatch.
 
-The header passes because it cannot fail. Its checksum total is `P + nMsgs`,
-around 30, so `total % (N-1)` is that same number for any plausible `N`, and
-the three characters it uses sit at the very start and very end of the
-alphabet. A data message sums hundreds of symbols into the millions, so its
-checksum depends on the alphabet being exactly right everywhere.
+The header passed because it could not fail. Under v5 it was a message of
+its own, and its checksum total was `P + nMsgs`, around 30, so
+`total % (N-1)` was that same number for any plausible `N`, and the three
+characters it used sat at the very start and very end of the alphabet. A
+data message sums hundreds of symbols into the millions, so its checksum
+depends on the alphabet being exactly right everywhere. Under v6 the header
+shares a message with a payload, so it is covered by a real checksum too.
 
-v5 therefore uses the v1 alphabet unchanged. 2,980 symbols cannot hold
-157^2, so P drops to 1 pixel per character and message counts roughly
-double: 57 for a dithered photo at 256 characters, against 33 under v4.
+v5 therefore reverted to the v1 alphabet, and v6 keeps it. 2,980 symbols
+cannot hold 157^2, so P is 1 pixel per character and message counts roughly
+double: 56 for a dithered photo at 256 characters, against 33 if the wider
+alphabet could be used.
 `importMapArt` refuses to start unless `alphaU.length()` is 2980 and says so
 plainly, so a truncated import is caught before it turns into confusing
 checksum failures.

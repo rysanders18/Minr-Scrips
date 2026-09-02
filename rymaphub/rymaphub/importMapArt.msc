@@ -4,19 +4,21 @@
 # message, validates each one as it arrives, and hands the accumulated
 # symbol stream to decodeMapArt.
 #
-# Message 1 is the header (protocol v5):
-#   "RYMH" + A[n-1-nMsgs] + A[P] + skip(check)
+# Message 1 carries the header in front of its own payload (protocol v6):
+#   "RYMH" + A[P] + A[n-1-nMsgs] + payload + skip(check)
 # where n is the alphabet size and P is pixels per plain symbol (1 or 2).
-# No palette is sent: pixels are master colour indices and the radix is the
-# namespace constant `colours`, so the header is always 7 characters.
-# nMsgs is written from the top of the alphabet and the checksum skips the
-# preceding character's value, so no two adjacent characters are ever equal;
-# check = (P + nMsgs) % (n-1).
-# Messages 2..nMsgs are data: A[n-1-index] + payload + skip(check). A bad
+# No message carries nothing but a header, so every run is a line shorter
+# and a small image can be a single message. No palette is sent: pixels are
+# master colour indices and the radix is the namespace constant `colours`,
+# so the header costs 6 characters whatever the image contains.
+# nMsgs is written from the top of the alphabet and is the field next to
+# the payload, whose symbol values are far lower, so no two adjacent
+# characters can be equal; check = (P + nMsgs + sum(payload)) % (n-1).
+# Messages 2..nMsgs are A[n-1-index] + payload + skip(check). A bad
 # message (wrong index, foreign character, checksum mismatch) is reported
 # and re-prompted without losing progress. "cancel" aborts. Displayed
-# message numbers are 1-based (header = message 1) to match the web page;
-# internal indices are 0-based.
+# message numbers are 1-based to match the web page; internal indices are
+# 0-based.
 #
 # Feedback: every accepted message plays a note block pling whose pitch
 # climbs from 0.5 to 2.0 across the paste, alongside a progress bar, so the
@@ -31,6 +33,7 @@
 @define Int pps = 1
 @define Int n = alpha.length()
 @define Int nMsgs = 0
+@define Int blen = 0
 @define Int s = 0
 @define Int total = 0
 @define Int prev = 0
@@ -39,10 +42,9 @@
 @define Boolean bad = false
 @define Boolean headerOk = false
 
-# The header's checksum total is only about 30, so it validates under any
-# plausible alphabet size and cannot catch a truncated import. Data
-# messages sum into the millions and fail immediately, which is a confusing
-# way to find out. Check the alphabet up front instead.
+# A truncated alphabet import shifts every symbol value, which shows up as
+# checksum failures on messages that look perfectly intact. Check it up
+# front so that never has to be diagnosed the hard way.
 @if n != 2980
     @player &c&lRYmaphub is misconfigured.&c The alphabet imported as {{n}} characters, expected 2980.
     @player &cRe-import &frymaphub.nms&c before trying again.
@@ -51,36 +53,44 @@
 @fi
 
 @player
-@player &#936be5&lRY's Map Hub
+@player &#936be5&lRYmaphub
 @player &7Paste the messages from &frysanders18.github.io/rymaphub&7 in order.
-@player
-@player &e&lPaste message 1&e into chat.
-
-@bypass title {{player}} actionbar ["",{"text":"Type ","bold":false,"color":"#a1a1a1"},{"text":"\"Cancel\"","bold":true,"color":"#aa4c4c"},{"text":" at any point to stop!","bold":false,"color":"#a1a1a1"}]
+@player &7Type &fcancel&7 at any point to stop.
+@player &e&lPaste message 1 into chat.
 @bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5
 
-# Header: a few attempts, then give up.
+# Message 1: a few attempts, then give up. It carries the header fields, so
+# nothing else can be read until it lands.
 @for Int attempt in list::range(0, 3)
     @if headerOk == false
         @prompt 90s msg &cTimed out waiting for message 1. Click the sign to start again.
         @if msg.startsWith("RYMH") == false
             @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
-            @player &cThat is not a RYmaphub header. Paste message 1 first, and regenerate it on the website if it is old.
+            @player &cThat is not a RYmaphub message 1. Paste message 1 first, and regenerate it on the website if it is old.
         @else
             @var body = msg.substring(4, msg.length())
+            @var blen = body.length()
             @var bad = false
-            @if body.length() != 3
+            @if blen < 3
                 @var bad = true
             @else
-                @var nMsgs = n - 1 - alpha.indexOf(body.substring(0, 1))
-                @var pps = alpha.indexOf(body.substring(1, 2))
-                @if pps < 1 || pps > 2 || nMsgs < 2
+                @var pps = alpha.indexOf(body.substring(0, 1))
+                @var nMsgs = n - 1 - alpha.indexOf(body.substring(1, 2))
+                @if pps < 1 || pps > 2 || nMsgs < 1
                     @var bad = true
                 @else
                     @var total = pps + nMsgs
+                    @for Int i in list::range(2, blen - 1)
+                        @var s = alpha.indexOf(body.substring(i, i + 1))
+                        @if s < 0
+                            @var bad = true
+                        @else
+                            @var total = total + s
+                        @fi
+                    @done
                     # The checksum skips the value of the character before it.
-                    @var prev = alpha.indexOf(body.substring(1, 2))
-                    @var c = alpha.indexOf(body.substring(2, 3))
+                    @var prev = alpha.indexOf(body.substring(blen - 2, blen - 1))
+                    @var c = alpha.indexOf(body.substring(blen - 1, blen))
                     @var got = c
                     @if c > prev
                         @var got = c - 1
@@ -92,7 +102,8 @@
             @fi
             @if bad == true
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
-                @player &cThe header is damaged. Received {{msg.length()}} characters. Paste message 1 again.
+                @player &cMessage 1 is damaged. Received {{msg.length()}} characters. Copy and paste it again.
+                @player &8[diag] alphabet {{n}}
             @else
                 @var headerOk = true
             @fi
@@ -101,28 +112,34 @@
 @done
 
 @if headerOk == false
-    @player &cCould not read the header. Start again from the sign.
+    @player &cCould not read message 1. Start again from the sign.
     @return
 @fi
 
-@var mapData[player] = ""
+# Everything between the header fields and the checksum is payload.
+@var mapData[player] = body.substring(2, blen - 1)
 @define Int next = 1
 @define Int code = 0
-@define Int dataTotal = nMsgs - 1
-@define Int received = 0
+@define Int received = 1
 @define Int filled = 0
 @define String bar = ""
 @define Float pitch = 2.0F
 
-@bypass playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 1 1
-@player &aHeader accepted. &f{{dataTotal}}&a messages to paste.
-@player &e&lPaste message 2.
+@if nMsgs > 1
+    @var pitch = 0.5F
+@fi
+@bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{pitch}}
 
-# Data messages. No @while in MSC, so loop over an attempt budget and
-# stop prompting once every message is in (or the player cancels).
+@if next < nMsgs
+    @player &aMessage 1 accepted. &f{{nMsgs - 1}}&a more to paste.
+    @player &e&lPaste message 2.
+@fi
+
+# No @while in MSC, so loop over an attempt budget and stop prompting once
+# every message is in (or the player cancels).
 @for Int attempt in list::range(0, nMsgs + 40)
     @if next < nMsgs
-        @prompt 90s msg &cTimed out. Click the sign to start again.
+        @prompt 120s msg &cTimed out. Click the sign to start again.
         @if msg.equalsIgnoreCase("cancel")
             @var next = nMsgs + 1000
         @else
@@ -130,17 +147,17 @@
             @if code == 0
                 @var mapData[player] = mapData[player] + msg.substring(1, msg.length() - 1)
                 @var next = next + 1
-                @var received = next - 1
+                @var received = next
 
                 # Pitch climbs 0.5 -> 2.0 across the whole paste.
                 @var pitch = 2.0F
-                @if dataTotal > 1
-                    @var pitch = 0.5F + 1.5F * Float(received - 1) / Float(dataTotal - 1)
+                @if nMsgs > 1
+                    @var pitch = 0.5F + 1.5F * Float(received - 1) / Float(nMsgs - 1)
                 @fi
                 @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{pitch}}
 
                 @if next < nMsgs
-                    @var filled = received * 20 / dataTotal
+                    @var filled = received * 20 / nMsgs
                     @var bar = "&a"
                     @for Int b in list::range(0, 20)
                         @if b == filled
@@ -148,7 +165,7 @@
                         @fi
                         @var bar = bar + "|"
                     @done
-                    @player &8[{{bar}}&8] &f{{received}}&7/&f{{dataTotal}}&8 - &7paste message &f{{next + 1}}
+                    @player &8[{{bar}}&8] &f{{received}}&7/&f{{nMsgs}}&8 - &7paste message &f{{next + 1}}
                 @fi
             @else
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
