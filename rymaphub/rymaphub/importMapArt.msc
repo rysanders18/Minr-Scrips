@@ -60,6 +60,7 @@
 @player &a&l &f rysanders18.github.io/rymaphub&#d4d4d4 in order.
 @player
 @player &e&lPaste message 1&e into chat.
+@player
 
 @bypass title {{player}} actionbar ["",{"text":"Type ","bold":false,"color":"#a1a1a1"},{"text":"\"Cancel\"","bold":true,"color":"#aa4c4c"},{"text":" at any point to stop!","bold":false,"color":"#a1a1a1"}]
 @bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5
@@ -157,9 +158,11 @@
                 @if dataTotal > 1
                     @var pitch = 0.5F + 1.5F * Float(received - 1) / Float(dataTotal - 1)
                 @fi
-                @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{pitch}}
+                @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.5 {{pitch}}
+                @bypass playsound minecraft:entity.firework_rocket.twinkle_far master {{player}} ~ ~ ~ 0.3 {{pitch}}
                 @bypass particle dust_color_transition{from_color:{{colors[received % colors.length()]}},scale:1,to_color:[1.000,1.000,1.000]} 4096.5 95.5 2054.88 0.05 0.02 0.02 1 10 force @s
-
+                @bypass title {{player}} actionbar ["",{"text":"Type ","bold":false,"color":"#a1a1a1"},{"text":"\"Cancel\"","bold":true,"color":"#aa4c4c"},{"text":" at any point to stop!","bold":false,"color":"#a1a1a1"}]
+                
                 @if next < nMsgs
                     @var filled = received * 20 / dataTotal
                     @var bar = "&a"
@@ -173,6 +176,7 @@
                 @fi
             @else
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
+                @bypass title {{player}} actionbar ["",{"text":"Type ","bold":false,"color":"#a1a1a1"},{"text":"\"Cancel\"","bold":true,"color":"#aa4c4c"},{"text":" at any point to stop!","bold":false,"color":"#a1a1a1"}]
                 @if code == 2
                     @var got = n - 1 - alpha.indexOf(msg.substring(0, 1))
                     @player &cThat is message {{got + 1}}, but message {{next + 1}} is next.

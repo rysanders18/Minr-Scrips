@@ -19,9 +19,9 @@
 # player is standing. mapId is the filled_map handed to the player.
     String world = "minecraft:epsilon_the_end"
     Int startX = 4032
-    Int startY = 140
+    Int startY = 120
     Int startZ = 1984
-    Int clearHeight = 100
+    Int clearHeight = 128
     Int mapId = 12372
     String baseBlock = "glass"
     String nooblineBlock = "stone"
