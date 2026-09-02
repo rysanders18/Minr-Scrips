@@ -21,9 +21,9 @@
 # 0-based.
 #
 # Feedback: every accepted message plays a note block pling whose pitch
-# climbs from 0.5 to 2.0 across the paste, alongside a progress bar, so the
-# run can be followed without reading the numbers. Failures play a low
-# didgeridoo instead.
+# climbs from 0.5 to 2.0 across the paste, alongside a progress bar and a
+# particle burst that walks the gradient in `colors`, so the run can be
+# followed without reading the numbers. Failures play a low didgeridoo.
 
 @using rymaphub
 
@@ -42,9 +42,9 @@
 @define Boolean bad = false
 @define Boolean headerOk = false
 
-# A truncated alphabet import shifts every symbol value, which shows up as
-# checksum failures on messages that look perfectly intact. Check it up
-# front so that never has to be diagnosed the hard way.
+# A truncated alphabet import shifts every symbol value, so every message
+# fails its checksum while looking perfectly intact. Check it up front
+# rather than leaving that to be diagnosed the hard way.
 @if n != 2980
     @player &c&lRYmaphub is misconfigured.&c The alphabet imported as {{n}} characters, expected 2980.
     @player &cRe-import &frymaphub.nms&c before trying again.
@@ -52,11 +52,16 @@
     @return
 @fi
 
+@define String[] colors = String["[0.988,0.914,0.329]", "[0.973,0.914,0.341]", "[0.957,0.914,0.349]", "[0.945,0.914,0.357]", "[0.929,0.914,0.369]", "[0.914,0.914,0.376]", "[0.898,0.918,0.384]", "[0.882,0.918,0.392]", "[0.867,0.918,0.4]", "[0.851,0.918,0.408]", "[0.835,0.918,0.416]", "[0.82,0.918,0.424]", "[0.804,0.918,0.431]", "[0.788,0.918,0.439]", "[0.769,0.918,0.443]", "[0.753,0.918,0.451]", "[0.737,0.914,0.459]", "[0.718,0.914,0.463]", "[0.702,0.914,0.471]", "[0.682,0.914,0.478]", "[0.663,0.914,0.482]", "[0.647,0.914,0.49]", "[0.627,0.914,0.494]", "[0.608,0.914,0.502]", "[0.584,0.914,0.506]", "[0.565,0.914,0.51]", "[0.545,0.91,0.518]", "[0.522,0.91,0.522]", "[0.498,0.91,0.529]", "[0.475,0.91,0.533]", "[0.451,0.91,0.537]", "[0.424,0.91,0.541]", "[0.392,0.906,0.549]", "[0.365,0.906,0.553]", "[0.329,0.906,0.557]", "[0.29,0.906,0.561]", "[0.247,0.906,0.569]", "[0.196,0.902,0.573]", "[0.118,0.902,0.576]"]
+
 @player
-@player &#936be5&lRYmaphub
-@player &7Paste the messages from &frysanders18.github.io/rymaphub&7 in order.
-@player &7Type &fcancel&7 at any point to stop.
-@player &e&lPaste message 1 into chat.
+@player &#936be5&lRY's Map Hub
+@player &#d4d4d4● Paste the messages from
+@player &a&l &f rysanders18.github.io/rymaphub&#d4d4d4 in order.
+@player
+@player &e&lPaste message 1&e into chat.
+
+@bypass title {{player}} actionbar ["",{"text":"Type ","bold":false,"color":"#a1a1a1"},{"text":"\"Cancel\"","bold":true,"color":"#aa4c4c"},{"text":" at any point to stop!","bold":false,"color":"#a1a1a1"}]
 @bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5
 
 # Message 1: a few attempts, then give up. It carries the header fields, so
@@ -66,7 +71,7 @@
         @prompt 90s msg &cTimed out waiting for message 1. Click the sign to start again.
         @if msg.startsWith("RYMH") == false
             @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
-            @player &cThat is not a RYmaphub message 1. Paste message 1 first, and regenerate it on the website if it is old.
+            @player &cThat is not a RYmaphub message. Paste message 1 first, and regenerate it on the website if it is old.
         @else
             @var body = msg.substring(4, msg.length())
             @var blen = body.length()
@@ -102,8 +107,8 @@
             @fi
             @if bad == true
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
-                @player &cMessage 1 is damaged. Received {{msg.length()}} characters. Copy and paste it again.
-                @player &8[diag] alphabet {{n}}
+                @player &cMessage 1 is damaged. Received {{msg.length()}} characters. Paste it again.
+                # @player &8[diag] alphabet {{n}}
             @else
                 @var headerOk = true
             @fi
@@ -116,48 +121,47 @@
     @return
 @fi
 
-# Everything between the header fields and the checksum is payload.
+# Everything between the header fields and the checksum is payload, so the
+# stream starts with message 1 rather than empty.
 @var mapData[player] = body.substring(2, blen - 1)
 @define Int next = 1
 @define Int code = 0
-@define Int received = 1
+@define Int dataTotal = nMsgs - 1
+@define Int received = 0
 @define Int filled = 0
 @define String bar = ""
 @define Float pitch = 2.0F
 
-@if nMsgs > 1
-    @var pitch = 0.5F
-@fi
-@bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{pitch}}
-
+@bypass playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 1 1
 @if next < nMsgs
-    @player &aMessage 1 accepted. &f{{nMsgs - 1}}&a more to paste.
+    @player &aMessage 1 accepted. &f{{dataTotal}}&a to go.
     @player &e&lPaste message 2.
 @fi
 
-# No @while in MSC, so loop over an attempt budget and stop prompting once
-# every message is in (or the player cancels).
+# Data messages. No @while in MSC, so loop over an attempt budget and
+# stop prompting once every message is in (or the player cancels).
 @for Int attempt in list::range(0, nMsgs + 40)
     @if next < nMsgs
-        @prompt 120s msg &cTimed out. Click the sign to start again.
-        @if msg.equalsIgnoreCase("cancel")
+        @prompt 90s msg &cTimed out. Click the button to start again.
+        @if msg.equalsIgnoreCase("cancel") || msg.equalsIgnoreCase("stop") || msg.equalsIgnoreCase("exit")
             @var next = nMsgs + 1000
         @else
             @var code = checkMessage(alpha, msg, next)
             @if code == 0
                 @var mapData[player] = mapData[player] + msg.substring(1, msg.length() - 1)
                 @var next = next + 1
-                @var received = next
+                @var received = next - 1
 
                 # Pitch climbs 0.5 -> 2.0 across the whole paste.
                 @var pitch = 2.0F
-                @if nMsgs > 1
-                    @var pitch = 0.5F + 1.5F * Float(received - 1) / Float(nMsgs - 1)
+                @if dataTotal > 1
+                    @var pitch = 0.5F + 1.5F * Float(received - 1) / Float(dataTotal - 1)
                 @fi
                 @bypass playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{pitch}}
+                @bypass particle dust_color_transition{from_color:{{colors[received % colors.length()]}},scale:1,to_color:[1.000,1.000,1.000]} 4096.5 95.5 2054.88 0.05 0.02 0.02 1 10 force @s
 
                 @if next < nMsgs
-                    @var filled = received * 20 / nMsgs
+                    @var filled = received * 20 / dataTotal
                     @var bar = "&a"
                     @for Int b in list::range(0, 20)
                         @if b == filled
@@ -165,7 +169,7 @@
                         @fi
                         @var bar = bar + "|"
                     @done
-                    @player &8[{{bar}}&8] &f{{received}}&7/&f{{nMsgs}}&8 - &7paste message &f{{next + 1}}
+                    @player &8[{{bar}}&8] &f{{received}}&#d4d4d4/&f{{dataTotal}}&8 - &#d4d4d4paste message &f{{next + 1}}
                 @fi
             @else
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5
@@ -176,7 +180,7 @@
                     @player &cMessage {{next + 1}} picked up a character that is not part of the code. Copy and paste it again.
                 @elseif code == 3
                     @player &cMessage {{next + 1}} failed its checksum. Copy and paste it again.
-                    @player &8[diag] {{msg.length()}} characters received, alphabet {{n}}
+                    # @player &8[diag] {{msg.length()}} characters received, alphabet {{n}}
                 @else
                     @player &cThat message is too short ({{msg.length()}} characters).
                 @fi
@@ -188,7 +192,7 @@
 @if next == nMsgs
     @var decodeMapArt(player, pps)
 @elseif next > nMsgs
-    @player &7Import cancelled.
+    @player &#d4d4d4Import cancelled.
 @else
     @player &cToo many failed messages. Start again from the sign.
 @fi
