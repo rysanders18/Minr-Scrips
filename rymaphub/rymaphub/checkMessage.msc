@@ -1,0 +1,56 @@
+# Int checkMessage(String alpha, String msg, Int expected)
+# Validates one data message against the alphabet. Layout (protocol v3) is
+#   A[n-1-index] + payload + skip(check)
+# where n is the alphabet size, the index is written from the TOP of the
+# alphabet so it can never equal the first payload character, and the
+# checksum is (index + sum of payload symbol values) % (n-1) written with
+# the value of the preceding character skipped over, so it can never equal
+# that character either. Together with the encoder's run codes this makes
+# two equal adjacent characters impossible - Minr chat silently dropped one
+# character out of a run of eight under protocol v2.
+#
+# Returns 0 = OK, 1 = a character is not in the alphabet, 2 = index is
+# not `expected`, 3 = checksum mismatch, 4 = too short to be a message.
+
+@using rymaphub
+@fast
+
+@define Int n = alpha.length()
+@define Int len = msg.length()
+@if len < 3
+    @return 4
+@fi
+
+@define Int first = alpha.indexOf(msg.substring(0, 1))
+@if first < 0
+    @return 1
+@fi
+@define Int idx = n - 1 - first
+@if idx != expected
+    @return 2
+@fi
+
+@define Int total = idx
+@define Int s = 0
+@for Int i in list::range(1, len - 1)
+    @var s = alpha.indexOf(msg.substring(i, i + 1))
+    @if s < 0
+        @return 1
+    @fi
+    @var total = total + s
+@done
+
+# Previous character's value, which the checksum skips over.
+@define Int prev = alpha.indexOf(msg.substring(len - 2, len - 1))
+@define Int c = alpha.indexOf(msg.substring(len - 1, len))
+@if c < 0
+    @return 1
+@fi
+@define Int got = c
+@if c > prev
+    @var got = c - 1
+@fi
+@if got != total % (n - 1)
+    @return 3
+@fi
+@return 0

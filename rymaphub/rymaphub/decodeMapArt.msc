@@ -1,0 +1,77 @@
+# decodeMapArt(Player player, Int pixelsPerSymbol)
+# Turns the validated symbol stream in mapData[player] into pixels.
+# Called by importMapArt once every message has been received.
+#
+# With base = colours^pixelsPerSymbol (colours is the fixed number of
+# master colour indices, so no palette is transmitted):
+#   symbol s <  base : pixelsPerSymbol pixels. 2/symbol: s / colours then
+#                      s % colours, each a master colour index.
+#   symbol s >= base : run code - repeat the previous PLAIN symbol
+#                      (s - base + 1) more times, so a run code repeats both
+#                      pixels of a pair rather than only the last one.
+# The encoder never emits the same character twice in a row inside a
+# payload, because every repeat becomes a run code and consecutive run
+# codes are forced to differ. Minr chat silently dropped one character out
+# of a run of eight identical ones under protocol v2, so this matters.
+# Pixels arrive column-major (x = 0..127, then z = 0..127 within a column)
+# and are streamed to emitPixels, which buffers one column at a time and
+# hands each complete column to buildColumn. Runs may cross columns and
+# message boundaries.
+#
+# Lays the glass floor first (one fill, which also clears nothing above it:
+# buildColumn clears each column before rebuilding it). @fast because a
+# dithered map produces several thousand commands; buildColumn yields one
+# tick per column and this loop yields after every 512-symbol chunk
+# (MSC lists, including list::range, are capped at 1000 elements).
+
+@using rymaphub
+@fast
+
+@define Int base = colours
+@if pixelsPerSymbol == 2
+    @var base = colours * colours
+@fi
+@define String data = mapData[player]
+@define Int len = data.length()
+
+@var colX[player] = 0
+@var colBuf[player] = Int[]
+@var lastSym[player] = 0
+
+@player &aAll messages received. &7Building the map...
+@bypass playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 1 2
+@bypass /execute in {{world}} run fill {{startX}} {{startY - 1}} {{startZ - 1}} {{startX + 127}} {{startY - 1}} {{startZ + 127}} {{baseBlock}}
+
+@define Int chunkSize = 512
+@define Int chunkCount = (len + chunkSize - 1) / chunkSize
+@define Int s = 0
+@define Int i = 0
+@define Int chunkLen = 0
+@for Int chunk in list::range(0, chunkCount)
+    @var chunkLen = len - chunk * chunkSize
+    @if chunkLen > chunkSize
+        @var chunkLen = chunkSize
+    @fi
+    @for Int j in list::range(0, chunkLen)
+        @var i = chunk * chunkSize + j
+        @var s = alphaU.indexOf(data.substring(i, i + 1))
+        @if s < base
+            @var lastSym[player] = s
+            @var emitSymbol(player, s, pixelsPerSymbol)
+        @else
+            @var repeatSymbol(player, lastSym[player], pixelsPerSymbol, s - base + 1)
+        @fi
+    @done
+    @delay 1
+@done
+
+@if colX[player] != 128
+    @player &cWarning: decoded {{colX[player]}} complete columns of 128. The map may be incomplete.
+@fi
+
+@var mapData[player] = ""
+@var colBuf[player] = Int[]
+@bypass /item replace entity {{player}} weapon.mainhand with minecraft:filled_map[minecraft:map_id={{mapId}}]
+@bypass playsound minecraft:entity.player.levelup master {{player}} ~ ~ ~ 1 1.2
+@player
+@player &#936be5&lRYmaphub &#40a02bMap art built. &7The map is in your hand.

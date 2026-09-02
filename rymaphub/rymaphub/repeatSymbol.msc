@@ -1,0 +1,30 @@
+# repeatSymbol(Player player, Int sym, Int pixelsPerSymbol, Int reps)
+# Handles a run code: appends `reps` further copies of the plain symbol
+# `sym`. reps is at most 499 (encoder cap).
+#
+# When the symbol's two pixels are the same colour - a flat region, the
+# common case - the whole run is one emitPixels call of up to 998 pixels,
+# which stays inside the MSC 1000-element list limit. When they differ (a
+# dithered checkerboard) the pixels must alternate, so the pair is appended
+# one repeat at a time.
+
+@using rymaphub
+@fast
+
+@define Int a = sym
+@define Int b = sym
+@if pixelsPerSymbol == 2
+    @var a = sym / colours
+    @var b = sym % colours
+@fi
+
+@if pixelsPerSymbol == 1
+    @var emitPixels(player, a, reps)
+@elseif a == b
+    @var emitPixels(player, a, reps * 2)
+@else
+    @for Int r in list::range(0, reps)
+        @var emitPixels(player, a, 1)
+        @var emitPixels(player, b, 1)
+    @done
+@fi

@@ -1,0 +1,20 @@
+# emitPixels(Player player, Int color, Int count)
+# Appends `count` pixels of master colour index `color` to the column buffer
+# colBuf[player]. Each time the buffer reaches 128 pixels (one full column,
+# north to south) buildColumn places it and the buffer is reset. Pixels
+# beyond the 128th column are dropped (guards against a stream that decodes
+# long). count is at most 998 (the encoder caps a run code at 499 repeats of
+# a symbol, and a symbol is at most 2 pixels), so list::range stays inside
+# the MSC 1000-element limit.
+
+@using rymaphub
+@fast
+
+@for Int r in list::range(0, count)
+    @if colX[player] < 128
+        @var colBuf[player].append(color)
+        @if colBuf[player].length() == 128
+            @var buildColumn(player)
+        @fi
+    @fi
+@done

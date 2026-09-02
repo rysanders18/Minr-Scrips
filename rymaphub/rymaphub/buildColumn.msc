@@ -1,0 +1,160 @@
+# buildColumn(Player player)
+# Places one map column (x = colX[player]) from the 128 master colour
+# indices in colBuf[player], north to south, then advances colX and clears
+# the buffer.
+#
+# Heights (Valley staircasing, after MapartCraft). A block's tone depends
+# only on the SIGN of its height minus the height of the block to its
+# north, so any heights work as long as light steps go up, dark steps go
+# down and normal steps stay level. "Classic" heights are the running sum
+# (+1 light, -1 dark) starting from the noobline at 0. Valley mode then
+# lowers the column: every non-plateau stretch is pulled down so its lowest
+# block sits at 0, and every plateau (the flat top from the last light of
+# an ascent up to the first dark) is pulled down by the smaller of its two
+# neighbouring stretches' pull-downs. Transparent pixels get no block and
+# are treated as level steps; the pixel south of one is compared with the
+# void, so it renders light regardless and is also a level step here (the
+# web page chooses a light tone for it so the preview matches).
+#
+# h has 129 entries: h[0] is the noobline block at startZ-1 that row 0 is
+# compared against; h[z+1] is map row z. All lists here are <= 129 long
+# (MSC caps lists at 1000).
+#
+# Placement: the column is cleared to air from startY to startY+clearHeight
+# first (previous art may have left blocks higher up, and the map shows the
+# TOPMOST coloured block), the noobline block is set, then consecutive
+# pixels with the same colour and height are placed with one fill each.
+
+@using rymaphub
+@fast
+
+@define Int x = colX[player]
+@define Int[] col = colBuf[player]
+
+# --- classic heights ---
+@define Int[] h = Int[0]
+@define Int cur = 0
+@define Int m = 0
+@define Int north = 1
+@for Int z in list::range(0, 128)
+    @var m = col[z]
+    @if z > 0
+        @var north = col[z - 1]
+    @fi
+    @if m > 0 && north > 0
+        @var cur = cur + (m - 1) % 3 - 1
+    @fi
+    @var h.append(cur)
+@done
+
+# --- mark plateaus ---
+@define Int[] inPlat = Int[]
+@for Int i in list::range(0, 129)
+    @var inPlat.append(0)
+@done
+@define Boolean ascending = false
+@define Int plateauStart = 0
+@for Int i in list::range(1, 129)
+    @if ascending == true && h[i] < h[i - 1]
+        @for Int j in list::range(plateauStart, i)
+            @var inPlat[j] = 1
+        @done
+        @var ascending = false
+    @elseif h[i] > h[i - 1]
+        @var ascending = true
+        @var plateauStart = i
+    @fi
+@done
+
+# --- pull segments down (index 129 acts as a sentinel) ---
+@define Int big = 1000000
+@define Int segStart = 0
+@define Int segType = 0
+@define Int lastPull = big
+@define Int pendStart = -1
+@define Int pendEnd = -1
+@define Int p = 0
+@define Int q = 0
+@define Int curType = 0
+@for Int i in list::range(1, 130)
+    @var curType = -1
+    @if i < 129
+        @var curType = inPlat[i]
+    @fi
+    @if curType != segType
+        @if segType == 0
+            @var p = big
+            @for Int j in list::range(segStart, i)
+                @if h[j] < p
+                    @var p = h[j]
+                @fi
+            @done
+            @for Int j in list::range(segStart, i)
+                @var h[j] = h[j] - p
+            @done
+            @if pendStart >= 0
+                @var q = p
+                @if lastPull < q
+                    @var q = lastPull
+                @fi
+                @for Int j in list::range(pendStart, pendEnd)
+                    @var h[j] = h[j] - q
+                @done
+                @var pendStart = -1
+            @fi
+            @var lastPull = p
+        @else
+            @var pendStart = segStart
+            @var pendEnd = i
+        @fi
+        @var segStart = i
+        @var segType = curType
+    @fi
+@done
+@if pendStart >= 0
+    @for Int j in list::range(pendStart, pendEnd)
+        @var h[j] = h[j] - lastPull
+    @done
+@fi
+
+# --- place ---
+@define Int wx = startX + x
+@bypass /execute in {{world}} run fill {{wx}} {{startY}} {{startZ - 1}} {{wx}} {{startY + clearHeight}} {{startZ + 127}} air
+@bypass /execute in {{world}} run setblock {{wx}} {{startY + h[0]}} {{startZ - 1}} {{nooblineBlock}}
+
+@define Int runM = -1
+@define Int runH = 0
+@define Int runStart = 0
+@define Int hh = 0
+@define String b = ""
+@for Int z in list::range(0, 129)
+    @var m = -1
+    @var hh = 0
+    @if z < 128
+        @var m = col[z]
+        @var hh = h[z + 1]
+    @fi
+    @if m != runM || hh != runH
+        @if runM > 0
+            @var b = blocks[(runM - 1) / 3]
+            @if z - runStart == 1
+                @bypass /execute in {{world}} run setblock {{wx}} {{startY + runH}} {{startZ + runStart}} {{b}}
+            @else
+                @bypass /execute in {{world}} run fill {{wx}} {{startY + runH}} {{startZ + runStart}} {{wx}} {{startY + runH}} {{startZ + z - 1}} {{b}}
+            @fi
+        @fi
+        @var runM = m
+        @var runH = hh
+        @var runStart = z
+    @fi
+@done
+
+@var colX[player] = x + 1
+@var colBuf[player] = Int[]
+
+# One progress line every 32 columns; the build takes a few seconds and
+# silence looks like a hang.
+@if x % 32 == 31
+    @player &7Building... &f{{x + 1}}&7/128 columns
+@fi
+@delay 1

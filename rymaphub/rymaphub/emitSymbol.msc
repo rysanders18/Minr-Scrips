@@ -1,0 +1,14 @@
+# emitSymbol(Player player, Int sym, Int pixelsPerSymbol)
+# Appends the pixels of one plain symbol to the column buffer. With
+# pixelsPerSymbol 2 a symbol packs two master colour indices as
+# sym = a * colours + b, high pixel first; with 1 it is a single index.
+
+@using rymaphub
+@fast
+
+@if pixelsPerSymbol == 2
+    @var emitPixels(player, sym / colours, 1)
+    @var emitPixels(player, sym % colours, 1)
+@else
+    @var emitPixels(player, sym, 1)
+@fi
