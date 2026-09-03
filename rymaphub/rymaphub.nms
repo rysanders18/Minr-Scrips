@@ -54,6 +54,8 @@
 
 # Functions
     importMapArt(Player player)
+    showLink(Player player)
+    showHelp(Player player)
     Int checkMessage(String alpha, String msg, Int expected)
     decodeMapArt(Player player, Int pixelsPerSymbol)
     emitSymbol(Player player, Int sym, Int pixelsPerSymbol)

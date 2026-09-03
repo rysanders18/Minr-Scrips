@@ -15,6 +15,8 @@ recomputes the staircase heights, and places the blocks itself.
 |---|---|
 | `rymaphub.nms` | Namespace: hub coordinates, block list, alphabet, per-player decode state, function signatures |
 | `rymaphub/importMapArt.msc` | Entry point (bind to the import sign). Prompt loop with validation and retry |
+| `rymaphub/showLink.msc` | Clickable web address + copy-to-clipboard button (bind to a button) |
+| `rymaphub/showHelp.msc` | Short how-to and FAQ (bind to a button) |
 | `rymaphub/checkMessage.msc` | Index + alphabet + checksum check for one data message |
 | `rymaphub/decodeMapArt.msc` | Symbol stream to pixels, 512 symbols per tick |
 | `rymaphub/emitSymbol.msc` | Appends the pixels of one plain symbol |
@@ -34,7 +36,12 @@ recomputes the staircase heights, and places the blocks itself.
    glass floor at 119, which fits a 0-255 dimension with room to spare.
 2. Create the namespace and define the seven functions with the signatures in
    `rymaphub.nms`, then import each `.msc`.
-3. Bind an interact script to the import sign: `@var rymaphub::importMapArt(player)`.
+3. Bind interact scripts to the hub buttons:
+   `@var rymaphub::importMapArt(player)` on the import button,
+   `@var rymaphub::showLink(player)` on a link button, and
+   `@var rymaphub::showHelp(player)` on a help button. The two display
+   functions use 1.21.5+ text components (`click_event`, `hover_event`,
+   `open_url` with `url`); rename those fields on an older server.
 4. The area must be loaded while building (the player is standing at the hub
    in that dimension). The area is 128 wide by 129 deep: the extra row at
    `startZ-1` is the noobline.

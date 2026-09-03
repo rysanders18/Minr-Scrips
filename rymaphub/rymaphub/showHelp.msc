@@ -1,0 +1,36 @@
+# showHelp(Player player)
+# Bind to a button/sign at the hub. Prints a short how-to and the questions
+# people actually ask, short enough to read without scrolling chat off the
+# screen. The web address is clickable, as in showLink.
+#
+# Text components use the 1.21.5+ shape: `click_event`/`hover_event` rather
+# than `clickEvent`/`hoverEvent`, and `open_url` carries `url` rather than
+# `value`. On an older server rename those fields.
+
+@using rymaphub
+@fast
+
+@player
+@player &#936be5&lRY's Map Hub &8- &fHow it works
+@player
+@player &e&l1. &fOpen the web page and upload an image.
+@bypass tellraw {{player}} ["",{"text":"   ","color":"#d4d4d4"},{"text":"rysanders18.github.io/rymaphub","color":"#936be5","underlined":true,"click_event":{"action":"open_url","url":"https://rysanders18.github.io/rymaphub/"},"hover_event":{"action":"show_text","value":[{"text":"Click to open in your browser","color":"#a1a1a1"}]}}]
+@player &e&l2. &fTune it. &#d4d4d4Dithering blends colours, staircasing
+@player &#d4d4d4   builds in 3D for three shades of every block.
+@player &e&l3. &fClick the import button here, then copy each
+@player &#d4d4d4   message and paste it into chat, in order.
+@player &#d4d4d4   The page copies the next one with &f'&#d4d4d4 or &fCtrl+C&#d4d4d4.
+@player &e&l4. &fThe map builds itself and lands in your hand.
+@player
+@player &#936be5&lQuestions
+@player &7• &fHow many messages? &#d4d4d4About 55 for a photo, far
+@player &#d4d4d4  fewer for flat art. A tiny image can be just one.
+@player &7• &fOne failed? &#d4d4d4Nothing is lost. Paste that same
+@player &#d4d4d4  message again; the script waits for it.
+@player &7• &fStuck or bored? &#d4d4d4Type &fcancel&#d4d4d4 to stop.
+@player &7• &fCan I retype them? &#d4d4d4No. Always copy and paste,
+@player &#d4d4d4  one character wrong and the message is rejected.
+@player &7• &fWhy the strange characters? &#d4d4d4Each one carries a
+@player &#d4d4d4  pixel of your image, which is why so few are needed.
+@player
+@bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5
