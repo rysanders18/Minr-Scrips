@@ -29,7 +29,7 @@ recomputes the staircase heights, and places the blocks itself.
    runs through `/execute in {{world}} run ...`. Columns are cleared from
    `startY` to `startY+clearHeight`, so that range must fit under the world
    height and above the tallest column the web page reports (the page's
-   "Max staircasing height" slider caps it at 128; default 32). The shipped values,
+   "Max staircasing height" slider caps it at 128, and defaults to 128). The shipped values,
    `startY = 120` and `clearHeight = 128`, build up to Y 248 and put the
    glass floor at 119, which fits a 0-255 dimension with room to spare.
 2. Create the namespace and define the seven functions with the signatures in
