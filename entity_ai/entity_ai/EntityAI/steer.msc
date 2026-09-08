@@ -1,0 +1,77 @@
+# Boolean steer(Int seconds)
+# Both arms out front tracing an arc, as if turning a wheel, with random
+# pauses at each end. Returns true if cut short by stopDistance.
+@cooldown 1s
+@using entity_ai
+
+@define Int waitingTicks = 0
+
+@define Boolean inwardsDirection = true
+@define Double velocity = 3.5D
+
+@define Double rightArmPositionX = -90D
+@define Double leftArmPositionX = -90D
+@define Double rightArmPositionY = 0D
+@define Double leftArmPositionY = 0D
+
+@define Double armCenterValueX = -90D
+@define Double armCenterValueY = 0D
+@define Double armMaxValue = 20D
+
+# --- Move to Action Position ---
+@define EntityPose actionPose = EntityPose(this.entity)
+@var actionPose.setRightArm(rightArmPositionX, rightArmPositionY, 0.0D)
+@var actionPose.setLeftArm(leftArmPositionX, leftArmPositionY, 0.0D)
+@var this.currentPose.moveToWithSpeed(actionPose, 10)
+
+# --- Iterate watch for a determined time ---
+@for Int i in list::range(1, seconds * 20)
+
+    # --- Check stop distance ---
+    @if this.helper.getPlayerDistance() >= this.stopDistance
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+        @fi
+        @return true
+    @fi
+
+    # --- Check arm direction to increment ---
+    @if inwardsDirection
+        @var rightArmPositionX += velocity
+        @var leftArmPositionX -= velocity
+    @else
+        @var rightArmPositionX -= velocity
+        @var leftArmPositionX += velocity
+    @fi
+
+    @var rightArmPositionX = getWithinDouble(rightArmPositionX, armCenterValueX - armMaxValue, armCenterValueX + armMaxValue)
+    @var leftArmPositionX = getWithinDouble(leftArmPositionX, armCenterValueX - armMaxValue, armCenterValueX + armMaxValue)
+    @var rightArmPositionY = armCenterValueY + math::sqrt(math::pow(armMaxValue, 2D) - math::pow(rightArmPositionX - armCenterValueX, 2D)) - armMaxValue
+    @var leftArmPositionY = armCenterValueY - math::sqrt(math::pow(armMaxValue, 2D) - math::pow(leftArmPositionX - armCenterValueX, 2D)) + armMaxValue
+
+    # --- Invert arms rotation when hits the edge values ---
+    @if rightArmPositionX >= armCenterValueX + armMaxValue || rightArmPositionX <= armCenterValueX - armMaxValue || leftArmPositionX >= armCenterValueX + armMaxValue || leftArmPositionX <= armCenterValueX - armMaxValue
+        @for Int j in list::range(1, math::ceil(math::randomDouble() * 50))
+            @delay 1
+            @var waitingTicks += 1
+        @done
+        @var inwardsDirection = !inwardsDirection
+    @fi
+
+    @if waitingTicks + i >= seconds * 20
+        # --- Move back to Start Position ---
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+            @delay 10
+        @fi
+        @return false
+    @fi
+
+    # --- Execute arm rotation ---
+    @var this.currentPose.setRightArm(rightArmPositionX, rightArmPositionY, 0.0D)
+    @var this.currentPose.setLeftArm(leftArmPositionX, leftArmPositionY, 0.0D)
+    @var this.currentPose.merge()
+
+@done
+
+@return false

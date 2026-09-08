@@ -1,0 +1,5 @@
+# setStopDistance(Int stopDistance)
+@using entity_ai
+@fast
+
+@var this.stopDistance = stopDistance

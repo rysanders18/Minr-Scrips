@@ -1,0 +1,49 @@
+# finishLine(Player player)
+# Bound to the finish line trigger (pressure plate / walk-on block / region
+# entry). Records the finish and gives immediate feedback; no points are
+# handed out here — endRound tallies everything so the "everyone finished"
+# rule and the First/Solo/Underdog bonuses can be applied with the full
+# round known. Ends the round on the spot once every runner is resolved
+# (finished or eliminated by the fall zone).
+@using uch
+@fast
+
+@if !roundActive
+    @return
+@fi
+@if inRound[player] == 0
+    @return
+@fi
+@if finishedRound[player] == 1
+    @return
+@fi
+@if eliminated[player] == 1
+    @return
+@fi
+
+# Cutoff derives from roundSeconds so the two can never drift apart.
+# Late finishes are told, not silently ignored — a silent reject here made
+# "no points" impossible to tell apart from a scoring bug.
+@define Long elapsed = system::currentTimeMillis() - roundStartMillis
+@if elapsed > roundSeconds * 1000L
+    @bypass /title {{player}} actionbar {"text":"Too late — the round is already over!","color":"red"}
+    @return
+@fi
+
+@var finishedRound[player] = 1
+@var finishCount = finishCount + 1
+@var finishNames.append(player.getName())
+
+# Long-only arithmetic for the time display (no Long->Double conversion)
+@define Long wholeSecs = elapsed / 1000L
+@define Long tenths = (elapsed % 1000L) / 100L
+
+@bypass /playsound minecraft:entity.player.levelup master {{player}} ~ ~ ~ 1 1.5
+@for Player p in runners
+    @bypass /title {{p}} actionbar {"text":"{{player.getName()}} finished in {{wholeSecs}}.{{tenths}}s! ({{finishCount}}/{{runners.length()}})","color":"gold"}
+@done
+
+# Everyone resolved (finished or out) -> no reason to run out the clock
+@if finishCount + eliminatedCount >= runners.length()
+    @var endRound()
+@fi

@@ -1,0 +1,51 @@
+# applyOutcome(Block block, Player player, Int outcome)
+# Grants the reward and fires win/lose flair for a resolved spin.
+#
+# REWARDS ARE PLACEHOLDERS (economy is flair-only for now). Drop your real
+# payouts into the marked branches — each jackpot symbol gets its own branch
+# so you can give different prizes ("multiple types of jackpots").
+#
+# Outcome ids (from resolveOutcome): 100+sym = triple of symbol `sym`,
+# 1 = pair, 0 = nothing. Symbol ids index itemList:
+#   0 diamond  1 iron  2 gold  3 emerald  4 netherite  5 coal  6 redstone  7 lapis  8 quartz
+@using rygamb
+@fast
+
+@if outcome >= 100
+    @define Int sym = outcome - 100
+
+    @if sym == 0
+        # === DIAMOND JACKPOT (grand prize) ===
+        # TODO reward, e.g. @bypass /eco give {{player}} 1000
+        @player &b&l*** DIAMOND JACKPOT! ***
+        @var fxJackpot(player)
+    @elseif sym == 4
+        # === NETHERITE JACKPOT ===
+        # TODO reward
+        @player &8&l*** NETHERITE JACKPOT! ***
+        @var fxJackpot(player)
+    @elseif sym == 3
+        # === EMERALD JACKPOT ===
+        # TODO reward
+        @player &a&l*** EMERALD JACKPOT! ***
+        @var fxJackpot(player)
+    @else
+        # === Minor triple (any other symbol) ===
+        # TODO reward
+        @player &e&lTriple {{itemList[sym]}}!
+        @var fxWin(player)
+    @fi
+    @return
+@fi
+
+@if outcome == 1
+    # === Pair (small consolation) ===
+    # TODO reward
+    @player &aA pair! Small win.
+    @var fxWin(player)
+    @return
+@fi
+
+# === Nothing ===
+@player &7No win. Spin again!
+@var fxLose(player)

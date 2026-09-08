@@ -1,0 +1,9 @@
+# fxReelStop(Player player, Int reel)
+# "Ker-chunk" when reel `reel` (1-3) locks. Pitch rises per reel so the three
+# stops read as a satisfying ascending sequence. PLACEHOLDER.
+@using rygamb
+@fast
+
+@define Float pitch = 0.6F + Float(reel) * 0.15F
+@bypass /playsound minecraft:block.wooden_button.click_on master {{player}} ~ ~ ~ 1.0 {{pitch}}
+@bypass /execute at {{player}} run particle minecraft:crit ~ ~1 ~ 0.3 0.3 0.3 0.1 8 force {{player}}

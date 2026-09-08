@@ -1,0 +1,63 @@
+# irodoriAnimation(Player player)
+# irodori animation
+#
+# Driver for the colour burst. Timeline, in ticks from the start — this
+# reproduces the original hand-unrolled version exactly, it is just
+# written as a schedule instead of hidden in `@if i == 18` checks
+# halfway down a loop body:
+#
+#   t=0    scatter, instant     + burst A, pitch 0.5 -> 0.9
+#   t=36   scatter, 2t per block
+#   t=72                          burst B, pitch 0.9 -> 1.3
+#   t=106  scatter, 2t per block
+#   t=142                         burst C, pitch 1.3 -> 1.7
+#
+# Every pass after the first is fired with @console so it runs alongside
+# the ones already in flight — the ring is being emptied while the
+# previous burst is still flying home. That is why the passes live in
+# irodoriAnimation:: functions and every command inside them is wrapped in
+# `execute in {{animWorld}}`: console has no world of its own.
+#
+# The three pitch windows butt up against each other (0.5-0.9, 0.9-1.3,
+# 1.3-1.7) and moveBlockDisplays ramps linearly inside each one, so the
+# chime climbs smoothly from 0.5 to 1.7 across all 105 blocks instead of
+# resetting to a random pitch every pass. To retune the whole animation,
+# move those six numbers; to change its shape, move the delays. Keep the
+# delays summing the same way if you change stepTicks in
+# irodoriAnimation.nms — 35 displays * stepTicks is one pass.
+#
+# Requires irodoriAnimation::summonBlockDisplays() to have been run once in-world.
+@using irodoriAnimation
+@fast
+
+@console function execute irodoriAnimation::dyeArmourGradient("{{armorStandUuid}}")
+@console function execute irodoriAnimation::shakeStand("{{armorStandUuid}}", Player("{{player.getName()}}"))
+@console function execute irodoriAnimation::spiralParticles("{{armorStandUuid}}")
+
+@var scatterBlockDisplays(0)
+@console function execute irodoriAnimation::moveBlockDisplays(Player("{{player.getName()}}"), Double(0.5D), Double(0.9D), 0)
+
+@delay 36
+@console function execute irodoriAnimation::scatterBlockDisplays({{stepTicks}})
+
+@delay 36
+@console function execute irodoriAnimation::moveBlockDisplays(Player("{{player.getName()}}"), Double(0.9D), Double(1.3D), 72)
+
+@delay 34
+@console function execute irodoriAnimation::scatterBlockDisplays({{stepTicks}})
+
+@delay 36
+@console function execute irodoriAnimation::moveBlockDisplays(Player("{{player.getName()}}"), Double(1.3D), Double(1.7D), 142)
+
+# t=176. interpolationTicks after the final pass began, which is the tick
+# its first display lands. vanishBlockDisplays then walks the ring at the
+# same stepTicks cadence, so each one shrinks away exactly as it settles.
+@delay 34
+@console function execute irodoriAnimation::vanishBlockDisplays()
+
+# t=250. The last display starts shrinking at 244 and is gone by 250, the
+# armour fade and the colour spiral both end at 240, and shakeStand has
+# set the child back on the ground at 240 — so this is the first tick with
+# nothing else running. Bang.
+@delay 54
+@console function execute irodoriAnimation::finale(Player("{{player.getName()}}"))

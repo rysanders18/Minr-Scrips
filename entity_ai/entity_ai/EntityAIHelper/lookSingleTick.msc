@@ -1,0 +1,60 @@
+# lookSingleTick(Double directionalAlign, Boolean toDebug, entity_ai::EntityPose currentPose)
+# Points only the head at the player (body stays put). Skips the merge
+# when the player is more than 90 degrees off the stand's facing, and
+# when the player stands on the stand's exact XZ (the angle math would
+# produce NaN, which the NBT parser rejects). Both skip branches
+# @delay 1 so the tick cadence matches a merge.
+@using entity_ai
+
+# --- Properties ---
+@define Double horizontalPosition = 0D
+@define Double verticalPosition = 0D
+
+# --- Define Vector distances ---
+@define Double x = this.player.getX() - this.entity.getX()
+@define Double y = this.player.getY() - this.entity.getY()
+@define Double z = this.player.getZ() - this.entity.getZ()
+
+# --- Guard against a zero-length vector (division by zero -> NaN) ---
+@if (x * x) + (z * z) < 0.000001D
+    @delay 1
+    @return
+@fi
+@if math::abs(x) < 0.000001D
+    @var x = 0.000001D
+@fi
+
+# --- Calculate head direction based on entity and player coordinates ---
+@var horizontalPosition = math::arctan(z / x)
+@var verticalPosition = math::arccos(y / math::sqrt((x * x) + (z * z) + (y * y)))
+
+# --- Assert head direction value ---
+@var horizontalPosition += 180.0D
+@var verticalPosition -= 90.0D
+
+@if this.player.getX() >= this.entity.getX()
+    @var horizontalPosition += 180.0D
+@fi
+
+@var horizontalPosition = horizontalPosition % 360
+@var verticalPosition = verticalPosition % 360
+
+# --- Stop head from breaking neck ---
+@define Double angleDifference = ((360 - directionalAlign) - horizontalPosition + 180 + 360) % 360 - 180
+@if angleDifference <= 90 && angleDifference >= -90
+    # --- Execute entity position change ---
+    @var currentPose.setHead(verticalPosition, (directionalAlign + horizontalPosition) % 360, 0.0D)
+    @var currentPose.merge()
+@else
+    @delay 1
+@fi
+
+# --- Log values for debugging ---
+@if toDebug
+    @player &7Player Coords [X/Z]: &3({{getRoundDouble(this.player.getX())}}, {{getRoundDouble(this.player.getZ())}})
+    @player
+    @player &7Horizontal Position: &3{{getRoundDouble(horizontalPosition)}}
+    @player &7Vertical Position: &3{{getRoundDouble(verticalPosition)}}
+    @player &7Neck Rotation: &3{{getRoundDouble(angleDifference)}}
+    @player
+@fi

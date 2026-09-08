@@ -1,0 +1,83 @@
+# sitGround()
+# Four keyframes that fold the stand down onto the ground while sinking
+# it 0.8 blocks in total. Gravity is disabled first so the stand doesn't
+# fall through. Ends in mSTATE_GROUND_SITTING; no-op unless standing.
+#
+# NOTE: the export had `setBody(-9.0D, 3-4D, 0.0D)` for the final frame,
+# which MSC evaluates as -1.0. That value is kept (it is what shipped);
+# change it to 3.4D if the original intent was a slight body twist.
+@cooldown 1s
+@using entity_ai
+
+@if this.debugMode
+    @player &3&l=== Start info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+    @player &7Previous Entity State: &3{{this.helper.getEntityState()}}
+@fi
+
+# --- Check invalid entity states ---
+@if this.helper.getEntityState() != mSTATE_STANDING
+    @if this.debugMode
+        @player &6&lWarning: &6Invalid Action in the current Entity State
+    @fi
+    @return
+@fi
+
+# --- Remove gravity to avoid falling inside the block ---
+@var this.helper.setGravity(false)
+
+# --- Disable alignment between models ---
+@var this.currentPose.setMoveAlignment(false)
+
+# --- Create first model ---
+@define EntityPose firstModel = EntityPose(this.entity)
+@var firstModel.setRightArm(-15.0D, 3.0D, 10.0D)
+@var firstModel.setLeftArm(-10.0D, 3.0D, -10.0D)
+@var firstModel.setRightLeg(-20.0D, 0.0D, 1.0D)
+@var firstModel.setLeftLeg(-3.0D, 0.0D, -1.0D)
+@var firstModel.setHead(16.5D, -20.3D, 3.0D)
+@var firstModel.setBody(9.0D, -0.7D, 0.0D)
+
+@var this.currentPose.moveToWithSpeedAndMovement(firstModel, 3, 0.0D, -0.1D, 0.0D)
+
+
+# --- Create second model ---
+@define EntityPose secondModel = EntityPose(this.entity)
+@var secondModel.setRightArm(-15.0D, 3.0D, 10.0D)
+@var secondModel.setLeftArm(30.0D, 0.0D, -10.0D)
+@var secondModel.setRightLeg(-60.0D, 0.0D, 1.0D)
+@var secondModel.setLeftLeg(-13.0D, -15.0D, -1.0D)
+@var secondModel.setHead(31.5D, -20.3D, 3.0D)
+@var secondModel.setBody(12.0D, -0.7D, 0.0D)
+
+@var this.currentPose.moveToWithSpeedAndMovement(secondModel, 3, 0.0D, -0.2D, 0.0D)
+
+
+# --- Create third model ---
+@define EntityPose thirdModel = EntityPose(this.entity)
+@var thirdModel.setRightArm(-30.0D, 3.0D, 10.0D)
+@var thirdModel.setLeftArm(30.0D, 0.0D, -10.0D)
+@var thirdModel.setRightLeg(-77.0D, 9.0D, 1.0D)
+@var thirdModel.setLeftLeg(-55.0D, -12.0D, -1.0D)
+@var thirdModel.setHead(31.5D, -20.3D, 3.0D)
+@var thirdModel.setBody(12.0D, -0.7D, 0.0D)
+
+@var this.currentPose.moveToWithSpeedAndMovement(thirdModel, 3, 0.0D, -0.3D, 0.0D)
+
+
+# --- Create fourth model ---
+@define EntityPose fourthModel = EntityPose(this.entity)
+@var fourthModel.setRightArm(18.0D, 0.0D, 10.0D)
+@var fourthModel.setLeftArm(18.0D, 0.0D, -10.0D)
+@var fourthModel.setRightLeg(-90.0D, 12.0D, 1.0D)
+@var fourthModel.setLeftLeg(-90.0D, -12.0D, -1.0D)
+@var fourthModel.setHead(4.7D, -0.8D, 0.0D)
+@var fourthModel.setBody(-9.0D, -1.0D, 0.0D)
+
+# --- Align last model ---
+@var this.currentPose.setMoveAlignment(true)
+@var this.currentPose.moveToWithSpeedAndMovement(fourthModel, 3, 0.0D, -0.2D, 0.0D)
+
+# --- Change entity state to ground sitting ---
+@var this.helper.setEntityState(mSTATE_GROUND_SITTING)

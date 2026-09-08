@@ -1,0 +1,7 @@
+# fxLose(Player player)
+# Loss / near-miss flair. PLACEHOLDER.
+@using rygamb
+@fast
+
+@bypass /playsound minecraft:block.note_block.bass master {{player}} ~ ~ ~ 1.0 0.6
+@bypass /execute at {{player}} run particle minecraft:smoke ~ ~1 ~ 0.3 0.3 0.3 0.02 10 force {{player}}

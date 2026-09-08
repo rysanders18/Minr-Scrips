@@ -1,0 +1,6 @@
+# moveTo(entity_ai::EntityPose newPose)
+# One-second (20 tick) transition. Delegates to moveToWithSpeed, which
+# additionally takes the shortest way round for each angle.
+@using entity_ai
+
+@var this.moveToWithSpeed(newPose, 20)

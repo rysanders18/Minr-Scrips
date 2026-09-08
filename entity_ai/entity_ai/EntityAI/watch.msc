@@ -1,0 +1,41 @@
+# Boolean watch(Int seconds)
+# Whole-body tracking of the player for `seconds`. Returns true if cut
+# short by the player leaving stopDistance.
+@cooldown 1s
+@using entity_ai
+
+@if this.debugMode
+    @player &3&l=== Start info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+@fi
+
+
+# --- Iterate watch for a determined time ---
+@for Int i in list::range(1, seconds * 20)
+
+    # --- Check stop distance ---
+    @if this.helper.getPlayerDistance() >= this.stopDistance
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity, this.helper.getRotation()), 10)
+        @fi
+        @return true
+    @fi
+
+    # -- Check debug loop ---
+    @define Boolean toDebug = this.debugMode && ((i + 1) % 100 == 0)
+
+    # --- Log start of every 100 loops for debugging ---
+    @if toDebug
+        @player &3&l=== {{(i + 1) / 20}} seconds ===
+    @fi
+
+    # --- Execute watch command ---
+    @var this.helper.watchSingleTick(toDebug)
+@done
+
+@if this.returnBackToPose
+    @var this.currentPose.moveToWithSpeed(EntityPose(this.entity, this.helper.getRotation()), 10)
+@fi
+
+@return false

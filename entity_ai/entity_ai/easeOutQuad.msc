@@ -1,0 +1,12 @@
+# Double easeOutQuad(Double t, Double b, Double c)
+# Penner ease-out quadratic with the duration implied to equal c, which
+# is how jumpSingleTick calls it: t runs 0..jumpHeight and the result
+# runs b..b+jumpHeight, decelerating toward the top.
+@using entity_ai
+@fast
+
+@if c == 0D
+    @return b
+@fi
+@define Double n = t / c
+@return (0D - c) * n * (n - 2D) + b

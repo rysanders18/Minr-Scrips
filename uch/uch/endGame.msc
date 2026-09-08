@@ -1,0 +1,34 @@
+# endGame()
+# Called by buildPhase once someone reaches winScore (or the maxRounds
+# safety backstop trips). Declares the winner (highest total score; the
+# earliest roster slot keeps a tie), shows final scores, resets everyone's
+# score, and returns the game to idle — pressing the start button begins
+# a fresh game.
+@using uch
+@fast
+
+@define String winnerName = ""
+@define Int bestScore = -1
+@for Player p in runners
+    @if totalScore[p] > bestScore
+        @var bestScore = totalScore[p]
+        @var winnerName = p.getName()
+    @fi
+@done
+
+@for Player p in runners
+    @bypass /playsound minecraft:ui.toast.challenge_complete master {{p}} ~ ~ ~ 1 1
+    @bypass /title {{p}} times 10 80 20
+    @bypass /title {{p}} title {"text":"{{winnerName}} wins!","bold":true,"color":"gold"}
+    @bypass /title {{p}} subtitle {"text":"{{bestScore}} points after {{roundNumber}} rounds","color":"yellow"}
+    @bypass /tellraw {{p}} ["",{"text":"===== Final Scores =====","bold":true,"color":"gold"}]
+    @for Player q in runners
+        @bypass /tellraw {{p}} ["",{"text":"{{q.getName()}}: ","color":"yellow"},{"text":"{{totalScore[q]}} points","color":"white"}]
+    @done
+@done
+
+# Reset for the next game
+@for Player p in runners
+    @var totalScore[p] = 0
+    @var inRound[p] = 0
+@done

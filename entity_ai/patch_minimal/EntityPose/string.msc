@@ -1,0 +1,14 @@
+@define String returnString = ""
+
+# --- Pose Values ---
+@var returnString += "Pose:{RightArm:[" + this.rightArm.getX() + "f, " + this.rightArm.getY() + "f, " + this.rightArm.getZ() + "f], " + "LeftArm:[" + this.leftArm.getX() + "f, " + this.leftArm.getY() + "f, " + this.leftArm.getZ() + "f], " + "RightLeg:[" + this.rightLeg.getX() + "f, " + this.rightLeg.getY() + "f, " + this.rightLeg.getZ() + "f], " + "LeftLeg:[" + this.leftLeg.getX() + "f, " + this.leftLeg.getY() + "f, " + this.leftLeg.getZ() + "f], " + "Head:[" + this.head.getX() + "f, " + this.head.getY() + "f, " + this.head.getZ() + "f], " + "Body:[" + this.body.getX() + "f, " + this.body.getY() + "f, " + this.body.getZ() + "f]}"
+
+
+# ---Rotation Value ---
+# FIX (MC 1.21.6+): Rotation must be a two-element [yaw, pitch] list.
+# A one-element list fails to decode and resets the stand to yaw 0.
+@if this.rotation != -1D
+    @var returnString += ",Rotation:[" + this.rotation + "f,0.0f]"
+@fi
+
+@return returnString

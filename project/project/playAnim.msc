@@ -1,0 +1,14 @@
+# playAnim()
+# Port of a/default/play_anim. Play once, no camera takeover.
+@using project
+@fast
+
+@var looping = false
+@var paused = false
+
+# Snap the camera to the first frame (teleport_duration 0).
+@bypass execute as @e[tag=project_root,type=block_display] at @s run data modify entity @e[type=minecraft:block_display,tag=project_camera,limit=1,sort=nearest] teleport_duration set value 0
+
+@delay 2
+@var start()
+

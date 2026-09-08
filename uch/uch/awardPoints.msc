@@ -1,0 +1,13 @@
+# awardPoints(Player player, Int amount, String reason)
+# Adds to the player's persistent total score and tells them what for.
+# Messages via /tellraw {{player}} rather than @player because this is
+# called from endRound, whose executing player is the button presser —
+# @player would send every award message to the wrong person.
+# The message includes the stored running total, read back AFTER the
+# write, so a failed write is immediately visible in-game.
+@using uch
+@fast
+
+@var totalScore[player] = totalScore[player] + amount
+@bypass /tellraw {{player}} ["",{"text":"+{{amount}} points ","bold":true,"color":"aqua"},{"text":"({{reason}}) ","color":"gray"},{"text":"— total: {{totalScore[player]}}","color":"yellow"}]
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 1.5

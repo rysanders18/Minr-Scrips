@@ -1,0 +1,6 @@
+# Double getRotation()
+# Stand yaw in Minecraft convention (0 = south, 90 = west), 0..360.
+@using entity_ai
+@fast
+
+@return (((360.0D - this.getDirectionalAlign()) - 90) + 360) % 360

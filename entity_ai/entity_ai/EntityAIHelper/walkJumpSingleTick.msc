@@ -1,0 +1,46 @@
+# Double[] walkJumpSingleTick(Double jumpHeight, Int iteration, Double currentValue, Double blocksPerSecond, Double distance, Double inwardsDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+# Combined forward + eased-upward step. Not used by any shipped action
+# (jumpFoward uses jumpSingleTick + walkSingleTick) but kept for API
+# parity. Returns [newHeight, direction as 0/1].
+#
+# FIX: threads soundEnabled into walkAnimationSingleTick (the export
+# passed three arguments to a four-argument method).
+@using entity_ai
+
+@define Int maxValue = math::ceil(jumpHeight * 10)
+
+@define Double timedXValue = ((iteration * jumpHeight) / maxValue)
+@define Double nextValue = easeOutQuad(timedXValue, 0D, jumpHeight)
+
+@define Boolean inwardsAnimationDirection = true
+@if inwardsDirection == 0D
+    @var inwardsAnimationDirection = false
+@fi
+@define Boolean nextDirection = inwardsAnimationDirection
+
+@define Double blocksPerTick = blocksPerSecond / (10 + (jumpHeight * 3D))
+@define Int ticks = math::ceil((distance * 10) / blocksPerSecond)
+
+# --- Avoid directions to use really small numbers ---
+@define Double xMove = blocksPerTick * this.entity.getDirectionX()
+@if math::abs(xMove) <= 0.001D
+    @var xMove = 0.0D
+@fi
+
+@define Double zMove = blocksPerTick * this.entity.getDirectionZ()
+@if math::abs(zMove) <= 0.001D
+    @var zMove = 0.0D
+@fi
+
+@bypass /execute as {{this.entity.getUniqueId()}} at @s run teleport ~{{xMove}} ~{{nextValue - currentValue}} ~{{zMove}}
+
+@if iteration % 2 == 0
+    @var nextDirection = this.walkAnimationSingleTick(15D * blocksPerSecond, inwardsAnimationDirection, soundEnabled, currentPose)
+@fi
+
+@define Double directionToDouble = 0D
+@if nextDirection
+    @var directionToDouble = 1D
+@fi
+
+@return Double[nextValue, directionToDouble]

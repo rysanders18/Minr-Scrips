@@ -1,0 +1,59 @@
+# selectBlock(Player player, Int slot)
+# Interact handler for one party-box pedestal; each of the 8 pedestal
+# positions binds this with its own slot index (0-7 in boxSlotPos order —
+# see setup note 5 in uch.nms). First come, first served: claiming a
+# pedestal breaks the block so nobody else can take it and gives the
+# matching pool ITEM (poolItems — lava becomes a lava bucket because lava
+# has no item form). Guarded so it only fires during the selection
+# window, only for roster members (name comparison, the roster idiom used
+# by fallRegion), and only once per player per round. MSC quirk: global
+# arrays can't be written by index (only relative arrays can), so a taken
+# slot is recorded by rebuilding slotPick with -1 in that position.
+@using uch
+@fast
+
+@if !selectActive
+    @return
+@fi
+@define Boolean isRunner = false
+@for Player q in runners
+    @if q.getName() == player.getName()
+        @var isRunner = true
+    @fi
+@done
+@if !isRunner
+    @return
+@fi
+@if hasSelected[player] == 1
+    @bypass /title {{player}} actionbar {"text":"You already have your block!","color":"red"}
+    @return
+@fi
+@define Int pick = slotPick[slot]
+@if pick == -1
+    @return
+@fi
+
+# Mark the slot taken (rebuild — no indexed writes on global arrays)
+@define Int[] updated = Int[]
+@for Int i in list::range(0, slotPick.length())
+    @if i == slot
+        @var updated.append(-1)
+    @else
+        @var updated.append(slotPick[i])
+    @fi
+@done
+@var slotPick = updated
+
+@var hasSelected[player] = 1
+@var selectedCount = selectedCount + 1
+@bypass /setblock {{boxSlotPos[slot]}} minecraft:air
+@bypass /give {{player}} {{poolItems[pick]}} 1
+@bypass /playsound minecraft:entity.item.pickup master {{player}} ~ ~ ~ 1 1
+@bypass /title {{player}} times 0 30 10
+@bypass /title {{player}} title {"text":"{{poolNames[pick]}}","bold":true,"color":"green"}
+@bypass /title {{player}} subtitle {"text":"Your block for this round!","color":"yellow"}
+@for Player p in runners
+    @if p.getName() != player.getName()
+        @bypass /title {{p}} actionbar {"text":"{{player.getName()}} grabbed {{poolNames[pick]}} ({{selectedCount}}/{{selectNeeded}})","color":"aqua"}
+    @fi
+@done

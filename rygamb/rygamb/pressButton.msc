@@ -1,0 +1,14 @@
+# pressButton(Block block, Player player)
+# Entry point wired to the slot-machine button. Ignores presses while a
+# spin is already running for this player (the per-player `spinning` lock),
+# otherwise kicks off the spin. The @delay loop inside spin yields the
+# server tick each frame, so the world keeps running during the animation.
+@using rygamb
+@fast
+
+@if spinning[player]
+    @player &7The reels are still spinning...
+    @return
+@fi
+
+@var spin(block, player)

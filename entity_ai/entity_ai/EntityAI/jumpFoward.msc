@@ -1,0 +1,27 @@
+# jumpFoward()
+# Eased 2-block hop while stepping forward with the walk animation.
+# Resets currentPose to the default afterwards.
+@using entity_ai
+
+@define Double jumpHeight = 2D
+
+@if this.debugMode
+    @player &3&l=== Jump Foward info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player &7Jump height: &3{{jumpHeight}}
+@fi
+
+@var this.helper.setGravity(true)
+@define Int maxValue = math::ceil(jumpHeight * 10)
+
+@define Double currentValue = 0D
+@define Boolean walkAnimationDirection = true
+
+# --- Iterate for the eased rise ---
+@for Int i in list::range(1, maxValue)
+    @var currentValue = this.helper.jumpSingleTick(jumpHeight, i, currentValue)
+    @var walkAnimationDirection = this.helper.walkSingleTick(3D, 1D, walkAnimationDirection, this.soundEnabled, this.currentPose)
+@done
+
+@var this.currentPose = EntityPose(this.entity)
+@var this.currentPose.merge()

@@ -1,0 +1,5 @@
+# Boolean getDebugMode()
+@using entity_ai
+@fast
+
+@return this.debugMode

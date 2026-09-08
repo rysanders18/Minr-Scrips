@@ -1,0 +1,40 @@
+# Double standRiseAt(Int tick)
+#
+# How far the armour stand is off the ground on a given tick of the
+# cutscene, in blocks. tick is measured from the start of the driver,
+# which is also the tick shakeStand starts on.
+#
+# The lift is a triangle folded at riseTicks (up for the first half of
+# 2 * riseTicks, down for the second) with smootherstep on each leg.
+# smootherstep has zero first AND second derivative at both ends, so the
+# stand eases in off the ground, eases out into the peak, eases in back
+# down and eases out onto the floor. The fold's corner sits exactly where
+# smootherstep's derivative is zero, so the peak comes out smooth rather
+# than showing the kink.
+#
+# This is the single source of truth for the lift. shakeStand drives the
+# stand with it, and moveBlockDisplays reads it to find where the stand
+# WILL be when a display finishes interpolating, so the two can't drift
+# apart. Ticks outside the run clamp to the ground.
+#
+# Folding is idempotent — standRiseAt(fold(t)) == standRiseAt(t) — so it
+# is safe to call with a tick that has already been folded, which is what
+# shakeStand does inside its loop.
+@using irodoriAnimation
+@fast
+
+@define Int t = tick
+
+@if t < 0
+    @var t = 0
+@fi
+@if t > 2 * riseTicks
+    @var t = 2 * riseTicks
+@fi
+@if t > riseTicks
+    @var t = 2 * riseTicks - t
+@fi
+
+# smootherstep(u) = 6u^5 - 15u^4 + 10u^3, in Horner form.
+@define Double u = Double(t) / Double(riseTicks)
+@return standRise * u * u * u * (u * (u * 6D - 15D) + 10D)

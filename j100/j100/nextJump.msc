@@ -1,0 +1,65 @@
+# nextJump(Player player)
+# Teleports to a RANDOM jump the player has not beaten yet.
+#
+# Random rather than lowest-numbered on purpose. When everyone walks the jumps
+# in the same 1 -> 100 order, practice gets confounded with difficulty: the
+# early jumps are attempted with cold hands and the late ones benefit from 99
+# jumps of warm-up, which bends the difficulty stats. Randomising the order
+# spreads that learning effect evenly over all 100 jumps instead of piling it
+# onto the low numbers.
+#
+# Two passes: count the unbeaten jumps, pick an index uniformly in [0, count),
+# then walk the list again and take the jump sitting at that index. The
+# Int(math::random(0D, Double(count))) form is used rather than
+# math::random(1, count) because the Double form is unambiguously half-open -
+# the same idiom the Cookie scripts use. The clamps after it are belt-and-
+# braces for the boundary and should never fire.
+#
+# Uses playerLevelPositions[player][level], so a custom position set with the
+# gold ingot (see clickBlock) is honoured. Does NOT count toward
+# levelTeleports - that stat tracks in-level ender pearl retries, not
+# navigating between jumps. Starts the play clock on arrival (see touchLevel).
+
+@using j100
+@fast
+@cooldown 3
+
+@var hotbarFunction(player)
+
+@define Int remaining = 0
+
+@for Int level in list::range(0, 100)
+    @if levelsCompleted[player][level] == false
+        @var remaining += 1
+    @fi
+@done
+
+@if remaining == 0
+    @bypass /playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 0.4 1
+    @player &#d4d4d4● &6&lAll 100 jumps beaten! &#d4d4d4Nothing left to teleport to.
+    @return
+@fi
+
+@define Int pick = Int(math::random(0D, Double(remaining)))
+
+@if pick < 0
+    @var pick = 0
+@fi
+@if pick >= remaining
+    @var pick = remaining - 1
+@fi
+
+@define Int seen = 0
+
+@for Int level in list::range(0, 100)
+    @if levelsCompleted[player][level] == false
+        @if seen == pick
+            @var touchLevel(player, level)
+            @var player.teleport(playerLevelPositions[player][level])
+            @bypass /playsound minecraft:entity.player.teleport master {{player}} ~ ~ ~ 0.4 1
+            @player &#d4d4d4● Teleported to jump &e&l{{level + 1}}&#d4d4d4 - &7{{remaining}} left to beat.
+            @return
+        @fi
+        @var seen += 1
+    @fi
+@done

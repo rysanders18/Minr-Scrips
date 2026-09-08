@@ -1,0 +1,12 @@
+# Double getWithinDouble(Double value, Double minValue, Double maxValue)
+# Clamps value into [minValue, maxValue]. MSC has no math::min/max.
+@using entity_ai
+@fast
+
+@if value < minValue
+    @return minValue
+@fi
+@if value > maxValue
+    @return maxValue
+@fi
+@return value

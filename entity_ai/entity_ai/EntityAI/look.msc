@@ -1,0 +1,51 @@
+# Boolean look(Int seconds)
+# Head-only tracking of the player for `seconds`; the head stops at the
+# 90-degree neck limit. Returns true if cut short by stopDistance.
+@cooldown 1s
+@using entity_ai
+
+# --- Properties ---
+@define Float headAngle = 90.0
+
+# --- Make the head follow the player on any direction of the body ---
+@define Double directionalAlign = this.helper.getDirectionalAlign()
+
+
+# --- Start log values for debugging ---
+@if this.debugMode
+    @player &3&l=== Start info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+    @player &7Armor Stand Direction Alignment: &3{{getRoundDouble(directionalAlign)}}
+    @player &7Neck Lock Range: &3{{getRoundDouble(directionalAlign + headAngle)}} to {{getRoundDouble(directionalAlign - headAngle)}}
+    @player
+@fi
+
+# --- Iterate watch for a determined time ---
+@for Int i in list::range(1, seconds * 20)
+
+    # --- Check stop distance ---
+    @if this.helper.getPlayerDistance() >= this.stopDistance
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+        @fi
+        @return true
+    @fi
+
+    # -- Check debug loop ---
+    @define Boolean toDebug = this.debugMode && ((i + 1) % 100 == 0)
+
+    # --- Log start of every 100 loops for debugging ---
+    @if toDebug
+        @player &3&l=== {{(i + 1) / 20}} seconds ===
+    @fi
+
+    # --- Execute watch command ---
+    @var this.helper.lookSingleTick(directionalAlign, toDebug, this.currentPose)
+@done
+
+@if this.returnBackToPose
+    @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+@fi
+
+@return false

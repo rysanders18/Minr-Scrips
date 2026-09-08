@@ -1,0 +1,29 @@
+# scatterBlockDisplays(Int stepDelay)
+#
+# Reset pass. Throws every display back out to a random point on the ring
+# with a random tumble and scale 0, at interpolation_duration 0 so the
+# jump is instant and invisible — the player only ever sees the return
+# trip that moveBlockDisplays animates.
+#
+# stepDelay is the tick gap between displays:
+#   0         whole ring resets in a single tick (opening frame)
+#   stepTicks staggered over 70 ticks, so the ring visibly empties while
+#             the previous burst is still flying in
+@using irodoriAnimation
+@fast
+
+@define Double ringLow = 0D - ringHeight
+@define Double spinLow = 0D - spinRange
+@define Double angle = 0D
+
+@for Int i in list::range(0, blockColors.length())
+    @var angle = math::random(0D, 360D)
+
+    @bypass /execute in {{animWorld}} run data merge entity @e[limit=1,tag=iro{{i}}] {interpolation_duration:0,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[{{math::random(spinLow, spinRange)}}f,0f,{{math::random(spinLow, spinRange)}}f,{{math::random(spinLow, spinRange)}}f],translation:[{{ringRadius * math::cos(angle)}}f,{{math::random(ringLow, ringHeight)}}f,{{ringRadius * math::sin(angle)}}f],scale:[0f,0f,0f]}}
+
+    @if stepDelay > 0
+        @for Int j in list::range(0, stepDelay)
+            @delay 1
+        @done
+    @fi
+@done

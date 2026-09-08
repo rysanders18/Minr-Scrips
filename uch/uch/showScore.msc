@@ -1,0 +1,9 @@
+# showScore(Player player)
+# Debug/utility: prints the player's stored total score. Run in-game with
+#   /function execute uch::showScore(Player("YourName"))
+# Pair with awardPoints to verify the relative write actually persists:
+#   /function execute uch::awardPoints(Player("YourName"), Int(5), String("Test"))
+@using uch
+@fast
+
+@bypass /tellraw {{player}} ["",{"text":"{{player.getName()}} has ","color":"gray"},{"text":"{{totalScore[player]}} points","bold":true,"color":"aqua"}]

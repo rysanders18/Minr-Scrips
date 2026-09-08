@@ -1,0 +1,5 @@
+# Player getPlayer()
+@using entity_ai
+@fast
+
+@return this.player

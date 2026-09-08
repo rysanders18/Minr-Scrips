@@ -1,0 +1,13 @@
+# Int getEntityIndex(String uuid)
+# Index of this armor stand in the entityKeys/entityStates parallel
+# arrays. Unknown stands are registered as mSTATE_STANDING. Uses
+# .contains() before .find() because .find() throws on a missing value.
+@using entity_ai
+@fast
+
+@if !entityKeys.contains(uuid)
+    @var entityKeys.append(uuid)
+    @var entityStates.append(mSTATE_STANDING)
+@fi
+
+@return entityKeys.find(uuid)

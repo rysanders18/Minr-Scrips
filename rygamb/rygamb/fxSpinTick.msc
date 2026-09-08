@@ -1,0 +1,6 @@
+# fxSpinTick(Player player)
+# Per-frame whir while the reels spin. PLACEHOLDER — swap the sound/particle.
+@using rygamb
+@fast
+
+@bypass /playsound minecraft:ui.button.click master {{player}} ~ ~ ~ 0.3 2.0

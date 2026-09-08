@@ -1,0 +1,574 @@
+# playFrame(Int frame)
+# Dispatch to the keyframe body for `frame`. MSC has no dynamic
+# function lookup, so this is a hand-coded @if chain (see the MSC
+# docs, "No dynamic constant lookup"). One branch per keyframe, 0..282.
+@using project
+@fast
+
+@if frame == 0
+    @var keyframe0()
+@elseif frame == 1
+    @var keyframe1()
+@elseif frame == 2
+    @var keyframe2()
+@elseif frame == 3
+    @var keyframe3()
+@elseif frame == 4
+    @var keyframe4()
+@elseif frame == 5
+    @var keyframe5()
+@elseif frame == 6
+    @var keyframe6()
+@elseif frame == 7
+    @var keyframe7()
+@elseif frame == 8
+    @var keyframe8()
+@elseif frame == 9
+    @var keyframe9()
+@elseif frame == 10
+    @var keyframe10()
+@elseif frame == 11
+    @var keyframe11()
+@elseif frame == 12
+    @var keyframe12()
+@elseif frame == 13
+    @var keyframe13()
+@elseif frame == 14
+    @var keyframe14()
+@elseif frame == 15
+    @var keyframe15()
+@elseif frame == 16
+    @var keyframe16()
+@elseif frame == 17
+    @var keyframe17()
+@elseif frame == 18
+    @var keyframe18()
+@elseif frame == 19
+    @var keyframe19()
+@elseif frame == 20
+    @var keyframe20()
+@elseif frame == 21
+    @var keyframe21()
+@elseif frame == 22
+    @var keyframe22()
+@elseif frame == 23
+    @var keyframe23()
+@elseif frame == 24
+    @var keyframe24()
+@elseif frame == 25
+    @var keyframe25()
+@elseif frame == 26
+    @var keyframe26()
+@elseif frame == 27
+    @var keyframe27()
+@elseif frame == 28
+    @var keyframe28()
+@elseif frame == 29
+    @var keyframe29()
+@elseif frame == 30
+    @var keyframe30()
+@elseif frame == 31
+    @var keyframe31()
+@elseif frame == 32
+    @var keyframe32()
+@elseif frame == 33
+    @var keyframe33()
+@elseif frame == 34
+    @var keyframe34()
+@elseif frame == 35
+    @var keyframe35()
+@elseif frame == 36
+    @var keyframe36()
+@elseif frame == 37
+    @var keyframe37()
+@elseif frame == 38
+    @var keyframe38()
+@elseif frame == 39
+    @var keyframe39()
+@elseif frame == 40
+    @var keyframe40()
+@elseif frame == 41
+    @var keyframe41()
+@elseif frame == 42
+    @var keyframe42()
+@elseif frame == 43
+    @var keyframe43()
+@elseif frame == 44
+    @var keyframe44()
+@elseif frame == 45
+    @var keyframe45()
+@elseif frame == 46
+    @var keyframe46()
+@elseif frame == 47
+    @var keyframe47()
+@elseif frame == 48
+    @var keyframe48()
+@elseif frame == 49
+    @var keyframe49()
+@elseif frame == 50
+    @var keyframe50()
+@elseif frame == 51
+    @var keyframe51()
+@elseif frame == 52
+    @var keyframe52()
+@elseif frame == 53
+    @var keyframe53()
+@elseif frame == 54
+    @var keyframe54()
+@elseif frame == 55
+    @var keyframe55()
+@elseif frame == 56
+    @var keyframe56()
+@elseif frame == 57
+    @var keyframe57()
+@elseif frame == 58
+    @var keyframe58()
+@elseif frame == 59
+    @var keyframe59()
+@elseif frame == 60
+    @var keyframe60()
+@elseif frame == 61
+    @var keyframe61()
+@elseif frame == 62
+    @var keyframe62()
+@elseif frame == 63
+    @var keyframe63()
+@elseif frame == 64
+    @var keyframe64()
+@elseif frame == 65
+    @var keyframe65()
+@elseif frame == 66
+    @var keyframe66()
+@elseif frame == 67
+    @var keyframe67()
+@elseif frame == 68
+    @var keyframe68()
+@elseif frame == 69
+    @var keyframe69()
+@elseif frame == 70
+    @var keyframe70()
+@elseif frame == 71
+    @var keyframe71()
+@elseif frame == 72
+    @var keyframe72()
+@elseif frame == 73
+    @var keyframe73()
+@elseif frame == 74
+    @var keyframe74()
+@elseif frame == 75
+    @var keyframe75()
+@elseif frame == 76
+    @var keyframe76()
+@elseif frame == 77
+    @var keyframe77()
+@elseif frame == 78
+    @var keyframe78()
+@elseif frame == 79
+    @var keyframe79()
+@elseif frame == 80
+    @var keyframe80()
+@elseif frame == 81
+    @var keyframe81()
+@elseif frame == 82
+    @var keyframe82()
+@elseif frame == 83
+    @var keyframe83()
+@elseif frame == 84
+    @var keyframe84()
+@elseif frame == 85
+    @var keyframe85()
+@elseif frame == 86
+    @var keyframe86()
+@elseif frame == 87
+    @var keyframe87()
+@elseif frame == 88
+    @var keyframe88()
+@elseif frame == 89
+    @var keyframe89()
+@elseif frame == 90
+    @var keyframe90()
+@elseif frame == 91
+    @var keyframe91()
+@elseif frame == 92
+    @var keyframe92()
+@elseif frame == 93
+    @var keyframe93()
+@elseif frame == 94
+    @var keyframe94()
+@elseif frame == 95
+    @var keyframe95()
+@elseif frame == 96
+    @var keyframe96()
+@elseif frame == 97
+    @var keyframe97()
+@elseif frame == 98
+    @var keyframe98()
+@elseif frame == 99
+    @var keyframe99()
+@elseif frame == 100
+    @var keyframe100()
+@elseif frame == 101
+    @var keyframe101()
+@elseif frame == 102
+    @var keyframe102()
+@elseif frame == 103
+    @var keyframe103()
+@elseif frame == 104
+    @var keyframe104()
+@elseif frame == 105
+    @var keyframe105()
+@elseif frame == 106
+    @var keyframe106()
+@elseif frame == 107
+    @var keyframe107()
+@elseif frame == 108
+    @var keyframe108()
+@elseif frame == 109
+    @var keyframe109()
+@elseif frame == 110
+    @var keyframe110()
+@elseif frame == 111
+    @var keyframe111()
+@elseif frame == 112
+    @var keyframe112()
+@elseif frame == 113
+    @var keyframe113()
+@elseif frame == 114
+    @var keyframe114()
+@elseif frame == 115
+    @var keyframe115()
+@elseif frame == 116
+    @var keyframe116()
+@elseif frame == 117
+    @var keyframe117()
+@elseif frame == 118
+    @var keyframe118()
+@elseif frame == 119
+    @var keyframe119()
+@elseif frame == 120
+    @var keyframe120()
+@elseif frame == 121
+    @var keyframe121()
+@elseif frame == 122
+    @var keyframe122()
+@elseif frame == 123
+    @var keyframe123()
+@elseif frame == 124
+    @var keyframe124()
+@elseif frame == 125
+    @var keyframe125()
+@elseif frame == 126
+    @var keyframe126()
+@elseif frame == 127
+    @var keyframe127()
+@elseif frame == 128
+    @var keyframe128()
+@elseif frame == 129
+    @var keyframe129()
+@elseif frame == 130
+    @var keyframe130()
+@elseif frame == 131
+    @var keyframe131()
+@elseif frame == 132
+    @var keyframe132()
+@elseif frame == 133
+    @var keyframe133()
+@elseif frame == 134
+    @var keyframe134()
+@elseif frame == 135
+    @var keyframe135()
+@elseif frame == 136
+    @var keyframe136()
+@elseif frame == 137
+    @var keyframe137()
+@elseif frame == 138
+    @var keyframe138()
+@elseif frame == 139
+    @var keyframe139()
+@elseif frame == 140
+    @var keyframe140()
+@elseif frame == 141
+    @var keyframe141()
+@elseif frame == 142
+    @var keyframe142()
+@elseif frame == 143
+    @var keyframe143()
+@elseif frame == 144
+    @var keyframe144()
+@elseif frame == 145
+    @var keyframe145()
+@elseif frame == 146
+    @var keyframe146()
+@elseif frame == 147
+    @var keyframe147()
+@elseif frame == 148
+    @var keyframe148()
+@elseif frame == 149
+    @var keyframe149()
+@elseif frame == 150
+    @var keyframe150()
+@elseif frame == 151
+    @var keyframe151()
+@elseif frame == 152
+    @var keyframe152()
+@elseif frame == 153
+    @var keyframe153()
+@elseif frame == 154
+    @var keyframe154()
+@elseif frame == 155
+    @var keyframe155()
+@elseif frame == 156
+    @var keyframe156()
+@elseif frame == 157
+    @var keyframe157()
+@elseif frame == 158
+    @var keyframe158()
+@elseif frame == 159
+    @var keyframe159()
+@elseif frame == 160
+    @var keyframe160()
+@elseif frame == 161
+    @var keyframe161()
+@elseif frame == 162
+    @var keyframe162()
+@elseif frame == 163
+    @var keyframe163()
+@elseif frame == 164
+    @var keyframe164()
+@elseif frame == 165
+    @var keyframe165()
+@elseif frame == 166
+    @var keyframe166()
+@elseif frame == 167
+    @var keyframe167()
+@elseif frame == 168
+    @var keyframe168()
+@elseif frame == 169
+    @var keyframe169()
+@elseif frame == 170
+    @var keyframe170()
+@elseif frame == 171
+    @var keyframe171()
+@elseif frame == 172
+    @var keyframe172()
+@elseif frame == 173
+    @var keyframe173()
+@elseif frame == 174
+    @var keyframe174()
+@elseif frame == 175
+    @var keyframe175()
+@elseif frame == 176
+    @var keyframe176()
+@elseif frame == 177
+    @var keyframe177()
+@elseif frame == 178
+    @var keyframe178()
+@elseif frame == 179
+    @var keyframe179()
+@elseif frame == 180
+    @var keyframe180()
+@elseif frame == 181
+    @var keyframe181()
+@elseif frame == 182
+    @var keyframe182()
+@elseif frame == 183
+    @var keyframe183()
+@elseif frame == 184
+    @var keyframe184()
+@elseif frame == 185
+    @var keyframe185()
+@elseif frame == 186
+    @var keyframe186()
+@elseif frame == 187
+    @var keyframe187()
+@elseif frame == 188
+    @var keyframe188()
+@elseif frame == 189
+    @var keyframe189()
+@elseif frame == 190
+    @var keyframe190()
+@elseif frame == 191
+    @var keyframe191()
+@elseif frame == 192
+    @var keyframe192()
+@elseif frame == 193
+    @var keyframe193()
+@elseif frame == 194
+    @var keyframe194()
+@elseif frame == 195
+    @var keyframe195()
+@elseif frame == 196
+    @var keyframe196()
+@elseif frame == 197
+    @var keyframe197()
+@elseif frame == 198
+    @var keyframe198()
+@elseif frame == 199
+    @var keyframe199()
+@elseif frame == 200
+    @var keyframe200()
+@elseif frame == 201
+    @var keyframe201()
+@elseif frame == 202
+    @var keyframe202()
+@elseif frame == 203
+    @var keyframe203()
+@elseif frame == 204
+    @var keyframe204()
+@elseif frame == 205
+    @var keyframe205()
+@elseif frame == 206
+    @var keyframe206()
+@elseif frame == 207
+    @var keyframe207()
+@elseif frame == 208
+    @var keyframe208()
+@elseif frame == 209
+    @var keyframe209()
+@elseif frame == 210
+    @var keyframe210()
+@elseif frame == 211
+    @var keyframe211()
+@elseif frame == 212
+    @var keyframe212()
+@elseif frame == 213
+    @var keyframe213()
+@elseif frame == 214
+    @var keyframe214()
+@elseif frame == 215
+    @var keyframe215()
+@elseif frame == 216
+    @var keyframe216()
+@elseif frame == 217
+    @var keyframe217()
+@elseif frame == 218
+    @var keyframe218()
+@elseif frame == 219
+    @var keyframe219()
+@elseif frame == 220
+    @var keyframe220()
+@elseif frame == 221
+    @var keyframe221()
+@elseif frame == 222
+    @var keyframe222()
+@elseif frame == 223
+    @var keyframe223()
+@elseif frame == 224
+    @var keyframe224()
+@elseif frame == 225
+    @var keyframe225()
+@elseif frame == 226
+    @var keyframe226()
+@elseif frame == 227
+    @var keyframe227()
+@elseif frame == 228
+    @var keyframe228()
+@elseif frame == 229
+    @var keyframe229()
+@elseif frame == 230
+    @var keyframe230()
+@elseif frame == 231
+    @var keyframe231()
+@elseif frame == 232
+    @var keyframe232()
+@elseif frame == 233
+    @var keyframe233()
+@elseif frame == 234
+    @var keyframe234()
+@elseif frame == 235
+    @var keyframe235()
+@elseif frame == 236
+    @var keyframe236()
+@elseif frame == 237
+    @var keyframe237()
+@elseif frame == 238
+    @var keyframe238()
+@elseif frame == 239
+    @var keyframe239()
+@elseif frame == 240
+    @var keyframe240()
+@elseif frame == 241
+    @var keyframe241()
+@elseif frame == 242
+    @var keyframe242()
+@elseif frame == 243
+    @var keyframe243()
+@elseif frame == 244
+    @var keyframe244()
+@elseif frame == 245
+    @var keyframe245()
+@elseif frame == 246
+    @var keyframe246()
+@elseif frame == 247
+    @var keyframe247()
+@elseif frame == 248
+    @var keyframe248()
+@elseif frame == 249
+    @var keyframe249()
+@elseif frame == 250
+    @var keyframe250()
+@elseif frame == 251
+    @var keyframe251()
+@elseif frame == 252
+    @var keyframe252()
+@elseif frame == 253
+    @var keyframe253()
+@elseif frame == 254
+    @var keyframe254()
+@elseif frame == 255
+    @var keyframe255()
+@elseif frame == 256
+    @var keyframe256()
+@elseif frame == 257
+    @var keyframe257()
+@elseif frame == 258
+    @var keyframe258()
+@elseif frame == 259
+    @var keyframe259()
+@elseif frame == 260
+    @var keyframe260()
+@elseif frame == 261
+    @var keyframe261()
+@elseif frame == 262
+    @var keyframe262()
+@elseif frame == 263
+    @var keyframe263()
+@elseif frame == 264
+    @var keyframe264()
+@elseif frame == 265
+    @var keyframe265()
+@elseif frame == 266
+    @var keyframe266()
+@elseif frame == 267
+    @var keyframe267()
+@elseif frame == 268
+    @var keyframe268()
+@elseif frame == 269
+    @var keyframe269()
+@elseif frame == 270
+    @var keyframe270()
+@elseif frame == 271
+    @var keyframe271()
+@elseif frame == 272
+    @var keyframe272()
+@elseif frame == 273
+    @var keyframe273()
+@elseif frame == 274
+    @var keyframe274()
+@elseif frame == 275
+    @var keyframe275()
+@elseif frame == 276
+    @var keyframe276()
+@elseif frame == 277
+    @var keyframe277()
+@elseif frame == 278
+    @var keyframe278()
+@elseif frame == 279
+    @var keyframe279()
+@elseif frame == 280
+    @var keyframe280()
+@elseif frame == 281
+    @var keyframe281()
+@elseif frame == 282
+    @var keyframe282()
+@fi

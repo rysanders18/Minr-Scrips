@@ -1,0 +1,9 @@
+# 
+
+@using j100
+@fast
+
+@for Int i in list::range(0, 100)
+    @command /s r g {{goldBlockList[i].getX()}} {{goldBlockList[i].getY()}} {{goldBlockList[i].getZ()}} Epsilon
+    @command /s c g {{goldBlockList[i].getX()}} {{goldBlockList[i].getY()}} {{goldBlockList[i].getZ()}} Epsilon @var j100::goldBlock(player)
+@done

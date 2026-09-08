@@ -1,0 +1,7 @@
+# deleteModel()
+# Port of _/delete. Removes the whole display-entity tree.
+@using project
+@fast
+
+@bypass execute as @e[type=minecraft:block_display,tag=project] on passengers run kill @s
+@bypass execute as @e[type=minecraft:block_display,tag=project] run kill @s

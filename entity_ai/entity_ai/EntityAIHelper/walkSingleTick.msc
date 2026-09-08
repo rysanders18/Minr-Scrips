@@ -1,0 +1,24 @@
+# Boolean walkSingleTick(Double blocksPerSecond, Double distance, Boolean inwardsAnimationDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+# One step forward along the stand's facing plus one animation frame.
+#
+# FIX: the export called walkAnimationSingleTick with three arguments
+# after v1.4 added soundEnabled to it; the flag is now threaded through.
+@using entity_ai
+
+@define Double blocksPerTick = blocksPerSecond / 10
+@define Int ticks = math::ceil((distance * 10) / blocksPerSecond)
+
+# --- Avoid directions to use really small numbers ---
+@define Double xMove = blocksPerTick * this.entity.getDirectionX()
+@if math::abs(xMove) <= 0.001D
+    @var xMove = 0.0D
+@fi
+
+@define Double zMove = blocksPerTick * this.entity.getDirectionZ()
+@if math::abs(zMove) <= 0.001D
+    @var zMove = 0.0D
+@fi
+
+
+@bypass /execute as {{this.entity.getUniqueId()}} at @s run teleport ~{{xMove}} ~ ~{{zMove}}
+@return this.walkAnimationSingleTick(7.5D * blocksPerSecond, inwardsAnimationDirection, soundEnabled, currentPose)

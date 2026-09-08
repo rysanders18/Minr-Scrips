@@ -1,0 +1,6 @@
+# rotateToBlockLocation(Int x, Int z, Double degreesPerSecond)
+# Turns to face the centre of block (x, z).
+@cooldown 1
+@using entity_ai
+
+@var this.rotateToLocation(x + 0.5D, z + 0.5D, degreesPerSecond)

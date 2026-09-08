@@ -1,0 +1,6 @@
+# walkToBlock(Int x, Int z, Double blocksPerSecond)
+# walkTo the centre of block (x, z).
+@cooldown 1
+@using entity_ai
+
+@var this.walkTo(x + 0.5D, z + 0.5D, blocksPerSecond)

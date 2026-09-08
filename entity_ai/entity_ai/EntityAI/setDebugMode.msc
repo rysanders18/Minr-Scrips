@@ -1,0 +1,5 @@
+# setDebugMode(Boolean debugMode)
+@using entity_ai
+@fast
+
+@var this.debugMode = debugMode

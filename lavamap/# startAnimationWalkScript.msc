@@ -1,0 +1,14 @@
+@using lavamap
+@fast
+
+# Kill The last pig
+@bypass /minecraft:tp @e[tag=lavamappig{{pigNumber}},distance=..200] -13211 1 9476 
+@bypass /minecraft:kill @e[tag=lavamappig{{pigNumber}},distance=..200] 
+
+@if pigNumber == 9
+    @var pigNumber = 0
+@else
+    @var pigNumber += 1
+@fi
+
+@var startAnimation(player, pigNumber)

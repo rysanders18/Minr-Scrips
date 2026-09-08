@@ -1,0 +1,6 @@
+# Int getEntityState()
+@using entity_ai
+@fast
+
+@define Int index = getEntityIndex(this.entity.getUniqueId())
+@return entityStates[index]

@@ -1,0 +1,79 @@
+# moveBlockDisplays(Player player, Double pitchStart, Double pitchEnd, Int startTick)
+#
+# One burst pass. Walks iro0..iro34 in blockColors order and, every
+# stepTicks, for one display:
+#   1. sprays its block particle at a random point on the ring and again
+#      at the display itself,
+#   2. interpolates it onto the armour stand at displayScale, unwinding
+#      the random tumble scatterBlockDisplays gave it,
+#   3. plays one chime.
+#
+# WHERE IT LANDS: on the stand's chest, not the summon anchor. The anchor
+# sits 1.2 blocks above the stand's feet and a little to the side, so a
+# translation of [0, 0, 0] parks the colour in mid-air beside the child.
+# aimX/aimZ/aimBase convert the anchor into chest height on the stand.
+# X and Z are exact — every display converges on the same column, as it
+# always did. standScatter only spreads them vertically, which is where
+# the old fixed drop had its variation too.
+#
+# The aim also LEADS the stand. Each display takes interpolationTicks to
+# fly, and shakeStand is lifting the stand through that whole window, so
+# the target is standRiseAt(the tick this display actually lands on) —
+# which is why the pass needs to know its own startTick. Aiming at the
+# stand's height at dispatch would miss by most of a block mid-climb.
+#
+# PITCH: a straight linear ramp, pitchStart on the first display to
+# pitchEnd on the last — pitchStep is fixed up front and multiplied by
+# the loop index, so the rise is even regardless of how many colours are
+# in blockColors. The ramp does NOT restart per call, which is the point:
+# the driver chains passes with adjoining windows (0.5->0.9, 0.9->1.3,
+# 1.3->1.7) and the chime climbs continuously across the whole
+# animation. Minecraft clamps playsound pitch to 0.5-2.0 — a window
+# outside that range just flattens out at the end.
+@using irodoriAnimation
+@fast
+
+@define Int count = blockColors.length()
+
+@define Double pitchStep = 0D
+@if count > 1
+    @var pitchStep = (pitchEnd - pitchStart) / Double(count - 1)
+@fi
+
+@define Double ringLow = 0D - ringHeight
+@define Double scatterLow = 0D - standScatter
+@define Double angle = 0D
+@define Double pitch = pitchStart
+
+# Where the stand is, expressed in the displays' own space. Every
+# transformation is relative to the summon anchor, and the anchor sits
+# above and slightly aside from the stand, so these are the deltas that
+# turn "the anchor" into "the child's chest".
+@define Double aimX = standX - anchorX
+@define Double aimZ = standZ - anchorZ
+@define Double aimBase = standGroundY + standAimHeight - anchorY
+
+@define Int landsOn = 0
+@define Double aimY = 0D
+
+@for Int i in list::range(0, count)
+    @var angle = math::random(0D, 360D)
+    @var pitch = pitchStart + pitchStep * Double(i)
+
+    # Aim at where the stand WILL be, not where it is. This display is
+    # dispatched startTick + i * stepTicks into the cutscene and takes
+    # interpolationTicks to fly, and the stand is rising or falling the
+    # whole time — aiming at its current height would land the colour a
+    # block off during the climb.
+    @var landsOn = startTick + i * stepTicks + interpolationTicks
+    @var aimY = aimBase + standRiseAt(landsOn)
+
+    @bypass /execute in {{animWorld}} run execute at @e[limit=1,tag=iro{{i}}] run particle block{block_state:"minecraft:{{blockColors[i]}}"} ~{{ringRadius * math::cos(angle)}} ~{{math::random(ringLow, ringHeight)}} ~{{ringRadius * math::sin(angle)}} 0 0 0 0.01 1 force
+    @bypass /execute in {{animWorld}} run execute at @e[limit=1,tag=iro{{i}}] run particle block{block_state:"minecraft:{{blockColors[i]}}"} ~ ~ ~ 0 0 0 0.01 1 force
+    @bypass /execute in {{animWorld}} run data merge entity @e[limit=1,tag=iro{{i}}] {interpolation_duration:{{interpolationTicks}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,{{aimY + math::random(scatterLow, standScatter)}}f,0f],scale:[{{displayScale}}f,{{displayScale}}f,{{displayScale}}f]}}
+    @bypass /execute in {{animWorld}} run playsound {{chimeSound}} master {{player}} {{chimePos}} {{chimeVolume}} {{pitch}}
+
+    @for Int j in list::range(0, stepTicks)
+        @delay 1
+    @done
+@done

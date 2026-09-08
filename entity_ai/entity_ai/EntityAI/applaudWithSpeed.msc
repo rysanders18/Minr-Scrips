@@ -1,0 +1,88 @@
+# Boolean applaudWithSpeed(Int seconds, Double velocity)
+# applaud with a caller-chosen speed, clamped to 1..20 degrees per tick.
+# The move-in speed scales inversely with velocity (linear fit from the
+# original: 10 ticks at 7.5 deg/tick).
+@cooldown 1s
+@using entity_ai
+
+# --- Properties ---
+@define Boolean inwardsDirection = true
+
+@define Double rightArmPosition = -90.0D
+@define Double rightArmMinValue = -90.0D
+@define Double rightArmMaxValue = -70.0D
+
+@define Double leftArmPosition = -40.0D
+@define Double leftArmMinValue = -40.0D
+@define Double leftArmMaxValue = -60.0D
+
+# --- Limit velocity parameter ---
+@define Double minVelocity = 1.0D
+@define Double maxVelocity = 20.0D
+@var velocity = getWithinDouble(velocity, minVelocity, maxVelocity)
+
+# --- Start log values for debugging ---
+@if this.debugMode
+    @player &3&l=== Setup ===
+    @player &7Entity Coords [X/Z] = &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+    @player &7Min Value Right Arm: &3{{rightArmMinValue}}
+    @player &7Max Value Right Arm: &3{{rightArmMaxValue}}
+    @player
+    @player &7Min Value Left Arm: &3{{leftArmMinValue}}
+    @player &7Max Value Left Arm: &3{{leftArmMaxValue}}
+    @player
+    @player &7Velocity: &3{{velocity}} degrees per tick
+    @player
+@fi
+
+# --- Move to Action Position ---
+@define Double mSLOPE = -5.0D / 7.0D
+@define Double mSHIFT = 114.0D / 7.0D
+@define Int moveSpeed = math::ceil(mSLOPE * velocity + mSHIFT)
+
+@define EntityPose actionPose = EntityPose(this.entity)
+@var actionPose.setRightArm(rightArmPosition, -50.0D, 0.0D)
+@var actionPose.setLeftArm(leftArmPosition, 50.0D, 0.0D)
+@var this.currentPose.moveToWithSpeed(actionPose, moveSpeed)
+
+# --- Iterate watch for a determined time ---
+@for Int i in list::range(1, seconds * 20)
+
+    # --- Check stop distance ---
+    @if this.helper.getPlayerDistance() >= this.stopDistance
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+        @fi
+        @return true
+    @fi
+
+    # --- Check arm direction to increment ---
+    @if inwardsDirection
+        @var rightArmPosition += velocity
+        @var leftArmPosition -= velocity
+    @else
+        @var rightArmPosition -= velocity
+        @var leftArmPosition += velocity
+    @fi
+
+    # --- Invert arms rotation when hits the edge values ---
+    @if rightArmPosition <= rightArmMinValue || rightArmPosition >= rightArmMaxValue || leftArmPosition >= leftArmMinValue || leftArmPosition <= leftArmMaxValue
+        @if inwardsDirection && this.soundEnabled
+            @bypass /playsound entity.firework_rocket.blast ambient @p {{this.entity.getX()}} {{this.entity.getY()}} {{this.entity.getZ()}} 100 2.0
+        @fi
+        @var inwardsDirection = !inwardsDirection
+    @fi
+
+    # --- Execute arm rotation ---
+    @var this.currentPose.setRightArm(rightArmPosition, -50.0D, 0.0D)
+    @var this.currentPose.setLeftArm(leftArmPosition, 50.0D, 0.0D)
+    @var this.currentPose.merge()
+@done
+
+# --- Move back to Start Position ---
+@if this.returnBackToPose
+    @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+@fi
+
+@return false

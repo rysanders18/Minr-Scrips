@@ -1,0 +1,9 @@
+# Double getPlayerDistance()
+# Horizontal (XZ) distance between player and stand.
+@using entity_ai
+@fast
+
+@define Double x = this.player.getX() - this.entity.getX()
+@define Double z = this.player.getZ() - this.entity.getZ()
+
+@return math::sqrt((x * x) + (z * z))

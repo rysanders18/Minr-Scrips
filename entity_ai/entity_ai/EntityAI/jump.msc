@@ -1,0 +1,21 @@
+# jump()
+# Eased 1.5-block hop; gravity is re-enabled first so the stand lands.
+@using entity_ai
+
+@define Double jumpHeight = 1.5D
+
+@if this.debugMode
+    @player &3&l=== Jump info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player &7Jump height: &3{{jumpHeight}}
+@fi
+
+@var this.helper.setGravity(true)
+@define Int maxValue = math::ceil(jumpHeight * 10)
+
+@define Double currentValue = 0D
+
+# --- Iterate for the eased rise ---
+@for Int i in list::range(1, maxValue)
+    @var currentValue = this.helper.jumpSingleTick(jumpHeight, i, currentValue)
+@done

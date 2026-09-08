@@ -1,0 +1,12 @@
+# Int otherThan(Int x)
+# Returns a random symbol id different from x. Used to fill the non-matching
+# reel of a pair / near-miss so it never accidentally completes the set.
+@using rygamb
+@fast
+
+@define Int n = itemList.length()
+@define Int r = Int(math::random(0D, Double(n)))
+@if r == x
+    @var r = (r + 1) % n
+@fi
+@return r

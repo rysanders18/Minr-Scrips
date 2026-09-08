@@ -1,0 +1,11 @@
+# Double getRoundDouble(Double value)
+# Rounds to 2 decimals (half away from zero). Debug-output helper only.
+# MSC has no math::round, so floor(x + 0.5) with a sign flip.
+@using entity_ai
+@fast
+
+@define Double scaled = value * 100D
+@if scaled >= 0D
+    @return Double(math::floor(scaled + 0.5D)) / 100D
+@fi
+@return (0D - Double(math::floor((0D - scaled) + 0.5D))) / 100D

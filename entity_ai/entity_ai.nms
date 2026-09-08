@@ -1,0 +1,147 @@
+@namespace entity_ai
+
+# =====================================================================
+# entity_ai - armor stand animation library (D4rkSly, v1.4) - REPAIRED
+# =====================================================================
+# Rebuilt from the in-game script export so it runs on current Minecraft
+# versions. See entity_ai/README.md for the full list of what changed.
+#
+# The headline fix: every rotation write used a ONE-element NBT list
+# ({Rotation:[yawf]}). Since Minecraft 1.21.6 entity NBT is decoded with
+# codecs and Rotation must be exactly [yaw, pitch]; a one-element list
+# fails to decode and the entity silently falls back to yaw 0 / pitch 0.
+# Rotation is now written either as a two-element list or via /tp.
+#
+# Entity states (simulated enum, stored per armor stand UUID in the two
+# parallel arrays below - entityKeys[i] <-> entityStates[i]).
+    Int mSTATE_STANDING = 0
+    Int mSTATE_SITTING = 1
+    Int mSTATE_GROUND_SITTING = 2
+
+    String[] entityKeys = String[]
+    Int[] entityStates = Int[]
+
+# --- Namespace helpers ---
+# getEntityIndex: index of uuid in entityKeys, registering it as
+#   mSTATE_STANDING on first sight.
+# getRoundDouble: 2-decimal rounding for debug output.
+# getWithinDouble: clamp value into [minValue, maxValue].
+# easeOutQuad: Penner ease-out (t in [0, c], returns b..b+c).
+    Int getEntityIndex(String uuid)
+    Double getRoundDouble(Double value)
+    Double getWithinDouble(Double value, Double minValue, Double maxValue)
+    Double easeOutQuad(Double t, Double b, Double c)
+
+# --- EntityPose ---
+# Tracks the six armor stand pose parts (degrees, as Vector3 x/y/z) plus
+# an optional body rotation (-1 = "don't write Rotation"). merge() pushes
+# the pose to the entity with one /data merge. moveTo* interpolate from
+# the current values to newPose over N ticks, one merge per tick.
+# Fields: entity, rightArm, leftArm, rightLeg, leftLeg, head, body,
+#   rotation, moveAlignment (snap exactly onto newPose after a move).
+    @class EntityPose
+        EntityPose(Entity entity)
+        EntityPose(Entity entity, Double rotation)
+
+        setRightArm(Double x, Double y, Double z)
+        setLeftArm(Double x, Double y, Double z)
+        setRightLeg(Double x, Double y, Double z)
+        setLeftLeg(Double x, Double y, Double z)
+        setHead(Double x, Double y, Double z)
+        setBody(Double x, Double y, Double z)
+        setRotation(Double rotation)
+        setMoveAlignment(Boolean moveAlignment)
+        copyFrom(entity_ai::EntityPose other)
+
+        String string()
+        merge()
+        moveTo(entity_ai::EntityPose newPose)
+        moveToWithSpeed(entity_ai::EntityPose newPose, Int ticks)
+        moveToWithSpeedAndMovement(entity_ai::EntityPose newPose, Int ticks, Double x, Double y, Double z)
+
+        Entity entity
+        Vector3 rightArm
+        Vector3 leftArm
+        Vector3 rightLeg
+        Vector3 leftLeg
+        Vector3 head
+        Vector3 body
+        Double rotation
+        Boolean moveAlignment
+    @endclass
+
+# --- EntityAIHelper ---
+# Internal per-tick primitives used by EntityAI actions.
+# Fields: entity, player.
+    @class EntityAIHelper
+        EntityAIHelper(Entity entity, Player player)
+
+        clearEntityState()
+        Int getEntityState()
+        setEntityState(Int newState)
+        Double getDirectionalAlign()
+        Double getRotation()
+        Double getPlayerDistance()
+        setGravity(Boolean enabled)
+        Double jumpSingleTick(Double jumpHeight, Int iteration, Double currentValue)
+        lookSingleTick(Double directionalAlign, Boolean toDebug, entity_ai::EntityPose currentPose)
+        watchSingleTick(Boolean toDebug)
+        Boolean walkAnimationSingleTick(Double velocity, Boolean inwardsDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+        Boolean walkSingleTick(Double blocksPerSecond, Double distance, Boolean inwardsAnimationDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+        Double[] walkJumpSingleTick(Double jumpHeight, Int iteration, Double currentValue, Double blocksPerSecond, Double distance, Double inwardsDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+
+        Entity entity
+        Player player
+    @endclass
+
+# --- EntityAI ---
+# Public object. Construct with the armor stand and the player, then call
+# actions. Actions that take `seconds` return true when they were cut
+# short because the player left stopDistance, false when they ran out.
+# Fields: entity, player, debugMode, stopDistance (blocks, default 10),
+#   returnBackToPose (default true), soundEnabled (default true),
+#   currentPose (mirror of the stand's pose - the server offers no way
+#   to read it back), helper.
+    @class EntityAI
+        EntityAI(Entity entity, Player player)
+        EntityAI(Entity entity, Player player, Boolean debugMode)
+
+        Entity getEntity()
+        Player getPlayer()
+        Boolean getDebugMode()
+        setDebugMode(Boolean debugMode)
+        Int getStopDistance()
+        setStopDistance(Int stopDistance)
+        setReturnBackToPose(Boolean smoothBack)
+        setSoundEnabled(Boolean soundEnabled)
+        entity_ai::EntityPose getCurrentPose()
+        Int getEntityState()
+
+        Boolean watch(Int seconds)
+        Boolean look(Int seconds)
+        Boolean wave(Int seconds)
+        Boolean applaud(Int seconds)
+        Boolean applaudWithSpeed(Int seconds, Double velocity)
+        Boolean steer(Int seconds)
+        jump()
+        jumpFoward()
+        rotate(Double degrees, Double degreesPerSecond)
+        rotateTo(Double direction, Double degreesPerSecond)
+        rotateToLocation(Double x, Double z, Double degreesPerSecond)
+        rotateToBlockLocation(Int x, Int z, Double degreesPerSecond)
+        walk(Double distance, Double blocksPerSecond)
+        walkTo(Double x, Double z, Double blocksPerSecond)
+        walkToBlock(Int x, Int z, Double blocksPerSecond)
+        sitGround()
+        stand()
+
+        Entity entity
+        Player player
+        Boolean debugMode
+        Int stopDistance
+        Boolean returnBackToPose
+        Boolean soundEnabled
+        entity_ai::EntityPose currentPose
+        entity_ai::EntityAIHelper helper
+    @endclass
+@endnamespace

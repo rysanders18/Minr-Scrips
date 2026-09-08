@@ -1,0 +1,42 @@
+# goldBlock(Player player)
+# Runs when a player touches the gold block at the top of a jump: marks it
+# beaten, banks the winning attempt's time, and asks for a difficulty rating.
+#
+# touchLevel is called BEFORE levelsCompleted is set, because it refuses to
+# bank time onto an already-beaten jump. That call is what finally credits the
+# successful attempt, which the old fall-to-fall timing never counted at all.
+# The second touchLevel(-1) stops the clock so the walk to the next jump is not
+# charged to this one.
+#
+# Re-touching the gold block of a jump you have already beaten does nothing. It
+# used to re-open the rating prompt and overwrite the rating you gave the first
+# time round.
+
+@using j100
+@fast
+
+@define Int level
+
+@for Int i in list::range(0, 10)
+    @for Int j in list::range(0, 10)
+        @if player.getX() < (4843.5 - 18.0 * i) && player.getX() > (4827.5 - 18.0 * i) && player.getZ() < (2970.5 - 18.0 * j) && player.getZ() > (2954.5 - 18.0 * j)
+            @var level = i * 10 + j
+
+            @if levelsCompleted[player][level]
+                @return
+            @fi
+
+            @var touchLevel(player, level)
+            @var levelsCompleted[player][level] = true
+            @var touchLevel(player, -1)
+            @bypass /playsound minecraft:block.note_block.pling
+
+            @player &aLevel &l{{level + 1}} &acompleted! &7(&e{{levelFalls[player][level]}}&7 falls)
+
+            # gather opinion
+            @var gatherOpinion(player, level)
+            @var nextJump(player)
+            @return
+        @fi
+    @done
+@done

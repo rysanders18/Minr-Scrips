@@ -1,0 +1,8 @@
+# entity_ai::EntityAIHelper(Entity entity, Player player)
+# Internal helper bound to the same stand/player pair as its EntityAI.
+@using entity_ai
+
+@var this.entity = entity
+@var this.player = player
+
+@return this

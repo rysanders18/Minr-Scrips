@@ -1,0 +1,14 @@
+# entity_ai::EntityAI(Entity entity, Player player, Boolean debugMode)
+# Same as the two-argument constructor with debug output toggled.
+@using entity_ai
+
+@var this.entity = entity
+@var this.player = player
+@var this.debugMode = debugMode
+@var this.stopDistance = 10
+@var this.returnBackToPose = true
+@var this.soundEnabled = true
+@var this.currentPose = EntityPose(entity)
+@var this.helper = EntityAIHelper(entity, player)
+
+@return this

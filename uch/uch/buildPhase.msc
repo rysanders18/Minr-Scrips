@@ -1,0 +1,86 @@
+# buildPhase()
+# Runs between rounds. First the party box: selectPhase drops the roster
+# into the box in adventure and everyone grabs their block for the round
+# (or times out empty-handed). Then everyone lands at buildSpawn in
+# creative with buildSeconds to place their grabbed block (creative is
+# still honor-system — enforcement comes later). The last five seconds
+# count down 5..1 as big titles with rising pings, then the next round
+# starts immediately with the same roster minus anyone who logged off.
+# Also the game-over gate: the first player to reach winScore ends the
+# game (maxRounds is only a safety backstop against a game that never
+# scores), and endGame runs instead of another round — checked BEFORE the
+# party box so a finished game doesn't run a pointless selection. The
+# round's ghost invisibility (uchghosts team, applied by startRound) is
+# stripped FIRST, before the game-over gate, so nobody is left invisible
+# when endGame runs instead of a build phase.
+@using uch
+@fast
+
+# Ghosts off — everyone is fully visible for building (and for endGame)
+@for Player p in runners
+    @bypass /effect clear {{p}} minecraft:invisibility
+@done
+@bypass /team empty uchghosts
+
+@define Boolean gameOver = roundNumber >= maxRounds
+@for Player p in runners
+    @if totalScore[p] >= winScore
+        @var gameOver = true
+    @fi
+@done
+@if gameOver
+    @var endGame()
+    @return
+@fi
+
+# Party box: everyone grabs their block for this build phase
+@var selectPhase()
+
+# Into the real build phase with the grabbed block
+@for Player p in runners
+    @if p.isOnline()
+        @bypass /gamemode survival {{p}}
+        @var p.teleport(buildSpawn)
+    @fi
+@done
+@var buildActive = true
+
+@for Player p in runners
+    @bypass /playsound minecraft:block.note_block.bell master {{p}} ~ ~ ~ 1 1
+    @bypass /title {{p}} times 0 40 10
+    @bypass /title {{p}} title {"text":"Build phase!","bold":true,"color":"gold"}
+    @bypass /title {{p}} subtitle {"text":"Place your block — {{buildSeconds}} seconds!","color":"yellow"}
+@done
+
+@for Int t in list::range(0, buildSeconds)
+    @delay 1s
+    @define Int remaining = buildSeconds - t - 1
+    @if remaining > 0 && remaining <= 5
+        @for Player p in runners
+            @bypass /playsound minecraft:block.note_block.pling master {{p}} ~ ~ ~ 1 {{0.6 + (5 - remaining) * 0.2}}
+            @bypass /title {{p}} times 0 25 5
+            @bypass /title {{p}} title {"text":"{{remaining}}","bold":true,"color":"red"}
+            @bypass /title {{p}} subtitle {"text":"Get ready...","color":"gray"}
+        @done
+    @elseif remaining > 5
+        @for Player p in runners
+            @bypass /title {{p}} actionbar {"text":"Build phase: {{remaining}}s","color":"gold"}
+        @done
+    @fi
+@done
+
+@var buildActive = false
+
+# Next round with everyone still online
+@define Player[] nextRoster = Player[]
+@for Player p in runners
+    @if p.isOnline()
+        @var nextRoster.append(p)
+    @fi
+@done
+@if nextRoster.length() == 0
+    @return
+@fi
+
+@var roundNumber = roundNumber + 1
+@var startRound(nextRoster)

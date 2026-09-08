@@ -1,0 +1,29 @@
+# rotateToLocation(Double x, Double z, Double degreesPerSecond)
+# Turns to face an exact XZ coordinate.
+@cooldown 1
+@using entity_ai
+
+# --- Calculate direction based on entity and given coordinates ---
+@define Double vectorX = x - this.entity.getX()
+@define Double vectorZ = z - this.entity.getZ()
+
+# --- Already there: nothing to face (avoids a 0/0 angle) ---
+@if (vectorX * vectorX) + (vectorZ * vectorZ) < 0.000001D
+    @return
+@fi
+@if math::abs(vectorX) < 0.000001D
+    @var vectorX = 0.000001D
+@fi
+
+@define Double horizontalPosition = math::arctan(vectorZ / vectorX)
+
+# --- Assert head direction value ---
+@var horizontalPosition += 90.0D
+@if x >= this.entity.getX()
+    @var horizontalPosition += 180.0D
+@fi
+
+# --- Set up the direction to degrees of rotation needed ---
+@define Double direction = horizontalPosition % 360
+
+@var this.rotateTo(direction, degreesPerSecond)

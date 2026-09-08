@@ -1,0 +1,16 @@
+# entity_ai::EntityAI(Entity entity, Player player)
+# debugMode defaults to false. stopDistance 10 blocks, sounds on,
+# return-to-rest-pose on. currentPose starts at the default pose because
+# the server cannot read a stand's pose back.
+@using entity_ai
+
+@var this.entity = entity
+@var this.player = player
+@var this.debugMode = false
+@var this.stopDistance = 10
+@var this.returnBackToPose = true
+@var this.soundEnabled = true
+@var this.currentPose = EntityPose(entity)
+@var this.helper = EntityAIHelper(entity, player)
+
+@return this

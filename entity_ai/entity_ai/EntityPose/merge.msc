@@ -1,0 +1,8 @@
+# merge()
+# Pushes the tracked pose (and Rotation, if set) onto the armor stand.
+# One command per call - the animation loops rely on this costing a
+# tick, same as the original library. The spaces around the template
+# keep the SNBT braces from being read as part of the {{ }} marker.
+@using entity_ai
+
+@bypass /data merge entity {{this.entity.getUniqueId()}} { {{this.string()}} }

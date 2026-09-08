@@ -1,0 +1,27 @@
+# String string()
+# SNBT body for /data merge entity, built exactly the way the original
+# library built it: Doubles concatenated straight into the text. Java
+# may print a tiny value as 4.4E-16, and Minecraft's SNBT float parser
+# accepts that exponent form, so no formatting helper is needed.
+#
+# FIX: Rotation is written as [yaw, pitch] (two elements). Since 1.21.6
+# entity rotation is decoded with a fixed-size-2 codec; the old
+# one-element Rotation:[yawf] fails to decode and resets the stand to
+# yaw 0 / pitch 0.
+@using entity_ai
+@fast
+
+@define String returnString = ""
+
+@var returnString += "Pose:{RightArm:[" + this.rightArm.getX() + "f," + this.rightArm.getY() + "f," + this.rightArm.getZ() + "f],"
+@var returnString += "LeftArm:[" + this.leftArm.getX() + "f," + this.leftArm.getY() + "f," + this.leftArm.getZ() + "f],"
+@var returnString += "RightLeg:[" + this.rightLeg.getX() + "f," + this.rightLeg.getY() + "f," + this.rightLeg.getZ() + "f],"
+@var returnString += "LeftLeg:[" + this.leftLeg.getX() + "f," + this.leftLeg.getY() + "f," + this.leftLeg.getZ() + "f],"
+@var returnString += "Head:[" + this.head.getX() + "f," + this.head.getY() + "f," + this.head.getZ() + "f],"
+@var returnString += "Body:[" + this.body.getX() + "f," + this.body.getY() + "f," + this.body.getZ() + "f]}"
+
+@if this.rotation != -1D
+    @var returnString += ",Rotation:[" + this.rotation + "f,0.0f]"
+@fi
+
+@return returnString

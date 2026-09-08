@@ -1,0 +1,6 @@
+# stopSound()
+# Port of _/stop_sound. Flags sound playback as paused on the root.
+@using project
+@fast
+
+@bypass execute as @e[tag=project_root,type=block_display] at @s run tag @s add sound_pause

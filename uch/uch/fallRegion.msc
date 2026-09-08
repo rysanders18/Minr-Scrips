@@ -1,0 +1,61 @@
+# fallRegion(Player player)
+# Bound to the fall zone under the course (region entry / walk-on). Always
+# ejects whoever fell back to the start platform, then applies round rules:
+# underdogs (underdogGap+ points behind the leader) each get one bonus
+# life, everyone else is out on their first fall. Ends the round early once every runner
+# is resolved (finished or out) — covers everyone falling, and the last
+# straggler falling after the rest already finished.
+# Safe for bystanders: outside a round, or for non-runners, this is just a
+# teleport out of the pit — the roster is fixed at button press, so the
+# ejection can't enroll anyone mid-round.
+@using uch
+@fast
+
+@if player.getGameMode() != "ADVENTURE"
+    @return
+@fi
+
+@var player.teleport(startPosition)
+
+@if !roundActive
+    @return
+@fi
+@if inRound[player] == 0
+    @return
+@fi
+@if finishedRound[player] == 1
+    @return
+@fi
+@if eliminated[player] == 1
+    @return
+@fi
+
+# Underdog bonus life: first fall respawns them instead of eliminating
+@if fallsUsed[player] == 0 && isUnderdog(player)
+    @var fallsUsed[player] = 1
+    @bypass /playsound minecraft:item.totem.use master {{player}} ~ ~ ~ 0.6 1.2
+    @bypass /title {{player}} times 0 30 10
+    @bypass /title {{player}} title {"text":"Second chance!","bold":true,"color":"aqua"}
+    @bypass /title {{player}} subtitle {"text":"Underdog bonus life — go!","color":"yellow"}
+    @return
+@fi
+
+# Out for this round: spectate until the build phase (endRound's cleanup
+# returns everyone to creative)
+@var eliminated[player] = 1
+@var eliminatedCount = eliminatedCount + 1
+@bypass /gamemode spectator {{player}}
+@bypass /playsound minecraft:entity.villager.no master {{player}} ~ ~ ~ 1 0.8
+@bypass /title {{player}} times 0 30 10
+@bypass /title {{player}} title {"text":"You fell!","bold":true,"color":"red"}
+@bypass /title {{player}} subtitle {"text":"Out for this round.","color":"gray"}
+@for Player p in runners
+    @if p.getName() != player.getName()
+        @bypass /title {{p}} actionbar {"text":"{{player.getName()}} fell! ({{finishCount + eliminatedCount}}/{{runners.length()}} done)","color":"red"}
+    @fi
+@done
+
+# Everyone resolved (finished or out) -> no reason to run out the clock
+@if finishCount + eliminatedCount >= runners.length()
+    @var endRound()
+@fi

@@ -1,0 +1,32 @@
+# vanishBlockDisplays()
+#
+# The colour going in. Shrinks each display to nothing once it has
+# settled onto the child, walking iro0..iro34 at the same stepTicks
+# cadence moveBlockDisplays dispatched them on — so if this is started
+# interpolationTicks after the final pass began, every display winks out
+# on the exact tick it finishes its flight, in the order they arrive.
+#
+# Only the final pass should be followed by this. The driver fires it on
+# the tick the last pass's first display lands; see the timeline there.
+#
+# Writes ONLY transformation.scale, never a transformation compound. The
+# compound form decomposes the matrix and resets the other fields, which
+# would yank every display back to the anchor as it shrank — the same
+# trap documented in the rychess applyTransform notes. The targeted-field
+# write preserves the translation the display just flew to, and still
+# triggers the interpolation.
+#
+# vanishTicks controls the shrink. It is set separately first because the
+# displays are still carrying interpolationTicks from their flight, which
+# would drag the fade out to nearly two seconds. 0 makes them pop.
+@using irodoriAnimation
+@fast
+
+@for Int i in list::range(0, blockColors.length())
+    @bypass /execute in {{animWorld}} run data merge entity @e[limit=1,tag=iro{{i}}] {interpolation_duration:{{vanishTicks}}}
+    @bypass /execute in {{animWorld}} run data modify entity @e[limit=1,tag=iro{{i}}] transformation.scale set value [0f,0f,0f]
+
+    @for Int j in list::range(0, stepTicks)
+        @delay 1
+    @done
+@done

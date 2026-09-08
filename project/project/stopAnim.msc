@@ -1,0 +1,20 @@
+# stopAnim()
+# Port of _/stop_anim. Stop playback and hand the spectator camera
+# client back to the gamemode we saved for them.
+#
+# The original read the saved gamemode out of the gm_cam_client
+# scoreboard with a 4-way `if score ... matches N` chain. Here the
+# value is the per-player `savedGameMode` MSC variable, which is a
+# gamemode name usable directly in /gamemode.
+@using project
+@fast
+
+@var playing = false
+@var paused = true
+
+@if camClient != ""
+    @define Player cam = Player(camClient)
+    @bypass gamemode {{savedGameMode[cam]}} {{cam}}
+    @var watchingCam[cam] = false
+    @var camClient = ""
+@fi

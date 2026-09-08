@@ -1,0 +1,9 @@
+# clearEntityState()
+# Forgets the stand's stored state, so the next lookup registers it
+# fresh as mSTATE_STANDING.
+@using entity_ai
+@fast
+
+@define Int index = getEntityIndex(this.entity.getUniqueId())
+@var entityKeys.remove(index)
+@var entityStates.remove(index)

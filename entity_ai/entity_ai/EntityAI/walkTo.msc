@@ -1,0 +1,9 @@
+# walkTo(Double x, Double z, Double blocksPerSecond)
+# Turns toward (x, z) at 90 deg/s, then walks the straight-line distance.
+@using entity_ai
+
+@var this.rotateToLocation(x, z, 90D)
+
+@define Double distance = math::sqrt(math::pow(x - this.entity.getX(), 2D) + math::pow(z - this.entity.getZ(), 2D))
+
+@var this.walk(distance, blocksPerSecond)

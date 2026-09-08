@@ -1,0 +1,6 @@
+# rotateTo(Double direction, Double degreesPerSecond)
+# Turns to an absolute yaw (0 = south, 90 = west) the short way round.
+@using entity_ai
+
+@define Double degrees = (direction - this.helper.getRotation() + 180 + 360) % 360 - 180
+@var this.rotate(degrees, degreesPerSecond)

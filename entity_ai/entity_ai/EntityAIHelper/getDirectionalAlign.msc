@@ -1,0 +1,17 @@
+# Double getDirectionalAlign()
+# Angle (0..360) derived from the stand's facing vector. The library's
+# other angle helpers are expressed relative to this value.
+@using entity_ai
+@fast
+
+@define Double directionalAlign = 0D
+
+@if math::arccos(this.entity.getDirectionZ()) > 90
+    @var directionalAlign += math::arccos(this.entity.getDirectionX())
+@else
+    @var directionalAlign -= math::arccos(this.entity.getDirectionX())
+@fi
+
+@var directionalAlign = (directionalAlign + 360) % 360
+
+@return directionalAlign

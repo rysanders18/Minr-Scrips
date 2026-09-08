@@ -1,0 +1,32 @@
+# Boolean walkAnimationSingleTick(Double velocity, Boolean inwardsDirection, Boolean soundEnabled, entity_ai::EntityPose currentPose)
+# Swings arms and legs by `velocity` degrees, flipping direction at
+# +-20 degrees (with a footstep sound on the inward flip). Returns the
+# direction to use next tick.
+@using entity_ai
+
+# --- Properties ---
+@define Double minValue = -20.0D
+@define Double maxValue = 20.0D
+
+# --- Check arm direction to increment ---
+@if !inwardsDirection
+    @var velocity = velocity * -1.0D
+@fi
+
+# --- Apply the Pose changes ---
+@var currentPose.setRightArm(currentPose.rightArm.getX() + velocity, currentPose.rightArm.getY(), currentPose.rightArm.getZ())
+@var currentPose.setLeftArm(currentPose.leftArm.getX() - velocity, currentPose.leftArm.getY(), currentPose.leftArm.getZ())
+@var currentPose.setRightLeg(currentPose.rightLeg.getX() - velocity, currentPose.rightLeg.getY(), currentPose.rightLeg.getZ())
+@var currentPose.setLeftLeg(currentPose.leftLeg.getX() + velocity, currentPose.leftLeg.getY(), currentPose.leftLeg.getZ())
+
+# --- Invert arms rotation when hits the edge values ---
+@if currentPose.rightArm.getX() <= minValue || currentPose.rightArm.getX() >= maxValue || currentPose.leftArm.getX() <= minValue || currentPose.leftArm.getX() >= maxValue || currentPose.rightLeg.getX() <= minValue || currentPose.rightLeg.getX() >= maxValue || currentPose.leftLeg.getX() <= minValue || currentPose.leftLeg.getX() >= maxValue
+    @if inwardsDirection && soundEnabled
+        @bypass /playsound block.anvil.step ambient @p {{this.entity.getX()}} {{this.entity.getY()}} {{this.entity.getZ()}} 100 1.0
+    @fi
+    @var inwardsDirection = !inwardsDirection
+@fi
+
+# --- Execute Merge ---
+@var currentPose.merge()
+@return inwardsDirection

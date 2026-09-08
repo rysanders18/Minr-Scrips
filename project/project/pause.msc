@@ -1,0 +1,7 @@
+# pause()
+# Halt playback. The running runFrame chain sees this after its
+# @delay and stops advancing. Call resume() to continue.
+@using project
+@fast
+
+@var paused = true

@@ -1,0 +1,138 @@
+@namespace uch
+
+# =====================================================================
+# uch — crude Ultimate Chicken Horse: full game loop
+# =====================================================================
+# One-time server setup:
+#   1. Create a region named "uchlobby" (world Theta) covering the lobby
+#      area around the start button. It only needs to CONTAIN everyone who
+#      might stand near the button — startButton filters candidates down
+#      to the true 30-block radius around the presser in-script (MSC has
+#      no radius query; Region.getPlayersInside() is the only player-list
+#      source, so the region supplies candidates and the script measures).
+#   2. Bind uch::startButton(Player) to the start button (interact).
+#   3. Bind uch::finishLine(Player) to the finish line trigger (pressure
+#      plate / walk-on block / region entry).
+#   4. Bind uch::fallRegion(Player) to the fall zone under the course
+#      (region entry / walk-on). It ejects adventure-mode players to the
+#      start platform, even outside a round.
+#   5. Bind an interact script to each of the 8 party-box pedestal
+#      positions (see boxSlotPos) calling uch::selectBlock(player, N)
+#      with N = 0..7 in boxSlotPos order. Bindings are positional, so
+#      they survive the pedestal block being swapped every round and
+#      broken on selection.
+#
+# Game flow: startButton starts a GAME (one press per game). Each round:
+# adventure mode, teleport to start, roundSeconds on the clock. Runners
+# spend the round on the uchghosts team with no-particle invisibility —
+# invisible to bystanders, translucent to each other (seeFriendlyInvisibles);
+# buildPhase clears the effect and empties the team before anything else. The round
+# ends when every runner is resolved (finished or fell) or on timeout;
+# endRound tallies points and puts everyone in creative; buildPhase then
+# runs the party box (selectPhase): the roster is dropped into the box in
+# adventure, the 8 pedestals are stocked with random pool blocks, and
+# everyone has selectSeconds to claim one — first come, first served,
+# claiming breaks the pedestal. Then everyone lands at buildSpawn in
+# creative with their grabbed block, buildPhase gives buildSeconds to
+# place it, counts the last five seconds down 5..1,
+# and starts the next round with the same roster (minus logoffs). First
+# player to reach winScore wins: endGame announces them and resets scores
+# (maxRounds is only a safety backstop against a game that never scores).
+#
+# Scoring — real Ultimate Chicken Horse rules, default values scaled x10
+# so points stay Ints (UCH: Goal 1.0, First 0.2, Solo 0.6). A round only
+# pays out when SOMEBODY finished and SOMEBODY didn't — everyone finishing
+# (too easy) or nobody finishing (too hard) awards nothing.
+#   Goal +10      every finisher in a scoring round
+#   First +2      first across the line, when 2+ players finished
+#   Solo +6       the only finisher in a 3+ player round, on top of Goal
+#   Underdog +8   every finisher who entered the round underdogGap (25) or
+#                 more points behind the leader (house bonus in UCH's
+#                 spirit; UCH itself has no underdog award)
+#
+# Lives: falling into the fall zone eliminates you for the round (you
+# spectate until the build phase) — except underdogs (underdogGap+ points
+# behind the leader), who each get one bonus life: their first fall
+# respawns them at the start instead.
+
+# ---- Config ----
+
+    Int roundSeconds = 60
+    Int buildSeconds = 20
+    Int selectSeconds = 20
+    Int winScore = 100
+    Int maxRounds = 10
+    Int goalPoints = 10
+    Int firstBonus = 2
+    Int soloBonus = 6
+    Int underdogBonus = 8
+    Int underdogGap = 25
+    Position startPosition = Position(-9160.5, 101.0, 9771.5, -180.0, 0.0, "Theta")
+# boxSpawn: top of the party-box drop tube (block-selection phase)
+    Position boxSpawn = Position(-9146.5, 142.0, 9764.5, 1080.0, 0.0, "Theta")
+# buildSpawn: where the roster lands for the real build phase
+    Position buildSpawn = Position(-9146.5, 105.0, 9768.5, -180.0, 0.0, "Theta")
+
+# ---- Party box (block-selection phase) ----
+# boxSlotPos: the 8 pedestal positions inside the box, in slot order 0-7;
+# each position has an interact script bound that calls
+# selectBlock(player, slot) with its own index (see setup note 5).
+# The four pool arrays are PARALLEL (same length, same order):
+#   poolBlocks — what /setblock puts on a pedestal (display states added
+#                where the default state looks wrong, e.g. floor levers)
+#   poolItems  — what /give hands the grabber (lava has no item form, so
+#                it becomes a lava bucket)
+#   poolNames  — pretty label for titles/announcements
+#   poolWeights — relative rarity (chance = weight / sum of all weights;
+#                the sum is computed at stocking time, so tweak freely).
+#                Tiers: 8 staple (slab), 6 simple platforms, 4 mid,
+#                2 gadgets, 1 crazy (lava, sticky piston).
+# Pool extracted from uchblocks.schem.
+
+    String[] boxSlotPos = String["-9147 114 9774", "-9149 114 9773", "-9150 114 9771", "-9149 114 9769", "-9147 114 9768", "-9145 114 9769", "-9144 114 9771", "-9145 114 9773"]
+    String[] poolBlocks = String["minecraft:lava", "minecraft:blue_ice", "minecraft:light_weighted_pressure_plate", "minecraft:redstone_torch", "minecraft:white_bed", "minecraft:iron_trapdoor", "minecraft:iron_door", "minecraft:honey_block", "minecraft:slime_block", "minecraft:sticky_piston[facing=up]", "minecraft:trapped_chest", "minecraft:lever[face=floor]", "minecraft:stone_button[face=floor]", "minecraft:pale_oak_button[face=floor]", "minecraft:cobblestone_wall", "minecraft:iron_chain", "minecraft:pale_oak_trapdoor", "minecraft:pale_oak_shelf", "minecraft:pale_oak_door", "minecraft:pale_oak_fence_gate", "minecraft:pale_oak_fence", "minecraft:pale_oak_slab"]
+    String[] poolItems = String["minecraft:lava_bucket", "minecraft:blue_ice", "minecraft:light_weighted_pressure_plate", "minecraft:redstone_torch", "minecraft:white_bed", "minecraft:iron_trapdoor", "minecraft:iron_door", "minecraft:honey_block", "minecraft:slime_block", "minecraft:sticky_piston", "minecraft:trapped_chest", "minecraft:lever", "minecraft:stone_button", "minecraft:pale_oak_button", "minecraft:cobblestone_wall", "minecraft:iron_chain", "minecraft:pale_oak_trapdoor", "minecraft:pale_oak_shelf", "minecraft:pale_oak_door", "minecraft:pale_oak_fence_gate", "minecraft:pale_oak_fence", "minecraft:pale_oak_slab"]
+    String[] poolNames = String["Lava Bucket", "Blue Ice", "Pressure Plate", "Redstone Torch", "Bed", "Iron Trapdoor", "Iron Door", "Honey Block", "Slime Block", "Sticky Piston", "Trapped Chest", "Lever", "Stone Button", "Wooden Button", "Cobblestone Wall", "Chain", "Trapdoor", "Shelf", "Door", "Fence Gate", "Fence", "Slab"]
+    Int[] poolWeights = Int[1, 2, 2, 2, 4, 4, 2, 2, 2, 1, 2, 2, 2, 2, 6, 4, 6, 6, 4, 4, 6, 8]
+
+# ---- Game state (shared globals; one game at a time) ----
+
+    Boolean roundActive = false
+    Boolean buildActive = false
+    Boolean selectActive = false
+    Int selectedCount = 0
+    Int selectNeeded = 0
+# slotPick: pool index currently on each pedestal; -1 = taken/empty
+    Int[] slotPick = Int[]
+    Int roundNumber = 0
+    Long roundStartMillis = 0L
+    Player[] runners = Player[]
+    Int finishCount = 0
+    Int eliminatedCount = 0
+    String[] finishNames = String[]
+
+# ---- Per-player persistent state ----
+
+    relative Int totalScore = 0
+    relative Int inRound = 0
+    relative Int finishedRound = 0
+    relative Int eliminated = 0
+    relative Int fallsUsed = 0
+    relative Int hasSelected = 0
+
+# ---- Functions ----
+
+    startButton(Player player)
+    startRound(Player[] starters)
+    finishLine(Player player)
+    fallRegion(Player player)
+    selectPhase()
+    selectBlock(Player player, Int slot)
+    buildPhase()
+    Boolean isUnderdog(Player player)
+    endRound()
+    endGame()
+    awardPoints(Player player, Int amount, String reason)
+    createHoles()
+
+@endnamespace

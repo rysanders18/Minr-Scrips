@@ -1,0 +1,10 @@
+@using uch
+
+# Finish line
+@command s i w -9161 100 9745 Theta https://paste.minr.org/dagivubira
+
+@for Int i in list::range(0, 8)
+    @command script remove interact {{boxSlotPos[i]}} Theta
+    @command script create interact {{boxSlotPos[i]}} Theta @using uch
+    @command script create interact {{boxSlotPos[i]}} Theta @var selectBlock(player, {{i}})
+@done

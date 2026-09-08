@@ -1,0 +1,15 @@
+# copyFrom(entity_ai::EntityPose other)
+# Copies the six pose parts and moveAlignment from another pose, keeping
+# this pose's entity and rotation. Replaces the original
+# `@var this = newPose` + setRotation(rotationToPersist) sequence, which
+# relied on reassigning `this` propagating back to the caller.
+@using entity_ai
+@fast
+
+@var this.rightArm = Vector3(other.rightArm.getX(), other.rightArm.getY(), other.rightArm.getZ())
+@var this.leftArm = Vector3(other.leftArm.getX(), other.leftArm.getY(), other.leftArm.getZ())
+@var this.rightLeg = Vector3(other.rightLeg.getX(), other.rightLeg.getY(), other.rightLeg.getZ())
+@var this.leftLeg = Vector3(other.leftLeg.getX(), other.leftLeg.getY(), other.leftLeg.getZ())
+@var this.head = Vector3(other.head.getX(), other.head.getY(), other.head.getZ())
+@var this.body = Vector3(other.body.getX(), other.body.getY(), other.body.getZ())
+@var this.moveAlignment = other.moveAlignment

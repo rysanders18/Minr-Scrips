@@ -1,0 +1,5 @@
+# Entity getEntity()
+@using entity_ai
+@fast
+
+@return this.entity

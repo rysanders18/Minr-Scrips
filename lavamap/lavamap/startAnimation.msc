@@ -1,0 +1,93 @@
+# startAnimation(Player player, Int pigNumber)
+
+@using lavamap
+@fast
+
+@bypass execute as @e[type=pig,distance=..200] on passengers on vehicle run tag @s add ridden
+@bypass minecraft:kill @e[type=pig,distance=..200,tag=!ridden]
+@bypass tag @e[type=pig,distance=..200] remove ridden
+
+# @var uuid = player.getUniqueId()
+@var lastPigNumber[player] = pigNumber
+
+# Fresh cutscene -- clear any stale rejoin gate from a previous run.
+@var loggedOffMidCutscene[player] = 0
+
+# Summon pig to ride
+@bypass /summon pig -13211 100 9476 {NoGravity:1b,Silent:1b,Invulnerable:1b,DeathLootTable:"minecraft:empty",Tags:["lavamappig{{pigNumber}}", "lavamapping"],CustomName:[{"bold":true,"color":"#FF870F","text":"L"},{"color":"#FF770C","text":"A"},{"color":"#FF6608","text":"V"},{"color":"#FF5605","text":"A "},{"color":"#FF5605","text":"P"},{"color":"#FF6608","text":"I"},{"color":"#FF870F","text":"G"}],active_effects:[{id:"minecraft:invisibility",amplifier:1,duration:200000,show_particles:0b,show_icon:0b}]}
+@bypass /ride {{player}} mount @e[tag=lavamappig{{pigNumber}},limit=1]
+@bypass /rotate {{player}} facing -13217 100 9476
+@bypass /effect give {{player}} minecraft:blindness 1 1 true
+
+@delay 10
+
+
+@define String[] motionValues = String["[0.1,0.0,0.0]", "[0.13,0.0,0.0]", "[0.16,0.0,0.0]", "[0.19,0.0,0.0]", "[0.22,-0.01,0.0]", "[0.25,-0.02,0.0]", "[0.28,-0.03,0.0]", "[0.31,-0.04,0.0]", "[0.34,-0.05,0.0]", "[0.37,-0.06,0.0]", "[0.4,-0.07,0.0]", "[0.43,-0.08,0.0]", "[0.46,-0.09,0.0]", "[0.49,-0.1,0.0]", "[0.52,-0.09,0.0]", "[0.55,-0.08,0.0]", "[0.58,-0.07,0.0]", "[0.61,-0.06,0.0]", "[0.64,-0.05,0.0]", "[0.67,-0.04,0.0]", "[0.7,-0.03,0.05]", "[0.73,-0.02,0.05]", "[0.76,-0.01,0.1]", "[0.79,0.0,0.1]", "[0.82,0.01,0.1]", "[0.85,0.02,0.1]", "[0.88,0.03,0.1]", "[0.91,0.04,0.05]", "[0.94,0.05,0.05]", "[0.97,0.06,0.04]", "[1.0,0.07,0.03]", "[1.03,0.08,0.02]", "[1.06,0.09,0.01]", "[1.09,0.1,0.0]", "[1.12,0.09,0.0]", "[1.15,0.08,0.0]", "[1.18,0.07,-0.01]", "[1.21,0.06,-0.02]", "[1.24,0.05,-0.03]", "[1.27,0.04,-0.04]", "[1.3,0.03,-0.05]", "[1.3,0.02,-0.05]", "[1.3,0.02,-0.1]", "[1.3,0.02,-0.15]", "[1.3,0.02,-0.2]", "[1.3,0.02,-0.25]", "[1.3,0.02,-0.3]", "[1.3,0.02,-0.35]", "[1.3,0.02,-0.4]", "[1.3,0.02,-0.45]", "[1.3,0.02,-0.5]", "[1.3,0.02,-0.55]", "[1.3,0.02,-0.6]", "[1.3,0.02,-0.6]", "[1.3,0.02,-0.6]", "[1.3,0.02,-0.6]", "[1.3,0.02,-0.4]", "[1.3,0.02,-0.2]", "[1.3,0.02,-0.1]", "[1.3,0.02,0.0]", "[1.3,0.02,0.05]", "[1.3,0.02,0.1]", "[1.3,0.02,0.15]", "[1.3,0.02,0.2]", "[1.3,0.02,0.25]", "[1.3,0.0,0.3]", "[1.3,0.0,0.35]", "[1.3,0.0,0.4]", "[1.3,0.0,0.45]", "[1.3,0.0,0.5]", "[1.3,0.0,0.55]", "[1.3,0.0,0.5]", "[1.3,0.0,0.45]", "[1.3,0.0,0.4]", "[1.3,0.0,0.35]", "[1.3,0.0,0.3]", "[1.29,-0.04,0.25]", "[1.28,-0.04,0.2]", "[1.27,-0.04,0.15]", "[1.26,-0.04,0.1]", "[1.25,-0.04,0.05]", "[1.24,-0.04,0.0]", "[1.23,-0.04,0.0]", "[1.22,-0.04,-0.025]", "[1.21,-0.04,-0.025]", "[1.2,-0.04,-0.05]", "[1.19,-0.04,-0.05]", "[1.18,-0.04,-0.0725]", "[1.17,-0.05,-0.0725]", "[1.16,-0.06,-0.1]", "[1.15,-0.07,-0.1]", "[1.14,-0.08,-0.0725]", "[1.13,-0.08,-0.0725]", "[1.12,-0.08,-0.05]", "[1.11,-0.08,-0.05]", "[1.1,-0.08,-0.025]", "[1.06,-0.08,-0.025]", "[1.02,-0.085,-0.025]", "[0.98,-0.09,-0.025]", "[0.94,-0.095,0.0]", "[0.9,-0.1,0.0]", "[0.86,-0.105,0.0]", "[0.82,-0.11,0.0]", "[0.78,-0.115,0.0]", "[0.74,-0.12,0.005]", "[0.7,-0.125,0.01]", "[0.66,-0.13,0.015]", "[0.63,-0.135,0.02]", "[0.6,-0.14,0.025]", "[0.57,-0.145,0.03]", "[0.54,-0.15,0.035]", "[0.51,-0.155,0.04]", "[0.48,-0.16,0.045]", "[0.45,-0.155,0.05]", "[0.42,-0.15,0.04]", "[0.41,-0.145,0.04]", "[0.39,-0.14,0.05]", "[0.37,-0.135,0.06]", "[0.35,-0.13,0.07]", "[0.34,-0.125,0.08]", "[0.33,-0.12,0.09]", "[0.32,-0.115,0.1]", "[0.31,-0.11,0.11]", "[0.3,-0.105,0.11]", "[0.29,-0.1,0.105]", "[0.28,-0.095,0.1]", "[0.27,-0.09,0.095]", "[0.26,-0.085,0.09]", "[0.25,-0.08,0.0875]", "[0.245,-0.075,0.085]", "[0.24,-0.07,0.0825]", "[0.235,-0.065,0.08]", "[0.23,-0.06,0.0775]", "[0.225,-0.055,0.075]", "[0.22,-0.05,0.0725]", "[0.215,-0.045,0.07]", "[0.21,-0.04,0.0675]", "[0.205,-0.035,0.065]", "[0.2,-0.03,0.0625]", "[0.195,-0.025,0.06]", "[0.19,-0.02,0.0575]", "[0.185,-0.015,0.055]", "[0.18,-0.01,0.0525]", "[0.175,-0.01,0.05]", "[0.17,-0.01,0.0475]", "[0.165,-0.01,0.045]", "[0.16,-0.01,0.0425]", "[0.155,-0.01,0.04]", "[0.15,-0.01,0.0375]", "[0.145,-0.01,0.035]", "[0.14,-0.01,0.0325]", "[0.135,-0.01,0.03]", "[0.13,-0.01,0.0275]", "[0.125,-0.01,0.025]", "[0.12,-0.01,0.0225]", "[0.115,-0.01,0.02]", "[0.11,-0.01,0.0175]", "[0.105,-0.01,0.015]", "[0.1,-0.01,0.0125]", "[0.095,-0.01,0.01]", "[0.09,-0.01,0.0075]", "[0.085,-0.01,0.005]", "[0.08,-0.01,0.0025]", "[0.075,-0.01,0.0]", "[0.07,-0.01,-0.003]", "[0.065,-0.01,-0.003]", "[0.06,-0.01,-0.003]", "[0.055,-0.01,-0.003]", "[0.05,-0.01,-0.0006]", "[0.045,-0.01,-0.0006]", "[0.04,-0.01,-0.0006]", "[0.035,-0.01,-0.0006]", "[0.03,-0.01,-0.0006]", "[0.0275,-0.01,-0.0006]", "[0.025,-0.01,-0.0003]", "[0.0225,-0.01,-0.0003]", "[0.02,-0.01,-0.0003]", "[0.0175,-0.01,-0.0003]", "[0.015,-0.01,-0.0003]", "[0.0125,-0.01,-0.0003]", "[0.01,-0.01,-0.0003]", "[0.0075,-0.01,-0.0003]", "[0.005,-0.01,-0.0003]", "[0.0025,-0.01,-0.0001]", "[0.0,-0.01,-0.0001]"]
+@for Int i in list::range(0, motionValues.length() - 1)
+    # If player is offline
+    @if player.isOnline() == false
+        # Player vanished mid-flight. This is the ONLY moment we still know
+        # who they are -- queue the rejoin cleanup now, with the name baked in
+        # as a LITERAL. Nothing downstream needs a %placeholder%, and login
+        # actions fire on login, which region entry flags do not: a relogging
+        # player is already inside the region and crosses no boundary.
+        @var loggedOffMidCutscene[player] = 1
+        @console /login action add {{player.getName()}} function execute lavamap::rejoinFunction("{{player.getName()}}")
+
+        # Their pig went offline with them and respawns when they do, so
+        # killing it is rejoinFunction's job, not ours. Just stop animating.
+        @return
+    @fi
+
+    @bypass /data merge entity @e[tag=lavamappig{{pigNumber}},limit=1] {Motion:{{motionValues[i]}}}
+    # @player DEBUG: i = {{i}}, Motion = {{motionValues[i]}}
+    @bypass /particle minecraft:flame ~ ~0.5 ~ 0 0 0 0.15 1
+    @bypass /particle minecraft:large_smoke ~ ~0.5 ~ 0 0 0 0.15 1
+    
+    @if i < 120
+        @bypass /rotate @s facing -13217 100 9476
+    @else
+        @bypass /rotate @s 90.0 -1.3685483
+    @fi
+    
+    @if i % 7 == 0
+        @bypass /playsound minecraft:block.lava.extinguish master {{player}} ~ ~ ~ 0.15~ {{2.5 - (Float(i) / (motionValues.length()) * 1.5 + 0.5)}}
+    @fi
+    @if i % 4 == 0
+        @bypass /playsound minecraft:block.lava.pop master {{player}} ~ ~ ~ 0.4 {{2.5 - (Float(i) / (motionValues.length()) * 1.5 + 0.5)}}
+    @fi
+    @bypass /playsound minecraft:item.bundle.insert_fail master {{player}} ~ ~ ~ 0.5 {{2.5 - (Float(i) / (motionValues.length()) * 1.5 + 0.5)}}
+    # @bypass /playsound minecraft:item.firecharge.use master {{player}} ~ ~ ~ 0.05 {{2.5 - (Float(i) / (motionValues.length()) * 1.5 + 0.5)}}
+    
+    # @player yaw = {{player.getYaw()}}, pitch = {{player.getPitch()}}
+    @delay 1
+@done
+@delay 10
+
+# If player is offline
+@if player.isOnline() == false
+    @var loggedOffMidCutscene[player] = 1
+    @console /login action add {{player.getName()}} function execute lavamap::rejoinFunction("{{player.getName()}}")
+    # This pig is still in the world (the logout happened after the ride
+    # ended), so kill it here. Coordinate on the old tp was truncated to
+    # "-130" and the /login line had no arguments at all -- both fixed.
+    @console /execute in minecraft:theta run minecraft:kill @e[tag=lavamappig{{pigNumber}}]
+    @return
+@fi
+
+@bypass /minecraft:tp ~ ~ ~
+@console /execute in minecraft:theta run minecraft:tp @e[tag=lavamappig{{pigNumber}},limit=1] -13088 65 9479 
+@console /execute in minecraft:theta run minecraft:kill @e[tag=lavamappig{{pigNumber}},limit=1]
+
+@if pigNumber > 10
+    @console /execute in minecraft:theta run minecraft:tp @e[tag=lavamappig{{pigNumber - 10}},limit=1] -13088 65 9479 
+    @console /execute in minecraft:theta run minecraft:kill @e[tag=lavamappig{{pigNumber - 10}},limit=1]
+@fi
+
+
+@delay 2
+
+@bypass /playsound minecraft:entity.zombie_villager.cure master {{player}} ~ ~ ~ 0.5
+@bypass /particle minecraft:white_smoke ~ ~ ~ 0 0 0 0.3 100
+@bypass /particle minecraft:large_smoke ~ ~ ~ 0 0 0 0.3 100
+@bypass /particle minecraft:flame ~ ~ ~ 0 0 0 0.3 100

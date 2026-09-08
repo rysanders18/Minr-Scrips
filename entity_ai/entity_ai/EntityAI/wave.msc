@@ -1,0 +1,61 @@
+# Boolean wave(Int seconds)
+# Right arm raised, swinging between -45 and 0 degrees. Returns true if
+# cut short by stopDistance.
+@cooldown 1s
+@using entity_ai
+
+@define Boolean positiveDirection = true
+@define Double position = -45.0D
+@define Double minValue = -45.0D
+@define Double maxValue = 0.0D
+@define Double velocity = 5.0D
+
+# --- Move to Action Position ---
+@define EntityPose actionPose = EntityPose(this.entity)
+@var actionPose.setRightArm(-179.9D, 0.0D, position)
+@var this.currentPose.moveToWithSpeed(actionPose, 10)
+
+# --- Start log values for debugging ---
+@if this.debugMode
+    @player &3&l=== Setup ===
+    @player &7Entity Coords [X/Z] = &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+    @player &7Min Value Arm Edge: &3{{minValue}}
+    @player &7Max Value Arm Edge: &3{{maxValue}}
+    @player
+@fi
+
+# --- Iterate watch for a determined time ---
+@for Int i in list::range(1, seconds * 20)
+
+    # --- Check stop distance ---
+    @if this.helper.getPlayerDistance() >= this.stopDistance
+        @if this.returnBackToPose
+            @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+        @fi
+        @return true
+    @fi
+
+    # --- Check arm direction to increment ---
+    @if positiveDirection
+        @var position += velocity
+    @else
+        @var position -= velocity
+    @fi
+
+    # --- Invert arm rotation when hits the edge values ---
+    @if position <= minValue || position >= maxValue
+        @var positiveDirection = !positiveDirection
+    @fi
+
+    # --- Execute arm rotation ---
+    @var this.currentPose.setRightArm(-179.9D, 0.0D, position)
+    @var this.currentPose.merge()
+@done
+
+# --- Move back to Start Position ---
+@if this.returnBackToPose
+    @var this.currentPose.moveToWithSpeed(EntityPose(this.entity), 10)
+@fi
+
+@return false

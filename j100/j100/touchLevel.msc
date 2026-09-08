@@ -1,0 +1,44 @@
+# touchLevel(Player player, Int level)
+# Moves this player's play clock onto `level`, banking the time already spent
+# on whatever level the clock was previously sitting on. Pass -1 to stop the
+# clock (the player has left the jump area entirely).
+#
+# Every event that proves the player is still working on a jump - a fall, an
+# ender pearl retry, arriving from the menu, touching the gold block - calls
+# this, so the gap since the previous such event is banked into
+# levelTimes[previous].
+#
+# Two guards keep the number honest:
+#   * A gap longer than idleCapMs is CLAMPED, not discarded. The old
+#     timeOfLastFall logic threw away any gap over 60s outright, which is why
+#     jumps beaten in one or two tries recorded no time at all and slow jumps
+#     silently lost their longest attempts. Clamping keeps a genuinely slow
+#     attempt while stopping an AFK or a logout from adding hours to a jump.
+#   * Time is only banked for jumps the player has NOT beaten yet, matching
+#     levelFalls and levelTeleports. These stats describe first clears, so
+#     messing about on a jump you already beat must not change its difficulty.
+
+@using j100
+@fast
+
+@define Long now = system::currentTimeMillis()
+@define Int previous = currentLevel[player]
+@define Long elapsed = 0L
+
+@if previous >= 0 && levelClockStart[player] > 0L && levelsCompleted[player][previous] == false
+    @var elapsed = now - levelClockStart[player]
+    @if elapsed > idleCapMs
+        @var elapsed = idleCapMs
+    @fi
+    @if elapsed > 0L
+        @var levelTimes[player][previous] += elapsed
+    @fi
+@fi
+
+@var currentLevel[player] = level
+
+@if level >= 0
+    @var levelClockStart[player] = now
+@else
+    @var levelClockStart[player] = 0L
+@fi

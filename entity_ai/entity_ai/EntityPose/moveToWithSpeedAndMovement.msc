@@ -1,0 +1,59 @@
+# moveToWithSpeedAndMovement(entity_ai::EntityPose newPose, Int ticks, Double x, Double y, Double z)
+# moveToWithSpeed plus a relative teleport of (x, y, z) blocks spread
+# evenly over the same ticks. Used by sitGround/stand to lower and raise
+# the stand while the legs fold. The teleport runs `as <uuid> at @s` so
+# the ~ offsets are relative to the stand, not to the script's player.
+@using entity_ai
+
+# --- Get Pose Distance Rotations ---
+@define Double distanceRightArmX = ((newPose.rightArm.getX() - this.rightArm.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceRightArmY = ((newPose.rightArm.getY() - this.rightArm.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceRightArmZ = ((newPose.rightArm.getZ() - this.rightArm.getZ() + 180 + 360) % 360 - 180) / ticks
+
+@define Double distanceLeftArmX = ((newPose.leftArm.getX() - this.leftArm.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceLeftArmY = ((newPose.leftArm.getY() - this.leftArm.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceLeftArmZ = ((newPose.leftArm.getZ() - this.leftArm.getZ() + 180 + 360) % 360 - 180) / ticks
+
+@define Double distanceRightLegX = ((newPose.rightLeg.getX() - this.rightLeg.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceRightLegY = ((newPose.rightLeg.getY() - this.rightLeg.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceRightLegZ = ((newPose.rightLeg.getZ() - this.rightLeg.getZ() + 180 + 360) % 360 - 180) / ticks
+
+@define Double distanceLeftLegX = ((newPose.leftLeg.getX() - this.leftLeg.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceLeftLegY = ((newPose.leftLeg.getY() - this.leftLeg.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceLeftLegZ = ((newPose.leftLeg.getZ() - this.leftLeg.getZ() + 180 + 360) % 360 - 180) / ticks
+
+@define Double distanceHeadX = ((newPose.head.getX() - this.head.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceHeadY = ((newPose.head.getY() - this.head.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceHeadZ = ((newPose.head.getZ() - this.head.getZ() + 180 + 360) % 360 - 180) / ticks
+
+@define Double distanceBodyX = ((newPose.body.getX() - this.body.getX() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceBodyY = ((newPose.body.getY() - this.body.getY() + 180 + 360) % 360 - 180) / ticks
+@define Double distanceBodyZ = ((newPose.body.getZ() - this.body.getZ() + 180 + 360) % 360 - 180) / ticks
+
+# --- Get Movement Distance ---
+@define Double distanceMovementX = x / ticks
+@define Double distanceMovementY = y / ticks
+@define Double distanceMovementZ = z / ticks
+
+# --- Iterate for the requested number of ticks ---
+@for Int i in list::range(1, ticks)
+
+    @var this.setRightArm(this.rightArm.getX() + distanceRightArmX, this.rightArm.getY() + distanceRightArmY, this.rightArm.getZ() + distanceRightArmZ)
+    @var this.setLeftArm(this.leftArm.getX() + distanceLeftArmX, this.leftArm.getY() + distanceLeftArmY, this.leftArm.getZ() + distanceLeftArmZ)
+    @var this.setRightLeg(this.rightLeg.getX() + distanceRightLegX, this.rightLeg.getY() + distanceRightLegY, this.rightLeg.getZ() + distanceRightLegZ)
+    @var this.setLeftLeg(this.leftLeg.getX() + distanceLeftLegX, this.leftLeg.getY() + distanceLeftLegY, this.leftLeg.getZ() + distanceLeftLegZ)
+    @var this.setHead(this.head.getX() + distanceHeadX, this.head.getY() + distanceHeadY, this.head.getZ() + distanceHeadZ)
+    @var this.setBody(this.body.getX() + distanceBodyX, this.body.getY() + distanceBodyY, this.body.getZ() + distanceBodyZ)
+
+    @var this.merge()
+
+    @if distanceMovementX != 0.0D || distanceMovementY != 0.0D || distanceMovementZ != 0.0D
+        @bypass /execute as {{this.entity.getUniqueId()}} at @s run teleport ~{{distanceMovementX}} ~{{distanceMovementY}} ~{{distanceMovementZ}}
+    @fi
+@done
+
+# --- Snap onto the exact target pose (rotation is kept) ---
+@if this.moveAlignment
+    @var this.copyFrom(newPose)
+    @var this.merge()
+@fi

@@ -1,0 +1,35 @@
+@using entity_ai
+
+@define Double blocksPerTick = degreesPerSecond / 10
+@define Int ticks = math::ceil((math::abs(degrees) * 10) / degreesPerSecond)
+@define Double finalDirection = this.helper.getRotation() + degrees
+
+@if degrees < 0
+    @var blocksPerTick *= -1D
+@fi
+
+@if this.debugMode
+    @player &3&l=== Rotate Foward info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player &7Start Rotation Position: &3{{getRoundDouble(this.helper.getRotation())}}
+    @player
+    @player &7Blocks Per Tick: &3{{getRoundDouble(blocksPerTick)}}
+    @player &7Ticks Total: &3{{ticks}}
+    @player
+@fi
+
+# --- Iterate watch for a determined time ---
+# FIX (MC 1.21.6+): Rotation must be a two-element [yaw, pitch] list.
+# A one-element list fails to decode and resets the stand to yaw 0.
+@for Int i in list::range(1, ticks + 1)
+    @bypass /data merge entity {{this.entity.getUniqueId()}} {Rotation:[{{this.helper.getRotation() + blocksPerTick}}f,0.0f]}
+@done
+
+# --- Adjust Rotation after the transiction ---
+@var this.currentPose.rotation = this.helper.getRotation()
+@bypass /data merge entity {{this.entity.getUniqueId()}} {Rotation:[{{finalDirection}}f,0.0f]}
+
+@if this.debugMode
+    @player &3&l=== Rotation Final Info ===
+    @player &7Destination Rotation Position: &3{{getRoundDouble(this.helper.getRotation())}}
+@fi

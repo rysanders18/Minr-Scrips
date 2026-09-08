@@ -1,0 +1,7 @@
+# updateSlots(Block block, Player player, Int slot1, Int slot2, Int slot3)
+@using rygamb
+@fast
+
+@bypass /item replace block {{block.getX()}} {{block.getY()}} {{block.getZ()}} container.0 with {{itemList[slot1]}}
+@bypass /item replace block {{block.getX()}} {{block.getY()}} {{block.getZ()}} container.1 with {{itemList[slot2]}}
+@bypass /item replace block {{block.getX()}} {{block.getY()}} {{block.getZ()}} container.2 with {{itemList[slot3]}}

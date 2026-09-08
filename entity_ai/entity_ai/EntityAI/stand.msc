@@ -1,0 +1,75 @@
+# stand()
+# Reverses sitGround (keyframes 3 -> 2 -> 1 -> default, rising 0.8
+# blocks) and clears the stored state. No-op when already standing.
+# Gravity is left off, matching the original; call jump() or
+# helper.setGravity(true) if the stand should fall again.
+@cooldown 1s
+@using entity_ai
+
+@if this.debugMode
+    @player &3&l=== Start info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player
+    @player &7Previous Entity State: &3{{this.helper.getEntityState()}}
+@fi
+
+# --- Check invalid entity states ---
+@if this.helper.getEntityState() == mSTATE_STANDING
+    @if this.debugMode
+        @player &6&lWarning: &6Invalid Action in the current Entity State
+    @fi
+    @return
+@fi
+
+
+# --- Check if the state before was Ground sitted ---
+@if this.helper.getEntityState() == mSTATE_GROUND_SITTING
+
+    # --- Disable alignment between models ---
+    @var this.currentPose.setMoveAlignment(false)
+
+    # --- Create third model backwards ---
+    @define EntityPose thirdModel = EntityPose(this.entity)
+    @var thirdModel.setRightArm(-30.0D, 3.0D, 10.0D)
+    @var thirdModel.setLeftArm(30.0D, 0.0D, -10.0D)
+    @var thirdModel.setRightLeg(-77.0D, 9.0D, 1.0D)
+    @var thirdModel.setLeftLeg(-55.0D, -12.0D, -1.0D)
+    @var thirdModel.setHead(31.5D, -20.3D, 3.0D)
+    @var thirdModel.setBody(12.0D, -0.7D, 0.0D)
+
+    @var this.currentPose.moveToWithSpeedAndMovement(thirdModel, 3, 0.0D, 0.2D, 0.0D)
+
+
+    # --- Create second model backwards ---
+    @define EntityPose secondModel = EntityPose(this.entity)
+    @var secondModel.setRightArm(-15.0D, 3.0D, 10.0D)
+    @var secondModel.setLeftArm(30.0D, 0.0D, -10.0D)
+    @var secondModel.setRightLeg(-60.0D, 0.0D, 1.0D)
+    @var secondModel.setLeftLeg(-13.0D, -15.0D, -1.0D)
+    @var secondModel.setHead(31.5D, -20.3D, 3.0D)
+    @var secondModel.setBody(12.0D, -0.7D, 0.0D)
+
+    @var this.currentPose.moveToWithSpeedAndMovement(secondModel, 3, 0.0D, 0.3D, 0.0D)
+
+
+    # --- Create first model backwards ---
+    @define EntityPose firstModel = EntityPose(this.entity)
+    @var firstModel.setRightArm(-15.0D, 3.0D, 10.0D)
+    @var firstModel.setLeftArm(-10.0D, 3.0D, -10.0D)
+    @var firstModel.setRightLeg(-20.0D, 0.0D, 1.0D)
+    @var firstModel.setLeftLeg(-3.0D, 0.0D, -1.0D)
+    @var firstModel.setHead(16.5D, -20.3D, 3.0D)
+    @var firstModel.setBody(9.0D, -0.7D, 0.0D)
+
+    @var this.currentPose.moveToWithSpeedAndMovement(firstModel, 3, 0.0D, 0.2D, 0.0D)
+
+
+    # --- Create start model ---
+    @define EntityPose startModel = EntityPose(this.entity)
+
+    @var this.currentPose.setMoveAlignment(true)
+    @var this.currentPose.moveToWithSpeedAndMovement(startModel, 3, 0.0D, 0.1D, 0.0D)
+@fi
+
+# --- Change entity state back to standing ---
+@var this.helper.clearEntityState()

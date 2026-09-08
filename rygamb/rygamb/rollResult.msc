@@ -1,0 +1,66 @@
+# rollResult(Player player)
+# Predetermines this spin's outcome and stores it in target1/2/3. A single
+# weighted roll (out of 1000) picks the tier, so the whole house edge and
+# every jackpot's rarity live right here — tune the thresholds freely.
+#
+# Tiers (cumulative thresholds below):
+#   jackpot     - three of a rare jackpotSymbol  (BIG)
+#   minorTriple - three of a commonSymbol        (small)
+#   nearMiss    - teaseSymbol, teaseSymbol, other (the flashy fake-out)
+#   pair        - X, X, other                    (consolation)
+#   nothing     - no triple                       (loss)
+#
+# nearMiss and pair are mechanically the same shape (X X Y); nearMiss just
+# forces the flashy teaseSymbol so the player sees two of the big one and
+# just misses. spin.msc gives both the dramatic reel-3 slowdown.
+@using rygamb
+@fast
+
+@define Int n = itemList.length()
+@define Int roll = Int(math::random(0D, 1000D))
+
+# --- TIER THRESHOLDS (cumulative, out of 1000) — TUNE FREELY ---
+@define Int jackpotMax = 15
+@define Int tripleMax = 70
+@define Int nearMissMax = 150
+@define Int pairMax = 300
+
+@if roll < jackpotMax
+    @define Int ji = Int(math::random(0D, Double(jackpotSymbols.length())))
+    @define Int js = jackpotSymbols[ji]
+    @var target1[player] = js
+    @var target2[player] = js
+    @var target3[player] = js
+    @return
+@fi
+
+@if roll < tripleMax
+    @define Int ci = Int(math::random(0D, Double(commonSymbols.length())))
+    @define Int cs = commonSymbols[ci]
+    @var target1[player] = cs
+    @var target2[player] = cs
+    @var target3[player] = cs
+    @return
+@fi
+
+@if roll < nearMissMax
+    @var target1[player] = teaseSymbol
+    @var target2[player] = teaseSymbol
+    @var target3[player] = otherThan(teaseSymbol)
+    @return
+@fi
+
+@if roll < pairMax
+    @define Int ps = Int(math::random(0D, Double(n)))
+    @var target1[player] = ps
+    @var target2[player] = ps
+    @var target3[player] = otherThan(ps)
+    @return
+@fi
+
+# Nothing: reel 2 is forced different from reel 1, so this can never be a
+# triple. (An incidental pair is harmless — it just pays the pair tier.)
+@define Int a = Int(math::random(0D, Double(itemList.length())))
+@var target1[player] = a
+@var target2[player] = otherThan(a)
+@var target3[player] = Int(math::random(0D, Double(itemList.length())))

@@ -1,0 +1,46 @@
+# startButton(Player player)
+# Bound to the round-start button. Starts a fresh GAME: gathers every
+# player within 30 blocks of the presser — candidates come from the
+# "uchlobby" region (MSC's only player-list source is
+# Region.getPlayersInside()), then the true 30-block radius is measured
+# in-script — wipes their scores, and hands the roster to startRound.
+# Later rounds start automatically from buildPhase; the button only needs
+# pressing once per game.
+@using uch
+@fast
+
+@if roundActive || buildActive
+    @player &cA game is already running!
+    @return
+@fi
+
+# Gather everyone within 30 blocks of the presser
+@define Position origin = player.getPosition()
+@define Double ox = origin.getX()
+@define Double oy = origin.getY()
+@define Double oz = origin.getZ()
+@define Player[] candidates = Region("uchlobby", "Theta").getPlayersInside()
+@define Player[] starters = Player[]
+@for Player p in candidates
+    @define Position pos = p.getPosition()
+    @define Double dx = pos.getX() - ox
+    @define Double dy = pos.getY() - oy
+    @define Double dz = pos.getZ() - oz
+    @if dx * dx + dy * dy + dz * dz <= 900.0D
+        @var starters.append(p)
+    @fi
+@done
+
+@if starters.length() == 0
+    @player &cNo players found near the button. Is the "uchlobby" region set up around the lobby (and the button inside it)?
+    @return
+@fi
+
+# Fresh game: everyone starts from zero (also makes round 1 a full tie, so
+# there is no underdog until someone actually falls behind)
+@for Player p in starters
+    @var totalScore[p] = 0
+@done
+@var roundNumber = 1
+
+@var startRound(starters)

@@ -1,0 +1,5 @@
+# setSoundEnabled(Boolean soundEnabled)
+@using entity_ai
+@fast
+
+@var this.soundEnabled = soundEnabled

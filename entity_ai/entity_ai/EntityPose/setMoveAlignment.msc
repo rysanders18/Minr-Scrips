@@ -1,0 +1,8 @@
+# setMoveAlignment(Boolean moveAlignment)
+# When true (default) moveTo* ends by snapping exactly onto the target
+# pose, clearing interpolation rounding. sitGround/stand turn it off for
+# the intermediate keyframes so they flow into each other.
+@using entity_ai
+@fast
+
+@var this.moveAlignment = moveAlignment

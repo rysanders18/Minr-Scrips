@@ -1,0 +1,60 @@
+# rejoinFunction(String username)
+#
+# Cleans up after a player who logged off mid-cutscene: their pig went offline
+# with them and comes back with them on rejoin.
+#
+# HOW THIS IS TRIGGERED (three designs were tried; only this one works):
+#  1. WorldGuard console-command-on-entry + "%username%"  -- REJECTED. This
+#     server does not substitute %username%; the script received the literal
+#     string, Player("%username%") gave a null UUID, and the first method call
+#     threw "IllegalArgumentException: UUID id cannot be null".
+#  2. WorldGuard console-command-on-entry + Region.getPlayersInside() -- also
+#     REJECTED. Entry flags fire on BOUNDARY CROSSING, a movement event. A
+#     relogging player is already inside the region, crosses nothing, and the
+#     flag never fires. Confirmed empirically: walking out and back in works,
+#     relogging does not.
+#  3. /login action add  -- WHAT WE USE. startAnimation queues this at the
+#     moment it detects the logout, while it still holds the Player object, so
+#     the username is baked in as a LITERAL here. No placeholder substitution
+#     is involved anywhere, and login actions fire on login by definition.
+#
+# OTHER INVARIANTS:
+#  - Player(username) resolves name -> UUID AT CONSTRUCTION. On login that
+#    lookup is too early, so the @delay MUST come BEFORE the Player(...) line.
+#    Delaying after it just uses an already-null UUID -- that was the original
+#    bug and the reason "adding a delay" appeared not to help.
+#  - Runs from console: no @bypass executor, so every command is @console with
+#    explicit selectors. Relative forms (~ ~ ~, @s, distance=..) have nothing
+#    to anchor to here.
+#  - Vanilla /tp takes no world argument; dimension comes from /execute in.
+
+@using lavamap
+@fast
+
+# Let the join settle before touching the player registry.
+@delay 10
+
+@define Player p = Player(username)
+@if p.isOnline() == false
+    @return
+@fi
+
+# Idempotence guard. A queued login action may outlive the situation that
+# created it -- without this, a stale action could yank a player who has since
+# started a fresh cutscene.
+@if loggedOffMidCutscene[p] != 1
+    @return
+@fi
+
+# Kill the pig they are actually riding. "on vehicle" (1.19.4+) resolves the
+# mount directly, so this needs no tag bookkeeping and no-ops harmlessly if
+# they came back un-mounted.
+@console /execute as {{username}} on vehicle run kill @s
+
+# Fallback for pre-1.19.4 servers -- tag-based, needs lastPigNumber to have
+# survived the logout:
+# @console /execute in minecraft:theta run kill @e[tag=lavamappig{{lastPigNumber[p]}}]
+
+@console /execute in minecraft:theta run tp {{username}} -13088.237548828125 94.0 9478.935546875 90.0 -1.3685483
+
+@var loggedOffMidCutscene[p] = 0

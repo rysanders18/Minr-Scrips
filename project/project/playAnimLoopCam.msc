@@ -1,0 +1,24 @@
+# playAnimLoopCam(Player player)
+# Port of a/default/play_anim_loop_cam. Loop playback and put
+# `player` into spectator on the animation camera.
+#
+# Camera-viewer state is held in MSC variables (savedGameMode /
+# watchingCam per-player slots + the camClient global) instead of
+# the gm_cam_client scoreboard and bde_cam_client tag.
+@using project
+@fast
+
+@var looping = true
+@var paused = false
+
+@bypass execute as @e[tag=project_root,type=block_display] at @s run data modify entity @e[type=minecraft:block_display,tag=project_camera,limit=1,sort=nearest] teleport_duration set value 0
+
+# Remember the player's current gamemode, then spectate the camera.
+@var savedGameMode[player] = player.getGameMode()
+@var watchingCam[player] = true
+@var camClient = player.getName()
+@bypass gamemode spectator {{player}}
+@bypass execute as @e[tag=project_root,type=block_display] at @s run spectate @e[type=minecraft:block_display,tag=project_camera,limit=1,sort=nearest] {{player}}
+
+@delay 2
+@var start()

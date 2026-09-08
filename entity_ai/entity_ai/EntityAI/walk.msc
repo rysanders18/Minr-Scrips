@@ -1,0 +1,47 @@
+# walk(Double distance, Double blocksPerSecond)
+# Walks forward `distance` blocks along the stand's facing (negative =
+# moonwalk) with the arm/leg swing. Resets currentPose afterwards.
+@using entity_ai
+
+@define Boolean inwardsAnimationDirection = true
+@define Double blocksPerTick = blocksPerSecond / 10
+@define Int ticks = math::ceil((distance * 10) / blocksPerSecond)
+
+# --- Avoid directions to use really small numbers ---
+@define Double xMove = blocksPerTick * this.entity.getDirectionX()
+@if math::abs(xMove) <= 0.001D
+    @var xMove = 0.0D
+@fi
+
+@define Double zMove = blocksPerTick * this.entity.getDirectionZ()
+@if math::abs(zMove) <= 0.001D
+    @var zMove = 0.0D
+@fi
+
+@if this.debugMode
+    @player &3&l=== Walk Foward info ===
+    @player &7Entity Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+    @player &7Entity X Direction: &3{{getRoundDouble(this.entity.getDirectionX())}}
+    @player &7Entity Z Direction: &3{{getRoundDouble(this.entity.getDirectionZ())}}
+    @player
+    @player &7Blocks Per Tick: &3{{getRoundDouble(blocksPerTick)}}
+    @player &7Ticks Total: &3{{ticks}}
+    @player
+    @player &7X Blocks Per Tick: &3{{getRoundDouble(xMove)}}
+    @player &7Z Blocks Per Tick: &3{{getRoundDouble(zMove)}}
+@fi
+
+# --- Iterate for the requested number of ticks ---
+@for Int i in list::range(1, ticks + 1)
+    @bypass /execute as {{this.entity.getUniqueId()}} at @s run teleport ~{{xMove}} ~ ~{{zMove}}
+
+    @var inwardsAnimationDirection = this.helper.walkAnimationSingleTick(7.5D * blocksPerSecond, inwardsAnimationDirection, this.soundEnabled, this.currentPose)
+@done
+
+@if this.debugMode
+    @player &3&l=== Walk Foward Final Info ===
+    @player &7Entity Destination Coords [X/Z]: &3({{getRoundDouble(this.entity.getX())}}, {{getRoundDouble(this.entity.getZ())}})
+@fi
+
+@var this.currentPose = EntityPose(this.entity)
+@var this.currentPose.merge()

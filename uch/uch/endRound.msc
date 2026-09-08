@@ -1,0 +1,97 @@
+# endRound()
+# Tallies the round. Called by finishLine/fallRegion once every runner is
+# resolved (finished or out), or by startRound's timer when time runs out.
+# Guarded so whichever caller gets here second is a no-op.
+#
+# UCH scoring rules: a round only pays out when SOMEBODY finished and
+# SOMEBODY didn't — everyone finishing (too easy) or nobody finishing
+# (too hard) awards nothing. In a scoring round every finisher gets Goal
+# points; the first finisher gets the First bonus when 2+ finished; a solo
+# finisher in a 3+ player round gets the bigger Solo bonus on top of Goal.
+# Underdog (house bonus) goes to every underdog (underdogGap+ points
+# behind the leader) who scored this round; underdog status is snapshotted
+# BEFORE any awardPoints call mutates totalScore.
+@using uch
+@fast
+
+
+
+@if !roundActive
+    @return
+@fi
+
+@delay 40
+
+@var roundActive = false
+
+@define Int total = runners.length()
+@define Boolean everyoneFinished = finishCount >= total && total > 0
+@define Boolean scoringRound = finishCount > 0 && finishCount < total
+
+# Snapshot who the underdogs are before scores change
+@define String[] underdogNames = String[]
+@for Player p in runners
+    @if isUnderdog(p)
+        @var underdogNames.append(p.getName())
+    @fi
+@done
+
+# ---- Award points ----
+@if scoringRound
+    @for Player p in runners
+        @if finishedRound[p] == 1
+            @var awardPoints(p, goalPoints, "Goal")
+            @if underdogNames.contains(p.getName())
+                @var awardPoints(p, underdogBonus, "Underdog")
+            @fi
+        @fi
+    @done
+    @if finishCount >= 2
+        @var awardPoints(Player(finishNames[0]), firstBonus, "First")
+    @fi
+    @if finishCount == 1 && total >= 3
+        @var awardPoints(Player(finishNames[0]), soloBonus, "Solo")
+    @fi
+@fi
+
+# ---- Announce the outcome ----
+@for Player p in runners
+    @bypass /title {{p}} times 0 60 20
+    @if everyoneFinished
+        @bypass /title {{p}} title {"text":"Everybody made it!","bold":true,"color":"green"}
+        @bypass /title {{p}} subtitle {"text":"Too easy — no points!","color":"yellow"}
+        @bypass /playsound minecraft:entity.villager.no master {{p}} ~ ~ ~ 1 1.2
+    @elseif finishCount == 0
+        @bypass /title {{p}} title {"text":"Nobody made it!","bold":true,"color":"red"}
+        @bypass /title {{p}} subtitle {"text":"Too hard — no points!","color":"gray"}
+        @bypass /playsound minecraft:entity.villager.no master {{p}} ~ ~ ~ 1 0.8
+    @else
+        @bypass /title {{p}} title {"text":"Round over!","bold":true,"color":"gold"}
+        @bypass /title {{p}} subtitle {"text":"{{finishCount}}/{{total}} made it — {{finishNames[0]}} was first!","color":"yellow"}
+        @if finishedRound[p] == 1
+            @bypass /playsound minecraft:ui.toast.challenge_complete master {{p}} ~ ~ ~ 0.7 1
+        @else
+            @bypass /playsound minecraft:entity.villager.no master {{p}} ~ ~ ~ 1 0.8
+        @fi
+    @fi
+@done
+
+# ---- Scoreboard recap ----
+@for Player viewer in runners
+    @bypass /tellraw {{viewer}} ["",{"text":"===== Scores =====","bold":true,"color":"gold"}]
+    @for Player p in runners
+        @define String note = "did not finish"
+        @if finishedRound[p] == 1
+            @var note = "finished"
+        @elseif eliminated[p] == 1
+            @var note = "fell"
+        @fi
+        @bypass /tellraw {{viewer}} ["",{"text":"{{p.getName()}}: ","color":"yellow"},{"text":"{{totalScore[p]}} points ","color":"white"},{"text":"({{note}})","color":"gray"}]
+    @done
+@done
+
+# ---- Cleanup ----
+@for Player p in runners
+    @var inRound[p] = 0
+    # @bypass /gamemode creative {{p}}
+@done

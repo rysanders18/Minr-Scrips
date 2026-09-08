@@ -1,0 +1,10 @@
+# start()
+# Begin playback from frame 0. Assumes playAnim* already set
+# the looping flag and snapped the camera.
+@using project
+@fast
+
+@var playing = true
+@var paused = false
+@var currentFrame = 0
+@var runFrame()

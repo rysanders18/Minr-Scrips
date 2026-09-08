@@ -1,0 +1,38 @@
+@namespace rygamb
+
+# ============================================================
+#  SLOT MACHINE
+# ============================================================
+
+# --- Reel symbols. The index IS the symbol id used everywhere else. ---
+String[] itemList = String["minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:netherite_scrap", "minecraft:coal", "minecraft:redstone", "minecraft:lapis_lazuli", "minecraft:quartz"]
+
+# --- Odds tuning (all values are symbol ids into itemList) ---
+# A triple of any jackpotSymbol = a BIG win (each gets its own payout in applyOutcome).
+Int[] jackpotSymbols = Int[0, 4, 3]
+# A triple of any commonSymbol = a small "minor triple" win.
+Int[] commonSymbols = Int[5, 6, 1]
+# The flashy symbol used for the "X ... X ... nothing" near-miss fake-out.
+Int teaseSymbol = 0
+
+# --- Per-player spin state ---
+relative Boolean spinning = false
+relative Int target1 = 0
+relative Int target2 = 0
+relative Int target3 = 0
+
+# --- Functions ---
+updateSlots(Block block, Player player, Int slot1, Int slot2, Int slot3)
+pressButton(Block block, Player player)
+spin(Block block, Player player)
+rollResult(Player player)
+Int otherThan(Int x)
+Int resolveOutcome(Int s1, Int s2, Int s3)
+applyOutcome(Block block, Player player, Int outcome)
+fxSpinTick(Player player)
+fxReelStop(Player player, Int reel)
+fxJackpot(Player player)
+fxWin(Player player)
+fxLose(Player player)
+
+@endnamespace

@@ -1,0 +1,11 @@
+# setGravity(Boolean enabled)
+# NoGravity:1b disables gravity. Still valid entity NBT on current
+# versions.
+@using entity_ai
+
+@define Int gravity = 0
+@if !enabled
+    @var gravity += 1
+@fi
+
+@bypass /data merge entity {{this.entity.getUniqueId()}} {NoGravity:{{gravity}}b}

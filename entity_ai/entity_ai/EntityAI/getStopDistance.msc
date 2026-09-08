@@ -1,0 +1,5 @@
+# Int getStopDistance()
+@using entity_ai
+@fast
+
+@return this.stopDistance

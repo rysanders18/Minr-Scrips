@@ -1,0 +1,75 @@
+# startRound(Player[] starters)
+# Launches one round for the given roster and owns its lifecycle: sets
+# everyone to adventure mode, teleports them to the start platform, runs
+# the backstop timer, then hands off to buildPhase. Runners also join the
+# uchghosts team and get no-particle invisibility for the round: to
+# bystanders they're invisible, to each other they render as translucent
+# ghosts (seeFriendlyInvisibles). buildPhase strips the effect and empties
+# the team. The hand-off happens
+# HERE for both endings — timeout (this loop calls endRound itself) and
+# early end (finishLine/fallRegion call endRound, which drops roundActive;
+# this loop notices within a second). Keeping the transition with the
+# timer owner guarantees exactly one buildPhase per round and leaves no
+# stale timers running into the next round.
+@using uch
+@fast
+
+# Clear stale flags from the previous roster
+@for Player old in runners
+    @var inRound[old] = 0
+    @var finishedRound[old] = 0
+@done
+
+@var runners = Player[]
+@var finishNames = String[]
+@var finishCount = 0
+@var eliminatedCount = 0
+
+# Clone blocks from fly room, to nofly room. TODO, generalize
+@bypass /clone -9141 91 9776 -9153 110 9740 -9167 91 9740
+
+# Ghost team: recreated every round (team add is a harmless error if it
+# already exists). seeFriendlyInvisibles is what makes teammates render
+# each other translucent instead of fully invisible.
+@bypass /team add uchghosts
+@bypass /team modify uchghosts seeFriendlyInvisibles true
+
+@for Player p in starters
+    @var runners.append(p)
+    @var inRound[p] = 1
+    @var finishedRound[p] = 0
+    @var eliminated[p] = 0
+    @var fallsUsed[p] = 0
+    @var p.teleport(startPosition)
+    @bypass /gamemode adventure {{p}}
+    @bypass /team join uchghosts {{p}}
+    @bypass /effect give {{p}} minecraft:invisibility infinite 0 true
+    @bypass /playsound minecraft:entity.ender_dragon.growl master {{p}} ~ ~ ~ 0.6 1.4
+    @bypass /title {{p}} times 0 30 10
+    @bypass /title {{p}} title {"text":"GO!","bold":true,"color":"green"}
+    @bypass /title {{p}} subtitle {"text":"Round {{roundNumber}} — first to {{winScore}} points wins!","color":"yellow"}
+@done
+
+@var roundActive = true
+@var roundStartMillis = system::currentTimeMillis()
+
+# Backstop timer
+@for Int t in list::range(0, roundSeconds)
+    @delay 1s
+    @if !roundActive
+        # Round already ended early and was tallied by endRound
+        @var buildPhase()
+        @return
+    @fi
+    @define Int remaining = roundSeconds - t - 1
+    @if remaining > 0
+        @for Player p in runners
+            @if finishedRound[p] == 0 && eliminated[p] == 0
+                @bypass /title {{p}} actionbar {"text":"{{remaining}}s remaining","color":"yellow"}
+            @fi
+        @done
+    @fi
+@done
+
+@var endRound()
+@var buildPhase()

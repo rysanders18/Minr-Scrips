@@ -1,0 +1,7 @@
+# setRightArm(Double x, Double y, Double z)
+# Pose angles in degrees. Vector3 replaces the old Location(x,y,z,world)
+# store - it needs no world and has the same getX/getY/getZ accessors.
+@using entity_ai
+@fast
+
+@var this.rightArm = Vector3(x, y, z)

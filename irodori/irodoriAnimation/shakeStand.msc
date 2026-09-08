@@ -1,0 +1,31 @@
+# shakeStand(String entityUuid, Player player)
+#
+# Shakes the stand harder and harder as it lifts off the ground, then
+# back down again. i is folded into a triangle (0 -> riseTicks -> 0) and
+# everything keys off it: pose jitter, creak volume, and the height.
+#
+# The height is eased, not linear. smootherstep has zero first AND second
+# derivative at both ends, so applying it to each leg of the triangle
+# gives all four beats the lift wants: it eases IN off the ground, eases
+# OUT into the peak, eases IN back down, and eases OUT onto the floor. A
+# raw i/riseTicks ramp instead leaves the ground at full speed and turns
+# a hard corner at the top.
+
+@using irodoriAnimation
+@fast
+
+@for Int i in list::range(0, 2 * riseTicks)
+    @if i > riseTicks
+        @var i = (2 * riseTicks - i) * 1
+    @fi
+
+    @console execute in minecraft:theta run data merge entity {{entityUuid}} {Pose:{Head:[{{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f],Body:[{{math::random(-5D * Float(i) / 150, 5D * Float(i) / 150)}}f, {{math::random(-5D * Float(i) / 150, 5D * Float(i) / 150)}}f, {{math::random(-5D * Float(i) / 150, 5D * Float(i) / 150)}}f],LeftArm:[{{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150 - (50D * Float(i) / 150), (10D * Float(i) / 150) - (50D * Float(i) / 150))}}f],RightArm:[{{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150 + (50D * Float(i) / 150), 10D * Float(i) / 150 + (50D * Float(i) / 150))}}f],LeftLeg:[{{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f],RightLeg:[{{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f, {{math::random(-10D * Float(i) / 150, 10D * Float(i) / 150)}}f]}}
+    @console execute in minecraft:theta run minecraft:tp {{entityUuid}} {{standX}} {{standGroundY + standRiseAt(i)}} {{standZ}}
+    @delay 1
+
+    @if i % 7 == 0
+        @console execute in minecraft:theta run playsound minecraft:entity.creaking.step master {{player}} -1127 185 604 {{Float(i) / 300}} {{math::random(0.8D, 1.2D)}}
+    @fi
+
+@done
+

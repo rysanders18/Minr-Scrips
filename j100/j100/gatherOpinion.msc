@@ -1,0 +1,41 @@
+# gatherOpinion(Player player, Int level)
+# Asks for a 1-100 difficulty rating and stores it in jumpRatings.
+#
+# The reply is validated by comparing it against String(n) for every n in
+# 1..100 - the same no-cast trick selectJump uses, since MSC has no safe
+# string-to-Int parse. One pass rejects both junk ("lmaoo", "got it") and
+# out-of-range numbers. Those used to be written into jumpRatings verbatim and
+# had to be thrown out by hand at analysis time.
+#
+# The player gets three tries. A blank reply - which is also what a prompt
+# timeout leaves behind - stops the asking immediately rather than nagging. If
+# nothing valid arrives, jumpRatings is left empty, which rank_jumps.py reads
+# as "no rating" rather than as a score of zero.
+
+@using j100
+@fast
+
+@define String rating
+
+@for Int attempt in list::range(0, 3)
+    @var rating = ""
+    @player &eRate the difficulty of this jump from &l1-100!
+    @player &7(Please only enter a whole number)
+    @prompt 500s rating You took too long!
+
+    @if rating == ""
+        @return
+    @fi
+
+    @for Int n in list::range(1, 101)
+        @if rating == String(n)
+            @var jumpRatings[player][level] = rating
+            @player &aRating for jump &l{{level + 1}}&a saved! Thank you for your feedback!
+            @return
+        @fi
+    @done
+
+    @player &c"{{rating}}" is not a whole number from &l1-100&c. Try again.
+@done
+
+@player &7No rating saved for jump &l{{level + 1}}&7 - no problem, carry on!

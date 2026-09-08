@@ -1,0 +1,43 @@
+# resetProgress(Player player)
+# Wipes this player's jump progress after a typed confirmation.
+#
+# Clears every piece of per-player state: completions, fall counts, teleport
+# counts, banked times, difficulty ratings, the play clock, and any custom
+# positions set with the gold ingot (those are restored element-by-element from
+# the levelPositions namespace constant, which holds the map's default spawn
+# for each jump).
+
+@using j100
+@fast
+@cooldown 10s
+
+@define String confirmation
+
+@player &#d4d4d4---------------------------------
+@player &c&lWARNING! &#d4d4d4This wipes all 100 jump completions, your fall and
+@player &#d4d4d4teleport counts, your times and ratings, and every custom
+@player &#d4d4d4position you have set.
+@player &#d4d4d4● Type &#D3D6E0"Yes"&#d4d4d4 in chat to confirm.
+@prompt 20s confirmation &cYou took too long!
+
+@if confirmation.toLowerCase() != "yes"
+    @bypass /playsound minecraft:ui.button.click master {{player}} ~ ~ ~ 0.5 1
+    @player &#d4d4d4● Reset cancelled - nothing was changed.
+    @return
+@fi
+
+@var touchLevel(player, -1)
+
+@for Int level in list::range(0, 100)
+    @var levelsCompleted[player][level] = false
+    @var levelFalls[player][level] = 0
+    @var levelTeleports[player][level] = 0
+    @var levelTimes[player][level] = 0L
+    @var jumpRatings[player][level] = ""
+    @var playerLevelPositions[player][level] = levelPositions[level]
+@done
+
+@bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.75 1
+@player &#d4d4d4---------------------------------
+@player &#d4d4d4● Reset all &6&lJump 100 &#d4d4d4progress successfully!
+@player &#d4d4d4---------------------------------

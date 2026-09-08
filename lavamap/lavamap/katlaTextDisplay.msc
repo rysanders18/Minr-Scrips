@@ -1,0 +1,91 @@
+# katlaTextDisplay()
+# Blue-flash accent animation for the "Katla" text display (tag: katlaTextDisplay).
+#
+# Phase 1 -- sweep (6 ticks): an icy white-blue wavefront advances left to
+#   right, one character per tick. Characters behind the front settle into a
+#   light-blue gradient (lightest on the K, deepest on the final a) and hold
+#   until the whole word is blue.
+# Phase 2 -- return (10 ticks): staggered fade back. Character j starts
+#   returning at tick j and blends blue -> original over 6 ticks, so the K
+#   lands first (tick 6) and the final a lands 4 ticks later (tick 10).
+#
+# Every frame rewrites the full text component list via /data merge, keeping
+# the bold K and the dark-red shadow_color from the original summon. The
+# final frame is exactly colorList, so the display always ends at its resting
+# colors -- safe to re-run any time. colorList / blueShades are the knobs.
+#
+# fadeSteps holds the 6-step blue -> original path for each character, laid
+# out flat (row j = fadeSteps[j*6 .. j*6+5]) because MSC has no 2D arrays.
+# Each path cools through a pale warm tint of that character's own hue rather
+# than a straight RGB lerp, so the fade reads as a glow cooling down instead
+# of passing through gray.
+
+@using lavamap
+@fast
+@global_cooldown 15t
+
+@define String[] colorList = String["#ffaa00", "#ff9500", "#ff7f22", "#ff6a3d", "#ff5555"]
+
+# This is what the entity currently is.
+# /summon text_display -13092.00 97.750 9479.00 {shadow:1b,Rotation:[270F,0F],Tags:["katlaTextDisplay"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[4f,4f,5f]},text:[{"bold":true,"color":"gold","shadow_color":-14942208,"text":"K"},{"color":"#FF9911","shadow_color":-14942208,"text":"a"},{"color":"#FF8822","shadow_color":-14942208,"text":"t"},{"color":"#FF7733","shadow_color":-14942208,"text":"l"},{"color":"#FF5555","shadow_color":-14942208,"text":"a"}],background:16711680}
+
+@define String[] chars = String["K", "a", "t", "l", "a"]
+
+# Light-blue shades each character settles into once the wavefront passes.
+@define String[] blueShades = String["#D6F4FF", "#AEE6FF", "#86D7FF", "#5FC9FF", "#45BCFF"]
+@define String waveFrontColor = "#F0FFFF"
+
+# Row j (6 entries) = character j's path from blueShades[j] back to colorList[j].
+@define String[] fadeSteps = String["#EBEDD9", "#FFE6B3", "#FFD786", "#FFC85A", "#FFB92D", "#FFAA00", "#D7E3D9", "#FFDFB3", "#FFCD86", "#FFBA5A", "#FFA82D", "#FF9500", "#C3D8DE", "#FFD9BD", "#FFC396", "#FFAC70", "#FF9649", "#FF7F22", "#AFCEE2", "#FFD2C5", "#FFB8A3", "#FF9E81", "#FF845F", "#FF6A3D", "#A2C4E6", "#FFCCCC", "#FFAEAE", "#FF9191", "#FF7373", "#FF5555"]
+
+@define String frameJson = ""
+@define String col = ""
+@define Int step = 0
+
+@console /function execute rytools::particleLine(Location(-13092.0, 97.90, 9480.44, "Theta"), Location(-13092.0, 97.90, 9477.56, "Theta"), 10, 1, "minecraft:soul_fire_flame", 1)
+
+# Phase 1: wavefront sweeps left to right, one char per tick. At i == 5 no
+# char is the front anymore, so that iteration is the all-blue settle frame.
+# (list::range excludes its end bound, so range(0, 6) runs i = 0..5.)
+@for Int i in list::range(0, 6)
+    @var frameJson = ""
+    @for Int j in list::range(0, 5)
+        @if j < i
+            @var col = blueShades[j]
+        @elseif j == i
+            @var col = waveFrontColor
+        @else
+            @var col = colorList[j]
+        @fi
+        @if j == 0
+            @var frameJson += String("{\"bold\":true,\"color\":\"" + col + "\",\"shadow_color\":-14942208,\"text\":\"" + chars[j] + "\"}")
+        @else
+            @var frameJson += String(",{\"color\":\"" + col + "\",\"shadow_color\":-14942208,\"text\":\"" + chars[j] + "\"}")
+        @fi
+    @done
+    @delay 1
+    @bypass /data merge entity @e[tag=katlaTextDisplay,limit=1] {text:[{{frameJson}}]}
+@done
+
+# Phase 2: staggered return. Char j sits blue until step r - j reaches 1,
+# then walks its fadeSteps row; step 6 of each row IS the original color.
+@for Int r in list::range(1, 11)
+    @var frameJson = ""
+    @for Int j in list::range(0, 5)
+        @var step = r - j
+        @if step < 1
+            @var col = blueShades[j]
+        @elseif step > 6
+            @var col = colorList[j]
+        @else
+            @var col = fadeSteps[j * 6 + step - 1]
+        @fi
+        @if j == 0
+            @var frameJson += String("{\"bold\":true,\"color\":\"" + col + "\",\"shadow_color\":-14942208,\"text\":\"" + chars[j] + "\"}")
+        @else
+            @var frameJson += String(",{\"color\":\"" + col + "\",\"shadow_color\":-14942208,\"text\":\"" + chars[j] + "\"}")
+        @fi
+    @done
+    @delay 1
+    @bypass /data merge entity @e[tag=katlaTextDisplay,limit=1] {text:[{{frameJson}}]}
+@done

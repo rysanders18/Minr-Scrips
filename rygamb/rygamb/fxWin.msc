@@ -1,0 +1,7 @@
+# fxWin(Player player)
+# Small / medium win flair. PLACEHOLDER.
+@using rygamb
+@fast
+
+@bypass /playsound minecraft:entity.experience_orb.pickup master {{player}} ~ ~ ~ 1.0 1.2
+@bypass /execute at {{player}} run particle minecraft:happy_villager ~ ~1 ~ 0.4 0.4 0.4 0.1 15 force {{player}}

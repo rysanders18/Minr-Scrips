@@ -1,0 +1,26 @@
+# summonBlockDisplays()
+#
+# One-time world setup — this was the commented-out block at the top of
+# "# irodori animation.msc". Spawns one block_display per entry in
+# blockColors at animAnchor, tagged iro<i> where <i> is that entry's
+# index. Everything else in the namespace addresses displays by that tag,
+# so the tag/colour pairing is the contract.
+#
+# Kills the old iro displays first, so re-running after editing
+# blockColors replaces the ring instead of doubling it up. Displays are
+# summoned at scale 0.1 and identity rotation; the first
+# scatterBlockDisplays pass overwrites both, so those values only matter
+# for the split second before the animation starts.
+@using irodoriAnimation
+@fast
+
+@for Int i in list::range(0, blockColors.length())
+    @bypass /execute in {{animWorld}} run kill @e[type=block_display,tag=iro{{i}}]
+@done
+
+@delay 1
+
+@for Int i in list::range(0, blockColors.length())
+    @bypass /execute in {{animWorld}} run summon block_display {{anchorX}} {{anchorY}} {{anchorZ}} {Tags:["iro{{i}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.1f,0.1f,0.1f]},block_state:{Name:"minecraft:{{blockColors[i]}}"}}
+    @delay 1
+@done

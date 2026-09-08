@@ -1,0 +1,39 @@
+# runFrame()
+# Drives the WHOLE animation from a single function invocation: a
+# frame loop with the @delay inside it, wrapped in repeat loops for
+# looping playback. This is iteration, not recursion, so the call
+# stack stays flat no matter how many frames (or loops) play.
+#
+# The original version recursed (runFrame(frame + 1) after each
+# @delay); MSC's @delay does NOT unwind the stack, so that hit
+# "Recursion too deep: 101 > 100" near frame 97. Frames must be
+# advanced by a loop, never by recursion.
+@using project
+@fast
+
+# Repeat passes without recursion. MSC caps list/range size at 1000,
+# so two nested counters give up to 1,000,000 passes (years of
+# looping) while keeping each range() within the limit. A one-shot
+# returns after the first pass; a loop runs until stopAnim()/pause()
+# flips a flag. The frame range below is 283 (< 1000), so it's fine.
+@for Int cycle in list::range(0, 1000)
+    @for Int pass in list::range(0, 1000)
+        @for Int i in list::range(currentFrame, lastFrame + 1)
+            @if !playing
+                @return
+            @fi
+            @if paused
+                @return
+            @fi
+            @var currentFrame = i
+            @var playFrame(i)
+            @delay 2
+        @done
+
+        @if !looping
+            @var stopAnim()
+            @return
+        @fi
+        @var currentFrame = 0
+    @done
+@done

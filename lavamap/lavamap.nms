@@ -1,0 +1,17 @@
+@namespace lavamap
+
+Int pigNumber = 100
+relative Int lastPigNumber
+relative Int lastCutsceneTime
+
+# Idempotence gate for rejoinFunction. Set to 1 by startAnimation when it
+# detects a mid-cutscene logout; cleared by rejoinFunction once cleanup has
+# run. Stops a stale queued login action from yanking a player who has since
+# started a fresh cutscene.
+relative Int loggedOffMidCutscene
+
+startAnimation(Player player, Int pigNumber)
+rejoinFunction(String username)
+katlaTextDisplay()
+
+@endnamespace

@@ -1,0 +1,10 @@
+# fxJackpot(Player player)
+# Big-win celebration. PLACEHOLDER — go wild here (fireworks, titles, etc).
+@using rygamb
+@fast
+
+@bypass /playsound minecraft:entity.player.levelup master {{player}} ~ ~ ~ 1.0 1.0
+@bypass /playsound minecraft:item.totem.use master {{player}} ~ ~ ~ 1.0 1.0
+@bypass /execute at {{player}} run particle minecraft:explosion_emitter ~ ~1 ~ 0.5 0.5 0.5 0.0 3 force {{player}}
+@bypass /execute at {{player}} run particle minecraft:totem_of_undying ~ ~1 ~ 0.5 1.0 0.5 0.3 80 force {{player}}
+@bypass /title {{player}} title ["",{"text":"JACKPOT!","bold":true,"color":"gold"}]

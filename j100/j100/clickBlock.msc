@@ -1,0 +1,62 @@
+# clickBlock(Player player)
+
+@using j100
+@fast
+@cooldown 5
+
+
+
+@define Int level
+
+@for Int i in list::range(0, 10)
+    @for Int j in list::range(0, 10)
+        @if player.getX() < (4843.5 - 18.0 * i) && player.getX() > (4827.5 - 18.0 * i) && player.getZ() < (2970.5 - 18.0 * j) && player.getZ() > (2954.5 - 18.0 * j)
+            @var level = i * 10 + j
+            @if player.getItemInMainHand().getItemType() == "STICK"
+                @bypass /playsound minecraft:ui.button.click master @s ~ ~ ~ 0.2 1
+                @var touchLevel(player, level)
+                @var player.teleport(playerLevelPositions[player][level])
+                @if levelsCompleted[player][level] == false
+                    @var levelTeleports[player][level] += 1
+                @fi
+                @bypass /playsound minecraft:entity.player.teleport master @s ~ ~ ~ 0.2
+                @return
+            @elseif player.getItemInMainHand().getItemType() == "GOLD_INGOT"
+                @if player.isOnGround() == false
+                    @player &cYou must be on the ground to set a custom position!
+                    @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.4 1
+                    @return
+                @fi
+
+                @player &#E5B932Setting custom position for jump &l{{level + 1}}&#E5B932!
+                @bypass /playsound minecraft:ui.button.click master @s ~ ~ ~ 0.75 1
+                @define Position customPosition = player.getPosition()
+                
+                @for Int k in list::range(0, 4)
+                    @delay 1
+                    @if player.getPosition() != customPosition
+                        @player &cYou must be standing still to set a custom position!
+                        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.4 1
+                        @return
+                    @fi
+                @done
+
+                @var playerLevelPositions[player][level] = customPosition
+                @player &aCustom position for jump &l{{level + 1}}&a set!
+                @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.4 1
+                @return
+            @elseif player.getItemInMainHand().getItemType() == "REDSTONE"
+                @var playerLevelPositions[player][level] = levelPositions[level]
+                @player &cCustom position for jump &l{{level + 1}}&c removed!
+                @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.4 1
+                @return
+            @elseif player.getItemInMainHand().getItemType() == "BARRIER"
+                @var touchLevel(player, -1)
+                @var player.teleport(Position(4835.5, 116.0, 2962.5, -180.0, 0.0, "Epsilon"))
+                @bypass /playsound minecraft:entity.player.teleport master @s ~ ~ ~ 0.2
+                @player &cYou have left jump &l{{level + 1}}&c!
+                @return
+            @fi
+        @fi
+    @done
+@done

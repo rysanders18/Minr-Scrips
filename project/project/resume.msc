@@ -1,0 +1,11 @@
+# resume()
+# Continue playback from where pause() stopped it. runFrame() picks
+# up at currentFrame (re-rendering that one frame, a visual no-op
+# since the transforms are idempotent).
+@using project
+@fast
+
+@if paused
+    @var paused = false
+    @var runFrame()
+@fi

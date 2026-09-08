@@ -1,0 +1,93 @@
+# selectPhase()
+# The "grab a block from the box" phase, run by buildPhase before the
+# build timer. Stocks the 8 party-box pedestals (boxSlotPos) with
+# weighted-random picks from the block pool (poolWeights: simple blocks
+# common, lava/piston rare; duplicates allowed), clears inventories so
+# blocks can't be stockpiled across rounds, and teleports the whole
+# roster to the top of the drop tube in adventure. Players click a
+# pedestal to claim it (selectBlock) — first come, first served, one
+# each. Returns once every online runner has grabbed a block or
+# selectSeconds runs out; whoever timed out gets nothing this build
+# phase. MSC has no break, so the early exit works by skipping the
+# @delay once everyone has picked — the tail of the loop drains
+# instantly. Pedestals are cleared to air on the way out; buildPhase
+# then moves everyone to buildSpawn.
+@using uch
+@fast
+
+# Creates dropper holes
+@var createHoles()
+
+# Stock the pedestals with a weighted pick: roll in [0, totalWeight)
+# (math::random on Doubles is exclusive-upper), then walk the cumulative
+# weights — the winner is the last index whose cumulative start the roll
+# reached (MSC has no break, so the loop just keeps re-assigning pick
+# until the cumulative sum passes the roll).
+@define Int totalWeight = 0
+@for Int w in list::range(0, poolWeights.length())
+    @var totalWeight = totalWeight + poolWeights[w]
+@done
+
+@var slotPick = Int[]
+@for Int i in list::range(0, boxSlotPos.length())
+    @define Int roll = Int(math::random(0D, Double(totalWeight)))
+    @define Int pick = 0
+    @define Int acc = 0
+    @for Int j in list::range(0, poolWeights.length())
+        @if roll >= acc
+            @var pick = j
+        @fi
+        @var acc = acc + poolWeights[j]
+    @done
+    @var slotPick.append(pick)
+    @bypass /setblock {{boxSlotPos[i]}} {{poolBlocks[pick]}}
+@done
+
+@var selectedCount = 0
+@var selectNeeded = 0
+@for Player p in runners
+    @var hasSelected[p] = 0
+    @if p.isOnline()
+        @var selectNeeded = selectNeeded + 1
+        @bypass /clear {{p}}
+        @bypass /gamemode adventure {{p}}
+        @var p.teleport(boxSpawn)
+        @bypass /playsound minecraft:block.ender_chest.open master {{p}} ~ ~ ~ 1 1
+        @bypass /title {{p}} times 0 40 10
+        @bypass /title {{p}} title {"text":"Grab a block!","bold":true,"color":"aqua"}
+        @bypass /title {{p}} subtitle {"text":"First come, first served — {{selectSeconds}} seconds!","color":"yellow"}
+    @fi
+@done
+@var selectActive = true
+
+# Countdown; once everyone has picked the remaining iterations stop
+# delaying, so the loop finishes within a second of the last grab
+@for Int t in list::range(0, selectSeconds)
+    @if selectedCount < selectNeeded
+        @delay 1s
+        @define Int remaining = selectSeconds - t - 1
+        @if remaining > 0 && selectedCount < selectNeeded
+            @for Player p in runners
+                @if hasSelected[p] == 0
+                    @bypass /title {{p}} actionbar {"text":"Grab a block: {{remaining}}s","color":"aqua"}
+                @fi
+            @done
+        @fi
+    @fi
+@done
+@var selectActive = false
+
+# Too slow: no block this round
+@for Player p in runners
+    @if hasSelected[p] == 0 && p.isOnline()
+        @bypass /playsound minecraft:entity.villager.no master {{p}} ~ ~ ~ 1 0.8
+        @bypass /title {{p}} times 0 30 10
+        @bypass /title {{p}} title {"text":"Too slow!","bold":true,"color":"red"}
+        @bypass /title {{p}} subtitle {"text":"No block for you this round.","color":"gray"}
+    @fi
+@done
+
+# Reset the box for next round
+@for Int i in list::range(0, boxSlotPos.length())
+    @bypass /setblock {{boxSlotPos[i]}} minecraft:air
+@done

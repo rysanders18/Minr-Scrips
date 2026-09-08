@@ -1,0 +1,11 @@
+# checkLoop()
+# Reached after the final frame. Port of k/default/check_loop:
+# loop back to the start if looping is set, otherwise stop.
+@using project
+@fast
+
+@if looping
+    @var start()
+@else
+    @var stopAnim()
+@fi

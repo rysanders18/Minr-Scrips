@@ -1,0 +1,6 @@
+# setEntityState(Int newState)
+@using entity_ai
+@fast
+
+@define Int index = getEntityIndex(this.entity.getUniqueId())
+@var entityStates[index] = newState

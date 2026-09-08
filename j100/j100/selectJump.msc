@@ -1,0 +1,38 @@
+# selectJump(Player player)
+# Asks the player for a jump number in chat, then teleports them to it.
+#
+# The reply is matched against String(level + 1) for each of the 100 levels
+# rather than parsed into an Int, so any non-numeric or out-of-range answer
+# simply falls through to the error branch - no cast to fail on.
+#
+# Uses playerLevelPositions[player][level], so a custom position set with the
+# gold ingot (see clickBlock) is honoured.
+
+@using j100
+@fast
+@cooldown 5s
+
+@define String reply
+
+@var hotbarFunction(player)
+
+@player &#d4d4d4---------------------------------
+@player &#d4d4d4● Which jump do you want? Type a number &e1&#d4d4d4-&e100&#d4d4d4 in chat.
+@prompt 20s reply &cYou took too long!
+
+@for Int level in list::range(0, 100)
+    @if reply == String(level + 1)
+        @var touchLevel(player, level)
+        @var player.teleport(playerLevelPositions[player][level])
+        @bypass /playsound minecraft:entity.player.teleport master {{player}} ~ ~ ~ 0.4 1
+        @if levelsCompleted[player][level]
+            @player &#d4d4d4● Teleported to jump &e&l{{level + 1}}&#d4d4d4 &a(already beaten)&#d4d4d4.
+        @else
+            @player &#d4d4d4● Teleported to jump &e&l{{level + 1}}&#d4d4d4 &c(not beaten yet)&#d4d4d4.
+        @fi
+        @return
+    @fi
+@done
+
+@bypass /playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 0.4 1
+@player &c"{{reply}}" is not a jump number. Pick a whole number from 1 to 100.

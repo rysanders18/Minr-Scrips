@@ -1,0 +1,223 @@
+@namespace irodoriAnimation
+
+# =====================================================================
+# irodoriAnimation — colour-burst block_display animation
+# =====================================================================
+# 35 block_display entities sit at one anchor point, tagged iro0..iro34.
+# The tag index IS the index into blockColors — every function here
+# relies on that pairing, so never reorder blockColors without
+# re-running summonBlockDisplays.
+#
+# The animation is two alternating passes over that ring:
+#
+#   scatterBlockDisplays  snaps each display OUT to a random point on the
+#                         ring at scale 0 (invisible) with a random
+#                         tumble, interpolation_duration 0 so the jump is
+#                         instant and unseen.
+#   moveBlockDisplays     interpolates each display back IN to the anchor
+#                         at full scale, sprays its block particle, and
+#                         plays one chime.
+#
+# "# irodori animation.msc" is the driver: it interleaves the two passes
+# and hands each chime pass its own pitch window, so the chime climbs
+# smoothly across the whole animation instead of restarting per pass.
+#
+# Every command is wrapped in `execute in {{animWorld}}` because the
+# driver fires these with @console (so passes overlap), and console has
+# no world context of its own.
+    String armorStandUuid = "bb96b6f9-dde4-4f7e-91ae-3006aa24a7f9"
+
+    # --- placement ---------------------------------------------------
+    String animWorld = "minecraft:theta"
+    String animAnchor = "-1126.55 187.2 604.45"
+
+    # --- chime -------------------------------------------------------
+    String chimeSound = "minecraft:block.beacon.activate"
+    String chimePos = "-1127 186 604"
+    Double chimeVolume = 0.3D
+
+    # Tick gap between displays in a pass. The driver's @delay timeline
+    # is derived from this (35 displays * 2 ticks = 70 ticks a pass), so
+    # changing it means re-timing the driver.
+    Int stepTicks = 2
+
+    # --- geometry ----------------------------------------------------
+    # Ring the displays scatter to / spray particles from.
+    Double ringRadius = 2D
+    Double ringHeight = 1.14D
+    # Random tumble applied on scatter (right_rotation quaternion terms).
+    Double spinRange = 3.14D
+    # Visible scale once a display has flown home; 0 while scattered.
+    Double displayScale = 0.2D
+    # Ticks a display takes to interpolate from ring back to the stand.
+    Int interpolationTicks = 34
+    # Ticks a display takes to shrink away once it has landed on the
+    # child, at the end of the final pass. 0 makes them pop instead.
+    Int vanishTicks = 6
+
+    # --- the stand -----------------------------------------------------
+    # Numeric form of the summon anchor. EVERY display transformation is
+    # relative to this point, so moveBlockDisplays has to measure the
+    # stand against it to aim at anything. summonBlockDisplays templates
+    # these, so the anchor has one definition.
+    Double anchorX = -1126.55D
+    Double anchorY = 187.2D
+    Double anchorZ = 604.45D
+
+    # Where the armour stand stands on the ground, and how far shakeStand
+    # lifts it over 2 * riseTicks (up for the first half, down the second).
+    Double standX = -1126.50D
+    Double standGroundY = 186.0D
+    Double standZ = 604.56D
+    Double standRise = 1.0D
+    Int riseTicks = 120
+
+    # Height up the stand the displays fly to. The anchor sits 1.2 blocks
+    # ABOVE the stand's feet, which is why the old fixed drop aimed the
+    # displays into empty air below it. Chest height, not feet — the
+    # colour lands on the child, not around its ankles.
+    Double standAimHeight = 1.1D
+    # Random VERTICAL spread around that aim point, so the 35 arrivals
+    # aren't all at one height. X and Z are exact — the displays converge
+    # on the stand's column, same as they always did.
+    Double standScatter = 0.3D
+
+    # --- colour spiral -----------------------------------------------
+    # One dust_color_transition per ARM per tick orbiting the armour
+    # stand. The three cycles run on unequal periods so the helix never
+    # repeats inside the cutscene: at the opening speed the orbit comes
+    # round every ~40 ticks, the climb every ~80, the radius breath every
+    # ~120. math::sin/cos take DEGREES in MSC, so these are degrees per
+    # tick — but they are accumulated, not multiplied by the tick index,
+    # because spiralSpeedEnd makes the rate vary.
+    Double spiralSpin = 9.0D
+    Double spiralRise = 4.5D
+    Double spiralWeave = 3.0D
+
+    # Every cycle scales up to this by the last tick, on a squared curve
+    # so the acceleration is barely there early and lands at the end.
+    Double spiralSpeedEnd = 3.0D
+    # Progress (0..1) at which the 2nd, 3rd and 4th strand join. The gaps
+    # shorten so the build accelerates instead of ticking evenly.
+    Double spiralArm2 = 0.35D
+    Double spiralArm3 = 0.60D
+    Double spiralArm4 = 0.80D
+    # How much of the orbit offset each arm also takes in the CLIMB, so
+    # the strands ride at different heights. 1.0 is a true multi-start
+    # helix (2 arms exactly antiphase, feet against head); 0.0 puts every
+    # arm at the same height, as a flat ring of points.
+    Double spiralArmRiseSpread = 1.0D
+    # Orbit radius, and how far it breathes in and out around that.
+    Double spiralRadius = 0.45D
+    Double spiralWeaveAmp = 0.18D
+    # Height band the helix sweeps: feet at 0.05, head at 1.85.
+    Double spiralHeightMid = 0.95D
+    Double spiralHeightAmp = 0.90D
+    # Fraction of the radius surrendered by the end, so the colour
+    # closes in on the child instead of orbiting at a fixed distance.
+    Double spiralDrawIn = 0.45D
+    Double sparkScale = 0.9D
+    # Ticks ahead the particle's to_color is taken from, so the motes
+    # carry the colour the armour is about to become.
+    Int spiralLead = 30
+
+    # --- finale --------------------------------------------------------
+    # Ground height the rainbow wheel is drawn at, and the height the
+    # bang goes off at (the child's chest).
+    Double finaleY = 186.2D
+    Double bangY = 186.9D
+
+    # One ring of particles a tick, finaleArms of them, for finaleTicks.
+    # finaleArms must divide by finaleCentres (see phase two below) and
+    # into the hue wheel's band count — 12 gives 4 streams per whirl and
+    # an exact rainbowArmOffset of 10.
+    Int finaleTicks = 96
+    Int finaleArms = 12
+    Double finaleSpin = 11.0D
+    Double finaleScale = 1.2D
+
+    # HARD LIMIT: the room is 7 blocks across with the stand at the
+    # centre, so nothing may pass 3.5 blocks out. finaleSplitRadius +
+    # finaleSubRadius is the furthest anything reaches — keep that sum
+    # under finaleMaxRadius if you retune either.
+    Double finaleMaxRadius = 3.5D
+
+    # Phase one: the arms sweep from finaleRadiusStart out to
+    # finaleSplitRadius (5 blocks across) on an ease-out curve, so they
+    # leave the blast fast and slow as they widen. They arrive on
+    # finaleSplitTick.
+    Double finaleRadiusStart = 0.35D
+    Double finaleSplitRadius = 2.5D
+    Int finaleSplitTick = 24
+
+    # Phase two: finaleCentres equidistant points sit on the split ring,
+    # and each becomes the centre of its own mini spiral. The streams fold
+    # along the ring into the nearest one over the first finaleGather of
+    # the phase, then orbit it, blooming out to finaleSubRadius and
+    # winding back in to nothing as they die.
+    #
+    # finaleArms MUST divide by finaleCentres — that quotient is how many
+    # streams feed each whirl, and they are spread evenly round its orbit.
+    # finaleSplitRadius + finaleSubRadius is the furthest anything gets,
+    # so that sum is what has to stay under finaleMaxRadius.
+    Int finaleCentres = 3
+    Double finaleGather = 0.30D
+    Double finaleSubRadius = 0.9D
+    Double finaleSubSpin = 26.0D
+
+    # Indices into the 120-band hue wheel in finale.msc. rainbowArmOffset
+    # MUST be (bands / finaleArms) to spread the streams evenly round it —
+    # that is why the wheel is 120 bands rather than 60, so 8 streams
+    # divide it exactly. rainbowStep is how many bands the whole wheel
+    # advances per tick; rainbowSubOffset separates the spirals an arm
+    # splits into.
+    Int rainbowStep = 4
+    Int rainbowArmOffset = 10
+    Int rainbowLead = 12
+
+    String[] blockColors = String["red_concrete", "red_terracotta", "orange_terracotta", "smooth_red_sandstone", "orange_concrete", "orange_wool", "honeycomb_block", "raw_gold_block", "horn_coral_block", "yellow_wool", "yellow_concrete", "sponge", "stripped_bamboo_block", "bamboo_block", "melon", "lime_terracotta", "moss_block", "green_wool", "green_concrete", "waxed_weathered_copper_bulb", "waxed_weathered_copper", "stripped_warped_hyphae", "cyan_concrete_powder", "cyan_wool", "lapis_ore", "light_blue_terracotta", "deepslate_lapis_ore", "blue_concrete_powder", "blue_wool", "purple_glazed_terracotta", "purple_wool", "purple_concrete", "stripped_crimson_hyphae", "fire_coral_block", "red_concrete_powder"]
+
+# --- functions -------------------------------------------------------
+
+    # Main function, executes the entire animation
+    irodoriAnimation(Player player)
+
+    # One-time world setup. Safe to re-run: kills the old displays first.
+    summonBlockDisplays()
+
+    # Reset pass: throw every display back out to the ring, invisible.
+    # stepDelay 0 = whole ring in one tick, stepTicks = staggered.
+    scatterBlockDisplays(Int stepDelay)
+
+    # Shrinks each display to scale 0 as it settles onto the child, in
+    # arrival order. Only follows the FINAL pass — start it
+    # interpolationTicks after that pass began.
+    vanishBlockDisplays()
+
+    # How far off the ground the stand is on a given driver tick. Single
+    # source of truth for the lift — shakeStand drives the stand with it,
+    # moveBlockDisplays aims at it.
+    Double standRiseAt(Int tick)
+
+    # Burst pass: fly the ring onto the stand with a chime whose pitch
+    # ramps linearly from pitchStart (first display) to pitchEnd (last).
+    # startTick is this pass's offset from the start of the driver, so
+    # each display can aim at where the stand will BE when it lands.
+    moveBlockDisplays(Player player, Double pitchStart, Double pitchEnd, Int startTick)
+
+    # Fades a mannequin's dyed armour through the colour journey.
+    dyeArmourGradient(String entityUuid)
+
+    # dust_color_transition particles spiralling up, down and around the
+    # same stand, building from one slow strand to four fast ones. Same
+    # length as dyeArmourGradient and indexed in step with it — start
+    # both on the same tick.
+    spiralParticles(String entityUuid)
+
+    shakeStand(String entityUuid, Player player)
+
+    # The last beat: a bang on the child's chest, then rainbow spiral
+    # arms sweeping outward across the ground around the stand.
+    finale(Player player)
+
+@endnamespace

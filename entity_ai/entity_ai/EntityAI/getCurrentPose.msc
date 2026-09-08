@@ -1,0 +1,5 @@
+# entity_ai::EntityPose getCurrentPose()
+@using entity_ai
+@fast
+
+@return this.currentPose

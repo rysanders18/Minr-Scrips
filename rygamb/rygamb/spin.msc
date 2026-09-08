@@ -1,0 +1,88 @@
+# spin(Block block, Player player)
+# Drives the reel animation.
+#
+#  1. rollResult predetermines this spin's result into target1/2/3, so the
+#     odds are fully controlled up front (and we can engineer near-misses).
+#  2. All three reels whir fast, re-rolling a random face each frame.
+#  3. Reels lock left-to-right at lockF1 < lockF2 < lockF3, each snapping to
+#     its predetermined target with a "ker-chunk" (fxReelStop).
+#  4. If the first two reels match (tease == true) the lone spinning reel 3
+#     slows dramatically. This is the "7... 7... will it hit?" anticipation —
+#     it fires for BOTH real triples AND the engineered fake-outs, because at
+#     that moment the animation genuinely doesn't know which it is.
+#  5. Settle on the true result, resolve the combo, apply the outcome.
+#
+# Tunables: the lock frames and the per-frame @delay values below.
+@using rygamb
+@fast
+
+@var spinning[player] = true
+
+@var rollResult(player)
+@define Int t1 = target1[player]
+@define Int t2 = target2[player]
+@define Int t3 = target3[player]
+
+@define Int n = itemList.length()
+@define Boolean firstTwoMatch = t1 == t2
+
+# Frame at which each reel stops re-rolling and holds its target.
+@define Int lockF1 = 10
+@define Int lockF2 = 16
+@define Int lockF3 = 22
+@define Int totalFrames = 24
+
+@define Int r1 = 0
+@define Int r2 = 0
+@define Int r3 = 0
+@define Boolean locked1 = false
+@define Boolean locked2 = false
+@define Boolean locked3 = false
+
+@for Int f in list::range(0, totalFrames)
+    @if f < lockF1
+        @var r1 = Int(math::random(0D, Double(n)))
+    @elseif !locked1
+        @var locked1 = true
+        @var r1 = t1
+        @var fxReelStop(player, 1)
+    @fi
+
+    @if f < lockF2
+        @var r2 = Int(math::random(0D, Double(n)))
+    @elseif !locked2
+        @var locked2 = true
+        @var r2 = t2
+        @var fxReelStop(player, 2)
+    @fi
+
+    @if f < lockF3
+        @var r3 = Int(math::random(0D, Double(n)))
+    @elseif !locked3
+        @var locked3 = true
+        @var r3 = t3
+        @var fxReelStop(player, 3)
+    @fi
+
+    @var updateSlots(block, player, r1, r2, r3)
+    @var fxSpinTick(player)
+
+    # Pacing: fast while all three spin, slower as reels lock, and a long
+    # suspenseful crawl on reel 3 alone when reels 1 & 2 already match.
+    @if f >= lockF2 && !locked3
+        @if firstTwoMatch
+            @delay 5
+        @else
+            @delay 3
+        @fi
+    @elseif f >= lockF1
+        @delay 2
+    @else
+        @delay 1
+    @fi
+@done
+
+@var updateSlots(block, player, t1, t2, t3)
+@define Int outcome = resolveOutcome(t1, t2, t3)
+@var applyOutcome(block, player, outcome)
+@var spinning[player] = false

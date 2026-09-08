@@ -1,0 +1,17 @@
+# Int resolveOutcome(Int s1, Int s2, Int s3)
+# Classifies the final reel combo into an outcome id, read honestly from the
+# symbols themselves (independent of how rollResult chose them):
+#   100 + symbolId : three of a kind  (each symbol is its own jackpot id)
+#   1              : exactly one matching pair
+#   0              : nothing
+# applyOutcome decides how big each three-of-a-kind actually pays.
+@using rygamb
+@fast
+
+@if s1 == s2 && s2 == s3
+    @return 100 + s1
+@fi
+@if s1 == s2 || s1 == s3 || s2 == s3
+    @return 1
+@fi
+@return 0

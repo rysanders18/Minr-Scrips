@@ -1,0 +1,6 @@
+# setRotation(Double rotation)
+# Body yaw written by merge(). Set to -1 to stop writing Rotation.
+@using entity_ai
+@fast
+
+@var this.rotation = rotation

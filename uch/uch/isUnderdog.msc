@@ -1,0 +1,17 @@
+# Boolean isUnderdog(Player player)
+# True when the player is underdogGap (25) or more points behind the
+# current leader among the registered runners — there can be several
+# underdogs at once, or none. Reads live totalScore, which is stable for
+# the whole round because points are only handed out in endRound (which
+# snapshots underdog status before awarding anything).
+@using uch
+@fast
+
+@define Int best = 0
+@for Player p in runners
+    @if totalScore[p] > best
+        @var best = totalScore[p]
+    @fi
+@done
+
+@return best - totalScore[player] >= underdogGap

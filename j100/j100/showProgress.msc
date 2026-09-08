@@ -1,0 +1,61 @@
+# showProgress(Player player)
+# Prints every jump's completion state as a 10x10 grid, plus totals.
+#
+# Level indexing matches goldBlock/clickBlock: level = i * 10 + j, where i is
+# the x-cell (0 = the +X row nearest x=4843) and j is the z-cell. So grid row i
+# holds levels i*10+1 .. i*10+10 in the 1-indexed numbering shown to players.
+#
+# Filled green dot = beaten, hollow red dot = not beaten.
+
+@using j100
+@fast
+@cooldown 3
+
+@define Int completed = 0
+@define Int totalFalls = 0
+@define Int totalTeleports = 0
+@define Int firstUnbeaten = -1
+
+@for Int level in list::range(0, 100)
+    @if levelsCompleted[player][level]
+        @var completed += 1
+    @elseif firstUnbeaten == -1
+        @var firstUnbeaten = level
+    @fi
+    @var totalFalls += levelFalls[player][level]
+    @var totalTeleports += levelTeleports[player][level]
+@done
+
+@player &#d4d4d4---------------------------------
+@player &#d4d4d4● &6&lJUMP 100 &#d4d4d4Progress: &a&l{{completed}}&#d4d4d4/&a&l100 &7({{100 - completed}} left)
+@player &#d4d4d4● Total falls: &c{{totalFalls}} &#d4d4d4| Teleports: &b{{totalTeleports}}
+
+@define String row
+@define String rowLabel
+
+@for Int i in list::range(0, 10)
+    @var rowLabel = String(i * 10 + 1) + "-" + String(i * 10 + 10)
+    @if i == 0
+        @var rowLabel = "  " + rowLabel
+    @elseif i < 9
+        @var rowLabel = " " + rowLabel
+    @fi
+
+    @var row = ""
+    @for Int j in list::range(0, 10)
+        @if levelsCompleted[player][i * 10 + j]
+            @var row = row + "&a● "
+        @else
+            @var row = row + "&c○ "
+        @fi
+    @done
+
+    @player &8{{rowLabel}} &8| {{row}}
+@done
+
+@if completed == 100
+    @player &#d4d4d4● &6&lAll 100 jumps beaten! &#d4d4d4Nice.
+@else
+    @player &#d4d4d4● Lowest unbeaten: &e&l{{firstUnbeaten + 1}} &7(the jump menu picks a random one)
+@fi
+@player &#d4d4d4---------------------------------

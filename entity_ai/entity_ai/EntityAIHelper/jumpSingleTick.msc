@@ -1,0 +1,13 @@
+# Double jumpSingleTick(Double jumpHeight, Int iteration, Double currentValue)
+# Raises the stand by the eased delta for this iteration and returns the
+# new eased height so the caller can feed it back next tick. Gravity
+# (re-enabled by jump()) brings the stand down again afterwards.
+@using entity_ai
+
+@define Int maxValue = math::ceil(jumpHeight * 10)
+
+@define Double timedXValue = ((iteration * jumpHeight) / maxValue)
+@define Double nextValue = easeOutQuad(timedXValue, 0D, jumpHeight)
+
+@bypass /execute as {{this.entity.getUniqueId()}} at @s run teleport ~ ~{{nextValue - currentValue}} ~
+@return nextValue

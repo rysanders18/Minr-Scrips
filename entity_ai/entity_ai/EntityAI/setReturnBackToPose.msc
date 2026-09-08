@@ -1,0 +1,5 @@
+# setReturnBackToPose(Boolean smoothBack)
+@using entity_ai
+@fast
+
+@var this.returnBackToPose = smoothBack
