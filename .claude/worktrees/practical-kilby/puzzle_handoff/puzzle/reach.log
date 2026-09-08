@@ -1,9 +1,0 @@
-Loading phase1...
-Phase1 end: conv=19
-Initial reds: [(6926, 146, 2546), (6926, 148, 2548), (6926, 151, 2545), (6926, 152, 2547), (6927, 146, 2551), (6927, 147, 2545), (6927, 148, 2548), (6930, 146, 2546), (6931, 146, 2550), (6931, 147, 2544), (6931, 148, 2547), (6931, 152, 2548), (6932, 149, 2548)]
-Goal pos int: 10  in reds_ever: False
-Depth 1: frontier=58, visited=59, reds_ever=13, t=0.0s, est_mem=0MB
-Depth 2: frontier=1547, visited=1606, reds_ever=13, t=0.2s, est_mem=1MB
-[depth 3] RED reached (6928, 148, 2548) via: red X-chain (6926, 148, 2548)..(6927, 148, 2548) slide +X×1 [convert: ((6926, 148, 2548), (6927, 148, 2548))]
-Depth 3: frontier=25485, visited=27091, reds_ever=14, t=4.2s, est_mem=13MB
-Depth 4: frontier=295198, visited=322289, reds_ever=14, t=64.7s, est_mem=154MB

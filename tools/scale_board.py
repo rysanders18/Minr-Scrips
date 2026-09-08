@@ -1,6 +1,15 @@
+"""Wrap every rotation/scale/translation entry of the block_display
+`transformation:[...]` matrices in rychess/rychess/__init__.msc with
+`{{value*m}}` so the whole board can be scaled by editing the single
+`@define Float m` at the top of that file. Idempotent: already-wrapped
+values are left alone. Run from the repo root:
+
+    python tools/scale_board.py
+"""
+import os
 import re
 
-path = r"C:\Users\ryanp\code\Minr Scrips\rychess\__init__.msc"
+path = os.path.join(os.path.dirname(__file__), "..", "rychess", "rychess", "__init__.msc")
 
 with open(path, "r", encoding="utf-8") as f:
     content = f.read()

@@ -1,0 +1,52 @@
+# --- Environment / tooling ---
+.venv/
+__pycache__/
+*.pyc
+.claude/
+__MACOSX/
+.DS_Store
+Thumbs.db
+
+# --- Archives and binary caches ---
+*.zip
+*.pkl
+*.pkl.bak
+*.schem
+
+# --- Generated build output (hundreds of MB of /setblock and /fill dumps) ---
+# slimeMaze: everything the generators emit. Only the generators, docs and
+# small registries (solution/splices/starts .txt, slimemaze.nms) are tracked.
+slimeMaze/backup_*/
+slimeMaze/slimemaze/
+slimeMaze/*/slimemaze/
+slimeMaze/*_bak_*/
+slimeMaze/datapack/
+slimeMaze/**/server_export*/
+slimeMaze/**/walls_preview/
+slimeMaze/**/*.log
+# j100: world-build fill dumps and the bindings emitted by gen_interact_imports.py
+j100/setup*.msc
+j100/j100/interactImport*.msc
+j100/scratch_j100.json
+j100/j100_ranking.html
+# project: 283 BDEngine keyframe dumps (~24 MB). keyframe0.msc is kept as a sample.
+project/project/keyframe*.msc
+!project/project/keyframe0.msc
+# mannequin: motion-capture data and the world-build dump
+mannequin/mannequin/# prerecordingSet*.msc
+mannequin/mannequin/# Chess Room.msc
+# video-to-colour frame dumps (output of rytools/MP4 to Hex Codes.py)
+Video to Color list output*.msc
+
+# --- Scratch and stray copies at the repo root ---
+Untitled-*.msc
+test.msc
+/testMannequin.msc
+/the100function.msc
+/index.html
+/index.md
+/script.js
+rychess/textForClaude.md
+
+# --- Nested checkouts of other people's repos (not submodules) ---
+xword/
