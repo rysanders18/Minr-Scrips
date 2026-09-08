@@ -1,4 +1,4 @@
-# cosmeticOre(Player player) https://paste.minr.org/omohoqefef
+# cosmeticOre (Player player) https://paste.minr.org/omohoqefef
 
 @fast
 @using Harha
@@ -15,7 +15,6 @@
     @fi
     @if blocksSinceReset[player] > blocksSinceResetPB[player]
         @var blocksSinceResetPB[player] = blocksSinceReset[player]
-        @var 
         @if blocksSinceResetPB[player] >= 5
             @player
             @player &6New Personal Best: &e&l{{blocksSinceResetPB[player]}}&6 Blocks since last reset!

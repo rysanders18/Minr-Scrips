@@ -1,6 +1,5 @@
-# resetBlocks(Player player, Int giveNumber)
 # seperated to function to allow for cooldown without affecting other scripts in after regions
-
+# resetBlocks(Player player, Int giveNumber)
 @using Harha
 @fast
 

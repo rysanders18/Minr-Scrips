@@ -1,4 +1,4 @@
-# generalTarget(Block block, Int[] directions, Int level, Int height, Player player) https://paste.minr.org/noquxenude
+# generalTarget(Block block, Int[] directions, Int level, Int height, Player player) https://paste.minr.org/zagipubugo
 @using Harha
 @fast
 
@@ -68,11 +68,9 @@
         @var globalBlocks += 1
         @var blocksThisStage[player] += 1
         @var blocksThisStageGlobal[level] += 1
-        
+
         # Handles cosmetics
-        @if cosmeticSwap100[player] == true && blockSelection != "blue_ice" && blockSelection != "slime_block"
-            @var cosmetic100(player)
-        @elseif cosmeticSwap[player] == true
+        @if cosmeticSwap == true
             @if (grateList.contains(blockSelection))
                 @var cosmeticCopper(player)
             @elseif (coralList.contains(blockSelection))
@@ -95,12 +93,10 @@
                 @var cosmeticPumpkin(player)
             @elseif (paleGardenList.contains(blockSelection))
                 @var cosmeticPaleGarden(player)
-            @elseif (froglightList.contains(blockSelection))
-                @var cosmeticFroglight(player)
             @fi
         @fi
-        
-        
+
+
         @if player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
             @if level >= 30 && level <= 39
                 @if bootsObtained == true
@@ -216,6 +212,6 @@
     
     # get current adjacent block
     @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
-    
+
     @var anticheat(adjacentBlock, player)
 @done

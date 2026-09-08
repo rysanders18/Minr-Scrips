@@ -1,0 +1,31 @@
+# calculate100(Player player) https://paste.minr.org/lalapajuha
+
+@using Harha
+@fast
+
+@define Float progress = 0.0
+# (20%) Even Harder Hat Completion: Not Completed
+# (20%) Cosmetics Unlocked: xx/12
+# (20%) Secrets Found: xx/24
+# (20%) Secrets Completed: xx/24
+# (20%) Style Points Unlocked: xxx/4000
+
+@if numberCompletionsMaster[player] >= 1
+    @var progress += 10.0
+@fi
+@if numberCompletionsSoulLink[player] >= 1
+    @var progress += 10.0
+@fi
+
+@var progress += Float((Float(cosmeticsUnlocked[player].sum()) / 12) * 20)
+@var progress += Float((Float(secretsFoundList[player].sum()) / 25) * 20)
+@var progress += Float((Float(secretsCompletedList[player].sum()) / 25) * 20)
+@if stylePointPrestiges[player] >= 1
+    @var progress += 20.0
+@else
+    @var progress += Float((Float(swagPoints[player]) / 4000) * 20)
+@fi
+
+
+@var progress100[player] = progress
+

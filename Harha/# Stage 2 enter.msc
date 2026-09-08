@@ -33,12 +33,11 @@
     
     
     @var stage[player] += 1
-    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
-    
+    @var timeThisStage = (system::currentTimeMillis() - startTime[player])
     @var startTime[player] = system::currentTimeMillis()
     # if this is First time entering stage 2, PB = this time
     @if stage2Entered[player] == false
-        @var stage1PB[player] = timeThisStage
+        @var stage1PB[player] = (timeThisStage)
         @var top100Function(player, 18)
         @if numberCompletions[player] >= 1
             @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
@@ -46,12 +45,12 @@
         @fi
         @var stage2Entered[player] = true
         @var firstTime = true
-        
+
         @bypass /title @s actionbar ["",{"text":"Stage 1 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
     @else
-        @if (timeThisStage) < stage1PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+        @if (timeThisStage) < stage1PB[player] && speedrunTeleportedRecentlyOld == false
             @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage1PB)}})
-            @var stage1PB[player] = timeThisStage
+            @var stage1PB[player] = (timeThisStage)
             @var top100Function(player, 18)
             @if numberCompletions[player] >= 1
                 @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]

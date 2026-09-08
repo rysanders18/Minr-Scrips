@@ -1,0 +1,20 @@
+# cosmeticPumpkin (Player player)
+
+@fast
+@using Harha
+
+@if pumpkinNumber[player] == 5
+    @var pumpkinNumber[player] = 0
+@else
+    @var pumpkinNumber[player] += 1
+@fi
+
+@var blockSelection[player] = pumpkinList[pumpkinNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+    @var numberOfBlocksToGive[player] -= 1
+    @var lastPumpkinNumber[player] = pumpkinNumber[player]
+@fi
+    
+    
+    # @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

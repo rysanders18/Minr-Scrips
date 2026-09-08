@@ -1,0 +1,144 @@
+flowchart TD
+
+%% ===============================
+%% STYLES
+%% ===============================
+classDef death fill:#ffcccc,stroke:#cc0000,stroke-width:2px,color:black
+classDef win fill:#ccffcc,stroke:#006600,stroke-width:2px,color:black
+classDef loop fill:#eeeeee,stroke:#555555,stroke-width:2px,color:black
+
+%% ===============================
+%% MORNING ROUTINE
+%% ===============================
+subgraph MR [Morning Routine]
+  A[Your alarm goes off] --> B[Snooze]
+  A --> C[Get out of bed]
+
+  %% Snooze paths
+  subgraph Snooze
+    B --> B1[Get out of bed]
+    B1 --> B11[Watch TV]
+    B11 --> B111[Skip School]:::death --> B1111[Mom kills you]:::death
+    B11 --> B112[Get on the bus] --> B1121[Starve w/o breakfast]:::death
+
+    B1 --> B12[Eat breakfast]
+    B12 --> B121[Skip School]:::death --> B1211[Mom kills you]:::death
+    B12 --> B122[Get on the bus] --> B1221[No teeth → embarrassment]:::death
+
+    B1 --> B13[Brush teeth]
+    B13 --> B131[Skip School]:::death --> B1311[Mom kills you]:::death
+    B13 --> B132[Get on the bus] --> B1321[Starve w/o breakfast]:::death
+
+    B --> B2[Snooze more]
+    B2 --> B21[Get out of bed]
+    B21 --> B211[Skip School]:::death --> B2111[Mom kills you]:::death
+    B21 --> B212[Get on the bus] --> B2121[Starve w/o breakfast]:::death
+    B2 --> B22[Snooze even more] --> B221[Miss bus → mom kills you]:::death
+  end
+
+  %% Get out of bed paths
+  subgraph GetOutBed
+    C --> C1[Watch TV]
+    C1 --> C11[Eat breakfast]
+    C11 --> C111[Skip School]:::death --> C1111[Mom kills you]:::death
+    C11 --> C112[Get on the bus] --> C1121[No teeth → embarrassment]:::death
+
+    C1 --> C12[Brush teeth]
+    C12 --> C121[Skip School]:::death --> C1211[Mom kills you]:::death
+    C12 --> C122[Get on the bus] --> C1221[Starve w/o breakfast]:::death
+
+    C --> C2[Eat breakfast]
+    C2 --> C21[Watch TV]
+    C21 --> C211[Skip School]:::death --> C2111[Mom kills you]:::death
+    C21 --> C212[Get on the bus] --> C2121[No teeth → embarrassment]:::death
+
+    C2 --> C22[Brush teeth]
+    C22 --> C221[Skip School]:::death --> C2211[Mom kills you]:::death
+    C22 --> C222[Get on the bus] --> C2221[Starve w/o breakfast]:::death
+
+    C --> C3[Brush teeth]
+    C3 --> C31[Watch TV]
+    C31 --> C311[Skip School]:::death --> C3111[Mom kills you]:::death
+    C31 --> C312[Get on the bus] --> C3121[Starve w/o breakfast]:::death
+
+    C3 --> C32[Eat breakfast]
+    C32 --> C321[Skip School]:::death --> C3211[Mom kills you]:::death
+    C32 --> C322[Get on the bus] --> C3221[No teeth → embarrassment]:::death
+  end
+end
+
+%% ===============================
+%% SKIP FIRST PERIOD
+%% ===============================
+subgraph SFP [Skip First Period]
+  D[Skip first period] --> D1[Walk out of school]
+  D1 --> D11[Walk home] --> D111[Mom kills you]:::death
+  D1 --> D12[Walk to gas station]
+  D12 --> D121[Buy 5 chips] --> D1211[Card declines → embarrassment]:::death
+  D12 --> D122[Buy 1 water]
+  D122 --> D1221[Go back to school] --> D12211[Transition → School Fire]:::loop
+  D122 --> D1222[Just keep walking] --> D12221[Police encounter]
+
+  %% Police encounter
+  subgraph Police
+    D12221 --> P1[Police pull you over]
+    P1 --> P11[Run]
+    P11 --> P111[Run faster]
+    P111 --> P1111[Run even faster] --> P11111[Break sound barrier → die]:::death
+    P111 --> P1112[Turn yourself in] --> P11121[Death penalty for speeding]:::death
+    P1 --> P12[Turn yourself in] --> P121[Death penalty for fleeing police]:::death
+    P1 --> P13[Stay and talk] --> P131[WIN: Jail for truancy]:::win
+  end
+end
+
+%% ===============================
+%% SCHOOL FIRE SEQUENCE
+%% ===============================
+subgraph SF [School Fire Sequence]
+
+  %% Homeroom
+  subgraph Homeroom
+    H[Go to Homeroom]
+    H --> H1[Follow teacher’s orders]
+    H1 --> H11[Wait in line] --> H111[Roof collapses]:::death
+    H1 --> H12[Push ahead] --> H121[Roof collapses]:::death
+    H1 --> H13[Suggest window] --> H131[Jump out window]:::death
+    H --> H2[Run out immediately] --> H21[Slip and die]:::death
+    H --> H3[Hide under desk] --> H31[Fire finds you]:::death
+  end
+
+  %% Bathroom
+  subgraph Bathroom
+    BATH[Hide in bathroom]
+    BATH --> B1[Call 911] --> B11[Phone dead → run] --> B111[Slip and die]:::death
+    BATH --> B12[Stay in bathroom] --> B121[Fire cooks you]:::death
+  end
+
+  %% Hallways
+  subgraph Hallways
+    HW[Walk in hallways]
+    HW --> HW1[Say bathroom] --> HW11[Fridge explodes]:::death
+    HW --> HW2[Tell truth] --> HW21[Fridge explodes]:::death
+  end
+
+  %% Study
+  subgraph Study
+    ST[Go to Study]
+    ST --> ST1[Run through fire] --> ST11[Combust instantly]:::death
+    ST --> ST2[Barricade room] --> ST21[Roast alive]:::death
+    ST --> ST3[Climb vents] --> ST31[Stuck, crispy]:::death
+  end
+
+  %% Friends
+  subgraph Friends
+    F[Meet with Friends]
+    F --> F1[Follow group To be expanded]:::loop
+    F --> F2[Be the hero To be expanded]:::loop
+    F --> F3[Call 911 To be expanded]:::loop
+  end
+end
+
+%% Cross connections
+D12211 --> SF
+D12221 -.-> SF
+

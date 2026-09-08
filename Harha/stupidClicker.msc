@@ -1,0 +1,85 @@
+# stupidClicker(Player player, Block thisBlock)
+
+@fast
+@using Harha
+
+# @define Block thisBlock = Block(block.getX(), block.getY(), block.getZ(), block.getWorld())
+
+@define BlockLocation[] clickerBlockLocation = BlockLocation[BlockLocation(-4628, 93, 5072 , "Theta_the_end"), BlockLocation(-4627, 93, 5072 , "Theta_the_end"), BlockLocation(-4626, 93, 5072 , "Theta_the_end"), BlockLocation(-4628, 92, 5072, "Theta_the_end"), BlockLocation(-4627, 92, 5072, "Theta_the_end"), BlockLocation(-4626, 92, 5072 , "Theta_the_end"), BlockLocation(-4628, 91, 5072, "Theta_the_end"), BlockLocation(-4627, 91, 5072, "Theta_the_end"), BlockLocation(-4626, 91, 5072 , "Theta_the_end")]
+@define String[] woolList1 = String["red_wool", "orange_wool", "yellow_wool", "lime_wool", "light_blue_wool", "cyan_wool", "blue_wool", "purple_wool", "magenta_wool"]
+@define Int[] order = Int[6, 5, 3, 8, 1, 7, 2, 0, 6, 5, 3, 8, 1, 7, 2, 0, 6, 7, 8, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 8, 3, 5, 0, 2, 3, 5, 6, 8, 3, 5, 0, 2, 3, 5, 4, 4, 4]
+@define BlockLocation thisBlockLocation = thisBlock.getLocation()
+
+@if stupidMapClickerTime == true && stupidMapClickerCount != 44
+    @if thisBlock.getBlockType() == "TARGET"
+        @var thisBlockLocation.set(woolList1[order[stupidMapClickerCount]])
+        # @var clickerBlockLocation[order[stupidMapClickerCount + 2]].set("white_wool")
+        @var clickerBlockLocation[order[stupidMapClickerCount + 2]].set(woolList1[order[stupidMapClickerCount + 2]].substring(0, woolList1[order[stupidMapClickerCount + 2]].length() - 4) + "glazed_terracotta")
+        @if stupidMapClickerCount == 43
+            @var clickerBlockLocation[order[stupidMapClickerCount + 1]].set("minecraft:diamond_block")
+        @else
+            @var clickerBlockLocation[order[stupidMapClickerCount + 1]].set("minecraft:target")
+        @fi
+        @var stupidMapClickerCount += 1
+
+        @bypass playsound minecraft:entity.chicken.egg master @a[distance=..15] -4627 92 5072 1 {{Float(stupidMapClickerCount) / Float(order.length()) * 1.5 + 0.5}}
+        @bypass playsound minecraft:block.note_block.hat master @a[distance=..15] -4627 92 5072 1 {{Float(stupidMapClickerCount) / Float(order.length()) * 1.5 + 0.5}}
+
+    @else
+        @bypass playsound minecraft:block.note_block.didgeridoo master @a[distance=..15] -4627 92 5072 1 {{musicNotes[24 - (stupidMapClickerFails * 3)]}}
+        @var stupidMapClickerFails += 1
+        
+        @if stupidMapClickerFails >= 5
+            @var stupidMapClickerTime = false
+            @var stupidMapClickerCount = 0
+            @var stupidMapClickerFails = 0
+            @var BlockLocation(-4629, 91, 5072, "Theta_the_end").set("red_stained_glass")
+            @var BlockLocation(-4629, 92, 5072, "Theta_the_end").set("red_stained_glass")
+            @var BlockLocation(-4629, 93, 5072, "Theta_the_end").set("red_stained_glass")
+            @var BlockLocation(-4625, 91, 5072, "Theta_the_end").set("red_stained_glass")
+            @var BlockLocation(-4625, 92, 5072, "Theta_the_end").set("red_stained_glass")
+            @var BlockLocation(-4625, 93, 5072, "Theta_the_end").set("red_stained_glass")
+            @bypass setblock -4627 92 5073 minecraft:polished_blackstone_button[face=wall,facing=south,powered=false]
+            @bypass title @s actionbar ["",{"text":"You clicked 5 wool blocks!","bold":true,"underlined":true,"color":"#FF5733"}]
+            @bypass playsound minecraft:block.respawn_anchor.deplete master @a[distance=..15] -4627 92 5072 1 1.25
+            @for Int i in list::range(0, 9)
+                @var clickerBlockLocation[i].set(woolList1[i])
+            @done
+        @fi
+    @fi
+@elseif stupidMapClickerTime == true && stupidMapClickerCount == 44
+    @bypass playsound minecraft:block.note_block.bell master @a[distance=..15] -4627 92 5072 1 {{musicNotes[19]}}
+    @bypass playsound minecraft:block.note_block.pling master @a[distance=..15] -4627 92 5072 1 {{musicNotes[24]}}
+    @player &eYou beat it in &e&l{{Float(stupidMapClickerTimeNumber1) / 20}} &eseconds!
+    @var stupidMapClickerTime = false
+    @var stupidMapClickerCount = 0
+    @var stupidMapClickerFails = 0
+    
+    @bypass playsound minecraft:block.end_portal.spawn master @a[distance=..15] -4627 92 5072 1 1.5
+    @delay 30
+    @for Int i in list::range(0, 9)
+        @var clickerBlockLocation[i].set("air")
+        @delay 1
+    @done
+
+    @var BlockLocation(-4629, 91, 5072, "Theta_the_end").set("pink_stained_glass")
+    @var BlockLocation(-4629, 92, 5072, "Theta_the_end").set("pink_stained_glass")
+    @var BlockLocation(-4629, 93, 5072, "Theta_the_end").set("pink_stained_glass")
+    @var BlockLocation(-4625, 91, 5072, "Theta_the_end").set("pink_stained_glass")
+    @var BlockLocation(-4625, 92, 5072, "Theta_the_end").set("pink_stained_glass")
+    @var BlockLocation(-4625, 93, 5072, "Theta_the_end").set("pink_stained_glass")
+
+    @delay 100
+    @for Int i in list::range(0, 9)
+        @var clickerBlockLocation[i].set(woolList1[i])
+        @bypass playsound minecraft:entity.chicken.egg master @a[distance=..15] -4627 92 5072 1 {{(Float(i)/8) + 0.5}}
+        @delay 1
+    @done
+    @bypass setblock -4627 92 5073 minecraft:polished_blackstone_button[face=wall,facing=south,powered=false]
+    @var BlockLocation(-4629, 91, 5072, "Theta_the_end").set("red_stained_glass")
+    @var BlockLocation(-4629, 92, 5072, "Theta_the_end").set("red_stained_glass")
+    @var BlockLocation(-4629, 93, 5072, "Theta_the_end").set("red_stained_glass")
+    @var BlockLocation(-4625, 91, 5072, "Theta_the_end").set("red_stained_glass")
+    @var BlockLocation(-4625, 92, 5072, "Theta_the_end").set("red_stained_glass")
+    @var BlockLocation(-4625, 93, 5072, "Theta_the_end").set("red_stained_glass")
+@fi

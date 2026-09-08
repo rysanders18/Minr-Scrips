@@ -1,0 +1,60 @@
+# Script on Computer Entity
+@using Harha
+@fast
+@cooldown 5s
+
+@define String name
+@bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+@player &#D3D6E0&lEnter a username or UUID:
+@prompt 20s name
+@define Player user = Player(name.toLowerCase())
+@if user == null
+    @if usernameList1.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList1.find(name.toLowerCase())])
+    @elseif usernameList2.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList2.find(name.toLowerCase())])
+    @elseif usernameList3.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList3.find(name.toLowerCase())])
+    @elseif usernameList4.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList4.find(name.toLowerCase())])
+    @elseif usernameList5.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList5.find(name.toLowerCase())])
+    @elseif usernameList6.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList6.find(name.toLowerCase())])
+    @elseif usernameList7.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList7.find(name.toLowerCase())])
+    @elseif usernameList8.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList8.find(name.toLowerCase())])
+    @elseif usernameList9.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList9.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList10.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList11.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList12.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList13.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList14.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList15.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList16.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList17.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList18.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList19.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList20.find(name.toLowerCase())])
+    @else
+        @player &c{{name}} has not joined the map yet!
+        # @player &cGet uuid from https://namemc.com/profile/{{name}}.1
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s
+        @return
+    @fi
+@fi
+
+@var pcStats(0, user, player)

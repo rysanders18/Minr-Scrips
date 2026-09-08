@@ -1,22 +1,12 @@
 @using Harha
 @fast
-# pcStats(Int pcSelect, Player user, Player player) https://paste.minr.org/erukuhuhol
+# pcStats(Int pcSelect, Player user, Player player) https://paste.minr.org/manufogalu
 # .      .
 @define Int secretsFound
 @define Int secretsCompleted
 @define Double noteInt
 @var secretsFound = secretsFoundList[user].sum()
 @var secretsCompleted = secretsCompletedList[user].sum()
-
-@if secretsCompleted < pbSecretsCompleted[user]
-    @var secretsCompleted = pbSecretsCompleted[user]
-@fi
-
-@if secretsFound < pbSecretsFound[user]
-    @var secretsFound = pbSecretsFound[user]
-@fi
-
-@bypass /particle minecraft:scrape -9224 96.5 9713 0 0 0 10 10
 
 @define Int bestHardestHatRun = 0
 @for Int i in list::range(0, 69)
@@ -88,7 +78,7 @@
 @var calculate100(user)
 
 # 0 = Main Screen
-@if pcSelect == 0
+@if pcSelect == 0 
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
@@ -99,9 +89,9 @@
         @player &#ffc71d✯ Certified Trackpad Victor!
     @fi
     @player
-    
-    
-    
+
+
+
     @chatscript 180s group12 pcStats(7, user, player)
     @if progress100[user] >= 100.0
         @player &#917E9C*&#D3D6E0 Progress to 100% completion: &#ffd700&l100.0%
@@ -110,9 +100,9 @@
     @fi
     @chatscript 180s group1 pcStats(1, user, player)
     @if numberCompletions[user] >= 10
-        @player &#917E9C*&#D3D6E0 Times completed map: &#ffd700&l{{formatNumber(String(numberCompletions[user]))}}
+        @player &#917E9C*&#D3D6E0 Times completed map: &#ffd700&l{{numberCompletions[user]}}
     @else
-        @player &#917E9C*&#D3D6E0 Times completed map: &#8596A6&l{{formatNumber(String(numberCompletions[user]))}}
+        @player &#917E9C*&#D3D6E0 Times completed map: &#8596A6&l{{numberCompletions[user]}}
     @fi
     @chatscript 180s group2 pcStats(2, user, player)
     @if cosmeticsUnlocked[user].sum() == 12
@@ -124,34 +114,35 @@
     @if stylePointPrestiges[user] >= 1
         @player &#917E9C*&#D3D6E0 Style Prestiges: &#ffd700&l{{stylePointPrestiges[user]}}
     @else
-        @player &#917E9C*&#D3D6E0 Style Points: &#8596A6&l{{formatNumber(String(swagPoints[user]))}}/4,000
+        @player &#917E9C*&#D3D6E0 Style Points: &#8596A6&l{{formatNumber(String(swagPoints[user]))}}/4,000 
     @fi
     @if secretsCompleted >= 25
         @player &#D3D6E0 &#D3D6E0 Secrets completed: &#ffd700&l25/25
     @else
         @player &#D3D6E0 &#D3D6E0 Secrets completed: &#8596A6&l{{secretsCompleted}}/25
     @fi
-    @player
+    @player 
     @chatscript 180s group4 pcStats(4, user, player)
-    @player &#917E9C*&#D3D6E0 Total Falls: &#8596A6&l{{formatNumber(String(totalFalls[user]))}}
+    @player &#917E9C*&#D3D6E0 Total Falls: &#8596A6&l{{totalFalls[user]}}
     
-    
+
     @if pbFalls[user] != 1000000000
         @chatscript 180s group1238 pcStats(8, user, player)
-        @player &#D3D6E0 &#D3D6E0 PB Falls: &#8596A6&l{{formatNumber(String(pbFalls[user]))}}
+        @player &#D3D6E0 &#D3D6E0 PB Falls: &#8596A6&l{{pbFalls[user]}}
     @fi
-    
+
     @chatscript 180s group1012332 pcStats(9, user, player)
-    @player &#917E9C*&#D3D6E0 Total Blocks placed: &#8596A6&l{{formatNumber(String(totalBlocks[user]))}}
+    @player &#917E9C*&#D3D6E0 Total Blocks placed: &#8596A6&l{{totalBlocks[user]}}
+
     @if pbBlocks[user] != 1000000000
-        @player &#D3D6E0 &#D3D6E0 PB Blocks placed: &#8596A6&l{{formatNumber(String(pbBlocks[user]))}}
+        @player &#D3D6E0 &#D3D6E0 PB Blocks placed: &#8596A6&l{{pbBlocks[user]}}
     @fi
-    
-    @player
+
+    @player 
     @chatscript 180s group5 pcStats(5, user, player)
     @player &#917E9C*&#D3D6E0 Fastest Times:
     @if numberCompletionsUMM[user] >= 1
-        @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: &#ffd700&lCompleted!
+        @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: &#ffd700&l{{allLevels[bestHardestHatRun]}}
     @else
         @player &#D3D6E0 &#D3D6E0 Furthest Hardest Hat Run: {{allLevels[bestHardestHatRun]}}
     @fi
@@ -160,7 +151,7 @@
     
     # @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
     
-    # Times Completed Map
+# Times Completed Map
 @elseif pcSelect == 1
     
     @var noteInt = math::random(0.0D, 20.0D)
@@ -173,7 +164,7 @@
         @player &#ffc71d✯ Certified Trackpad Victor!
     @fi
     @player
-    
+
     @player &#D3D6E0&lTotal Map &#D3D6E0completions: &#8596A6&l{{numberCompletions[user]}}
     @player &a&lHarder Hat &#D3D6E0completions: &#8596A6&l{{numberCompletionsNormal[user]}}
     @player &6&lEven Harder Hat &#D3D6E0completions: &#8596A6&l{{numberCompletionsMaster[user]}}
@@ -185,9 +176,9 @@
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
     # @player &#8596A6&l-&#8694A5&l-&#8792A4&l-&#8890A4&l-&#898EA3&l-&#8A8CA2&l-&#8B8AA1&l[&#8C88A0&lS&#8D869F&lt&#8E849F&la&#8F829E&lt&#90809D&li&#917E9C&ls&#90809D&lt&#8F829E&li&#8E849F&lc&#8D869F&ls&#8C88A0&l]&#8B8AA1&l-&#8A8CA2&l-&#898EA3&l-&#8890A4&l-&#8792A4&l-&#8596A6&l-
     
-    
+
 @elseif pcSelect == 2
-    
+
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
@@ -203,7 +194,7 @@
     @else
         @player &#7C5AC9&lA&#8A5CCF&lm&#985ED5&le&#A661DB&lt&#B463E1&lh&#C265E7&ly&#D067ED&ls&#DE6AF3&lt&#FA6EFF&l: &a{{numberCompletions[user]}}/1 Map completions. ✔
     @fi
-    
+
     @if numberCompletions[user] <= 2
         @player &#96B345&lA&#99AD50&lz&#9CA75B&la&#9FA165&ll&#A29A70&le&#A5947B&la &#A88E86&lL&#AB8890&le&#AE829B&la&#B17CA6&lv&#B475B1&le&#B76FBB&ls&#BD63D1&l: &c{{numberCompletions[user]}}/3 Map completions. ✕
     @else
@@ -215,9 +206,9 @@
     @else
         @player &#D4D4D4&lO&#D1C8A5&lr&#CEBD76&le &#CBB147&lB&#B2B150&ll&#8DB875&lo&#68BE9A&lc&#4ABEA7&lk&#37B381&ls&#129C36&l: &a{{numberCompletions[user]}}/10 Map completions. ✔
     @fi
-    
-    @player
-    
+
+    @player 
+
     @if swagPoints[user] <= 499 && stylePointPrestiges[user] < 1
         @player &#9209FF&lO&#8D0BF8&lb&#880DF1&ls&#830FEB&li&#7E11E4&ld&#7913DD&li&#7415D6&la&#6F17CF&ln &#6D17CE&lB&#7015D1&ll&#7313D4&lo&#7611D7&lc&#790EDA&lk&#7C0CDD&ls&#8208E3&l: &c{{formatNumber(String(swagPoints[user]))}}/500 Style Points. ✕
     @elseif stylePointPrestiges[user] >= 1
@@ -243,39 +234,39 @@
     @fi
     
     @player
-    
+
     @if secretsCompleted <= 0
         @player &#A8201F&lN&#9C1817&le&#8F1010&lt&#830808&lh&#760000&le&#5E1F21&lr &#463D41&lB&#2E5C62&ll&#167A82&lo&#158282&lc&#148982&lk&#119882&ls: &c{{secretsCompleted}}/1 Secrets completed. ✕
     @else
         @player &#A8201F&lN&#9C1817&le&#8F1010&lt&#830808&lh&#760000&le&#5E1F21&lr &#463D41&lB&#2E5C62&ll&#167A82&lo&#158282&lc&#148982&lk&#119882&ls: &a{{secretsCompleted}}/1 Secrets completed. ✔
     @fi
-    
+
     @if secretsCompleted <= 2
         @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &c{{secretsCompleted}}/3 Secrets completed. ✕
     @else
         @player &#E38627&lP&#D88A34&la&#CD8E41&lr&#C3924F&lt&#B8965C&li&#AD9A69&lc&#A29E76&ll&#98A384&le &#8DA791&lG&#82AB9E&ll&#77AFAB&la&#6CB3B8&ls&#62B7C6&ls&#4CBFE0&l: &a{{secretsCompleted}}/3 Secrets completed. ✔
     @fi
-    
+
     @if secretsCompleted <= 9
         @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &c{{secretsCompleted}}/10 Secrets completed. ✕
     @else
         @player &#ED1C24&lR&#F64E26&la&#FF7F27&li&#FFB914&ln&#FFF200&lb&#91D226&lo&#22B14C&lw &#11AA9A&lW&#00A2E8&lo&#3E7ED9&lo&#7C5AC9&ll&#FA6EFF&l: &a{{secretsCompleted}}/10 Secrets completed. ✔
     @fi
-    
+
     @player
-    
+
     @if numberCompletionsSoulLink[user] == 0
         @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &cHarder Hats not completed. ✕
     @else
         @player &#8591FF&lS&#8E99F8&lc&#98A2F0&lu&#A1AAE9&ll&#ABB3E1&lk &#B4BBDA&lC&#BDC4D2&la&#C7CCCB&lt&#D0D5C3&la&#D9DDBC&ll&#E3E6B4&ly&#ECEEAD&ls&#FFFF9E&lt: &aHarder Hats completed. ✔
     @fi
-    
+
     @if numberCompletionsMaster[user] == 0
         @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &cEven Harder Hat not completed. ✕
     @else
         @player &#DB7A52&lC&#D57F5D&lo&#CF8567&lp&#C88A72&lp&#C28F7C&le&#B0A082&lr &#9DB088&lG&#8BC18D&lr&#78D193&la&#73CC98&lt&#6EC79C&le&#63BDA5&l: &aEven Harder Hat completed. ✔
     @fi
-    
+
     @if pbFalls[user] >= 101
         @if pbFalls[user] == 1000000000
             @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &cBeat in <= 100 falls. ✕
@@ -285,13 +276,13 @@
     @else
         @player &#ED1C24&l&nC&#FE7727&l&nu&#FFAB18&l&ns&#FFE006&l&nt&#BBDE17&l&no&#55C03A&l&nm&r &#1AAE70&lG&#0AA7B8&ll&#1397E3&la&#4C76D5&ls&#865CCD&ls&#FA6EFF&l: &aBeat in <= 100 falls. (Best = {{formatNumber(String(pbFalls[user]))}}) ✔
     @fi
-    
-    @player
+
+    @player 
     @chatscript 180s group12 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 3
-    
+
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
@@ -305,15 +296,15 @@
     
     @define Int[] tempEarned = Int[]
     @define Int[] tempTotal = Int[]
-    
+
     @for Int level in list::range(0,70)
-        
+
         @define Int[] thresholds = Int[]
         @define Int[] rewards = Int[]
         @define Int startIndex = 0
         @define Int pointsToEarn = 0
         @define Int totalPoints = 0
-        
+
         @if level == 0
             @var thresholds = l101Thresholds
             @var rewards = l101Rewards
@@ -595,7 +586,7 @@
             @var rewards = l710Rewards
             @var startIndex = l710StartIndex
         @fi
-        
+
         @for Int i in list::range(0, thresholds.length())
             @if claimedStylePoints[user][startIndex + rewards.length() - i - 1] == true
                 @var totalPoints += rewards[rewards.length() - 1 - i]
@@ -608,14 +599,14 @@
         @var tempEarned.append(pointsToEarn)
         @var tempTotal.append(totalPoints)
     @done
-    
+
     @chatscript 180s pctp1 pcTeleport(allLevels[0], player)
     @if tempTotal[0] == tempEarned[0]
         @player &#917E9C*&#D3D6E0 {{allLevels[0]}}: &a({{tempEarned[0]}}/{{tempTotal[0]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[0]}}: &{{colorList[Int((Float(tempEarned[0]) / Float(tempTotal[0])) * 12)]}}({{tempEarned[0]}}/{{tempTotal[0]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp2 pcTeleport(allLevels[3], player)
     @if tempTotal[3] == tempEarned[3]
         @player &#917E9C*&#D3D6E0 {{allLevels[3]}}: &a({{tempEarned[3]}}/{{tempTotal[3]}}) ✔
@@ -629,89 +620,89 @@
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[4]}}: &{{colorList[Int((Float(tempEarned[4]) / Float(tempTotal[4])) * 12)]}}({{tempEarned[4]}}/{{tempTotal[4]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp4 pcTeleport(allLevels[4], player)
     @if tempTotal[8] == tempEarned[8]
         @player &#917E9C*&#D3D6E0 {{allLevels[8]}}: &a({{tempEarned[8]}}/{{tempTotal[8]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[8]}}: &{{colorList[Int((Float(tempEarned[8]) / Float(tempTotal[8])) * 12)]}}({{tempEarned[8]}}/{{tempTotal[8]}}) ✕
     @fi
-    
+
     @player
-    
+
     @chatscript 180s pctp5 pcTeleport(allLevels[10], player)
     @if tempTotal[10] == tempEarned[10]
         @player &#917E9C*&#D3D6E0 {{allLevels[10]}}: &a({{tempEarned[10]}}/{{tempTotal[10]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[10]}}: &{{colorList[Int((Float(tempEarned[10]) / Float(tempTotal[10])) * 12)]}}({{tempEarned[10]}}/{{tempTotal[10]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp6 pcTeleport(allLevels[12], player)
     @if tempTotal[12] == tempEarned[12]
         @player &#917E9C*&#D3D6E0 {{allLevels[12]}}: &a({{tempEarned[12]}}/{{tempTotal[12]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[12]}}: &{{colorList[Int((Float(tempEarned[12]) / Float(tempTotal[12])) * 12)]}}({{tempEarned[12]}}/{{tempTotal[12]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp7 pcTeleport(allLevels[13], player)
     @if tempTotal[13] == tempEarned[13]
         @player &#917E9C*&#D3D6E0 {{allLevels[13]}}: &a({{tempEarned[13]}}/{{tempTotal[13]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[13]}}: &{{colorList[Int((Float(tempEarned[13]) / Float(tempTotal[13])) * 12)]}}({{tempEarned[13]}}/{{tempTotal[13]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp8 pcTeleport(allLevels[14], player)
     @if tempTotal[14] == tempEarned[14]
         @player &#917E9C*&#D3D6E0 {{allLevels[14]}}: &a({{tempEarned[14]}}/{{tempTotal[14]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[14]}}: &{{colorList[Int((Float(tempEarned[14]) / Float(tempTotal[14])) * 12)]}}({{tempEarned[14]}}/{{tempTotal[14]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp9 pcTeleport(allLevels[15], player)
     @if tempTotal[15] == tempEarned[15]
         @player &#917E9C*&#D3D6E0 {{allLevels[15]}}: &a({{tempEarned[15]}}/{{tempTotal[15]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[15]}}: &{{colorList[Int((Float(tempEarned[15]) / Float(tempTotal[15])) * 12)]}}({{tempEarned[15]}}/{{tempTotal[15]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp10 pcTeleport(allLevels[16], player)
     @if tempTotal[16] == tempEarned[16]
         @player &#917E9C*&#D3D6E0 {{allLevels[16]}}: &a({{tempEarned[16]}}/{{tempTotal[16]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[16]}}: &{{colorList[Int((Float(tempEarned[16]) / Float(tempTotal[16])) * 12)]}}({{tempEarned[16]}}/{{tempTotal[16]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp11 pcTeleport(allLevels[18], player)
     @if tempTotal[18] == tempEarned[18]
         @player &#917E9C*&#D3D6E0 {{allLevels[18]}}: &a({{tempEarned[18]}}/{{tempTotal[18]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[18]}}: &{{colorList[Int((Float(tempEarned[18]) / Float(tempTotal[18])) * 12)]}}({{tempEarned[18]}}/{{tempTotal[18]}}) ✕
     @fi
-    
+
     @player
-    
+
     @chatscript 180s pctp12 pcTeleport(allLevels[22], player)
     @if tempTotal[22] == tempEarned[22]
         @player &#917E9C*&#D3D6E0 {{allLevels[22]}}: &a({{tempEarned[22]}}/{{tempTotal[22]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[22]}}: &{{colorList[Int((Float(tempEarned[22]) / Float(tempTotal[22])) * 12)]}}({{tempEarned[22]}}/{{tempTotal[22]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp13 pcTeleport(allLevels[24], player)
     @if tempTotal[24] == tempEarned[24]
         @player &#917E9C*&#D3D6E0 {{allLevels[24]}}: &a({{tempEarned[24]}}/{{tempTotal[24]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[24]}}: &{{colorList[Int((Float(tempEarned[24]) / Float(tempTotal[24])) * 12)]}}({{tempEarned[24]}}/{{tempTotal[24]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp14 pcTeleport(allLevels[29], player)
     @if tempTotal[29] == tempEarned[29]
         @player &#917E9C*&#D3D6E0 {{allLevels[29]}}: &a({{tempEarned[29]}}/{{tempTotal[29]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[29]}}: &{{colorList[Int((Float(tempEarned[29]) / Float(tempTotal[29])) * 12)]}}({{tempEarned[29]}}/{{tempTotal[29]}}) ✕
     @fi
-    
-    @player
+
+    @player 
     
     @chatscript 180s pctp15 pcTeleport(allLevels[32], player)
     @if tempTotal[32] == tempEarned[32]
@@ -719,15 +710,15 @@
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[32]}}: &{{colorList[Int((Float(tempEarned[32]) / Float(tempTotal[32])) * 12)]}}({{tempEarned[32]}}/{{tempTotal[32]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp16 pcTeleport(allLevels[37], player)
     @if tempTotal[37] == tempEarned[37]
         @player &#917E9C*&#D3D6E0 {{allLevels[37]}}: &a({{tempEarned[37]}}/{{tempTotal[37]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[37]}}: &{{colorList[Int((Float(tempEarned[37]) / Float(tempTotal[37])) * 12)]}}({{tempEarned[37]}}/{{tempTotal[37]}}) ✕
     @fi
-    
-    @player
+
+    @player 
     
     @chatscript 180s pctp17 pcTeleport(allLevels[42], player)
     @if tempTotal[42] == tempEarned[42]
@@ -735,76 +726,76 @@
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[42]}}: &{{colorList[Int((Float(tempEarned[42]) / Float(tempTotal[42])) * 12)]}}({{tempEarned[42]}}/{{tempTotal[42]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp18 pcTeleport(allLevels[43], player)
     @if tempTotal[43] == tempEarned[43]
         @player &#917E9C*&#D3D6E0 {{allLevels[43]}}: &a({{tempEarned[43]}}/{{tempTotal[43]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[43]}}: &{{colorList[Int((Float(tempEarned[43]) / Float(tempTotal[43])) * 12)]}}({{tempEarned[43]}}/{{tempTotal[43]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp19 pcTeleport(allLevels[44], player)
     @if tempTotal[44] == tempEarned[44]
         @player &#917E9C*&#D3D6E0 {{allLevels[44]}}: &a({{tempEarned[44]}}/{{tempTotal[44]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[44]}}: &{{colorList[Int((Float(tempEarned[44]) / Float(tempTotal[44])) * 12)]}}({{tempEarned[44]}}/{{tempTotal[44]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp20 pcTeleport(allLevels[45], player)
     @if tempTotal[45] == tempEarned[45]
         @player &#917E9C*&#D3D6E0 {{allLevels[45]}}: &a({{tempEarned[45]}}/{{tempTotal[45]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[45]}}: &{{colorList[Int((Float(tempEarned[45]) / Float(tempTotal[45])) * 12)]}}({{tempEarned[45]}}/{{tempTotal[45]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp21 pcTeleport(allLevels[49], player)
     @if tempTotal[49] == tempEarned[49]
         @player &#917E9C*&#D3D6E0 {{allLevels[49]}}: &a({{tempEarned[49]}}/{{tempTotal[49]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[49]}}: &{{colorList[Int((Float(tempEarned[49]) / Float(tempTotal[49])) * 12)]}}({{tempEarned[49]}}/{{tempTotal[49]}}) ✕
     @fi
-    
+
     @player
-    
+
     @chatscript 180s pctp22 pcTeleport(allLevels[53], player)
     @if tempTotal[53] == tempEarned[53]
         @player &#917E9C*&#D3D6E0 {{allLevels[53]}}: &a({{tempEarned[53]}}/{{tempTotal[53]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[53]}}: &{{colorList[Int((Float(tempEarned[53]) / Float(tempTotal[53])) * 12)]}}({{tempEarned[53]}}/{{tempTotal[53]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp23 pcTeleport(allLevels[55], player)
     @if tempTotal[55] == tempEarned[55]
         @player &#917E9C*&#D3D6E0 {{allLevels[55]}}: &a({{tempEarned[55]}}/{{tempTotal[55]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[55]}}: &{{colorList[Int((Float(tempEarned[55]) / Float(tempTotal[55])) * 12)]}}({{tempEarned[55]}}/{{tempTotal[55]}}) ✕
     @fi
-    
-    @player
-    
+
+    @player 
+
     @chatscript 180s pctp24 pcTeleport(allLevels[60], player)
     @if tempTotal[60] == tempEarned[60]
         @player &#917E9C*&#D3D6E0 {{allLevels[60]}}: &a({{tempEarned[60]}}/{{tempTotal[60]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[60]}}: &{{colorList[Int((Float(tempEarned[60]) / Float(tempTotal[60])) * 12)]}}({{tempEarned[60]}}/{{tempTotal[60]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp25 pcTeleport(allLevels[61], player)
     @if tempTotal[61] == tempEarned[61]
         @player &#917E9C*&#D3D6E0 {{allLevels[61]}}: &a({{tempEarned[61]}}/{{tempTotal[61]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[61]}}: &{{colorList[Int((Float(tempEarned[61]) / Float(tempTotal[61])) * 12)]}}({{tempEarned[61]}}/{{tempTotal[61]}}) ✕
     @fi
-    
+
     @chatscript 180s pctp26 pcTeleport(allLevels[67], player)
     @if tempTotal[67] == tempEarned[67]
         @player &#917E9C*&#D3D6E0 {{allLevels[67]}}: &a({{tempEarned[67]}}/{{tempTotal[67]}}) ✔
     @else
         @player &#917E9C*&#D3D6E0 {{allLevels[67]}}: &{{colorList[Int((Float(tempEarned[67]) / Float(tempTotal[67])) * 12)]}}({{tempEarned[67]}}/{{tempTotal[67]}}) ✕
     @fi
-    
+
     @player
-    
+
     @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 any level to teleport
     @chatscript 180s group7 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
@@ -824,7 +815,7 @@
     @player
     @player &aHarder Hat, &6Even Harder Hat, &cHardest Hat,
     @player &bHarder Hats, &5Even Harder Hats
-    @player
+    @player 
     @player &#D3D6E0Total: &r   &1 &#D3D6E0 (&a{{sectionBlocksPlacedNormal[user].sum()}}, &6{{sectionBlocksPlacedMaster[user].sum()}}, &c{{sectionBlocksPlacedUMM[user].sum()}}, &b{{sectionBlocksPlacedSoulLink[user].sum()}}, &5{{sectionBlocksPlacedMasterSoulLink[user].sum()}}&#D3D6E0)
     @player
     @player &#D3D6E0Section 1: (&a{{sectionBlocksPlacedNormal[user][0] + sectionBlocksPlacedNormal[user][1] + sectionBlocksPlacedNormal[user][2] + sectionBlocksPlacedNormal[user][3] + sectionBlocksPlacedNormal[user][4] + sectionBlocksPlacedNormal[user][5] + sectionBlocksPlacedNormal[user][6] + sectionBlocksPlacedNormal[user][7] + sectionBlocksPlacedNormal[user][8] + sectionBlocksPlacedNormal[user][9]}}, &6{{sectionBlocksPlacedMaster[user][0] + sectionBlocksPlacedMaster[user][1] + sectionBlocksPlacedMaster[user][2] + sectionBlocksPlacedMaster[user][3] + sectionBlocksPlacedMaster[user][4] + sectionBlocksPlacedMaster[user][5] + sectionBlocksPlacedMaster[user][6] + sectionBlocksPlacedMaster[user][7] + sectionBlocksPlacedMaster[user][8] + sectionBlocksPlacedMaster[user][9]}}, &c{{sectionBlocksPlacedUMM[user][0] + sectionBlocksPlacedUMM[user][1] + sectionBlocksPlacedUMM[user][2] + sectionBlocksPlacedUMM[user][3] + sectionBlocksPlacedUMM[user][4] + sectionBlocksPlacedUMM[user][5] + sectionBlocksPlacedUMM[user][6] + sectionBlocksPlacedUMM[user][7] + sectionBlocksPlacedUMM[user][8] + sectionBlocksPlacedUMM[user][9]}}, &b{{sectionBlocksPlacedSoulLink[user][0] + sectionBlocksPlacedSoulLink[user][1] + sectionBlocksPlacedSoulLink[user][2] + sectionBlocksPlacedSoulLink[user][3] + sectionBlocksPlacedSoulLink[user][4] + sectionBlocksPlacedSoulLink[user][5] + sectionBlocksPlacedSoulLink[user][6] + sectionBlocksPlacedSoulLink[user][7] + sectionBlocksPlacedSoulLink[user][8] + sectionBlocksPlacedSoulLink[user][9]}}, &5{{sectionBlocksPlacedMasterSoulLink[user][0] + sectionBlocksPlacedMasterSoulLink[user][1] + sectionBlocksPlacedMasterSoulLink[user][2] + sectionBlocksPlacedMasterSoulLink[user][3] + sectionBlocksPlacedMasterSoulLink[user][4] + sectionBlocksPlacedMasterSoulLink[user][5] + sectionBlocksPlacedMasterSoulLink[user][6] + sectionBlocksPlacedMasterSoulLink[user][7] + sectionBlocksPlacedMasterSoulLink[user][8] + sectionBlocksPlacedMasterSoulLink[user][9]}}&#D3D6E0)
@@ -839,7 +830,7 @@
     @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 to break down stats
     @chatscript 180s group9321 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 4
     
     @var noteInt = math::random(0.0D, 20.0D)
@@ -854,7 +845,7 @@
     @player
     @player &aHarder Hat, &6Even Harder Hat, &cHardest Hat,
     @player &bHarder Hats, &5Even Harder Hats
-    @player
+    @player 
     @player &#D3D6E0Total: &r   &1 &#D3D6E0 (&a{{sectionFallsNormal[user].sum()}}, &6{{sectionFallsMaster[user].sum()}}, &c{{sectionFallsUMM[user].sum()}}, &b{{sectionFallsSoulLink[user].sum()}}, &5{{sectionFallsMasterSoulLink[user].sum()}}&#D3D6E0)
     @player
     @player &#D3D6E0Section 1: (&a{{sectionFallsNormal[user][0] + sectionFallsNormal[user][1] + sectionFallsNormal[user][2] + sectionFallsNormal[user][3] + sectionFallsNormal[user][4] + sectionFallsNormal[user][5] + sectionFallsNormal[user][6] + sectionFallsNormal[user][7] + sectionFallsNormal[user][8] + sectionFallsNormal[user][9]}}, &6{{sectionFallsMaster[user][0] + sectionFallsMaster[user][1] + sectionFallsMaster[user][2] + sectionFallsMaster[user][3] + sectionFallsMaster[user][4] + sectionFallsMaster[user][5] + sectionFallsMaster[user][6] + sectionFallsMaster[user][7] + sectionFallsMaster[user][8] + sectionFallsMaster[user][9]}}, &c{{sectionFallsUMM[user][0] + sectionFallsUMM[user][1] + sectionFallsUMM[user][2] + sectionFallsUMM[user][3] + sectionFallsUMM[user][4] + sectionFallsUMM[user][5] + sectionFallsUMM[user][6] + sectionFallsUMM[user][7] + sectionFallsUMM[user][8] + sectionFallsUMM[user][9]}}, &b{{sectionFallsSoulLink[user][0] + sectionFallsSoulLink[user][1] + sectionFallsSoulLink[user][2] + sectionFallsSoulLink[user][3] + sectionFallsSoulLink[user][4] + sectionFallsSoulLink[user][5] + sectionFallsSoulLink[user][6] + sectionFallsSoulLink[user][7] + sectionFallsSoulLink[user][8] + sectionFallsSoulLink[user][9]}}, &5{{sectionFallsMasterSoulLink[user][0] + sectionFallsMasterSoulLink[user][1] + sectionFallsMasterSoulLink[user][2] + sectionFallsMasterSoulLink[user][3] + sectionFallsMasterSoulLink[user][4] + sectionFallsMasterSoulLink[user][5] + sectionFallsMasterSoulLink[user][6] + sectionFallsMasterSoulLink[user][7] + sectionFallsMasterSoulLink[user][8] + sectionFallsMasterSoulLink[user][9]}}&#D3D6E0)
@@ -869,7 +860,7 @@
     @player &#917E9C&l!!! &#D3D6E0&nClick&#D3D6E0 to break down stats
     @chatscript 180s group9 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 5
     
     @var noteInt = math::random(0.0D, 20.0D)
@@ -883,7 +874,7 @@
     @fi
     @player
     # @define String[] colorList3 = String["&#1FFB14&l", "&#FE984E&l", "&#00a800&l", "&#CE4426&l", "&#A3D0F2&l", "&#85C68B&l", "&#ff67c5&l"]
-    
+
     @if stage1PB[user] == 0
         @player &#1FFB14&lSection 1: &#D3D6E0Not beaten yet.
     @else
@@ -928,9 +919,9 @@
     @player
     @chatscript 180s group10 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 10
-    
+
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
@@ -976,7 +967,7 @@
     @player &#D3D6E0Section 5: [&6{{sectionBlocksPlacedMaster[user][40]}}, {{sectionBlocksPlacedMaster[user][41]}}, {{sectionBlocksPlacedMaster[user][42]}}, {{sectionBlocksPlacedMaster[user][43]}}, {{sectionBlocksPlacedMaster[user][44]}},   {{sectionBlocksPlacedMaster[user][45]}}, {{sectionBlocksPlacedMaster[user][46]}}, {{sectionBlocksPlacedMaster[user][47]}}, {{sectionBlocksPlacedMaster[user][48]}}, {{sectionBlocksPlacedMaster[user][49]}}&#D3D6E0]
     @player &#D3D6E0Section 6: [&6{{sectionBlocksPlacedMaster[user][50]}}, {{sectionBlocksPlacedMaster[user][51]}}, {{sectionBlocksPlacedMaster[user][52]}}, {{sectionBlocksPlacedMaster[user][53]}}, {{sectionBlocksPlacedMaster[user][54]}},   {{sectionBlocksPlacedMaster[user][55]}}, {{sectionBlocksPlacedMaster[user][56]}}, {{sectionBlocksPlacedMaster[user][57]}}, {{sectionBlocksPlacedMaster[user][58]}}, {{sectionBlocksPlacedMaster[user][59]}}&#D3D6E0]
     @player &#D3D6E0Section 7: [&6{{sectionBlocksPlacedMaster[user][60]}}, {{sectionBlocksPlacedMaster[user][61]}}, {{sectionBlocksPlacedMaster[user][62]}}, {{sectionBlocksPlacedMaster[user][63]}}, {{sectionBlocksPlacedMaster[user][64]}},   {{sectionBlocksPlacedMaster[user][65]}}, {{sectionBlocksPlacedMaster[user][66]}}, {{sectionBlocksPlacedMaster[user][67]}}, {{sectionBlocksPlacedMaster[user][68]}}, {{sectionBlocksPlacedMaster[user][69]}}&#D3D6E0]
-    @player
+    @player 
     @player &aHarder Hat:
     @player &#D3D6E0Section 1: [&a{{sectionBlocksPlacedNormal[user][0]}}, {{sectionBlocksPlacedNormal[user][1]}}, {{sectionBlocksPlacedNormal[user][2]}}, {{sectionBlocksPlacedNormal[user][3]}}, {{sectionBlocksPlacedNormal[user][4]}},   {{sectionBlocksPlacedNormal[user][5]}}, {{sectionBlocksPlacedNormal[user][6]}}, {{sectionBlocksPlacedNormal[user][7]}}, {{sectionBlocksPlacedNormal[user][8]}}, {{sectionBlocksPlacedNormal[user][9]}}&#D3D6E0]
     @player &#D3D6E0Section 2: [&a{{sectionBlocksPlacedNormal[user][10]}}, {{sectionBlocksPlacedNormal[user][11]}}, {{sectionBlocksPlacedNormal[user][12]}}, {{sectionBlocksPlacedNormal[user][13]}}, {{sectionBlocksPlacedNormal[user][14]}},   {{sectionBlocksPlacedNormal[user][15]}}, {{sectionBlocksPlacedNormal[user][16]}}, {{sectionBlocksPlacedNormal[user][17]}}, {{sectionBlocksPlacedNormal[user][18]}}, {{sectionBlocksPlacedNormal[user][19]}}&#D3D6E0]
@@ -990,9 +981,9 @@
     @player
     @chatscript 180s group11321 pcStats(9, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 6
-    
+
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt + 4)]}}
@@ -1038,7 +1029,7 @@
     @player &#D3D6E0Section 5: [&6{{sectionFallsMaster[user][40]}}, {{sectionFallsMaster[user][41]}}, {{sectionFallsMaster[user][42]}}, {{sectionFallsMaster[user][43]}}, {{sectionFallsMaster[user][44]}},   {{sectionFallsMaster[user][45]}}, {{sectionFallsMaster[user][46]}}, {{sectionFallsMaster[user][47]}}, {{sectionFallsMaster[user][48]}}, {{sectionFallsMaster[user][49]}}&#D3D6E0]
     @player &#D3D6E0Section 6: [&6{{sectionFallsMaster[user][50]}}, {{sectionFallsMaster[user][51]}}, {{sectionFallsMaster[user][52]}}, {{sectionFallsMaster[user][53]}}, {{sectionFallsMaster[user][54]}},   {{sectionFallsMaster[user][55]}}, {{sectionFallsMaster[user][56]}}, {{sectionFallsMaster[user][57]}}, {{sectionFallsMaster[user][58]}}, {{sectionFallsMaster[user][59]}}&#D3D6E0]
     @player &#D3D6E0Section 7: [&6{{sectionFallsMaster[user][60]}}, {{sectionFallsMaster[user][61]}}, {{sectionFallsMaster[user][62]}}, {{sectionFallsMaster[user][63]}}, {{sectionFallsMaster[user][64]}},   {{sectionFallsMaster[user][65]}}, {{sectionFallsMaster[user][66]}}, {{sectionFallsMaster[user][67]}}, {{sectionFallsMaster[user][68]}}, {{sectionFallsMaster[user][69]}}&#D3D6E0]
-    @player
+    @player 
     @player &aHarder Hat:
     @player &#D3D6E0Section 1: [&a{{sectionFallsNormal[user][0]}}, {{sectionFallsNormal[user][1]}}, {{sectionFallsNormal[user][2]}}, {{sectionFallsNormal[user][3]}}, {{sectionFallsNormal[user][4]}},   {{sectionFallsNormal[user][5]}}, {{sectionFallsNormal[user][6]}}, {{sectionFallsNormal[user][7]}}, {{sectionFallsNormal[user][8]}}, {{sectionFallsNormal[user][9]}}&#D3D6E0]
     @player &#D3D6E0Section 2: [&a{{sectionFallsNormal[user][10]}}, {{sectionFallsNormal[user][11]}}, {{sectionFallsNormal[user][12]}}, {{sectionFallsNormal[user][13]}}, {{sectionFallsNormal[user][14]}},   {{sectionFallsNormal[user][15]}}, {{sectionFallsNormal[user][16]}}, {{sectionFallsNormal[user][17]}}, {{sectionFallsNormal[user][18]}}, {{sectionFallsNormal[user][19]}}&#D3D6E0]
@@ -1052,7 +1043,7 @@
     @player
     @chatscript 180s group11 pcStats(4, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
+
 @elseif pcSelect == 7
     @var noteInt = math::random(0.0D, 20.0D)
     @bypass /playsound minecraft:block.note_block.bit master @s ~ ~ ~ 1 {{musicNotes[Int(noteInt)]}}
@@ -1081,31 +1072,31 @@
     @else
         @player &#D3D6E00.0/10% Even Harder Hat: &cNot Completed ✕
     @fi
-    
+
     @if numberCompletionsSoulLink[user] >= 1
         @player &#D3D6E010/10% Harder Hats: &a&lCompleted ✔
     @else
         @player &#D3D6E00.0/10% Harder Hats: &cNot Completed ✕
     @fi
-    
+
     @if cosmeticsUnlocked[user].sum() == 12
         @player &#D3D6E020/20% Cosmetics Unlocked: &a&l12/12 ✔
     @else
         @player &#D3D6E0{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) / 10}}.{{Int(((Float(cosmeticsUnlocked[user].sum()) / Float(12)) * 20) * 10) % 10}}/20% Cosmetics Unlocked: &{{colorList[Int(cosmeticsUnlocked[user].sum())]}}{{cosmeticsUnlocked[user].sum()}}/12  ✕
     @fi
-    
+
     @if secretsFound == 25
         @player &#D3D6E020/20% Secrets Found: &a&l25/25 ✔
     @else
         @player &#D3D6E0{{Int(((Float(secretsFound) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsFound) / Float(25)) * 20) * 10) % 10}}/20% Secrets Found: &{{colorList[math::floor(Double(Float(secretsFound * 11) / 25))]}}{{secretsFound}}/25  ✕
     @fi
-    
+
     @if secretsCompleted == 25
         @player &#D3D6E020/20% Secrets Completed: &a&l25/25 ✔
     @else
         @player &#D3D6E0{{Int(((Float(secretsCompleted) / Float(25)) * 20) * 10) / 10}}.{{Int(((Float(secretsCompleted) / Float(25)) * 20) * 10) % 10}}/20% Secrets Completed: &{{colorList[math::floor(Double(Float(secretsCompleted * 11) / 25))]}}{{secretsCompleted}}/25  ✕
     @fi
-    
+
     @if swagPoints[user] == 4000
         @player &#D3D6E020/20% Style Points: &a&l4,000/4,000 ✔
     @elseif stylePointPrestiges[user] == 1
@@ -1118,6 +1109,6 @@
     @player
     @chatscript 180s group110 pcStats(0, user, player)
     @player &#D3D6E0<<< &nClick&#D3D6E0 to go back
-    
-    
+
+
 @fi

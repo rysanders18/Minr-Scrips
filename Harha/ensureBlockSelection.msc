@@ -1,0 +1,45 @@
+# ensureBlockSelection(Int level, Player player) https://paste.minr.org/jopiqunile
+@using Harha
+@fast
+
+@if level <= 39 || (level == 40 && iceSwapped[player] == false) || level == 60 || level == 61 || level == 65 || level == 66 || level == 68
+    @if blockSelection[player] == "blue_ice" || blockSelection[player] == "slime_block" || blockSelection[player] == "iron_trapdoor" || blockSelection[player] == "target"
+        @var blockSelection[player] = blockSelectionStored[player]
+        @var iceSwapped[player] = false
+        @var slimeSwapped[player] = false
+        @var trapdoorSwapped[player] = false
+        @var targetSwapped[player] = false
+    @fi
+@elseif (level >= 41 && level <= 49) || (level == 40 && iceSwapped[player] == true) || (level == 50 && slimeSwapped[player] == false) || level == 63 || level == 67 || level == 69
+    @if blockSelection[player] != "blue_ice"
+        @var blockSelection[player] = "blue_ice"
+        @var iceSwapped[player] = true
+        @var slimeSwapped[player] = false
+        @var trapdoorSwapped[player] = false
+        @var targetSwapped[player] = false
+    @fi
+@elseif (level >= 51 && level <= 59) || (level == 50 && slimeSwapped[player] == true)
+    @if blockSelection[player] != "slime_block"
+        @var blockSelection[player] = "slime_block"
+        @var iceSwapped[player] = false
+        @var slimeSwapped[player] = true
+        @var trapdoorSwapped[player] = false
+        @var targetSwapped[player] = false
+    @fi
+@elseif level == 64
+    @if blockSelection[player] != "iron_trapdoor"
+        @var blockSelection[player] = "iron_trapdoor"
+        @var iceSwapped[player] = false
+        @var slimeSwapped[player] = false
+        @var trapdoorSwapped[player] = true
+        @var targetSwapped[player] = false
+    @fi
+@elseif level == 62
+    @if blockSelection[player] != "target"
+        @var blockSelection[player] = "target"
+        @var iceSwapped[player] = false
+        @var slimeSwapped[player] = false
+        @var trapdoorSwapped[player] = false
+        @var targetSwapped[player] = true
+    @fi
+@fi

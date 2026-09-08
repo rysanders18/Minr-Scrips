@@ -1,0 +1,31 @@
+# leaderboard right down arrow
+
+@fast
+@using Harha
+
+
+@if leaderboardType == 1 || leaderboardType == 3 || leaderboardType == 4 || leaderboardType == 5 || leaderboardType == 6 || leaderboardType == 8 || leaderboardType == 9 || leaderboardType == 10 || leaderboardType == 11 || leaderboardType == 13 || leaderboardType == 14 || leaderboardType == 15 || leaderboardType == 16 || leaderboardType == 17 || leaderboardType == 19 || leaderboardType == 20 || leaderboardType == 21 || leaderboardType == 22 || leaderboardType == 23 || leaderboardType == 24 || leaderboardType == 25
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType -= 1
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@elseif leaderboardType == 0
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType = 1
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@elseif leaderboardType == 2
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType = 6
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@elseif leaderboardType == 7
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType = 11
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@elseif leaderboardType == 12
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType = 17
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@elseif leaderboardType == 18
+    @bypass /playsound minecraft:ui.button.click master @s -9209.5 96.0 9715.0 1 1
+    @var leaderboardType = 25
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@fi

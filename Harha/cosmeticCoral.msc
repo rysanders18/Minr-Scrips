@@ -1,0 +1,19 @@
+# cosmeticCoral (Player player)
+
+@fast
+@using Harha
+
+@var coralNumber[player] = Int(math::random(0.0D, 5.0D))
+
+@if Int(math::random(0.0D, 15.0D)) == 1
+    @var coralNumber[player] += 5
+@fi
+
+@var blockSelection[player] = coralList[coralNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+    @var numberOfBlocksToGive[player] -= 1
+    @var lastCoralNumber[player] = coralNumber[player]
+@fi    
+
+    # @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

@@ -1,0 +1,16 @@
+# cosmeticGlass (Player player)
+
+@fast
+@using Harha
+
+@if glassNumber[player] >= glassList.length() - 1
+    @var glassNumber[player] = 0
+@else
+    @var glassNumber[player] += 1
+@fi
+
+@var blockSelection[player] = glassList[glassNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1

@@ -1,0 +1,14 @@
+# After area script 07-02
+# gives blocks and runs handleStylePoints function
+# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+
+@using Harha
+@fast
+
+
+@if player.getGameMode() == "ADVENTURE" && level[player] == 61
+    @var handleAfter(62, true, b702, l702Thresholds, l702Rewards, l702StartIndex, blocksThisStage, player)
+@elseif player.getGameMode() == "ADVENTURE"
+    @bypass clear {{player}} *[custom_data~{clear:true}]
+    @bypass item replace entity {{player}} container.0 with {{blockSelectionStored[player]}}[custom_name={"italic":false,"text":"‌"},can_place_on=[{blocks:"target"}],enchantments={"minecraft:vanishing_curse":1},tooltip_display={hide_tooltip:false,hidden_components:["enchantments","can_place_on"]},enchantment_glint_override=false,custom_data={clear:true},lore=[[{"bold":true,"color":"#58B4B8","italic":false,"text":"C"},{"color":"#5FBABE","text":"u"},{"color":"#65C1C4","text":"s"},{"color":"#6CC7CA","text":"t"},{"color":"#72CDD0","text":"o"},{"color":"#79D3D6","text":"m "},{"color":"#7FDADC","text":"B"},{"color":"#86E0E1","text":"l"},{"color":"#8CE6E7","text":"o"},{"color":"#93ECED","text":"c"},{"color":"#99F3F3","text":"k"},{"color":"#A6FFFF","text":"s"}],{"bold":false,"color":"gray","italic":false,"text":"You can choose your block selection"},{"bold":false,"color":"gray","italic":false,"text":"at the start of the map! Enjoy!"}," ",{"bold":true,"color":"gray","italic":false,"text":"{{cosmeticsUnlocked[player].sum()}}/12 Cosmetics unlocked."}," "],block_state={bloom:"true",north:"true",south:"true",east:"true",west:"true"}] 64
+@fi

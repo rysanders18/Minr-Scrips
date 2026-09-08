@@ -1,0 +1,16 @@
+# setLevel(Int levelToBeSetTo, Player player)
+
+@fast
+@using Harha
+
+@var level[player] = levelToBeSetTo
+
+@bypass /xp set {{player}} 22 levels
+@if levelToBeSetTo == 0
+    @bypass /xp set {{player}} 0 points
+@elseif levelToBeSetTo >= 69
+    @bypass /xp set {{player}} {{71}} points
+@else
+    @bypass /xp set {{player}} {{levelToBeSetTo + 1}} points
+@fi
+@bypass /xp set {{player}} {{levelToBeSetTo + 1}} levels 

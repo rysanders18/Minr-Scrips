@@ -103,7 +103,7 @@
 @elseif variation == 19
     @var select1 = "Section Times"
     @var select2 = "Section 2"
-@elseif variation == 20
+@elseif variation == 20 
     @var select1 = "Section Times"
     @var select2 = "Section 3"
 @elseif variation == 21
@@ -121,26 +121,15 @@
 @elseif variation == 25
     @var select1 = "Section Times"
     @var select2 = "Sum of Best"
-@elseif variation == 26
-    @var select1 = "Other"
-    @var select2 = "Group Size"
-@elseif variation == 27
-    @var select1 = "Other"
-    @var select2 = "Group Size"
-@elseif variation == 28
-    @var select1 = "Other"
-    @var select2 = "Prestiges"
-@elseif variation == 29
-    @var select1 = "Other"
-    @var select2 = "Anomalies"
-@elseif variation == 30
-    @var select1 = "Other"
-    @var select2 = "Gambling PB"
+@elseif variation >= 26
+    @var select1 = " "
+    @var select2 = " "
+    @var upArrow1 = " "
+    @var upArrow2 = " "
+    @var downArrow1 = " "
+    @var downArrow2 = " "
 @fi
-    # @var upArrow1 = " "
-    # @var upArrow2 = " "
-    # @var downArrow1 = " "
-    # @var downArrow2 = " "
+
 @for Int i in list::range(0, 10)
     @if topPlayers[i] == topPlayers[10] + " "
         @var isBolded[i] = true

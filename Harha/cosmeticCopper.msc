@@ -1,0 +1,16 @@
+# cosmeticCopper (Player player)
+
+@fast
+@using Harha
+
+@if grateNumber[player] >= 5
+    @var grateNumber[player] = 0
+@else
+    @var grateNumber[player] += 1
+@fi
+
+@var blockSelection[player] = grateList[grateNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1

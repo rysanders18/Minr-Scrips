@@ -32,7 +32,7 @@
     # #A86119
     
     @var stage[player] += 1
-    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
+    @var timeThisStage = (system::currentTimeMillis() - startTime[player])
     @var startTime[player] = system::currentTimeMillis()
     # @player {{timer::formatTime(timeThisStage)}}, {{timer::formatTime(stage4PB)}}, {{startTime[player]}}
     # if this is First time entering stage 4, PB = this time
@@ -48,7 +48,7 @@
         @bypass /title @s actionbar ["",{"text":"Stage 3 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
     @else
         
-        @if (timeThisStage) < stage3PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+        @if (timeThisStage) < stage3PB[player] && speedrunTeleportedRecentlyOld == false
             @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage3PB)}})
             @var stage3PB[player] = (timeThisStage)
             @var top100Function(player, 20)
@@ -78,37 +78,37 @@
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
         @fi
-        
+
     @fi
     
     @bypass /title @s times 0 30 20
     
-    @bypass /title @s subtitle ["",{"text":"F","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"D","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"}]
     @delay 1
     
-    @bypass /title @s subtitle ["",{"text":"Fin","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"Dec","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.122
-    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},"text":"t","bold":true,"color":"{{gradient2}}"}]
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"}]
     @delay 1
     
-    @bypass /title @s subtitle ["",{"text":"Find t","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"Deco b","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.26
-    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},"text":"t","bold":true,"color":"{{gradient2}}"},"text":"a","bold":true,"color":"{{gradient3}}"}]
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"}]
     @delay 1
     
-    @bypass /title @s subtitle ["",{"text":"Find the","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"Deco by Z","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.498
-    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},"text":"t","bold":true,"color":"{{gradient2}}"},"text":"a","bold":true,"color":"{{gradient3}}"},"text":"g","bold":true,"color":"{{gradient4}}"}]
+    @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"}]
     @delay 1
     
-    @bypass /title @s subtitle ["",{"text":"Find the Boo","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"Deco by Zha","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.682
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"},{"text":"e ","bold":true,"color":"{{gradient5}}"}]
     @delay 1
     
-    @bypass /title @s subtitle ["",{"text":"Find the Boots!","color":"#d4d4d4"}]
+    @bypass /title @s subtitle ["",{"text":"Deco by Zhar!","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 2
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"},{"text":"e ","bold":true,"color":"{{gradient5}}"},{"text":"4","bold":true,"color":"{{gradient6}}"},{"text":":","bold":true,"color":"{{gradient7}}"}]
     

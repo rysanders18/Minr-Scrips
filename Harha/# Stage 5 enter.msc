@@ -32,7 +32,7 @@
     # #8CD1FF
     
     @var stage[player] += 1
-    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
+    @var timeThisStage = (system::currentTimeMillis() - startTime[player])
     @var startTime[player] = system::currentTimeMillis()
     # @player {{timer::formatTime(timeThisStage)}}, {{timer::formatTime(stage4PB)}}, {{timer::formatTime(startTime[player])}}
     # if this is First time entering Stage 5, PB = this time
@@ -49,7 +49,7 @@
         @bypass /title @s actionbar ["",{"text":"Stage 4 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
     @else
         
-        @if (timeThisStage) < stage4PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+        @if (timeThisStage) < stage4PB[player] && speedrunTeleportedRecentlyOld == false
             @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage4PB)}})
             @var stage4PB[player] = (timeThisStage)
             @var top100Function(player, 21)

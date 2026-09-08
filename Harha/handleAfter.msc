@@ -1,0 +1,82 @@
+# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player) https://paste.minr.org/ubunizusuy
+# Function for after stage area script
+# Clears blocks, sets level, checks for style points, and runs anticheat
+@using Harha
+@fast
+
+@cooldown 1s
+
+# if the players level is correct then check for style points
+# DEBUG @player {{level[player]}} = {{levelNumber - 1}} && {{stylePresent}}
+# @player DEBUG ACTIVE: {{level[player]}} = {{levelNumber - 1}}, {{stylePresent}}
+@if level[player] == (levelNumber - 1) && stylePresent == true
+    # @player DEBUG ACTIVE: Style points Ran (blocks = {{blocksThisStage}})
+    @var handleStylePoints(thresholds, rewards, claimedIndexStart, blocksThisStage, player)
+@fi
+
+# master mode soft cp notification 
+@if (difficultySelection == "master" || player.getCurrentChallenge() == "hahahaha") && level[player] == (levelNumber - 1)
+    @if (levelNumber % 5) == 0 && masterSoftCP[player][Int(math::floor(Double(levelNumber) / 5))] == 0
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[13]}}
+        @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[20]}}
+        @bypass title {{player}} actionbar ["",{"text":"New ","bold":true,"color":"#ff6b48"},{"text":"Checkpoint ","bold":true,"color":"#ff7f37"},{"text":"Reached!","bold":true,"color":"#ff9523"}] 
+        @var masterSoftCP[player][Int(math::floor(Double(levelNumber) / 5)) - 1] = 1
+    @fi
+@fi
+
+
+# master mode SL soft cp notification 
+@if (difficultySelection == "masterSoulLink" || player.getCurrentChallenge() == "hahahahas") && level[player] == (levelNumber - 1)
+    # @player DEBUG: Master SL soft CP check - levelNumber: {{levelNumber}}, level[player]: {{level[player]}}
+    @if (levelNumber % 5) == 0 && masterSLSoftCP[player][Int(math::floor(Double(levelNumber) / 5))] == 0
+        # @player DEBUG: Level {{levelNumber}} is divisible by 5, checking masterSLSoftCP status
+        @define Boolean allPartnersAhead = true
+        @for Player p in partners[player]
+            # @player DEBUG: partner {{p.getName()}} is at level {{level[p]}}, {{levelNumber}}
+            # @player DEBUG: @if (({{level[p]}}) < {{levelNumber}} || {{masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5))]}} == 1) && ({{p.getName()}} != {{player.getName()}})
+            @if ((level[p]) < levelNumber || masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5))] == 1) && (p.getName() != player.getName())
+                # @player DEBUG: Partner {{p}} is behind (level {{level[p]}}) < {{levelNumber}}
+                @var allPartnersAhead = false
+            @fi
+        @done
+        # @player DEBUG: allPartnersAhead = {{allPartnersAhead}}
+        @if allPartnersAhead == true
+            # @player DEBUG: All partners ahead, granting checkpoint to all
+            @for Player p in partners[player]
+                @bypass /playsound minecraft:block.note_block.pling master {{p}} ~ ~ ~ 1 {{musicNotes[14]}}
+                @bypass /playsound minecraft:block.note_block.pling master {{p}} ~ ~ ~ 1 {{musicNotes[21]}}
+                @bypass title {{p}} actionbar ["",{"text":"New ","bold":true,"color":"#a800a8"},{"text":"Checkpoint ","bold":true,"color":"#c045a3"},{"text":"Reached!","bold":true,"color":"#cf71a5"}]
+                @var masterSLSoftCP[p][Int(math::floor(Double(levelNumber) / 5)) - 1] = 1
+                # @player DEBUG: Granted checkpoint to partner {{p}}
+            @done
+        @fi
+    @fi
+@fi
+
+# reset blocksThisStage
+@var blocksThisStage = 0
+
+@var ensureBlockSelection(levelNumber, player)
+@var setLevel(levelNumber, player)
+# @player DEBUG ACTIVE: XP Update Ran (level = {{levelNumber + 1}})
+
+
+
+# @var blocksThisStageGlobal[] TODO TODO
+@var numberOfBlocksToGive[player] = 63
+
+# clear blocks at end because cooldown
+@var resetBlocks(player, 64)
+# @player DEBUG ACTIVE: Reset Blocks Ran
+
+# anticheat
+@if levelNumber <= 60
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheat(cheatList[i], player)
+    @done
+@elseif levelNumber <= 69
+    @for Int i in list::range(0, cheatList.length())
+        @var anticheatEnd(cheatList[i], player)
+    @done
+@fi
+

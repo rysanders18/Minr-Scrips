@@ -23,7 +23,7 @@
     @define String gradient5 = "#d500a5"
     @define String gradient6 = "#bd00cf"
     @define String gradient7 = "#870fff"
-    
+
     # #ff0000
     # #fc0044
     # #f10067
@@ -35,35 +35,34 @@
     @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4703 92 5049 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16742144,16748800,16733440],fade_colors:[I;16713190,16711918]}]}}}}
     # @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4708 92 5046 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
     # @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4705 94 5041 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
-    
+
     @var stage[player] += 1
-    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
+    @var timeThisStage = (system::currentTimeMillis() - startTime[player])
     @var startTime[player] = system::currentTimeMillis()
     # @player {{timer::formatTime(timeThisStage)}}, {{timer::formatTime(stage5PB)}}, {{timer::formatTime(startTime[player])}}
     # if this is First time entering Stage 8, PB = this time
     @if stage8Entered[player] == false
         @var stage7PB[player] = (timeThisStage)
         @var top100Function(player, 24)
-        # Commented out because beating stage 8 is beating the map
-        # @if numberCompletions[player] >= 1
+        @if numberCompletions[player] >= 1
             @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
             @var top100Function(player, 25)
-        # @fi
+        @fi
         @var stage8Entered[player] = true
         @var firstTime = true
         
         @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
     @else
         
-        @if (timeThisStage) < stage7PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+        @if (timeThisStage) < stage7PB[player] && speedrunTeleportedRecentlyOld == false
             @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage7PB)}})
             @var stage7PB[player] = (timeThisStage)
             @var top100Function(player, 24)
-            
+
             # This is different because its stage 8
             @var stage8PB[player] = stage1PB[player] + stage2PB[player] + stage3PB[player] + stage4PB[player] + stage5PB[player] + stage6PB[player] + stage7PB[player]
             @var top100Function(player, 25)
-            
+
             
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[7]}}
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[11]}}
@@ -78,7 +77,7 @@
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[18]}}
             
         @fi
-        
+
         @if speedrunTeleportedRecentlyOld == false
             @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage7PB[player])}}","bold":true,"color":"light_purple"}]
         @else
@@ -119,11 +118,11 @@
     
     
     @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4708 92 5046 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;15662848,16770560,16766208],fade_colors:[I;16744448,16753152]}]}}}}
-    
+
     @delay 5
-    
+
     @bypass /execute in minecraft:theta_the_end run summon firework_rocket -4705 94 5041 {LifeTime:15,FireworksItem:{id:"minecraft:firework_rocket",count:1,components:{"minecraft:fireworks":{explosions:[{shape:"small_ball",has_twinkle:true,colors:[I;16711927,16711901,16711850],fade_colors:[I;15662848,16770560]}]}}}}
-    
+
     @delay 10
     @if firstTime == true
         @bypass /title @s actionbar ["",{"text":"Stage 7 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"}]

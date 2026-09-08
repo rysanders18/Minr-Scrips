@@ -1,0 +1,71 @@
+# handleStylePoints(Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage) https://paste.minr.org/xayapehifu
+@using Harha
+@fast
+
+
+@define Int oldSwagPoints = swagPoints[player]
+@define Int pointsToGive = 0
+
+@for Int i in list::range(0, thresholds.length())
+    @define Int threshold = thresholds[i]
+    @define Int reward = rewards[i]
+    @define Int globalIndex = claimedIndexStart + i
+
+    @if blocksThisStage <= threshold && claimedStylePoints[player][globalIndex] == false
+        @var swagPoints[player] += reward
+        @var pointsToGive += reward
+        @var claimedStylePoints[globalIndex] = true
+    @fi
+@done
+
+@if pointsToGive > 0
+
+    # cosmetic stuff TODO: PARTICLES
+
+    # if the player is going from less than X to more than Y style points, give cosmetic
+    @if stylePointPrestiges[player] == 0
+        @if oldSwagPoints < 500 && swagPoints[player] >= 500
+            @var cosmeticsUnlocked[player][3] = 1
+            @player &#d4d4d4----------------------------
+            @player &6&lCosmetic Unlocked!
+            @player &#9209FF&l&nO&#8D0BF8&l&nb&#880DF1&l&ns&#830FEB&l&ni&#7E11E4&l&nd&#7913DD&l&ni&#7415D6&l&na&#6F17CF&l&nn &#6D17CE&l&nB&#7015D1&l&nl&#7313D4&l&no&#7611D7&l&nc&#790EDA&l&nk&#7C0CDD&l&ns&#8208E3&l&n
+            @player &#d4d4d4----------------------------
+            @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
+            @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
+        @elseif oldSwagPoints < 1000 && swagPoints[player] >= 1000
+            @var cosmeticsUnlocked[player][4] = 1
+            @player &#d4d4d4----------------------------
+            @player &6&lCosmetic Unlocked!
+            @player &#304CD6&l&nC&#613CD0&l&no&#932DCA&l&nr&#C41DC4&l&na&#CB34B9&l&nl &#D24AAE&l&nB&#D961A3&l&nl&#DC567F&l&no&#E04A5A&l&nc&#E33F36&l&nk&#E0733B&l&ns&#DBDB46&l&n
+            @player &#d4d4d4----------------------------
+            @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
+            @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
+        @elseif oldSwagPoints < 2000 && swagPoints[player] >= 2000
+            @var cosmeticsUnlocked[player][5] = 1
+            @player &#d4d4d4----------------------------
+            @player &6&lCosmetic Unlocked!
+            @player &#FF0000&lT&#FF5555&lN&#FFAAAA&lT &#FFFFFF&lB&#FFAAAA&ll&#FF5555&lo&#FF0000&lc&#FF5555&lk
+            @player &#d4d4d4----------------------------
+            @bypass /playsound minecraft:ui.toast.challenge_complete master @s ~ ~ ~ 1 1.5
+            @bypass /execute at {{player}} anchored feet run particle minecraft:totem_of_undying ~ ~1 ~ 2 1 2 0.05 150 force @a[distance=..30]
+        @fi
+    @fi
+
+    @var swagTitle(pointsToGive, player)
+    @var the100function(player)
+    @if hasGainedStylePoints[player] == false
+        @var hasGainedStylePoints[player] = true
+        @delay 3s
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+        @player &7You just earned your first &#ffc71d&lSTYLE POINTS!
+        @delay 3s
+        @player &#ffc71dStyle Points &7are earned by &#d4d4d4&lbeating levels in less blocks than the par!
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+        @delay 3s
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+        @player &#d4d4d4&lClick on a level sign &7to see if that level can be &#d4d4d4&lbeaten in less blocks &7than intended!
+        @delay 3s
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+        @player &7Collect enough &#ffc71dStyle Points &7to unlock &#d4d4d4&lspecial cosmetic blocks &7to use!
+    @fi
+@fi

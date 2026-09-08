@@ -1,3 +1,4 @@
+
 # styleViewer(Player player, Int level) https://paste.minr.org/owequqocub
 @using Harha
 @fast
@@ -334,92 +335,92 @@
         
     @fi
     
-    # Section 1
-    # 1-01: 0:03
-    # 1-02: 0:07
-    # 1-03: 0:10
-    # 1-04: 0:14
-    # 1-05: 0:18
-    # 1-06: 0:20
-    # 1-07: 0:23
-    # 1-08: 0:27
-    # 1-09: 0:31
-    # 1-10: 0:35
-    
-    # Section 2
-    # 2-01: 0:42
-    # 2-02: 0:48
-    # 2-03: 0:53
-    # 2-04: 1:02
-    # 2-05: 1:11
-    # 2-06: 1:15
-    # 2-07: 1:21
-    # 2-08: 1:27
-    # 2-09: 1:32
-    # 2-10: 1:40
-    
-    # Section 3
-    # 3-01: 1:45
-    # 3-02: 1:48
-    # 3-03: 1:53
-    # 3-04: 1:56
-    # 3-05: 2:00
-    # 3-06: 2:04
-    # 3-07: 2:10
-    # 3-08: 2:14
-    # 3-09: 2:18
-    # 3-10: 2:24
-    
-    # Section 4
-    # 4-01: 2:52
-    # 4-02: 2:59
-    # 4-03: 3:11
-    # 4-04: 3:20
-    # 4-05: 3:25
-    # 4-06: 3:30
-    # 4-07: 3:36
-    # 4-08: 3:42
-    # 4-09: 3:56
-    # 4-10: 4:04
-    
-    # Section 5
-    # 5-01: 4:22
-    # 5-02: 4:26
-    # 5-03: 4:29
-    # 5-04: 4:32
-    # 5-05: 4:37
-    # 5-06: 4:42
-    # 5-07: 4:47
-    # 5-08: 4:52
-    # 5-09: 4:57
-    # 5-10: 5:05
-    
-    # Section 6
-    # 6-01: 5:14
-    # 6-02: 5:18
-    # 6-03: 5:22
-    # 6-04: 5:26
-    # 6-05: 5:30
-    # 6-06: 5:34
-    # 6-07: 5:40
-    # 6-08: 5:46
-    # 6-09: 5:52
-    # 6-10: 5:56
-    
-    # Section 7
-    # 7-01: 6:09
-    # 7-02: 6:17
-    # 7-03: 6:23
-    # 7-04: 6:29
-    # 7-05: 6:35
-    # 7-06: 6:40
-    # 7-07: 6:46
-    # 7-08: 6:51
-    # 7-09: 6:56
-    # 7-10: 7:01
-    
+# Section 1
+# 1-01: 0:03
+# 1-02: 0:07
+# 1-03: 0:10
+# 1-04: 0:14
+# 1-05: 0:18
+# 1-06: 0:20
+# 1-07: 0:23
+# 1-08: 0:27
+# 1-09: 0:31
+# 1-10: 0:35
+
+# Section 2
+# 2-01: 0:42
+# 2-02: 0:48
+# 2-03: 0:53
+# 2-04: 1:02
+# 2-05: 1:11
+# 2-06: 1:15
+# 2-07: 1:21
+# 2-08: 1:27
+# 2-09: 1:32
+# 2-10: 1:40
+
+# Section 3
+# 3-01: 1:45
+# 3-02: 1:48
+# 3-03: 1:53
+# 3-04: 1:56
+# 3-05: 2:00
+# 3-06: 2:04
+# 3-07: 2:10
+# 3-08: 2:14
+# 3-09: 2:18
+# 3-10: 2:24
+
+# Section 4
+# 4-01: 2:52
+# 4-02: 2:59
+# 4-03: 3:11
+# 4-04: 3:20
+# 4-05: 3:25
+# 4-06: 3:30
+# 4-07: 3:36
+# 4-08: 3:42
+# 4-09: 3:56
+# 4-10: 4:04
+
+# Section 5
+# 5-01: 4:22
+# 5-02: 4:26
+# 5-03: 4:29
+# 5-04: 4:32
+# 5-05: 4:37
+# 5-06: 4:42
+# 5-07: 4:47
+# 5-08: 4:52
+# 5-09: 4:57
+# 5-10: 5:05
+
+# Section 6
+# 6-01: 5:14
+# 6-02: 5:18
+# 6-03: 5:22
+# 6-04: 5:26
+# 6-05: 5:30
+# 6-06: 5:34
+# 6-07: 5:40
+# 6-08: 5:46
+# 6-09: 5:52
+# 6-10: 5:56
+
+# Section 7
+# 7-01: 6:09
+# 7-02: 6:17
+# 7-03: 6:23
+# 7-04: 6:29
+# 7-05: 6:35
+# 7-06: 6:40
+# 7-07: 6:46
+# 7-08: 6:51
+# 7-09: 6:56
+# 7-10: 7:01
+
     @if level == 0
-        @player &#d4d4d4&lAdvice:&7 These signs will give &#d4d4d4&ltips and advice &7for each level! If you’re stuck, these signs can definitely help you out. It's good practice to try to &#d4d4d4&lplace right before you land.
+        @player &#d4d4d4&lAdvice:&7 These signs will give &#d4d4d4&ltips and advice &7for each level! If you’re stuck, these signs can definitely help you out. It's good practice to try to &#d4d4d4&lplace right before you land. 
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=3s
     @elseif level == 1
         @player &#d4d4d4&lAdvice:&7 Here it helps to &#d4d4d4&lturn as soon as you place. Try to strafe so you don’t slam into the walls.
@@ -437,7 +438,7 @@
         @player &#d4d4d4&lAdvice:&7 Try to &#d4d4d4&lstrafe left &7away from the wall so you don’t hit the iron bars. &#d4d4d4&lYou can land very far left &7on the first block. Further than you think!
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=20s
     @elseif level == 6
-        @player &#d4d4d4&lAdvice:&7 Try to focus on &#d4d4d4&lstrafing further away from the targets! &7The further you are away from the target, the easier it is to aim.
+        @player &#d4d4d4&lAdvice:&7 Try to focus on &#d4d4d4&lstrafing further away from the targets! &7The further you are away from the target, the easier it is to aim. 
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=23s
     @elseif level == 7
         @player &#d4d4d4&lAdvice:&7 You can carry your momentum and &#d4d4d4&lchain the jumps,&7 or you can stop and take each jump slow! The choice is yours.
@@ -497,7 +498,7 @@
         @player &#d4d4d4&lAdvice:&7 Don’t attempt to place the blocks while you are inside them. &#d4d4d4&lYou need to be fully above the blocks. &7You might need to slow down a bit for the last target.
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=124s
     @elseif level == 26
-        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lCut the corner &7tight and &#d4d4d4&lplace the block as late as possible. &7The later you place the block, the more time you have to turn around and run to get some speed for the final jump.
+        @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lCut the corner &7tight and &#d4d4d4&lplace the block as late as possible. &7The later you place the block, the more time you have to turn around and run to get some speed for the final jump. 
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=130s
     @elseif level == 27
         @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lSlow down &7after the log to easily land on the 2nd block. You can experiment with holding space or not. &#d4d4d4&lMove away from the wall &7on the last block to &#d4d4d4&lavoid hitting the fence!
@@ -560,7 +561,7 @@
         @player &#d4d4d4&lAdvice:&7 &#d4d4d4&lRun as long as possible on each block to gain as much speed as you can &7for the final jump! Make sure you &#d4d4d4&ljump at the very far edge of the last block, &7and flick forwards so you are &#d4d4d4&laiming straight ahead when you jump. &7Keep in mind, you can &#d4d4d4&lgain momentum on the starting platform &7to help!
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=287s
     @elseif level == 47
-        @player &#d4d4d4&lAdvice:&7 Similarly to the last level, &#d4d4d4&lRun as long as possible on each block to gain as much speed as you can &7for the final jump. Make sure you &#d4d4d4&ljump at the very far edge of the last block, &7and flick forwards so you are &#d4d4d4&laiming straight ahead when you jump. Land on the far left edge &7of each block. You can stand much farther right on the block than you think!
+        @player &#d4d4d4&lAdvice:&7 Similarly to the last level, &#d4d4d4&lRun as long as possible on each block to gain as much speed as you can &7for the final jump. Make sure you &#d4d4d4&ljump at the very far edge of the last block, &7and flick forwards so you are &#d4d4d4&laiming straight ahead when you jump. Land on the far left edge &7of each block. You can stand much farther right on the block than you think! 
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=292s
     @elseif level == 48
         @player &#d4d4d4&lAdvice:&7 Envision yourself landing on the &#d4d4d4&lvery far left corner of the first block. Run a little &7on the first block to gain some speed, and stick close to the wall without hitting it. &#d4d4d4&lFlick forwards after placing the last block, and run as long as you can &7before jumping to the end.
@@ -626,7 +627,7 @@
         @player &#d4d4d4&lAdvice:&7 This &#d4d4d4&lvery challenging penultimate level &7combines rapid mouse movement with precise player movement. &#d4d4d4&lClick the note blocks mid air to activate the targets. &7Click the 1st note block after placing the first block, and click the 2nd note block after placing the 2nd block. Start moving your mouse &#d4d4d4&limmediately after clicking the note blocks &7to give yourself more time to place the targets. It helps if you &#d4d4d4&lstrafe slightly away from the walls, &7so you are closer to the note blocks, and it is easier to place the blocks. &#d4d4d4&lThink ahead&7 after placing the 3rd block.
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=416s
     @elseif level == 69
-        @player &#d4d4d4&lAdvice:&7 This is the &#d4d4d4&lfinal level!&7 This extremely difficult stage requires you to apply everything you’ve learned so far. Getting enough speed for the &#d4d4d4&lfinal jump is the most challenging factor&7 of this level. &#d4d4d4&lRun as long as possible on the last block, and jump at the very edge.&7 You should be &#d4d4d4&lfacing forwards for each jump&7 towards the end of this level to gain enough speed. Experiment with &#d4d4d4&lcrossing over to the other side&7 after placing the 3rd block.
+        @player &#d4d4d4&lAdvice:&7 This is the &#d4d4d4&lfinal level!&7 This extremely difficult stage requires you to apply everything you’ve learned so far. Getting enough speed for the &#d4d4d4&lfinal jump is the most challenging factor&7 of this level. &#d4d4d4&lRun as long as possible on the last block, and jump at the very edge.&7 You should be &#d4d4d4&lfacing forwards for each jump&7 towards the end of this level to gain enough speed. Experiment with &#d4d4d4&lcrossing over to the other side&7 after placing the 3rd block. 
         @player  https://www.youtube.com/watch?v=RvpoHzvJsVQ&t=421s
     @fi
     
@@ -650,7 +651,7 @@
             @return
         @fi
     @fi
-    
+
     # TODO: uncomment this
     # @define timer::Timer timer = timer::getMapTimer(player, "harha")
     # @if timer != null

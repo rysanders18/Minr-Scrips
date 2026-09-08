@@ -1,0 +1,1034 @@
+# harhaafter07-11 https://paste.minr.org/iyojifoyej
+# gives blocks and runs handleStylePoints function
+# handleAfter(Int levelNumber, Boolean stylePresent, Int[] cheatList, Int[] thresholds, Int[] rewards, Int claimedIndexStart, Int blocksThisStage, Player player)
+
+@using Harha
+@fast
+
+@if player.getGameMode() == "ADVENTURE" && hasTeleported[player] == true
+    @var player.teleport(Position(-4705.5, 93.0, 5051.5, 180.0, -10.0, "Theta_the_end"))
+    @bypass playsound minecraft:block.note_block.didgeridoo master @s
+    @player &cYou cannot complete the map because you teleported!
+    @return
+@fi
+
+# TODO: Remove comment to re-enable enteredEndThisRun check
+@if player.getGameMode() == "ADVENTURE" && enteredEndThisRun[player] == false
+    @var enteredEndThisRun[player] = true
+@else
+    @return
+@fi
+
+@if player.getGameMode() == "ADVENTURE" && hasTeleported[player] == false
+    @var enteredEndThisRun[player] = true
+        
+    # Handles pbFalls, pbBlocks, and numberCompletions per each challenge
+    @if player.getCurrentChallenge() == "hahahahaha" || difficultySelection[player] == "ultraMaster"
+        @if (pbFallsUMM[player] > sessionFalls[player])
+            @var pbFallsUMM[player] = sessionFalls[player]
+            @var top100Function(player, 4)
+        @fi
+        @if (pbBlocksUMM[player] > sessionBlocks[player])
+            @var pbBlocksUMM[player] = sessionBlocks[player]
+            @var top100Function(player, 9)
+        @fi
+        @var numberCompletionsUMM[player] += 1
+        @var top100Function(player, 15)
+    @elseif player.getCurrentChallenge() == "hahahaha" || difficultySelection[player] == "master"
+        @if (pbFallsMaster[player] > sessionFalls[player])
+            @var pbFallsMaster[player] = sessionFalls[player]
+            @var top100Function(player, 3)
+        @fi
+        @if (pbBlocksMaster[player] > sessionBlocks[player])
+            @var pbBlocksMaster[player] = sessionBlocks[player]
+            @var top100Function(player, 8)
+        @fi
+        @var numberCompletionsMaster[player] += 1
+        @var top100Function(player, 14)
+    @elseif player.getCurrentChallenge() == "hahahas" || difficultySelection[player] == "soulLink"
+        @if (pbFallsSoulLink[player] > sessionFalls[player])
+            @var pbFallsSoulLink[player] = sessionFalls[player]
+            @var top100Function(player, 5)
+        @fi
+        @if (pbBlocksSoulLink[player] > sessionBlocks[player])
+            @var pbBlocksSoulLink[player] = sessionBlocks[player]
+            @var top100Function(player, 10)
+        @fi
+        @var numberCompletionsSoulLink[player] += 1
+        @var top100Function(player, 16)
+        
+        # Handle soul link partners PB
+        @if partners[player].length() > soulLinkPlayersPB[player]
+            @var soulLinkPlayersPB[player] = partners[player].length()
+            @var top100Function(player, 27)
+        @fi
+        
+    @elseif player.getCurrentChallenge() == "hahahahas" || difficultySelection[player] == "masterSoulLink"
+        @if (pbFallsMasterSoulLink[player] > sessionFalls[player])
+            @var pbFallsMasterSoulLink[player] = sessionFalls[player]
+            @var top100Function(player, 6)
+        @fi
+        @if (pbBlocksMasterSoulLink[player] > sessionBlocks[player])
+            @var pbBlocksMasterSoulLink[player] = sessionBlocks[player]
+            @var top100Function(player, 11)
+            @var numberCompletionsMasterSoulLink[player] += 1
+            @var top100Function(player, 17)
+        @fi
+        
+        @if partners[player].length() > masterSoulLinkPlayersPB[player]
+            @var masterSoulLinkPlayersPB[player] = partners[player].length()
+            @var top100Function(player, 27)
+        @fi
+        
+    @else
+        @var numberCompletionsNormal[player] += 1
+        @var top100Function(player, 13)
+    @fi
+    
+    
+    @if (pbFalls[player] > sessionFalls[player])
+        @var pbFalls[player] = sessionFalls[player]
+        @var top100Function(player, 2)
+        
+    @fi
+    @if (pbBlocks[player] > sessionBlocks[player])
+        @var pbBlocks[player] = sessionBlocks[player]
+        @var top100Function(player, 7)
+    @fi
+    
+    @var numberCompletions[player] += 1
+    @var top100Function(player, 12)
+@fi
+
+@bypass /execute in minecraft:theta_the_end run setblock -4709 95 5027 minecraft:player_head[powered=false,rotation=4]{profile:"{{Player(top100MapCompletionsTotal[0]).getName()}}"} strict
+@bypass /execute in minecraft:theta_the_end run setblock -4708 94 5027 birch_wall_sign[facing=east,waterlogged=false]{back_text:{color:"black",has_glowing_text:0b},front_text:{color:"light_blue",has_glowing_text:1b,messages:[{"text":"{{Player(top100MapCompletionsTotal[0]).getName()}}","color":"red"},[{"color":"#CFE7FF","text":"H"},{"color":"#CBE3FA","text":"i"},{"color":"#C7DEF5","text":"g"},{"color":"#C3DAF1","text":"h"},{"color":"#BFD5EC","text":"e"},{"color":"#BCD1E7","text":"s"},{"color":"#B8CDE2","text":"t "},{"color":"#B4C8DD","text":"# "},{"color":"#B0C4D9","text":"o"},{"text":"f","color":"#A8BBCF"}],[{"color":"#CFE7FF","text":"C"},{"color":"#CCE4FB","text":"o"},{"color":"#C9E0F8","text":"m"},{"color":"#C6DDF4","text":"p"},{"color":"#C3D9F0","text":"l"},{"color":"#C0D6ED","text":"e"},{"color":"#BDD3E9","text":"t"},{"color":"#BACFE5","text":"i"},{"color":"#B7CCE1","text":"o"},{"color":"#B4C9DE","text":"n"},{"color":"#B1C5DA","text":"s"},{"color":"#AEC2D6","text":": "}],{"text":"{{numberCompletions[Player(top100MapCompletionsTotal[0])]}}","color":"red","bold":"true"}]},is_waxed:1b} strict
+
+@bypass /execute in minecraft:theta_the_end run setblock -4703 93 5009 minecraft:player_head[powered=false,rotation=12]{profile:"{{Player(top100BlocksPBNormal[0]).getName()}}"} strict
+@bypass /execute in minecraft:theta_the_end run setblock -4704 92 5009 birch_wall_sign[facing=west,waterlogged=false]{back_text:{color:"black",has_glowing_text:0b},front_text:{color:"light_blue",has_glowing_text:1b,messages:[{"text":"{{Player(top100BlocksPBNormal[0]).getName()}}","color":"gold"},[{"color":"#CFE7FF","text":"P"},{"color":"#CCE3FB","text":"e"},{"color":"#C9E0F7","text":"r"},{"color":"#C5DCF3","text":"s"},{"color":"#C2D8EF","text":"o"},{"color":"#BFD5EB","text":"n"},{"color":"#BCD1E7","text":"a"},{"color":"#B8CDE3","text":"l "},{"color":"#B5CADF","text":"B"},{"color":"#B2C6DB","text":"e"},{"color":"#AFC2D7","text":"s"},{"text":"t","color":"#A8BBCF"}],[{"color":"#CFE7FF","text":"B"},{"color":"#CCE4FB","text":"l"},{"color":"#C9E0F8","text":"o"},{"color":"#C6DDF4","text":"c"},{"color":"#C3D9F0","text":"k"},{"color":"#C0D6ED","text":"s "},{"color":"#BDD3E9","text":"P"},{"color":"#BACFE5","text":"l"},{"color":"#B7CCE1","text":"a"},{"color":"#B4C9DE","text":"c"},{"color":"#B1C5DA","text":"e"},{"color":"#AEC2D6","text":"d"},{"text":":","color":"#A8BBCF"}],{"text":"{{pbBlocks[Player(top100BlocksPBNormal[0])]}}","color":"gold","bold":"true"}]},is_waxed:1b} strict
+
+@bypass /execute in minecraft:theta_the_end run setblock -4709 94 4977 minecraft:player_head[powered=false,rotation=4]{profile:"{{Player(top100Section8PB[0]).getName()}}"} strict
+@bypass /execute in minecraft:theta_the_end run setblock -4708 93 4977 birch_wall_sign[facing=east,waterlogged=false]{back_text:{color:"black",has_glowing_text:0b},front_text:{color:"light_blue",has_glowing_text:1b,messages:[{"text":"{{Player(top100Section8PB[0]).getName()}}","color":"aqua"},[{"color":"#CFE7FF","text":"S"},{"color":"#CBE2FA","text":"u"},{"color":"#C6DDF4","text":"m "},{"color":"#C2D8EF","text":"o"},{"color":"#BED3EA","text":"f "},{"color":"#B9CFE4","text":"b"},{"color":"#B5CADF","text":"e"},{"color":"#B1C5DA","text":"s"},{"text":"t","color":"#A8BBCF"}],[{"color":"#CFE7FF","text":"S"},{"color":"#CCE4FB","text":"e"},{"color":"#C9E0F8","text":"c"},{"color":"#C6DDF4","text":"t"},{"color":"#C3D9F0","text":"i"},{"color":"#C0D6ED","text":"o"},{"color":"#BDD3E9","text":"n "},{"color":"#BACFE5","text":"T"},{"color":"#B7CCE1","text":"i"},{"color":"#B4C9DE","text":"m"},{"color":"#B1C5DA","text":"e"},{"color":"#AEC2D6","text":"s"},{"text":":","color":"#A8BBCF"}],{"text":"{{timer::formatTime(stage8PB[Player(top100Section8PB[0])])}}","color":"aqua","bold":"true"}]},is_waxed:1b} strict
+
+@bypass /execute in minecraft:theta_the_end run setblock -4704 94 4966 birch_wall_sign[facing=west,waterlogged=false]{back_text:{color:"black",has_glowing_text:0b},front_text:{color:"light_blue",has_glowing_text:1b,messages:[{"text":"{{firstEvenHarhaTrackpadVictor}}","color":"aqua"},[{"color":"#CFE7FF","text":"1"},{"color":"#CBE2FA","text":"s"},{"color":"#C6DDF4","text":"t "},{"color":"#C2D8EF","text":"E"},{"color":"#BDD3E9","text":"v"},{"color":"#B9CEE4","text":"e"},{"color":"#B4C9DE","text":"n "},{"color":"#B0C4D9","text":"H"},{"color":"#ABBFD3","text":"a"},{"color":"#A7BACE","text":"r"},{"color":"#A2B5C8","text":"d"},{"color":"#9EB0C3","text":"e"},{"text":"r","color":"#95A6B8"}],[{"color":"#CFE7FF","text":"H"},{"color":"#CAE1F9","text":"a"},{"color":"#C4DBF2","text":"t "},{"color":"#BFD5EC","text":"V"},{"color":"#BACFE5","text":"e"},{"color":"#B5C9DF","text":"r"},{"color":"#AFC4D8","text":"i"},{"color":"#AABED2","text":"f"},{"color":"#A5B8CB","text":"i"},{"color":"#A0B2C5","text":"e"},{"text":"d","color":"#95A6B8"}],[{"color":"#CFE7FF","text":"T"},{"color":"#CBE3FA","text":"r"},{"color":"#C7DEF6","text":"a"},{"color":"#C3DAF1","text":"c"},{"color":"#C0D6EC","text":"k"},{"color":"#BCD1E7","text":"p"},{"color":"#B8CDE3","text":"a"},{"color":"#B4C9DE","text":"d "},{"color":"#B0C4D9","text":"V"},{"color":"#ACC0D4","text":"i"},{"color":"#A8BCD0","text":"c"},{"color":"#A4B7CB","text":"t"},{"color":"#A1B3C6","text":"o"},{"color":"#9DAFC1","text":"r"},{"text":":","color":"#95A6B8"}]]},is_waxed:1b} strict
+
+
+@bypass /title @s times 0 100 10
+
+@define String[] gradient = String[]
+@define String[] subtextGradient = String["#FFFFFF", "#FFFFFF"]
+@define String[] fadedGradient = String[]
+@define String[] flashColors = String["#FFFFFF", "#C0C0C0"]
+
+# @define String[] rainbowGradient2 = String["#ff0000", "#ff9900", "#ccff00", "#33ff00", "#00ff66", "#00ffff", "#0066ff", "#3300ff", "#cc00ff", "#ff0099"]
+@define String[] rainbowGradient2 = String["#ff0000", "#ff3500", "#ff6a00", "#ff9e00", "#ffd300", "#f6ff00", "#c1ff00", "#8dff00", "#58ff00", "#23ff00", "#00ff12", "#00ff46", "#00ff7b", "#00ffb0", "#00ffe5", "#00e5ff", "#00b0ff", "#007bff", "#0046ff", "#0012ff", "#2300ff", "#5800ff", "#8d00ff", "#c100ff", "#f600ff", "#ff00d3", "#ff009e", "#ff006a", "#ff0035", "#ff0000"]
+# @define String[] rainbowGradient = String["#ff9500", "#ff9a00", "#ffa000", "#ffa500", "#ffab00", "#ffb000", "#ffb500", "#ffbb00", "#ffc000", "#ffc600", "#ffcb00", "#ffd000", "#ffd600", "#ffdb00", "#ffe100", "#ffe600", "#ffec00", "#fff100", "#fff700", "#fffc00", "#fff700", "#fff100", "#ffec00", "#ffe600", "#ffe100", "#ffdb00", "#ffd600", "#ffd000", "#ffcb00", "#ffc600", "#ffc000", "#ffbb00", "#ffb500", "#ffb000", "#ffab00", "#ffa500", "#ffa000", "#ff9a00"]
+@define String[] rainbowGradient = String["#ff6565", "#ff8565", "#ffa565", "#ffc565", "#ffe465", "#faff65", "#daff65", "#baff65", "#9aff65", "#7bff65", "#65ff70", "#65ff90", "#65ffb0", "#65ffcf", "#65ffef", "#66efff", "#66cfff", "#66b0ff", "#6690ff", "#6670ff", "#7b66ff", "#9b66ff", "#ba66ff", "#da66ff", "#fa66ff", "#ff66e5", "#ff66c5", "#ff66a5", "#ff6686", "#ff6666"]
+
+@define String[] pbGradient = String["#ff57ff&n", "#ff6dd9&n", "#ff84c1", "#ff9eb5", "#ff84c1", "#ff6dd9"]
+
+
+
+
+
+
+
+
+
+
+# FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS
+# FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS
+# FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS FALLS
+
+@define String text = ""
+@define String subtext = ""
+
+@define String title1text = "Times fallen: {{sessionFalls[player]}}"
+@define String title1subtext = "Personal Best: {{pbFalls[player]}}"
+
+# TODO: Change == to <
+@if sessionFalls[player] < pbFalls[player] && numberCompletions[player] > 1
+    @var title1subtext = "NEW PERSONAL BEST!"
+@fi
+
+@if title1subtext == "NEW PERSONAL BEST!"
+    @var subtextGradient = pbGradient
+@else
+    @var subtextGradient = rainbowGradient
+@fi
+
+@define Int maxLength1
+
+@if title1text.length() > title1subtext.length()
+    @var maxLength1 = title1text.length()
+@else
+    @var maxLength1 = title1subtext.length()
+@fi
+
+# @player DEBUG: appearing
+
+# Text appears 1 char at a time
+@define Int gradientOffset = 0
+@for Int i in list::range(2, maxLength1 + 2)
+@var gradient = hslGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "longer") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, i - 1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[j] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{i % rainbowGradient.length()}}
+            # @fi
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+    # @fi
+
+
+@done
+
+@var gradientOffset += maxLength1 + 2
+
+# @player DEBUG: flashing
+
+# Text flash code
+@for Int i in list::range(0, maxLength1 + 4)
+@define Int flashPos = i * 2
+@var gradient = hslGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "longer")
+@var text = ""
+@var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @if j == flashPos
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @elseif j == flashPos - 1
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @else
+                @var text += String("&" + gradient[j] + "&l" + title1text.substring(j, j + 1))
+            @fi
+        @fi
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+        # Subtext flashing on PB
+        @if title1subtext == "NEW PERSONAL BEST!"
+            @if title1subtext.length() >= j + 1
+                @if j == flashPos
+                # Flashing pb gradient
+                @var subtext += String("&" + flashColors[0] + "&l" + title1subtext.substring(j, j + 1))
+                @elseif j == flashPos - 1
+                @var subtext += String("&" + flashColors[0] + "&l" + title1subtext.substring(j, j + 1))
+                @else
+                @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+                @fi
+            @fi
+
+        # Subtext flashing on normal
+        @else
+            @if title1subtext.length() >= j + 1
+                @if j == flashPos
+                @var subtext += String("&" + flashColors[0] + "&l&n" + title1subtext.substring(j, j + 1))
+                @elseif j == flashPos - 1
+                @var subtext += String("&" + "#EEEEEE" + "&l&n" + title1subtext.substring(j, j + 1))
+                @else
+                @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+                @fi
+            @fi
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+@done
+
+@var gradientOffset += maxLength1 + 4
+
+# @player DEBUG: holding
+
+# Text stays for x cycles, cycling through rainbow
+@define Int cyclesToStay = 25
+@for Int i in list::range(0, cyclesToStay)
+@var gradient = hslGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "longer") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[j] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + maxLength1 * 2 + 6) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+
+@done
+
+@var gradientOffset += cyclesToStay + 1
+
+# @player DEBUG: disappearing
+
+# Text disappear 1 char at a time
+@for Int i in list::range(-1, maxLength1 - 1)
+@define Int disappearLength = maxLength1 - i - 1
+# @var gradient = hslGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "longer") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, disappearLength)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[j] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + disappearLength) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
+    # @fi
+
+@done
+
+@bypass /title @s subtitle [""]
+@bypass /title @s title [""]
+
+@delay 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+# SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS 
+# SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS SECRETS  
+
+@var gradient = String[]
+@var subtextGradient = String["#FFFFFF", "#FFFFFF"]
+@var fadedGradient = String[]
+@var flashColors = String["#FFFFFF", "#C0C0C0"]
+
+# @var rainbowGradient2 = String["#ff0000", "#ff9900", "#ccff00", "#33ff00", "#00ff66", "#00ffff", "#0066ff", "#3300ff", "#cc00ff", "#ff0099"]
+# @var rainbowGradient2 = String["#ff0000", "#ff3500", "#ff6a00", "#ff9e00", "#ffd300", "#f6ff00", "#c1ff00", "#8dff00", "#58ff00", "#23ff00", "#00ff12", "#00ff46", "#00ff7b", "#00ffb0", "#00ffe5", "#00e5ff", "#00b0ff", "#007bff", "#0046ff", "#0012ff", "#2300ff", "#5800ff", "#8d00ff", "#c100ff", "#f600ff", "#ff00d3", "#ff009e", "#ff006a", "#ff0035", "#ff0000"]
+# @var rainbowGradient = String["#ff9500", "#ff9a00", "#ffa000", "#ffa500", "#ffab00", "#ffb000", "#ffb500", "#ffbb00", "#ffc000", "#ffc600", "#ffcb00", "#ffd000", "#ffd600", "#ffdb00", "#ffe100", "#ffe600", "#ffec00", "#fff100", "#fff700", "#fffc00", "#fff700", "#fff100", "#ffec00", "#ffe600", "#ffe100", "#ffdb00", "#ffd600", "#ffd000", "#ffcb00", "#ffc600", "#ffc000", "#ffbb00", "#ffb500", "#ffb000", "#ffab00", "#ffa500", "#ffa000", "#ff9a00"]
+# @var rainbowGradient = String["#ff6565", "#ff8565", "#ffa565", "#ffc565", "#ffe465", "#faff65", "#daff65", "#baff65", "#9aff65", "#7bff65", "#65ff70", "#65ff90", "#65ffb0", "#65ffcf", "#65ffef", "#66efff", "#66cfff", "#66b0ff", "#6690ff", "#6670ff", "#7b66ff", "#9b66ff", "#ba66ff", "#da66ff", "#fa66ff", "#ff66e5", "#ff66c5", "#ff66a5", "#ff6686", "#ff6666"]
+
+# @var pbGradient = String["#ff57ff&n", "#ff6dd9&n", "#ff84c1", "#ff9eb5", "#ff84c1", "#ff6dd9"]
+
+# @var rainbowGradient = String["#57ffff", "#6cf8ff", "#95eeff", "#a9e8ff", "#b8e2ff", "#c6ddff", "#d5d5ff", "#e9cbff", "#ffb9ff", "#ffb7ef", "#ffb6d8", "#ffb3c3", "#ffafae", "#ffab92", "#ffa766", "#ffaa00", "#ffa766", "#ffab92", "#ffafae", "#ffb3c3", "#ffb6d8", "#ffb7ef", "#ffb9ff", "#e9cbff", "#d5d5ff", "#c6ddff", "#b8e2ff", "#a9e8ff", "#95eeff", "#6cf8ff"]
+# @var rainbowGradient2 = String["#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff"]
+
+@var rainbowGradient = String["#57ffff", "#76faf0", "#8cf4e2", "#9defd3", "#aceac5", "#b8e4b6", "#c3dfa8", "#cdd999", "#d5d48b", "#ddce7c", "#e4c86d", "#eac25e", "#f0bc4e", "#f6b63c", "#fab027", "#ffaa00", "#fab027", "#f6b63c", "#f0bc4e", "#eac25e", "#e4c86d", "#ddce7c", "#d5d48b", "#cdd999", "#c3dfa8", "#b8e4b6", "#aceac5", "#9defd3", "#8cf4e2", "#76faf0"]
+@var rainbowGradient2 = String["#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3"]
+
+
+
+
+
+
+
+
+
+
+@var text = ""
+@var subtext = ""
+
+@var title1text = "Secrets Found: {{secretsFoundList[player].sum()}}"
+@var title1subtext = "Secrets Completed: {{secretsCompletedList[player].sum()}}"
+
+# # TODO: Change == to <
+# @if sessionFalls[player] == pbFalls[player] && numberCompletions[player] > 1
+#     @var title1subtext = "NEW PERSONAL BEST!"
+# @fi
+
+@var subtextGradient = rainbowGradient2
+@var gradient = rainbowGradient
+
+
+@var maxLength1 = 0
+
+@if title1text.length() > title1subtext.length()
+    @var maxLength1 = title1text.length()
+@else
+    @var maxLength1 = title1subtext.length()
+@fi
+
+# @player DEBUG: appearing
+
+# Text appears 1 char at a time
+@var gradientOffset = 0
+@for Int i in list::range(2, maxLength1 + 2)
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient2.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, i - 1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(j + i + 100) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{i % rainbowGradient.length()}}
+            # @fi
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i + 100) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+    # @fi
+
+
+@done
+
+@var gradientOffset += maxLength1 + 2
+
+# @player DEBUG: flashing
+
+# Text flash code
+@for Int i in list::range(0, maxLength1 + 4)
+@define Int flashPos = i * 2
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter")
+@var text = ""
+@var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @if j == flashPos
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @elseif j == flashPos - 1
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @else
+                @var text += String("&" + gradient[(j + i + gradientOffset) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+            @fi
+        @fi
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+
+        # Subtext flashing on normal
+
+        @if title1subtext.length() >= j + 1
+            @if j == flashPos
+            @var subtext += String("&" + flashColors[0] + "&l&n" + title1subtext.substring(j, j + 1))
+            @elseif j == flashPos - 1
+            @var subtext += String("&" + "#EEEEEE" + "&l&n" + title1subtext.substring(j, j + 1))
+            @else
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+            @fi
+        @fi
+
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+@done
+
+@var gradientOffset += maxLength1 + 4
+
+# @player DEBUG: holding
+
+# Text stays for x cycles, cycling through rainbow
+@var cyclesToStay = 25
+@for Int i in list::range(0, cyclesToStay)
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(j + i + gradientOffset) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + maxLength1 * 2 + 6) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+
+@done
+
+@var gradientOffset += cyclesToStay + 1
+
+# @player DEBUG: disappearing
+
+# Text disappear 1 char at a time
+@for Int i in list::range(-1, maxLength1 - 1)
+@define Int disappearLength = maxLength1 - i - 1
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, disappearLength)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(j + i + gradientOffset) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + disappearLength) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
+    # @fi
+
+@done
+
+@bypass /title @s subtitle [""]
+@bypass /title @s title [""]
+
+@delay 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS 
+# STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINTS STYLE POINT
+
+@var subtextGradient = String["#FFFFFF", "#FFFFFF"]
+@var fadedGradient = String[]
+@var flashColors = String["#FFFFFF", "#C0C0C0"]
+@define String[] flashColors2 = String["#FFFFFF", "#C0C0C0"]
+# @var rainbowGradient2 = String["#ff0000", "#ff9900", "#ccff00", "#33ff00", "#00ff66", "#00ffff", "#0066ff", "#3300ff", "#cc00ff", "#ff0099"]
+# @var rainbowGradient2 = String["#ff0000", "#ff3500", "#ff6a00", "#ff9e00", "#ffd300", "#f6ff00", "#c1ff00", "#8dff00", "#58ff00", "#23ff00", "#00ff12", "#00ff46", "#00ff7b", "#00ffb0", "#00ffe5", "#00e5ff", "#00b0ff", "#007bff", "#0046ff", "#0012ff", "#2300ff", "#5800ff", "#8d00ff", "#c100ff", "#f600ff", "#ff00d3", "#ff009e", "#ff006a", "#ff0035", "#ff0000"]
+# @var rainbowGradient = String["#ff9500", "#ff9a00", "#ffa000", "#ffa500", "#ffab00", "#ffb000", "#ffb500", "#ffbb00", "#ffc000", "#ffc600", "#ffcb00", "#ffd000", "#ffd600", "#ffdb00", "#ffe100", "#ffe600", "#ffec00", "#fff100", "#fff700", "#fffc00", "#fff700", "#fff100", "#ffec00", "#ffe600", "#ffe100", "#ffdb00", "#ffd600", "#ffd000", "#ffcb00", "#ffc600", "#ffc000", "#ffbb00", "#ffb500", "#ffb000", "#ffab00", "#ffa500", "#ffa000", "#ff9a00"]
+# @var rainbowGradient = String["#ff6565", "#ff8565", "#ffa565", "#ffc565", "#ffe465", "#faff65", "#daff65", "#baff65", "#9aff65", "#7bff65", "#65ff70", "#65ff90", "#65ffb0", "#65ffcf", "#65ffef", "#66efff", "#66cfff", "#66b0ff", "#6690ff", "#6670ff", "#7b66ff", "#9b66ff", "#ba66ff", "#da66ff", "#fa66ff", "#ff66e5", "#ff66c5", "#ff66a5", "#ff6686", "#ff6666"]
+
+# @var pbGradient = String["#ff57ff&n", "#ff6dd9&n", "#ff84c1", "#ff9eb5", "#ff84c1", "#ff6dd9"]
+
+# @var rainbowGradient = String["#57ffff", "#6cf8ff", "#95eeff", "#a9e8ff", "#b8e2ff", "#c6ddff", "#d5d5ff", "#e9cbff", "#ffb9ff", "#ffb7ef", "#ffb6d8", "#ffb3c3", "#ffafae", "#ffab92", "#ffa766", "#ffaa00", "#ffa766", "#ffab92", "#ffafae", "#ffb3c3", "#ffb6d8", "#ffb7ef", "#ffb9ff", "#e9cbff", "#d5d5ff", "#c6ddff", "#b8e2ff", "#a9e8ff", "#95eeff", "#6cf8ff"]
+# @var rainbowGradient2 = String["#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff"]
+
+# @var rainbowGradient = String["#57ffff", "#76faf0", "#8cf4e2", "#9defd3", "#aceac5", "#b8e4b6", "#c3dfa8", "#cdd999", "#d5d48b", "#ddce7c", "#e4c86d", "#eac25e", "#f0bc4e", "#f6b63c", "#fab027", "#ffaa00", "#fab027", "#f6b63c", "#f0bc4e", "#eac25e", "#e4c86d", "#ddce7c", "#d5d48b", "#cdd999", "#c3dfa8", "#b8e4b6", "#aceac5", "#9defd3", "#8cf4e2", "#76faf0"]
+# @var rainbowGradient2 = String["#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3"]
+
+
+@var rainbowGradient = String["#ffaa00", "#ffc020", "#ffd534", "#ffea46", "#ffff57", "#ffff7b", "#ffff9b", "#ffffb9", "#ffffd6", "#ffffb9", "#ffff9b", "#ffff7b", "#ffff57", "#ffea46", "#ffd534", "#ffc020", "#ffaa00", "#ffc020", "#ffd534", "#ffea46", "#ffff57", "#ffff7b", "#ffff9b", "#ffffb9", "#ffffd6", "#ffffb9", "#ffff9b", "#ffff7b", "#ffff57", "#ffea46", "#ffd534", "#ffc020"]
+# @var rainbowGradient2 = String["#ffaa00", "#ffc020", "#ffd534", "#ffea46", "#ffff57", "#ffff7b", "#ffff9b", "#ffffb9", "#ffffd6", "#ffffb9", "#ffff9b", "#ffff7b", "#ffff57", "#ffea46", "#ffd534", "#ffc020", "#ffaa00", "#ffc020", "#ffd534", "#ffea46", "#ffff57", "#ffff7b", "#ffff9b", "#ffffb9", "#ffffd6", "#ffffb9", "#ffff9b", "#ffff7b", "#ffff57", "#ffea46", "#ffd534", "#ffc020"]
+
+@var rainbowGradient2 = String["#ababab", "#949494", "#7e7e7e", "#696969", "#545454", "#696969", "#7e7e7e", "#949494", "#ababab", "#ababab", "#949494", "#7e7e7e", "#696969", "#545454", "#696969", "#7e7e7e", "#949494", "#ababab", "#ababab", "#949494", "#7e7e7e", "#696969", "#545454", "#696969", "#7e7e7e", "#949494", "#ababab"]
+
+
+
+@var text = ""
+@var subtext = ""
+
+@if stylePointPrestiges[player] >= 1
+    @var title1text = "Style Prestiges: {{formatNumber(String(stylePointPrestiges[player]))}}"
+@else
+    @var title1text = "Style Points: {{formatNumber(String(swagPoints[player]))}}/4,000"
+@fi
+@var title1subtext = "Cosmetics Unlocked: {{cosmeticsUnlocked[player].sum()}}"
+
+# # TODO: Change == to <
+# @if sessionFalls[player] == pbFalls[player] && numberCompletions[player] > 1
+#     @var title1subtext = "NEW PERSONAL BEST!"
+# @fi
+
+@var subtextGradient = rainbowGradient2
+
+
+@var maxLength1 = 0
+
+@if title1text.length() > title1subtext.length()
+    @var maxLength1 = title1text.length()
+@else
+    @var maxLength1 = title1subtext.length()
+@fi
+
+# @player DEBUG: appearing
+
+@var gradient = rainbowGradient
+
+# Text appears 1 char at a time
+@var gradientOffset = 0
+@for Int i in list::range(2, maxLength1 + 2)
+# @var gradient = lchGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient2.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, i - 1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(-j + i + 100) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{i % rainbowGradient.length()}}
+            # @fi
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+    # @fi
+
+
+@done
+
+@var gradientOffset += maxLength1 + 2
+
+# @player DEBUG: flashing
+
+# Text flash code
+@for Int i in list::range(0, maxLength1 + 4)
+@define Int flashPos = i * 2
+# @var gradient = lchGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter")
+@var text = ""
+@var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @if j == flashPos
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @elseif j == flashPos - 1
+                @var text += String("&" + flashColors[0] + "&l&n" + title1text.substring(j, j + 1))
+            @else
+                @var text += String("&" + gradient[(-j + i + 100) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+            @fi
+        @fi
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+        # Subtext flashing on normal
+
+        @if title1subtext.length() >= j + 1
+            @if j == flashPos
+            @var subtext += String("&" + "#FFFFFF" + "&l&n" + title1subtext.substring(j, j + 1))
+            @elseif j == flashPos - 1
+            @var subtext += String("&" + "#EEEEEE" + "&l&n" + title1subtext.substring(j, j + 1))
+            @else
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+            @fi
+        @fi
+
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+@done
+
+@var gradientOffset += maxLength1 + 4
+
+# @player DEBUG: holding
+
+# Text stays for x cycles, cycling through rainbow
+@var cyclesToStay = 25
+@for Int i in list::range(0, cyclesToStay)
+# @var gradient = lchGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(-j + i + 100) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + maxLength1 * 2 + 6) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+
+@done
+
+@var gradientOffset += cyclesToStay + 1
+
+# @player DEBUG: disappearing
+
+# Text disappear 1 char at a time
+@for Int i in list::range(-1, maxLength1 - 1)
+@define Int disappearLength = maxLength1 - i - 1
+# @var gradient = lchGradient(rainbowGradient[(i + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, disappearLength)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(-j + i + 100) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + disappearLength) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
+    # @fi
+
+@done
+
+@bypass /title @s subtitle [""]
+@bypass /title @s title [""]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@delay 3
+
+
+
+
+# 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 
+# 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 100% COMPLETION 
+
+@var gradient = String[]
+@var subtextGradient = String["#FFFFFF", "#FFFFFF"]
+@var fadedGradient = String[]
+@var flashColors = String["#FFFFFF", "#C0C0C0"]
+
+# @var rainbowGradient2 = String["#ff0000", "#ff9900", "#ccff00", "#33ff00", "#00ff66", "#00ffff", "#0066ff", "#3300ff", "#cc00ff", "#ff0099"]
+# @var rainbowGradient2 = String["#ff0000", "#ff3500", "#ff6a00", "#ff9e00", "#ffd300", "#f6ff00", "#c1ff00", "#8dff00", "#58ff00", "#23ff00", "#00ff12", "#00ff46", "#00ff7b", "#00ffb0", "#00ffe5", "#00e5ff", "#00b0ff", "#007bff", "#0046ff", "#0012ff", "#2300ff", "#5800ff", "#8d00ff", "#c100ff", "#f600ff", "#ff00d3", "#ff009e", "#ff006a", "#ff0035", "#ff0000"]
+# @var rainbowGradient = String["#ff9500", "#ff9a00", "#ffa000", "#ffa500", "#ffab00", "#ffb000", "#ffb500", "#ffbb00", "#ffc000", "#ffc600", "#ffcb00", "#ffd000", "#ffd600", "#ffdb00", "#ffe100", "#ffe600", "#ffec00", "#fff100", "#fff700", "#fffc00", "#fff700", "#fff100", "#ffec00", "#ffe600", "#ffe100", "#ffdb00", "#ffd600", "#ffd000", "#ffcb00", "#ffc600", "#ffc000", "#ffbb00", "#ffb500", "#ffb000", "#ffab00", "#ffa500", "#ffa000", "#ff9a00"]
+# @var rainbowGradient = String["#ff6565", "#ff8565", "#ffa565", "#ffc565", "#ffe465", "#faff65", "#daff65", "#baff65", "#9aff65", "#7bff65", "#65ff70", "#65ff90", "#65ffb0", "#65ffcf", "#65ffef", "#66efff", "#66cfff", "#66b0ff", "#6690ff", "#6670ff", "#7b66ff", "#9b66ff", "#ba66ff", "#da66ff", "#fa66ff", "#ff66e5", "#ff66c5", "#ff66a5", "#ff6686", "#ff6666"]
+
+# @var pbGradient = String["#ff57ff&n", "#ff6dd9&n", "#ff84c1", "#ff9eb5", "#ff84c1", "#ff6dd9"]
+
+# @var rainbowGradient = String["#57ffff", "#6cf8ff", "#95eeff", "#a9e8ff", "#b8e2ff", "#c6ddff", "#d5d5ff", "#e9cbff", "#ffb9ff", "#ffb7ef", "#ffb6d8", "#ffb3c3", "#ffafae", "#ffab92", "#ffa766", "#ffaa00", "#ffa766", "#ffab92", "#ffafae", "#ffb3c3", "#ffb6d8", "#ffb7ef", "#ffb9ff", "#e9cbff", "#d5d5ff", "#c6ddff", "#b8e2ff", "#a9e8ff", "#95eeff", "#6cf8ff"]
+# @var rainbowGradient2 = String["#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff", "#57ffff", "#a9e8ff", "#d5d5ff", "#ffb7ef", "#ffafae", "#ffaa00", "#ffafae", "#ffb7ef", "#d5d5ff", "#a9e8ff"]
+
+# @var rainbowGradient = String["#57ffff", "#76faf0", "#8cf4e2", "#9defd3", "#aceac5", "#b8e4b6", "#c3dfa8", "#cdd999", "#d5d48b", "#ddce7c", "#e4c86d", "#eac25e", "#f0bc4e", "#f6b63c", "#fab027", "#ffaa00", "#fab027", "#f6b63c", "#f0bc4e", "#eac25e", "#e4c86d", "#ddce7c", "#d5d48b", "#cdd999", "#c3dfa8", "#b8e4b6", "#aceac5", "#9defd3", "#8cf4e2", "#76faf0"]
+# @var rainbowGradient2 = String["#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3", "#57ffff", "#9defd3", "#c3dfa8", "#ddce7c", "#f0bc4e", "#ffaa00", "#f0bc4e", "#ddce7c", "#c3dfa8", "#9defd3"]
+
+# @var rainbowGradient = String["#cc93cb", "#d88dbe", "#e289af", "#e7869e", "#e9868b", "#e68879", "#e08c68", "#d59258", "#c7984b", "#b59f42", "#a0a540", "#88aa44", "#6baf4f", "#46b360", "#00b575", "#00b48d", "#00b1a3", "#00afb5", "#00adc5", "#00acd3", "#00aae4", "#00a7fb", "#209fff", "#6d95ff", "#9c86ff", "#c375ff"]
+@var rainbowGradient = String["#00a7fa", "#08a5fa", "#0fa3fa", "#17a1fb", "#1e9ffb", "#269dfb", "#2d9bfb", "#349afb", "#3c98fc", "#4396fc", "#4b94fc", "#5292fc", "#5a90fc", "#628efd", "#698cfd", "#708afd", "#7888fd", "#8086fd", "#8784fd", "#8e82fe", "#9681fe", "#9e7ffe", "#a57dfe", "#ac7bfe", "#b479ff", "#bb77ff", "#c375ff", "#efe46a", "#efed58", "#f0f642", "#f0ff1f"]
+
+@var rainbowGradient2 = String["#f0ff1f", "#f0f642", "#efed58", "#efe46a", "#eedb79", "#ecd288", "#eac995", "#e8c0a2", "#e5b7ae", "#e2adba", "#dea4c6", "#da9bd2", "#d592dd", "#d088e9", "#ca7ff4", "#c375ff", "#ca7ff4", "#d088e9", "#d592dd", "#da9bd2", "#dea4c6", "#e2adba", "#e5b7ae", "#e8c0a2", "#eac995", "#ecd288", "#eedb79", "#efe46a", "#efed58", "#f0f642", "#f0ff1f"]
+
+
+
+
+
+
+@var text = ""
+@var subtext = ""
+
+@var title1subtext = "% of Map Completed..."
+@var title1text = "     "
+
+# # TODO: Change == to <
+# @if sessionFalls[player] == pbFalls[player] && numberCompletions[player] > 1
+#     @var title1subtext = "NEW PERSONAL BEST!"
+# @fi
+
+@var subtextGradient = rainbowGradient2
+@var gradient = rainbowGradient
+
+
+@var maxLength1 = 0
+
+@if title1text.length() > title1subtext.length()
+    @var maxLength1 = title1text.length()
+@else
+    @var maxLength1 = title1subtext.length()
+@fi
+
+# @player DEBUG: appearing
+
+# Text appears 1 char at a time
+@var gradientOffset = 0
+@for Int i in list::range(2, maxLength1 + 2)
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient2.length()], maxLength1 + 2, "shorter") 
+    @var text = "     "
+    @var subtext = ""
+    @for Int j in list::range(0, i - 1)
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+    # @fi
+
+
+@done
+
+@var gradientOffset += maxLength1 + 2
+
+# @player DEBUG: flashing
+
+# Text flash code
+@for Int i in list::range(0, maxLength1 + 4)
+@define Int flashPos = i * 2
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter")
+@var text = "     "
+@var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+
+        # Subtext flashing on normal
+
+        @if title1subtext.length() >= j + 1
+            @if j == flashPos
+            @var subtext += String("&" + flashColors[0] + "&l&n" + title1subtext.substring(j, j + 1))
+            @elseif j == flashPos - 1
+            @var subtext += String("&" + "#EEEEEE" + "&l&n" + title1subtext.substring(j, j + 1))
+            @else
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+            @fi
+        @fi
+
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 {{Float(i + 1) / Float(maxLength1) * 1.5 + 0.5}}
+@done
+
+@var gradientOffset += maxLength1 + 4
+
+# @player DEBUG: holding
+@var calculate100(player)
+@var title1text = String(Int(progress100[player] * 100) / 100) + "." + String(Int(progress100[player] * 100) % 100) + "%"
+@bypass /execute as @s at @s anchored eyes run particle minecraft:flash ^ ^ ^2 0 0 0 0 2 force @s
+@bypass /execute as @s run particle minecraft:firework ~ ~1.5 ~ 1 1 1 0.05 50
+@bypass /playsound minecraft:block.end_portal.spawn master @s ~ ~ ~ 0.8 1.0
+
+# Text stays for x cycles, cycling through rainbow
+@var cyclesToStay = 50
+@for Int i in list::range(0, cyclesToStay)
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, maxLength1)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(j + i + gradientOffset) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + maxLength1 * 2 + 6) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + i + gradientOffset) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+
+@done
+
+@var gradientOffset += cyclesToStay + 1
+
+# @player DEBUG: disappearing
+
+# Text disappear 1 char at a time
+@for Int i in list::range(-1, maxLength1 - 1)
+@define Int disappearLength = maxLength1 - i - 1
+# @var gradient = lchGradient(rainbowGradient[((-i * 2) + 100 + gradientOffset) % rainbowGradient.length()], rainbowGradient2[(i + gradientOffset + 3) % rainbowGradient.length()], maxLength1 + 2, "shorter") 
+    @var text = ""
+    @var subtext = ""
+    @for Int j in list::range(0, disappearLength)
+        @if title1text.length() >= j + 1
+            @var text += String("&" + gradient[(j + i + gradientOffset) % gradient.length()] + "&l" + title1text.substring(j, j + 1))
+
+            # @if j == 0
+            #     @player DEBUG: {{(i + gradientOffset) % rainbowGradient.length()}}
+            # @fi
+
+
+        @fi
+        @if title1subtext.length() >= j + 1
+            @var subtext += String("&" + subtextGradient[(j + disappearLength) % subtextGradient.length()] + "&l" + title1subtext.substring(j, j + 1))
+        @fi
+    @done
+    @delay 1
+    @if Region("hh2", "Theta_the_end").containsPlayer(player) == false
+        @bypass /title @s subtitle [""]
+        @bypass /title @s title [""]
+        @return
+    @fi
+    @bypass /title @s subtitle {{slytools::convertTextToTellraw(subtext)}}
+    @bypass /title @s title {{slytools::convertTextToTellraw(text)}}
+    # @if musicEnabled[player] == false
+        @bypass /playsound minecraft:entity.item.pickup master @s ~ ~ ~ 0.5 {{2.0 - (Float(maxLength1 - disappearLength) / Float(maxLength1) * 1.5)}}
+    # @fi
+
+@done
+
+@bypass /title @s subtitle [""]
+@bypass /title @s title [""]
+
+@delay 3

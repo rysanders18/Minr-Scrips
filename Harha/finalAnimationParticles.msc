@@ -1,0 +1,80 @@
+# finalAnimationParticles(Player player) https://paste.minr.org/axireyakad
+@fast
+@using Harha
+
+@define Float height = Float(-2.0)
+@define Float multiplier = Float(0.1)
+@define Int kOld = 0
+
+@define Float centerX = -9060.5
+@define Float centerY = 79.5
+@define Float centerZ = 9571.5
+
+@define Location[] coordinateList = Location[]
+
+@define Float[] icoCoordsR3X
+@define Float[] icoCoordsR3Y
+@define Float[] icoCoordsR3Z
+
+
+@var icoCoordsR3Z = Float[0.840000F, -1.050692F, 0.157366F, 1.266722F, -2.269887F, 2.097135F, -0.683228F, -1.267285F, 2.669788F, -2.691989F, 1.255157F, 0.894974F, -2.595634F, 2.920636F, -1.703160F, -0.374264F, 2.173326F, -2.747197F, 1.865501F, -0.114808F, -1.476914F, 2.063329F, -1.477545F, 0.312744F, 0.417632F]
+@var icoCoordsR3Y = Float[0.000000F, 0.962520F, -1.793108F, 1.652215F, -0.401511F, -1.334026F, 2.541574F, -2.440080F, 0.975002F, 1.111214F, -2.682197F, 2.853318F, -1.504223F, -0.642094F, 2.422570F, -2.888170F, 1.831681F, 0.113605F, -1.856423F, 2.482825F, -1.769837F, 0.277618F, 1.028037F, -1.390177F, 0.728823F]
+@var icoCoordsR3X = Float[2.880000F, 2.640000F, 2.400000F, 2.160000F, 1.920000F, 1.680000F, 1.440000F, 1.200000F, 0.960000F, 0.720000F, 0.480000F, 0.240000F, 0.000000F, -0.240000F, -0.480000F, -0.720000F, -0.960000F, -1.200000F, -1.440000F, -1.680000F, -1.920000F, -2.160000F, -2.400000F, -2.640000F, -2.880000F]
+
+# Particles First
+@define Int[] coolKValues = Int[3, 5, 8, 13, 17, 20, 22]
+@define Int numberParticles = 10
+
+@bypass /tellraw RYgamer1 DEBUG {{numberParticles}}
+
+@for Int k in list::range(1, 13)
+    # @var k = coolKValues[Int(k * 0.125) % coolKValues.length()] * k
+    # @if k % 2 == 0
+    #     @var k = 7
+    # @else
+    #     @var k = 5
+    # @fi
+    
+    @for Int i in list::range(0, icoCoordsR3X.length())
+        
+        @console /function execute Harha::finalAnimationParticles2({{i}}, {{k}}, {{kOld}}, {{height}}, {{multiplier}}, 20, {{centerY}})
+        # @for Int l in list::range(0, numberParticles)
+        #     @if i % 2 == 1
+        #         @bypass /execute in minecraft:theta run particle minecraft:flame {{(centerX) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{(centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier) + height}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+        #     @else
+        #         @bypass /execute in minecraft:theta run particle minecraft:soul_fire_flame {{(centerX) + (icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()] + (((Double(icoCoordsR3X[(i + k) % icoCoordsR3X.length()] - icoCoordsR3X[(i + kOld) % icoCoordsR3X.length()])) / numberParticles) * l)) * multiplier}} {{(centerY - 0.25 + (icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()] + (((Double(icoCoordsR3Y[(i + k) % icoCoordsR3Y.length()] - icoCoordsR3Y[(i + kOld) % icoCoordsR3Y.length()])) / numberParticles) * l)) * multiplier) + height}} {{centerZ + (icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()] + (((Double(icoCoordsR3Z[(i + k) % icoCoordsR3X.length()] - icoCoordsR3Z[(i + kOld) % icoCoordsR3Z.length()])) / numberParticles) * l)) * multiplier}} 0 0 0 0 1
+        #     @fi
+        #     @delay 1
+        # @done
+        # @bypass /execute in minecraft:theta run playsound minecraft:block.beacon.ambient master {{player}} ~ ~ ~ 1 {{((Float(k) / 10.0) + (Float(i) / 400.0)) * 1.5 + 0.5}}
+        # @bypass /tellraw RYgamer1 DEBUG: Beacon pitch: {{((Float(k) / 10.0) + (Float(i) / 400.0)) * 1.5 + 0.5}}
+        
+        
+        
+        # @if i % 2 == 0
+        @delay 1
+        # @fi
+        
+        # TODO Remove this line
+        # @if stopAnimation == true
+        #     @var stopAnimation = false
+        #     @return
+        # @fi
+        
+        @if k >= 8
+            @var multiplier -= 0.006
+        @else
+            @var multiplier += 0.003
+        @fi
+        @var height += 0.01
+        
+        @if k % 2 == 0
+            @console /function execute Harha::finalAnimationWave2()
+        @fi
+        @if k % 2 == 1
+            @console /function execute Harha::finalAnimationWave()
+        @fi
+        
+    @done
+@done
+@console /function execute Harha::finalAnimationWave()

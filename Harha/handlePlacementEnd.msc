@@ -1,0 +1,174 @@
+# handlePlacementEnd(Block block, Player player) https://paste.minr.org/vulelureqa
+
+@fast
+@using Harha
+
+# define variables for less typing
+@define Int x = block.getX()
+@define Int y = block.getY()
+@define Int z = block.getZ()
+
+@if totalBlocks[player] % 4 == 0
+    @if temporaryBlockSelection1[player] == "wet_sponge"
+        @bypass /particle minecraft:splash {{x}} {{y + 0.6}} {{z}} 0.3 0.6 0.3 1 15
+    @elseif temporaryBlockSelection1[player] == "crying_obsidian"
+        @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
+    @elseif temporaryBlockSelection == "sculk_catalyst"
+        @if (soulLinkPlayersPB[player]) <= 9
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{10 * soulLinkPlayersPB[player] - 10}}
+        @else
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
+            @bypass /particle minecraft:sculk_charge_pop {{x}} {{y + 1.15}} {{z}} 0.3 0.15 0.3 0.1 10
+            @bypass /playsound minecraft:block.sculk.place master @s {{x}} {{y}} {{z}} 1.0 {{math::random(0.9D, 1.1D)}}
+        @fi
+    @elseif coolGlass[player] == true && temporaryBlockSelection1[player] == "orange_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[1.000,0.533,0.220],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @elseif coolGlass[player] == true && temporaryBlockSelection1[player] == "light_blue_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection_ominous {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[0.471,0.965,1.000],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @fi
+    
+@elseif totalBlocks[player] % 4 == 1
+    @if temporaryBlockSelection2[player] == "wet_sponge"
+        @bypass /particle minecraft:splash {{x}} {{y + 0.6}} {{z}} 0.3 0.6 0.3 1 15
+    @elseif temporaryBlockSelection2[player] == "crying_obsidian"
+        @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
+    @elseif temporaryBlockSelection2[player] == "sculk_catalyst"
+        @if (totalFalls[player] / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls[player] / 1000}}
+        @else
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
+        @fi
+    @elseif coolGlass[player] == true && temporaryBlockSelection2[player] == "orange_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[1.000,0.533,0.220],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @elseif coolGlass[player] == true && temporaryBlockSelection2[player] == "light_blue_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection_ominous {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[0.471,0.965,1.000],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @fi
+    
+@elseif totalBlocks[player] % 4 == 2
+    @if temporaryBlockSelection3[player] == "wet_sponge"
+        @bypass /particle minecraft:splash {{x}} {{y + 0.6}} {{z}} 0.3 0.6 0.3 1 15
+    @elseif temporaryBlockSelection3[player] == "crying_obsidian"
+        @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
+    @elseif temporaryBlockSelection3[player] == "sculk_catalyst"
+        @if (totalFalls[player] / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls[player] / 1000}}
+        @else
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
+        @fi
+    @elseif coolGlass[player] == true && temporaryBlockSelection3[player] == "orange_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[1.000,0.533,0.220],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @elseif coolGlass[player] == true && temporaryBlockSelection3[player] == "light_blue_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection_ominous {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[0.471,0.965,1.000],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @fi
+    
+@elseif totalBlocks[player] % 4 == 3
+    @if temporaryBlockSelection4[player] == "wet_sponge"
+        @bypass /particle minecraft:splash {{x}} {{y + 0.6}} {{z}} 0.3 0.6 0.3 1 15
+    @elseif temporaryBlockSelection4[player] == "crying_obsidian"
+        @bypass /particle minecraft:dragon_breath {{x}} {{y + 0.6}} {{z}} 0.3 0.3 0.3 .01 10
+    @elseif temporaryBlockSelection4[player] == "sculk_catalyst"
+        @if (totalFalls[player] / 1000) < 101
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 {{totalFalls[player] / 1000}}
+        @else
+            @bypass /particle minecraft:scrape {{x}} {{y + 1.0}} {{z}} 0.3 0 0.3 0.3 100
+        @fi
+    @elseif coolGlass[player] == true && temporaryBlockSelection4[player] == "orange_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[1.000,0.533,0.220],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @elseif coolGlass[player] == true && temporaryBlockSelection4[player] == "light_blue_stained_glass"
+        @bypass /particle minecraft:trial_spawner_detection_ominous {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
+        @bypass /particle dust{color:[0.471,0.965,1.000],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
+    @fi
+@fi
+
+
+@define BlockLocation airset = BlockLocation(x, y, z, "theta_the_end")
+
+@if totalBlocks[player] % 4 == 0
+    # time block stays + 1 from target script
+    @if blockSelection[player] == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
+    
+    @if util::executeAndQuerySuccess("/execute in minecraft:theta_the_end if block {{x}} {{y}} {{z}} #minecraft:trapdoors[half=top]")
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1[player]}}, Properties:{half:"top"}}, DropItem: 0, CancelDrop:1}
+    @else
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection1[player]}}}, DropItem: 0, CancelDrop:1}
+    @fi
+
+    @return
+    
+@elseif totalBlocks[player] % 4 == 1
+    # time block stays + 1 from target script
+    @if blockSelection[player] == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
+    
+    @if util::executeAndQuerySuccess("/execute in minecraft:theta_the_end if block {{x}} {{y}} {{z}} #minecraft:trapdoors[half=top]")
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2[player]}}, Properties:{half:"top"}}, DropItem: 0, CancelDrop:1}
+    @else
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection2[player]}}}, DropItem: 0, CancelDrop:1}
+    @fi
+    
+    @return
+    
+@elseif totalBlocks[player] % 4 == 2
+    # time block stays + 1 from target script
+    @if blockSelection[player] == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
+
+    @if util::executeAndQuerySuccess("/execute in minecraft:theta_the_end if block {{x}} {{y}} {{z}} #minecraft:trapdoors[half=top]")
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3[player]}}, Properties:{half:"top"}}, DropItem: 0, CancelDrop:1}
+    @else
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection3[player]}}}, DropItem: 0, CancelDrop:1}
+    @fi
+    
+    @return
+    
+@elseif totalBlocks[player] % 4 == 3
+    # time block stays + 1 from target script
+    @if blockSelection[player] == "blue_ice"
+        @delay 6
+    @else
+        @delay 4
+    @fi
+    
+
+    @if util::executeAndQuerySuccess("/execute in minecraft:theta_the_end if block {{x}} {{y}} {{z}} #minecraft:trapdoors[half=top]")
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4[player]}}, Properties:{half:"top"}}, DropItem: 0, CancelDrop:1}
+    @else
+        @var airset.set("air")
+        # @bypass /execute in minecraft:theta_the_end run setblock {{x}} {{y}} {{z}} air
+        @bypass /execute in minecraft:theta_the_end run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:{{temporaryBlockSelection4[player]}}}, DropItem: 0, CancelDrop:1}
+    @fi
+    
+    @return
+
+@fi

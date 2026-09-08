@@ -1,4 +1,5 @@
-# handlePlacement(Block block, Int height, Player player) https://paste.minr.org/agiqerocap
+# handlePlacement(Block block, Int height, Player player) https://paste.minr.org/widiyibute
+
 
 @fast
 @using Harha
@@ -28,18 +29,12 @@
     @bypass /particle minecraft:trial_spawner_detection_ominous {{x}} {{y + 1.0}} {{z}} 0.3 0.3 0.3 00.01 15
     @bypass /particle dust{color:[0.471,0.965,1.000],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
 @elseif woolList.contains(temporaryBlockSelection)
-    @define String[] woolParticleList = String["0.824,0.000,0.000", "1.000,0.569,0.000", "1.000,1.000,0.000", "0.035,1.000,0.000", "0.000,0.969,1.000", "0.122,0.741,0.824", "0.000,0.055,0.824", "0.412,0.000,0.824", "0.741,0.000,0.824", "0.824,0.380,0.780"]
+    @define String[] woolParticleList = String["0.824,0.000,0.000", "1.000,0.569,0.000", "1.000,1.000,0.000", "0.035,1.000,0.000", "0.000,0.969,1.000", "0.122,0.741,0.824", "0.000,0.055,0.824", "0.412,0.000,0.824", "0.741,0.000,0.824", "0.824,0.380,0.780"] 
     @bypass /particle dust{color:[{{woolParticleList[woolList.find(String(temporaryBlockSelection))]}}],scale:1} {{x}} {{y + 1.0}} {{z}} .3 .1 .3 1 10 normal
 @elseif temporaryBlockSelection == "tnt"
     @bypass /playsound minecraft:entity.tnt.primed master {{player}} {{x}} {{y}} {{z}} 0.15 {{math::random(0.8D, 1.0D)}}
-@elseif paleGardenList.contains(temporaryBlockSelection)
-    @bypass /particle minecraft:pale_oak_leaves {{x}} {{y}} {{z}} 0.5 0.5 0.5 0.1 15 force
-@elseif froglightList.contains(temporaryBlockSelection)
-    @define String[] froglightParticleList = String["dust{color:[0.996,0.831,1.000],scale:1}", "dust{color:[0.800,1.000,0.808],scale:1}", "dust{color:[1.000,0.976,0.780],scale:1}"]
-    @bypass /particle {{froglightParticleList[froglightList.find(String(temporaryBlockSelection))]}} {{x}} {{y + 1.0}} {{z}} .25 .1 .25 1 7 normal
-    @bypass /playsound minecraft:entity.frog.death master @s {{x}} {{y}} {{z}} 0.1 {{math::random(0.9D, 1.1D)}}
 @fi
-
+    
 
 
 # time block stays + 1 from target script
@@ -109,7 +104,7 @@
         @bypass /summon tnt {{x}} {{y}} {{z}} {fuse:{{delayTimes[height - 1] + 4}},explosion_power:0,Tags:["HarhaTnt{{tntBlockNumber}}"],block_state:{Name:"minecraft:tnt"}}
         @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
         @var delay(delayTimes[height - 1] + 3)
-        
+
         @bypass /minecraft:kill @e[type=tnt,tag=HarhaTnt{{tntBlockNumber}}]
         @bypass /playsound minecraft:entity.generic.explode master {{player}} {{x}} {{y - height}} {{z}} 0.4 1
         @bypass execute in minecraft:theta run particle minecraft:explosion {{x}} {{y - height + 0.5}} {{z}} 0.3 0.3 0.3 1 1
@@ -117,11 +112,11 @@
         @bypass execute in minecraft:theta run particle minecraft:lava {{x}} {{y - height + 0.5}} {{z}} 0 0 0 1 10 normal
         @return
     @fi
-    @console /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
+    @bypass /execute in minecraft:theta run setblock {{x}} {{y}} {{z}} air
     @bypass /execute in minecraft:theta run summon falling_block {{x}} {{y}} {{z}} {BlockState:{Name:"{{temporaryBlockSelection}}",Properties:{bloom:"true",axis:"{{axis}}",facing:"{{facing}}",half:"{{half}}",type:"{{type}}",north:"{{north}}",east:"{{east}}",south:"{{south}}",west:"{{west}}"}},Time:1,DropItem:0b,CancelDrop:1b}
-    
+
     @var delay(delayTimes[height - 1])
-    
+
     @if (grateList.contains(temporaryBlockSelection))
         @bypass /playsound minecraft:block.copper_grate.break master @a[distance=..20] {{x}} {{y - height}} {{z}} 1 1
     @elseif (woolList.contains(temporaryBlockSelection))
@@ -147,10 +142,10 @@
     @else
         @bypass /playsound minecraft:block.{{temporaryBlockSelection}}.break master @a[distance=..20] {{x}} {{y - height}} {{z}} 1 0.8
     @fi
-    
+
     # Particle of block breaking
     @bypass /execute in minecraft:theta run particle block{block_state:{Name:{{temporaryBlockSelection}}}} {{x}} {{y - height}} {{z}} 0.3 0.3 0.3 1 40
-    
+
 @else
     @if temporaryBlockSelection == "tnt"
         @define String tntBlockNumber = player.getName() + totalBlocks[player]

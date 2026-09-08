@@ -15,10 +15,10 @@
 @var speedrunTeleportedRecently[player] = false
 
 # # @if stage[player] == 2
-# #
+# #     
 # #     @var stage[player] += 1
 # #     @var timeThisStage = (system::currentTimeMillis() - startTime[player])
-# #
+# # 
 # #     # if this is First time entering stage 3, PB = this time
 # #     @if stage3Entered[player] == false
 # #         @var stage2PB[player] = (timeThisStage)
@@ -33,13 +33,13 @@
 # #         @fi
 # #     @bypass /title @s actionbar ["",{"text":"Stage 2 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage2PB[player])}}","bold":true,"color":"light_purple"}]
 # #     @fi
-# #
-# #
+# # 
+# #     
 # #     @var startTime[player] = system::currentTimeMillis()
 # #     @bypass /title @s times 0 20 20
-
-@if stage[player] == 2
     
+@if stage[player] == 2
+
     @define String gradient1 = "#00a800"
     @define String gradient2 = "#24b620"
     @define String gradient3 = "#38c434"
@@ -56,7 +56,7 @@
     # #77fd77
     
     @var stage[player] += 1
-    @var timeThisStage = Long(math::floor(Double(((system::currentTimeMillis() - startTime[player]) + 25) / 50.0))) * 50
+    @var timeThisStage = (system::currentTimeMillis() - startTime[player])
     @var startTime[player] = system::currentTimeMillis()
     # if this is First time entering stage 3, PB = this time
     @if stage3Entered[player] == false
@@ -72,7 +72,7 @@
         @bypass /title @s actionbar ["",{"text":"Stage 2 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"}]
     @else
         # @player {{timer::formatTime(timeThisStage)}}, {{timer::formatTime(stage2PB)}}
-        @if (timeThisStage) < stage2PB[player] && speedrunTeleportedRecentlyOld == false && (player.getCurrentChallenge() != "hahahas" && player.getCurrentChallenge() != "hahahahas")
+        @if (timeThisStage) < stage2PB[player] && speedrunTeleportedRecentlyOld == false
             @player &#ffb4ff&lNew personal best! &d&l{{timer::formatTime(timeThisStage)}} &#ffb4ff&l({{timer::formatTime(stage2PB)}})
             @var stage2PB[player] = (timeThisStage)
             @var top100Function(player, 19)
@@ -95,17 +95,17 @@
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[18]}}
             
         @fi
-        @if speedrunTeleportedRecentlyOld == false
-            @bypass /title @s actionbar ["",{"text":"Stage 2 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage2PB[player])}}","bold":true,"color":"light_purple"}]
-        @else
+    @if speedrunTeleportedRecentlyOld == false
+        @bypass /title @s actionbar ["",{"text":"Stage 2 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient5}}"},{"text":"Best in ","bold":false,"color":"#ffb4ff"},{"text":"{{timer::formatTime(stage2PB[player])}}","bold":true,"color":"light_purple"}]
+    @else
             @bypass /title @s actionbar ["",{"text":"Speedrun Mode: ","bold":true,"color":"#d4d4d4"},{"text":"Timer Started!","bold":true,"color":"{{gradient5}}"}]
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
             @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
-        @fi
     @fi
-    
+    @fi
+
     @bypass /title @s times 0 30 20
-    
+
     @bypass /title @s subtitle ["",{"text":"S","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"}]
@@ -122,7 +122,7 @@
     @delay 1
     
     @bypass /title @s subtitle ["",{"text":"Slim","color":"#d4d4d4"}]
-    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.498
+    @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.498 
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"}]
     @delay 1
     
@@ -130,13 +130,13 @@
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.682
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"},{"text":"e ","bold":true,"color":"{{gradient5}}"}]
     @delay 1
-    
+
     @bypass /title @s subtitle ["",{"text":"Slime!","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 2
     @bypass /title @s title ["",{"text":"S","bold":true,"color":"{{gradient1}}"},{"text":"t","bold":true,"color":"{{gradient2}}"},{"text":"a","bold":true,"color":"{{gradient3}}"},{"text":"g","bold":true,"color":"{{gradient4}}"},{"text":"e ","bold":true,"color":"{{gradient5}}"},{"text":"3","bold":true,"color":"{{gradient6}}"},{"text":":","bold":true,"color":"{{gradient7}}"}]
-    
-    
-    
+
+
+
     @delay 15
     @if firstTime == true
         @bypass /title @s actionbar ["",{"text":"Stage 2 in ","bold":true,"color":"#d4d4d4"},{"text":"{{timer::formatTime(timeThisStage)}}    ","bold":true,"color":"{{gradient7}}"}]

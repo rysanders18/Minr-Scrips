@@ -1,0 +1,20 @@
+# cosmeticSponge (Player player)
+
+@fast
+@using Harha
+
+@if Int(math::random(1.0D, 11.0D)) >= 7
+    @var spongeNumber[player] = 2
+@else
+    @var spongeNumber[player] = 1
+@fi
+
+@var blockSelection[player] = spongeList[spongeNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+    @var numberOfBlocksToGive[player] -= 1
+    @var lastSpongeNumber[player] = spongeNumber[player]
+@fi
+    
+    
+    # @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

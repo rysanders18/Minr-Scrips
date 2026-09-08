@@ -1,0 +1,631 @@
+# finalAnimationWave3() https://paste.minr.org/zupahulipe
+
+@using Harha
+@fast
+
+
+
+@bypass /execute in minecraft:theta run setblock -9061 76 9571 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9061 75 9571 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+# Branch of 3 starts here
+@bypass /execute in minecraft:theta run setblock -9061 75 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 74 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 75 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9571 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 75 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9060 74 9571 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9061 75 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 74 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 75 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 74 9571 minecraft:emerald_block
+
+@bypass /execute in minecraft:theta run setblock -9059 75 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 74 9571 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 75 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9060 74 9572 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9062 75 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 75 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 74 9572 minecraft:emerald_block
+
+@bypass /execute in minecraft:theta run setblock -9059 75 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 74 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9060 74 9573 minecraft:emerald_block
+
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9062 75 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 74 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 75 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 74 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 74 9573 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9063 75 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 74 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 75 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9567 minecraft:emerald_block
+# another branch of 2 starts here
+@bypass /execute in minecraft:theta run setblock -9062 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 74 9573 minecraft:emerald_block
+
+@bypass /execute in minecraft:theta run setblock -9058 75 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 74 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 74 9573 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9064 75 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 74 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 75 9566 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9566 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 75 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 75 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 74 9574 minecraft:emerald_block
+
+@bypass /execute in minecraft:theta run setblock -9057 75 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 74 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 75 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 74 9573 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9065 75 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 74 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 75 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 75 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 74 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 75 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 74 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 75 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 74 9574 minecraft:emerald_block
+
+@bypass /execute in minecraft:theta run setblock -9057 75 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 75 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 75 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 75 9567 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9057 76 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 76 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 76 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 76 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 76 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 76 9574 minecraft:lime_stained_glass
+
+# Example Additions Below
+@bypass /execute in minecraft:theta run setblock -9065 76 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 76 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 76 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 76 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 76 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 76 9568 minecraft:lime_stained_glass
+
+
+
+# Extra
+@bypass /execute in minecraft:theta run setblock -9062 75 9576 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 74 9576 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 77 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 77 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 77 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 77 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 77 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 77 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 77 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 77 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 77 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 77 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 77 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 77 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 77 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9058 77 9574 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9064 77 9574 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 77 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+# Extra
+@bypass /execute in minecraft:theta run setblock -9061 75 9576 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 74 9576 minecraft:emerald_block
+
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 78 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 78 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 78 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 78 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 78 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 78 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 78 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 78 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 78 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 78 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 78 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 78 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 78 9568 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9057 78 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9059 78 9575 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9063 78 9575 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9065 78 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+# Extra
+@bypass /execute in minecraft:theta run setblock -9061 75 9577 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 74 9577 minecraft:emerald_block
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 79 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 79 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 79 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 79 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 79 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 79 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 79 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 79 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 79 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 79 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 79 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 79 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 79 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9058 79 9574 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 79 9574 minecraft:vine[west=true,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 79 9568 minecraft:vine[west=true,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 80 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 80 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 80 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 80 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 80 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 80 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 80 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 80 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 80 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 80 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 80 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 80 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 80 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9057 80 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9058 80 9574 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9065 80 9573 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 80 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 81 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 81 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 81 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 81 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 81 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 81 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 81 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 81 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 81 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 81 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 81 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 81 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9059 81 9567 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9064 81 9574 minecraft:vine[west=true,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 81 9575 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9065 81 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 82 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 82 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 82 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 82 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 82 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 82 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 82 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 82 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 82 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 82 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 82 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 82 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9059 82 9575 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 83 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 83 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 83 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 83 9568 minecraft:lime_stained_glass_pane[south=false,north=true,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9057 83 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 83 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 83 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 83 9574 minecraft:lime_stained_glass_pane[south=true,north=false,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9065 83 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 83 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 83 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 83 9574 minecraft:lime_stained_glass_pane[south=true,north=false,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9065 83 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 83 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 83 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 83 9568 minecraft:lime_stained_glass_pane[south=false,north=true,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9057 83 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 84 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 84 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 84 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 84 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 84 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 84 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 84 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 84 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 84 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 84 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 84 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 84 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9065 84 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 84 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 84 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 84 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9059 84 9568 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9057 85 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 85 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 85 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 85 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 85 9569 minecraft:lime_stained_glass_pane[south=false,north=true,west=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9059 85 9567 minecraft:lime_stained_glass_pane[south=false,north=true,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9057 85 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 85 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 85 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 85 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 85 9573 minecraft:lime_stained_glass_pane[south=true,north=false,west=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9059 85 9575 minecraft:lime_stained_glass_pane[south=true,north=false,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9065 85 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 85 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 85 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 85 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 85 9573 minecraft:lime_stained_glass_pane[south=true,north=false,west=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 85 9575 minecraft:lime_stained_glass_pane[south=true,north=false,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9065 85 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 85 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 85 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 85 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 85 9569 minecraft:lime_stained_glass_pane[south=false,north=true,west=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 85 9567 minecraft:lime_stained_glass_pane[south=false,north=true,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9058 85 9573 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 85 9573 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9058 86 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 86 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 86 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 86 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 86 9569 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 86 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 86 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 86 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 86 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 86 9573 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9064 86 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 86 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 86 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 86 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 86 9573 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9064 86 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 86 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 86 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 86 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 86 9569 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9059 86 9568 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9057 86 9570 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9060 86 9575 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9059 86 9574 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9063 86 9574 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 86 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9058 87 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 87 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 87 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 87 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 87 9569 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 87 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9057 87 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 87 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 87 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 87 9573 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9064 87 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 87 9574 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 87 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 87 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 87 9573 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9064 87 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9065 87 9568 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 87 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 87 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 87 9569 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9057 87 9572 minecraft:vine[west=false,up=true,north=false,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9059 88 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 88 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 88 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 88 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 88 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 88 9570 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9059 88 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 88 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 88 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 88 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 88 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 88 9572 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9063 88 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 88 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 88 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 88 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 88 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 88 9572 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9063 88 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 88 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 88 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 88 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 88 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 88 9570 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 88 9570 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9059 88 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9059 88 9573 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9064 88 9570 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 88 9569 minecraft:vine[west=false,up=false,north=true,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+
+@bypass /execute in minecraft:theta run setblock -9059 89 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 89 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 89 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9060 89 9568 minecraft:lime_stained_glass_pane[south=false,north=true,west=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9057 89 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 89 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 89 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 89 9570 minecraft:lime_stained_glass_pane[south=false,north=true,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9059 89 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 89 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 89 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9060 89 9574 minecraft:lime_stained_glass_pane[south=true,north=false,west=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9057 89 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 89 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 89 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9058 89 9572 minecraft:lime_stained_glass_pane[south=true,north=false,west=false,east=true]
+
+@bypass /execute in minecraft:theta run setblock -9063 89 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 89 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 89 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 89 9574 minecraft:lime_stained_glass_pane[south=true,north=false,west=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9065 89 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 89 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 89 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 89 9572 minecraft:lime_stained_glass_pane[south=true,north=false,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9063 89 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 89 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 89 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9062 89 9568 minecraft:lime_stained_glass_pane[south=false,north=true,west=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9065 89 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 89 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 89 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9064 89 9570 minecraft:lime_stained_glass_pane[south=false,north=true,west=true,east=false]
+
+@bypass /execute in minecraft:theta run setblock -9063 89 9573 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9060 90 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 90 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 90 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 90 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 90 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 90 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9571 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9060 90 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 90 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9059 90 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9059 90 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 90 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9572 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 90 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 90 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9567 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9062 90 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 90 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 90 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 90 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9573 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 90 9573 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9572 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 90 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9575 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9567 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9062 90 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 90 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9063 90 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9063 90 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9569 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 90 9569 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 90 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 90 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9567 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 90 9575 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9058 90 9571 minecraft:vine[west=false,up=false,north=false,south=false,east=true]
+@bypass /execute in minecraft:theta run setblock -9059 90 9573 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9061 90 9574 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 90 9573 minecraft:vine[west=false,up=false,north=false,south=true,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 90 9571 minecraft:vine[west=false,up=true,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9063 90 9569 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9061 90 9568 minecraft:vine[west=false,up=true,north=false,south=false,east=false]
+
+@delay 1
+# ===================================================================================================
+
+@bypass /execute in minecraft:theta run setblock -9060 91 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 91 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 91 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 91 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 91 9571 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 91 9571 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9060 91 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9060 91 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9057 91 9572 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9058 91 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9062 91 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 91 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 91 9572 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 91 9572 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9574 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9568 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9062 91 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9062 91 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 91 9570 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9064 91 9570 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9567 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9568 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9061 91 9575 minecraft:emerald_block
+@bypass /execute in minecraft:theta run setblock -9061 91 9574 minecraft:lime_stained_glass
+
+@bypass /execute in minecraft:theta run setblock -9063 91 9572 minecraft:vine[west=true,up=false,north=false,south=false,east=false]
+@bypass /execute in minecraft:theta run setblock -9064 91 9571 minecraft:lime_stained_glass
+@bypass /execute in minecraft:theta run setblock -9065 91 9571 minecraft:emerald_block
+
+

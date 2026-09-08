@@ -1,0 +1,13 @@
+# swagTitleParticles(Player player) https://paste.minr.org/xeficijimo
+@using Harha
+@fast
+
+@define Double cx = player.getX()
+@define Double cz = player.getZ()
+
+@for Int j in list::range(0, stylePointPrestiges[player] + 1)
+    @for Int i in list::range(0, 30 - j)
+        @bypass /execute at {{player}} run particle minecraft:totem_of_undying ~{{(cx + ((0.5 + Float(j) / stylePointPrestiges[player]) * math::cos(Double(i*(Float(30 - j)))))) - cx}} ~0.1 ~{{(cz + ((0.5 + Float(j) / stylePointPrestiges[player]) * math::sin(Double(i*(Float(30 - j)))))) - cz}} {{(cx + (0.35 * math::cos(Double(i*(Float(30 - j)))))) - cx}} 0.35 {{(cz + (0.35 * math::sin(Double(i*(Float(30 - j)))))) - cz}} 1.3 0
+    @done
+    @delay 1
+@done

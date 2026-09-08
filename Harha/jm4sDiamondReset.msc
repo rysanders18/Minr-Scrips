@@ -1,0 +1,12 @@
+@using Harha
+@fast
+
+# JM4s secret ADMIN reset button
+
+@cooldown 5s
+
+@for Int i in list::range(0, 11)
+    @var diamondsFound[player][i] = 0
+@done
+@player &c&lReset diamondsFound
+@player &cdiamondsFound[{{player}}] = {{diamondsFound}}

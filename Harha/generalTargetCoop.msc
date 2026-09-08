@@ -1,0 +1,84 @@
+# generalTargetCoop(Block block, Int[] directions, Int height, Player player)
+@using Harha
+@fast
+
+# if block not in main hand (i.e. player did not place block), do nothing
+@if (player.getItemInMainHand().getItemType().toLowerCase() == "air" && player.getItemInOffHand().getItemType().toLowerCase() == "air")
+    @return
+@fi
+
+# Necessary 1t delay because dumb stupid complicated minecraft mechanics
+@delay 1
+
+@define Int[] directionsX = Int[]
+@define Int[] directionsY = Int[]
+@define Int[] directionsZ = Int[]
+
+@if directions[0] == 1
+    @var directionsX.append(0)
+    @var directionsY.append(0)
+    @var directionsZ.append(-1)
+@fi
+@if directions[1] == 1
+    @var directionsX.append(1)
+    @var directionsY.append(0)
+    @var directionsZ.append(0)
+@fi
+@if directions[2] == 1
+    @var directionsX.append(0)
+    @var directionsY.append(0)
+    @var directionsZ.append(1)
+@fi
+@if directions[3] == 1
+    @var directionsX.append(-1)
+    @var directionsY.append(0)
+    @var directionsZ.append(0)
+@fi
+@if directions[4] == 1
+    @var directionsX.append(0)
+    @var directionsY.append(1)
+    @var directionsZ.append(0)
+@fi
+@if directions[5] == 1
+    @var directionsX.append(0)
+    @var directionsY.append(-1)
+    @var directionsZ.append(0)
+@fi
+
+# Scan for adjacent blockSelection blocks
+# Basically this sets offsetXYZ to (1, 0, 0) then (-1, 0, 0) then (0, 1, 0) then ... then (0, 0, -1) for all 6 directions
+# In other words it checks each side of the target, and if that block is "YOUR_BLOCK_HERE" then it runs the setAir() function
+@for Int i in list::range(0, directionsX.length())
+    # get current offset positions
+    @define Int offsetX = directionsX[i]
+    @define Int offsetY = directionsY[i]
+    @define Int offsetZ = directionsZ[i]
+    
+    # get current adjacent block
+    @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
+    
+    # if adjacentBlock = a block that can be selected
+    @if adjacentBlock.getBlockType() != "AIR"
+        
+        @var totalBlocks[player] += 1
+        @var top100Function(player, 0)
+        @var sessionBlocks[player] += 1
+        @var globalBlocks += 1
+        @var blocksThisStage[player] += 1
+        
+        @var handlePlacementCoop(adjacentBlock, height, player)
+    @fi
+@done
+
+# Run loop again for anticheat
+@for Int i in list::range(0, directionsX.length())
+    # get current offset positions
+    @define Int offsetX = directionsX[i]
+    @define Int offsetY = directionsY[i]
+    @define Int offsetZ = directionsZ[i]
+    
+    # get current adjacent block
+    @define Block adjacentBlock = Block(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ, block.getWorld())
+
+    @var anticheat(adjacentBlock, player)
+@done

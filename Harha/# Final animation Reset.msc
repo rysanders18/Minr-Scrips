@@ -1,0 +1,15 @@
+# Final animation Reset
+@using Harha
+@fast
+
+@define Int headNumber
+@player killing everything
+
+@var stopAnimation = true
+@for Int i in list::range(0, 25)
+    @var headNumber = i
+    @bypass /minecraft:kill @e[type=item_display,tag=harhaicosahedron{{headNumber}}]
+@done
+
+@bypass /minecraft:kill @e[tag=secretHeadEntity25]
+

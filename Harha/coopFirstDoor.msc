@@ -1,0 +1,40 @@
+# Coop First Door
+@cooldown 1s
+
+@using Harha
+@fast
+
+
+@if (Player(-9123, 73, 9664, "Theta") != null) && (Player(-9127, 73, 9664, "Theta") != null)
+    
+    @bypass minecraft:tellraw {{Player(-9123, 73, 9664, "Theta")}} {"bold":true,"color":"green","hoverEvent":{"action":"show_text","value":[{"text":"","bold":true}]},"text":"Good Luck!"}
+    @bypass minecraft:tellraw {{Player(-9127, 73, 9664, "Theta")}} {"bold":true,"color":"green","hoverEvent":{"action":"show_text","value":[{"text":"","bold":true}]},"text":"Good Luck!"}
+    @bypass minecraft:playsound minecraft:block.note_block.pling master @a[distance=..20] ~ ~ ~ 1 1
+    @bypass /execute in minecraft:theta run setblock -9126 70 9667 minecraft:redstone_block
+    
+    # player 1 vars
+    @var isOrange[Player(-9123, 73, 9664, "Theta")] = true
+    @var isBlue[Player(-9123, 73, 9664, "Theta")] = false
+    @var coopBlockSelection[Player(-9123, 73, 9664, "Theta")] = "orange_wool"
+    @bypass clear {{Player(-9123, 73, 9664, "Theta")}} *[custom_data~{clear:true}]
+    @bypass give {{Player(-9123, 73, 9664, "Theta")}} {{coopBlockSelection[Player(-9123, 73, 9664, "Theta")]}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"orange_concrete_powder"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    
+    # player 2 vars
+    @var isOrange[Player(-9127, 73, 9664, "Theta")] = false
+    @var isBlue[Player(-9127, 73, 9664, "Theta")] = true
+    @var coopBlockSelection[Player(-9127, 73, 9664, "Theta")] = "light_blue_wool"
+    @bypass clear {{Player(-9127, 73, 9664, "Theta")}} *[custom_data~{clear:true}]
+    @bypass give {{Player(-9127, 73, 9664, "Theta")}} {{coopBlockSelection[Player(-9127, 73, 9664, "Theta")]}}[custom_name='["",{"text":"‌","italic":false}]',block_state={bloom:"true"},can_place_on={predicates:[{blocks:"light_blue_concrete_powder"}]},enchantments={levels:{"minecraft:vanishing_curse":1},show_in_tooltip:false},enchantment_glint_override=false,custom_data={clear:true}] 64
+    
+    
+    @delay 1
+    @bypass /execute in minecraft:theta run setblock -9126 70 9667 minecraft:air
+@else
+    @player &c&lBoth Players must be standing on a pressure plate.
+    @bypass minecraft:playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 1
+@fi
+
+
+# @if Region("coopstartorange", "Theta").getPlayersInside().length() > 0 && Region("coopstartorange", "Theta").getPlayersInside().length() > 0 && Block(-9124, 73, 9664, "Theta").getBlockType().toLowerCase() == "minecraft:heavy_weighted_pressure_plate[power=0]"
+#     @player a player is in each region
+# @fi

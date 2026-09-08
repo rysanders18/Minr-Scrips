@@ -1,0 +1,9 @@
+# completeStage(Int stage, Player player)
+# Area script right after each stage that changes variable that Swag Route detection checks
+
+@fast
+@using Harha
+
+@var lastStageCompleted[player][stage] = true
+
+@player completed stage: {{stage}}

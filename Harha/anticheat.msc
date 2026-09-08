@@ -1,0 +1,23 @@
+# anticheat(Block block, Player player)
+# sets blocks to air if they are not supposed to be there
+
+@fast
+@using Harha
+
+# define variables for less typing
+@define Int x = block.getX()
+@define Int y = block.getY()
+@define Int z = block.getZ()
+
+@if block.getBlockType().toLowerCase() != "air"
+    @delay 5
+    @if block.getBlockType().toLowerCase() != "air"
+        @delay 5
+        @if block.getBlockType().toLowerCase() != "air"
+            @delay 5
+                @if block.getBlockType().toLowerCase() != "air"
+                @var handlePlacement(block, 15, player)
+            @fi
+        @fi
+    @fi
+@fi

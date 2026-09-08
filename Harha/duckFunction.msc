@@ -1,0 +1,158 @@
+# duckFunction(Player player)
+
+@fast
+@using Harha
+
+@define String[] colorList4 = String["#f0ff1f", "#fdf612", "#ffed0c", "#ffe55f", "#ffdf7f", "#ffd98f", "#ffd498", "#ffce9d", "#ffc9a1", "#ffc4a4", "#ffbfa6", "#ffb9a7", "#ffb4a9", "#ffaeab", "#ffa8ad", "#ffa2af", "#ff9bb2", "#ff94b6", "#ff8cbc", "#ff83c2", "#ff78cc", "#ff6bd8", "#ff64e4", "#f567ec", "#e56bf4", "#d46ffa", "#c273ff"]
+@define String[] secretBuilders = String["RY \& Crow", "leo_lazuli", "Crowenza", "jasmine476", "masts", "bin200", "Dalox02", "ItsPoekie", "RY \& Crow", "Jakube_", "johnplumber", "RYgamer1", "BoggledToggo", "Lennerd07", "JM4s", "Swifph \& Tet", "Vermilion_Stone", "2uba", "rmanimal", "Alienout", "RYgamer1", "Lagbolo", "ZombieKiler", "RYgamer1", "LendKaru"]
+@define String[] secretDifficulties = String["&8&lExpert", "&a&lNovice", "&c&lVery Hard", "&6&lHard", "&b&lEasy", "&7&lNot Rated Yet", "&6&lHard", "&e&lModerate", "&8&lExpert", "&6&lHard", "&6&lHard", "&6&lHard", "&c&lVery Hard", "&c&lVery Hard", "&c&lVery Hard", "&a&lNovice", "&8&lExpert", "&7&lVery Easy", "&a&lNovice", "&6&lHard", "&c&lVery Hard", "&c&lVery Hard", "&c&lVery Hard", "&e&lModerate", "&e&lModerate"]
+@define String[] secretMapTypes = String["Adventure with Parkour, Maze, Puzzle, Dropper, Search, Guess and Story", "Pure Maze", "Pure Parkour", "Pure Parkour", "Pure Guess", "Maze with Parkour, Puzzle, And Search", "Parkour with Search", "Pure Dropper", "Co-op Parkour with Puzzle", "Pure Search", "Parkour with Search", "Guess with Story", "Parkour with Puzzle and Maze", "Parkour with Search", "Search with Puzzle and Parkour", "Gambling", "Pure Parkour", "Pure Maze", "Pure Puzzle", "Puzzle with Maze, Search, and Parkour", "Search with Parkour", "Pure Parkour", "Pure Parkour", "Aim Trainer", "Fish..."]
+
+@var duckCount[player] += 1
+
+@define String name
+@bypass playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1
+@player
+@player &#CD95C8&lEnter a Username:
+@player
+@prompt 20s name &cYou took too long!
+@define Player user = Player(name.toLowerCase())
+@if user == null
+    @if usernameList1.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList1.find(name.toLowerCase())])
+    @elseif usernameList2.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList2.find(name.toLowerCase())])
+    @elseif usernameList3.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList3.find(name.toLowerCase())])
+    @elseif usernameList4.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList4.find(name.toLowerCase())])
+    @elseif usernameList5.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList5.find(name.toLowerCase())])
+    @elseif usernameList6.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList6.find(name.toLowerCase())])
+    @elseif usernameList7.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList7.find(name.toLowerCase())])
+    @elseif usernameList8.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList8.find(name.toLowerCase())])
+    @elseif usernameList9.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList9.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList10.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList11.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList12.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList13.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList14.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList15.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList16.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList17.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList18.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList19.find(name.toLowerCase())])
+    @elseif usernameList10.contains(name.toLowerCase())
+        @var user = Player(uuidList1[usernameList20.find(name.toLowerCase())])
+    @else
+        @player &c{{name}} has not joined the map yet!
+        # @player &cGet uuid from https://namemc.com/profile/{{name}}.1
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s
+        @return
+    @fi
+@fi
+
+@if name.toLowerCase() == player.getName().toLowerCase()
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8You just checked your stats silly!
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @delay 60
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8You are &lSO SILLY!!!!
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @bypass /playsound minecraft:entity.ender_dragon.growl master @s -9171.50 96.00 9676.50 1 1
+    @return 
+@fi
+
+@var canTalkToDuck[player] = false
+
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Hmm yes, &l{{user}}!
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 10)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+    @done
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Let me pull up their &lsecret files...
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 15)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass /playsound minecraft:item.book.page_turn master @s -9171.50 96.00 9676.50 1 {{math::random(0.9D, 1.1D)}}
+        @delay 4
+    @done
+    @player &#F0FF1F&lM&#E7E24D&lr&#DDC67A&l. &#D4A9A8&lD&#CD95C8&lu&#C98ADA&lc&#C273FF&lk: &#CD95C8Aha! Here we are.
+    @bypass /playsound minecraft:block.enchantment_table.use master @s -9171.50 96.00 9676.50 1 {{math::random(1.0D, 1.7D)}}
+    @bypass /playsound minecraft:entity.cat.ambient master @s -9171.50 96.00 9676.50 1 {{math::random(0.5D, 2.0D)}}
+    @for Int i in list::range(0, 4)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @if i == 2 
+            @bypass /playsound minecraft:item.book.page_turn master @s -9171.50 96.00 9676.50 1 {{math::random(0.9D, 1.1D)}}
+        @fi
+        @delay 4
+    @done
+    @for Int i in list::range(0, 60)
+        @bypass particle minecraft:trial_spawner_detection -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @bypass particle minecraft:trial_spawner_detection_ominous -9172 96 9676 0.3 0 0.3 00.00 8 normal @s
+        @delay 4
+        @if i == 3
+            @bypass playsound minecraft:item.armor.equip_wolf master @s -9171.50 96.00 9676.50 1 0.9
+            @bypass playsound minecraft:item.armor.equip_leather master @s -9171.50 96.00 9676.50 1 1.1
+            @bypass playsound minecraft:item.armor.equip_elytra master @s -9171.50 96.00 9676.50 1 0.5
+            @player
+            @player &#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-&#F0FF1F&lM&#ECF333&lr&#E8E646&l. &#E4DA5A&lD&#E0CE6D&lu&#DCC281&lc&#D8B594&lk&#D4A9A8&l'&#D1A1B4&ls &#CF9AC1&lP&#CC92CD&la&#CA8ADA&lg&#C782E6&le&#C273FF&ls&#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-
+            @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[0]}}#X:&l  &#C273FF &nF&#CD95C8 &4 &#C273FF &nC&r &e Builders &#CD95C8- &lDifficulty")}}
+            @player 
+            @for Int j in list::range(0, 9)
+                @if secretsFoundList[user][j] == 0 && secretsCompletedList[user][j] == 0 
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &c ✕&:&c&lSecret Not Found.:&  &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[user][j] == 1 && secretsCompletedList[user][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &a ✔&:&a&lSecret Found!:& &d &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[user][j] == 0 && secretsCompletedList[user][j] == 1
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &c ✕&:&c&lSecret Not Found.:&  &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @else
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}:&l &r &a ✔ &d &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @fi
+                # @player &#CD95C8Difficulty: {{secretDifficulties[j]}}
+                # @player
+            @done
+            @for Int j in list::range(9, 25)
+                @if secretsFoundList[user][j] == 0 && secretsCompletedList[user][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &c ✕&:&c&lSecret Not Found.:&  &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[user][j] == 1 && secretsCompletedList[user][j] == 0
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &a ✔&:&a&lSecret Found!:& &d &c ✕&:&c&lSecret Not Completed.:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @elseif secretsFoundList[user][j] == 0 && secretsCompletedList[user][j] == 1
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &c ✕&:&c&lSecret Not Found.:&  &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @else
+                    @bypass /tellraw {{player}} {{slytools::convertTextToTellraw("&{{colorList4[j + 1]}}#{{j + 1}}: &a ✔&:&a&lSecret Found!:& &d &a ✔&:&a&lSecret Completed!:&  &e{{secretBuilders[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:& &#CD95C8- &:&#e6e6e6&l{{secretMapTypes[j]}}:&{{secretDifficulties[j]}}&:&#e6e6e6&l{{secretMapTypes[j]}}:&")}}
+                @fi
+                # @player &#CD95C8Difficulty: {{secretDifficulties[j]}}
+                # @player                              &l &r  &{{colorList4[j + 1]}}#Difficulty
+            @done
+            @player &{{colorList4[26]}}#X:&l  &#C273FF &nF&#CD95C8 &4 &#C273FF &nC&r &e Builders &#CD95C8- &lDifficulty
+            @player
+            @player &#C273FFF = Found       &#C273FFC = Completed
+            @player &#CD95C8Secrets Found: &l{{Int(Float((Float(secretsFoundList[user].sum()) / 25) * 100) * 10) / 10}}%&4     &#CD95C8Completed: &l{{Int(Float((Float(secretsCompletedList[user].sum()) / 25) * 100) * 10) / 10}}%
+            @chatscript 100s harhaduck{{duckCount}} duckFunction(player)
+            @player &#CD95C8&nClick&#CD95C8 here to view someone else's progress!
+            @player &#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-&#F0FF1F&lM&#ECF333&lr&#E8E646&l. &#E4DA5A&lD&#E0CE6D&lu&#DCC281&lc&#D8B594&lk&#D4A9A8&l'&#D1A1B4&ls &#CF9AC1&lP&#CC92CD&la&#CA8ADA&lg&#C782E6&le&#C273FF&ls&#F0FF1F-&#EAEC3D=&#E4D95C-&#DDC67A=&#D7B399-&#D2A3B2=&#CE97C5-&#CA8BD8=&#C273FF-
+        @fi
+    @done
+    @var canTalkToDuck[player] = true

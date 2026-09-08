@@ -1,0 +1,19 @@
+# lb region
+
+@global_cooldown 5s
+
+@fast
+@using Harha
+
+
+@bypass attribute {{player}} minecraft:entity_interaction_range base set 8
+@define Region lbRegion = Region("harhaleaderboardregion", "Theta")
+
+@define Int[] typeList = Int[12, 18, 25, 7]
+
+@var leaderboardType = typeList[Int(math::random(0D, 4D))]
+@var leaderboardPage = 0
+
+@if lbRegion.getPlayersInside().length() <= 1
+    @var leaderboardSelection(leaderboardType, leaderboardPage, player)
+@fi

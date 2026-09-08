@@ -1,0 +1,20 @@
+# cosmeticLeaf (Player player)
+
+@fast
+@using Harha
+
+@if Int(math::random(1.0D, 11.0D)) >= 8
+    @var leafNumber[player] = 1
+@else
+    @var leafNumber[player] = 0
+@fi
+
+@var blockSelection[player] = leafList[leafNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1
+@var lastLeafNumber[player] = leafNumber[player]
+
+
+# @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

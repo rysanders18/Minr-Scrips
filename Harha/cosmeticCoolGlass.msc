@@ -1,0 +1,16 @@
+# cosmeticCoolGlass (Player player)
+
+@fast
+@using Harha
+
+@var coolGlassNumber[player] = Int(math::random(0.0D, 2.0D))
+
+@var blockSelection[player] = coolGlassList[coolGlassNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1
+@var lastCoolGlassNumber[player] = coolGlassNumber[player]
+
+
+# @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

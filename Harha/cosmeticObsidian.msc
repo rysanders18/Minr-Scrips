@@ -1,0 +1,20 @@
+# cosmeticObsidian (Player player)
+
+@fast
+@using Harha
+
+@if Int(math::random(1.0D, 11.0D)) >= 7
+    @var obsidianNumber[player] = 1
+@else
+    @var obsidianNumber[player] = 0
+@fi
+
+@var blockSelection[player] = obsidianList[obsidianNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1
+@var lastObsidianNumber[player] = obsidianNumber[player]
+
+
+# @bypass clear {{player}} {{blockSelection}}[can_place_on={predicates:[{blocks:"target"}]}] 640

@@ -1,0 +1,16 @@
+# cosmeticWool (Player player)
+
+@fast
+@using Harha
+
+@if woolNumber[player] >= 9
+    @var woolNumber[player] = 0
+@else
+    @var woolNumber[player] += 1
+@fi
+
+@var blockSelection[player] = woolList[woolNumber]
+@if numberOfBlocksToGive[player] >= 1
+    @var resetBlocks(player, numberOfBlocksToGive[player])
+@fi
+@var numberOfBlocksToGive[player] -= 1

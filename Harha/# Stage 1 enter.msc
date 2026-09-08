@@ -27,7 +27,7 @@
         @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 1.0
         @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 0.25 2.0
     @fi
-    
+
     @delay 1
     @bypass /title @s subtitle ["",{"text":"Go","color":"#d4d4d4"}]
     @bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 1 1.122
@@ -55,11 +55,11 @@
     
     @delay 15
     @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
-    
+
     @delay 20
     @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
-    
+
     @delay 20
     @bypass /title @s actionbar ["",{"text":"Timer Started!","bold":true,"color":"#1FFB14"}]
-    
+
 @fi
