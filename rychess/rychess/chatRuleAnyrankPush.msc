@@ -1,0 +1,18 @@
+# chatRuleAnyrankPush(Player player)
+# One-shot rule-explanation chat: fires the first time the player
+# witnesses a pawn double-push from a non-starting rank (variant
+# rule — pawns can double-push from ANY rank, not just rank 2/7).
+# noticeVariantRules dispatches here and sets the seenAnyrankPushRule
+# flag so this never fires twice for the same player. Standard
+# starting-rank double pushes do NOT trigger this — they're normal
+# chess.
+#
+# Body is a TEST PLACEHOLDER — replace with the real explanation
+# wording / random pick from a flavor pool. Keep the (player)
+# signature so the trigger stays unchanged.
+
+@using rychess
+@fast
+
+@delay 65
+@player &aRYgamer1&7 -> You: oh btw pawns can move 2 spaces from any rank here, not just the starting one lol

@@ -15,4 +15,4 @@
 @fast
 
 @var prerecordingActive[player] = false
-@bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"
+@bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}

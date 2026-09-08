@@ -10,21 +10,21 @@
 
 @if isCheckmate(player)
     @if sideToMove[player] == 0
-        @player &c&l*** Checkmate! Black wins. ***
+        @var chatPlayerLose(player)
     @else
-        @player &c&l*** Checkmate! White wins. ***
+        @var playCheckmateSound(player)
     @fi
-    @var playCheckmateSound(player)
+    
     @return true
 @fi
 
 @if isStalemate(player)
-    @player &e&l*** Stalemate. Draw. ***
+    # @player &e&l*** Stalemate. Draw. ***
     @return true
 @fi
 
 @if halfmoveClock[player] >= 100
-    @player &e&l*** Draw by 50-move rule. ***
+    # @player &e&l*** Draw by 50-move rule. ***
     @return true
 @fi
 

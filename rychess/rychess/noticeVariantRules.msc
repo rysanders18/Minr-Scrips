@@ -1,0 +1,51 @@
+# noticeVariantRules(Player player, Int move)
+# Detects variant pawn moves that a first-time player would find
+# surprising and fires a one-shot chat-explanation per rule. Called
+# from performEngineMove and interactEntity AFTER the move has been
+# committed visually (so the player sees the weird move first, then
+# gets the "wait, what?" follow-up).
+#
+# Two rules detected:
+#   1. Lateral pawn move (variant: pawns can move/capture one
+#      square left or right). Sampled as fromRank == toRank AND
+#      the piece arriving on toSq is a pawn. Lateral moves don't
+#      cross ranks so they never promote — board[toSq] is still
+#      the original pawn even after makeMove.
+#   2. Pawn double-push from a NON-starting rank (variant: pawns
+#      can double-push from any rank). Detected via flag == 2 +
+#      fromRank not in {1, 6}. Standard chess double-pushes from
+#      rank 2/7 are not flagged — they're not surprising.
+#
+# Each rule has its own one-shot seen-flag. Flags are never reset
+# (intentional — "first time" is lifetime, not per-game) so the
+# explanation lands exactly once per player.
+
+@using rychess
+@fast
+
+@define Int fromSq = moveFrom(move)
+@define Int toSq = moveTo(move)
+@define Int flags = moveFlags(move)
+@define Int fromRank = fromSq / 8
+@define Int toRank = toSq / 8
+
+# Rule 1: lateral pawn move.
+@if !seenLateralPawnRule[player]
+    @if fromRank == toRank
+        @define Int pAtTo = board[player][toSq]
+        @if pAtTo != 0 && pieceType(pAtTo) == 1
+            @var chatRuleLateral(player)
+            @var seenLateralPawnRule[player] = true
+        @fi
+    @fi
+@fi
+
+# Rule 2: double-push from a non-starting rank. flag=2 alone is the
+# "double push" marker; the rank gate filters out standard chess
+# opening pushes from rank 2 (fromRank=1) and rank 7 (fromRank=6).
+@if !seenAnyrankPushRule[player]
+    @if flags == 2 && fromRank != 1 && fromRank != 6
+        @var chatRuleAnyrankPush(player)
+        @var seenAnyrankPushRule[player] = true
+    @fi
+@fi

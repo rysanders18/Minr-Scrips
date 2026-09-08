@@ -11,24 +11,75 @@
 #      next tick and exits, freezing the mannequin in place. Pose snaps
 #      back to standing.
 #   4. Settle pause, random 3–9 ticks. Mannequin just stands there.
-#   5. cruiseToFacing to the play position (-9133.0, 9668.75) with
-#      yaw=0 (facing +Z south, into the board) and pitch=72.64 (head
-#      tilted down to look at the squares). cruiseToFacing blocks until
-#      the cruise+coast pipeline finishes, so step 6 only fires once
-#      the mannequin has physically arrived. Y is implicit: collideY
-#      drops the mannequin onto the chess-room floor (y ≈ -61).
+#   5. cruiseToFacing to the midpoint of the move's from-square and
+#      to-square centres, facing the board centre (-9133.0, 9670.0)
+#      with ±10° yaw jitter and 0-10° pitch. Per-move coords keep the
+#      mannequin "near the action" instead of always squatting on the
+#      same north-edge tile. cruiseToFacing blocks until the
+#      cruise+coast pipeline finishes, so step 6 only fires once the
+#      mannequin has physically arrived. Y is implicit: collideY drops
+#      the mannequin onto the chess-room floor (y ≈ -61).
 #   6. Contemplation pause, ~2 s (35–45 ticks). The mannequin is at
 #      the board, looking at the position, before "reaching for the
-#      piece" — keeps successive moves from feeling instant.
-#   7. Apply the move: makeMove + applyMoveVisually + displayBoard.
-#   8. Resume wandering with a fresh random prerecording.
+#      piece" — keeps successive moves from feeling instant. 30% of
+#      the time the pause splits into thirds with a sneaking-Pose
+#      window in the middle ("leaning in to study the board"), always
+#      unsneaking before the move below.
+#   6½. Score-swing chat (conditional). If chooseMove's score moved
+#      by ≥ 200 cp between turns (and we're not inside mate
+#      territory, |delta| < 5000), wait 40 ticks and fire chatTaunt
+#      (engine-favorable swing → human likely blundered) or chatCope
+#      (engine-unfavorable swing → engine blundered / human played
+#      well). Quiet turns skip the delay entirely.
+#   7. performEngineMove: turn head to from-square, dwell 1-4 ticks,
+#      playSelectSound + highlightMoves, dwell 2-20 ticks, turn head
+#      to to-square, dwell 1-4 ticks, then clearHighlights +
+#      makeMove + applyMoveVisually + displayBoard + move/capture
+#      sound. The two head-turns and three dwell windows are what
+#      sells the move as "the engine actually deciding" rather than
+#      a board flicker.
+#   8. sneakWalkTo back to the exact (midX, midZ) from step 5:
+#      cruiseToFacing's coast can settle ~1 b off, and the next
+#      prerecording's first /tp would visibly snap that residual.
+#      Walking the gap shut crouched (the crouch flips on at a
+#      random point in the first half of the walk) and easing yaw
+#      and pitch from the contemplation pose to the prerecording's
+#      starting pose (yaw=0, pitch=72.64) across the same walk hides
+#      both the position snap and the head-orientation snap.
+#   9. Resume wandering with a fresh random prerecording.
 #
-# When the chosen prerecording slot set is empty, step 7 is a no-op and
+# When the chosen prerecording slot set is empty, step 9 is a no-op and
 # the mannequin just stands at the play position until the next
 # engineMove call.
+#
+# Early return: after performEngineMove commits the move, sideToMove
+# flips to playerColor. If the human clicks their next move before
+# we finish the afterMove linger / sneakWalkTo / startRandom-
+# Prerecording tail, sideToMove flips BACK to engineColor — at which
+# point steps 8 and 9 are skipped (no point cleaning up if the next
+# engineMove is already spawned). The check is only safe AFTER step
+# 7 because that's when makeMove flips the side; checking earlier
+# would always see engineColor (engine's turn pre-commit).
+#
+# Fast mode: if this call begins within 2.5 s of the previous call's
+# completion (lastEngineMoveEnd[player]):
+#   - realise (2) and settle (4) upper bounds drop to ~1/3 (so the
+#     "I'm noticing my turn" beat doesn't drag on rapid play).
+#   - after-move (step before sneakWalkTo) upper bound is INVERTED:
+#     ~3× longer, so the mannequin lingers on the move instead of
+#     scampering away the moment the piece slides into place.
+# Contemplate (6) is intentionally left at full length — that beat
+# is the "reading the position" performance, not slack.
 
 @using rychess
 @fast
+
+# Defensive: callers (interactEntity legal-move branch, play.msc) are
+# expected to have already cleared humanCanMove before invoking us,
+# but clearing again here covers any future direct caller and makes
+# the invariant "humanCanMove is false for the entire engine turn"
+# locally enforced rather than caller-dependent.
+@var humanCanMove[player] = false
 
 @define Long t = system::currentTimeMillis()
 @define Int move = chooseMove(player)
@@ -36,20 +87,45 @@
 
 @if move == 0
     @if inCheck(player)
-        @player &c&lCheckmate.
+        # @player &c&lCheckmate.
     @else
-        @player &e&lStalemate.
+        # @player &e&lStalemate.
     @fi
     @return
+@fi
+
+# Fast mode: if the last engineMove finished within the past 2.5 s,
+# compress the realise/settle/after-move delay UPPER bounds so each
+# tick range is ~1/3 of normal (rounded). Contemplate (the "reading
+# the position" beat) is left alone — that's the read-the-board
+# performance and shouldn't shrink with back-to-back moves. The
+# lower bounds are preserved everywhere so the minimum delay still
+# floors at "human-plausible".
+#   realise: random(10,41) → random(10,20)   (range 31 → 10)
+#   settle:  random(3,7)   → random(3,4)     (range 4  → 1)
+#   after:   random(5,16)  → random(5,38)    (range 11 → 33, 3× LONGER)
+#
+# The afterMove inversion is deliberate: when the player is moving
+# fast, the engine's move shouldn't immediately scamper back to the
+# wandering prerecording. Lingering longer keeps the move from
+# feeling like a swat-and-run.
+@define Long now = system::currentTimeMillis()
+@define Boolean fastMode = (now - lastEngineMoveEnd[player]) < 7500L
+@define Double realiseUpper = 31D
+@define Double settleUpper = 7D
+@define Double afterUpper = 16D
+@if fastMode
+    # @player DEBUG: Fast mode triggered ({{elapsed}} ms); compressing delays.
+    @var realiseUpper = 20D
+    @var settleUpper = 4D
+    @var afterUpper = 38D
 @fi
 
 # math::random on Doubles is exclusive on the upper bound; widen by 1
 # and clamp to get inclusive ranges that match the spec's "0.5 to 3s"
 # and "3 to 9 ticks".
-@define Int realiseDelay = Int(math::random(10D, 61D))
-@if realiseDelay > 60
-    @var realiseDelay = 60
-@fi
+@define Int realiseDelay = Int(math::random(6D, realiseUpper))
+
 @if realiseDelay < 10
     @var realiseDelay = 10
 @fi
@@ -57,36 +133,196 @@
 
 @var mannequin::stopPrerecording(player)
 
-@define Int settleDelay = Int(math::random(3D, 10D))
-@if settleDelay > 9
-    @var settleDelay = 9
+@define Int settleDelay = Int(math::random(3D, settleUpper))
+@if settleDelay > 6
+    @var settleDelay = 6
 @fi
 @if settleDelay < 3
     @var settleDelay = 3
 @fi
 @var Harha::delay(settleDelay)
 
-@var mannequin::cruiseToFacing(player, -9133.0F, 9668.75F, 0.0F, 72.64F)
+# Land on the midpoint of the from-square and to-square centres so the
+# move plays out from where the mannequin is standing, not from a fixed
+# bench seat. Board geometry: A1 centre is (-9134.30, 9671.30), H8 centre
+# is (-9131.71, 9668.66), board centre ~(-9133.00, 9670.00); files run +X
+# (a→h), ranks run -Z (1→8), so per-step deltas are linear in (file, rank).
+@define Int fromSq = moveFrom(move)
+@define Int toSq = moveTo(move)
+@define Double avgFile = Double((fromSq % 8) + (toSq % 8)) / 2D
+@define Double avgRank = Double((fromSq / 8) + (toSq / 8)) / 2D
+@define Double xStep = (-9131.71D - (-9134.30D)) / 7D
+@define Double zStep = (9668.66D - 9671.30D) / 7D
+@define Double midX = -9134.30D + avgFile * xStep
+@define Double midZ = 9671.30D + avgRank * zStep
+
+# Yaw to face board centre. Minecraft yaw = atan2(-dx, dz); MSC only has
+# single-arg math::arctan (in degrees), so quadrant-correct manually.
+# Same pattern as cruiseTick.msc.
+@define Double dx = -9133.0D - midX
+@define Double dz = 9670.0D - midZ
+@define Double numer = -dx
+@define Double lookYaw = 0D
+@if dz > 0D
+    @var lookYaw = math::arctan(numer / dz)
+@elseif dz < 0D
+    @if numer >= 0D
+        @var lookYaw = math::arctan(numer / dz) + 180D
+    @else
+        @var lookYaw = math::arctan(numer / dz) - 180D
+    @fi
+@else
+    @if numer > 0D
+        @var lookYaw = 90D
+    @elseif numer < 0D
+        @var lookYaw = -90D
+    @fi
+@fi
+
+# Per-move jitter so repeated arrivals don't pose identically.
+@var lookYaw = lookYaw + math::random(-10D, 10D)
+@define Double lookPitch = math::random(60D, 70D)
+
+@var mannequin::cruiseToFacing(player, Float(midX), Float(midZ), Float(lookYaw), Float(lookPitch))
 
 # Contemplation pause once the mannequin has arrived at the board.
 # Looks like the engine is "reading the position" before reaching for
 # the piece. ~2 s; the small ±5 tick jitter keeps repeated moves from
 # feeling metronomic.
-@define Int contemplate = Int(math::random(35D, 46D))
+#
+# 30% of the time the contemplation splits into thirds with a sneak window
+# in the middle: stand → sneak → stand. Reads as "leaning in to study the
+# position" then sitting back up. The trailing stand portion guarantees a
+# clean standing pose before makeMove fires; if we sneaked right up to
+# the move boundary the piece would visually be picked up by a crouched
+# mannequin, which looks wrong.
+@define Int contemplate = Int(math::random(20D, 46D))
 @if contemplate > 45
     @var contemplate = 45
 @fi
 @if contemplate < 35
     @var contemplate = 35
 @fi
-@var Harha::delay(contemplate)
+@define Double sneakRoll = math::random(0D, 1D)
+@if sneakRoll < 0.3D
+    @define Int third1 = contemplate / 3
+    @define Int third2 = contemplate / 3
+    @define Int third3 = contemplate - third1 - third2
+    @var Harha::delay(third1)
+    @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"crouching"}
+    @var Harha::delay(third2)
+    @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}
+    @var Harha::delay(third3)
+@else
+    @var Harha::delay(contemplate)
+@fi
+
+# Score-swing chat trigger. chooseMove updated the cache at the very
+# top of this engineMove: prevEngineScore = last turn's bestScore,
+# curEngineScore = this turn's. delta > 0 = engine's eval moved in
+# its favor (human likely blundered); delta < 0 = engine's eval
+# moved against it (engine's last move was worse than expected, or
+# the human played a strong reply).
+#
+# Lands AFTER contemplate (the "reading the position" beat) and
+# BEFORE performEngineMove (the visible move) — reads as "the bot
+# looked at the board, said something, then played its move". The
+# 40-tick lead-in is only paid when a swing actually fires, so quiet
+# moves don't add latency to the sequence.
+#
+# Mate-score gate: searchInner returns ~±100000 near forced mate,
+# which would produce huge nonsense deltas at game end. Skip the
+# message when |delta| >= 5000 — those are mate-territory swings,
+# not blunders.
+@define Int swingDelta = curEngineScore[player] - prevEngineScore[player]
+@define Int absSwing = swingDelta
+@if absSwing < 0
+    @var absSwing = 0 - absSwing
+@fi
+@if absSwing >= 200 && absSwing < 5000
+    @if swingDelta >= 200
+        @var chatTaunt(player, swingDelta)
+    @fi
+    @var Harha::delay(Int(math::random(5D, 10D)))
+@fi
 
 @define String fromName = squareName(moveFrom(move))
 @define String toName = squareName(moveTo(move))
-@player &aEngine plays: &f{{fromName}} -> {{toName}} &8[{{elapsed}}ms]
 
-@var makeMove(player, move)
-@var applyMoveVisually(player, move)
-@var displayBoard(player)
+@var performEngineMove(player, move)
+
+# Re-open the click gate: the engine's move is committed, so clicks
+# from here onward are the human's next-turn input. The new
+# interactEntity (if a click is racing the animation tail) will
+# clear humanCanMove again before its makeMove. We do NOT re-set
+# humanCanMove at the short-circuit @return points below because
+# arriving there means a click has ALREADY beaten us — the new
+# interactEntity instance has already cleared humanCanMove and
+# spawned a fresh engineMove, and re-setting it true here would
+# mistakenly re-open the gate during that fresh engine turn.
+@var humanCanMove[player] = true
+
+# Player-already-responded short-circuit. performEngineMove flipped
+# sideToMove to playerColor via makeMove; a subsequent human click
+# flips it back. So sideToMove != playerColor here means the player
+# already played their next move while we were still finishing
+# this turn's animation tail — no point lingering or walking back.
+# Bail before the afterMove linger and the sneakWalkTo + prerecording
+# tail, and let the new engineMove (already spawned by interactEntity)
+# take over. lastEngineMoveEnd is still updated so future fast-mode
+# checks see this turn as ended.
+#
+# The guard is only safe AFTER performEngineMove because that's when
+# makeMove runs — before that, sideToMove != playerColor reflects
+# the engine's pre-commit state, not a player response.
+@if sideToMove[player] != playerColor[player]
+    @var lastEngineMoveEnd[player] = system::currentTimeMillis()
+    # @player DEBUG: Returning 1
+    @return
+@fi
+
+# Close the residual gap from cruiseToFacing's coast settling (~0-1 b
+# off target) so the prerecording's first /tp doesn't snap visibly.
+# sneakWalkTo shuffles toward exact (midX, midZ) using one or two
+# key-direction headings at a time, eases yaw/pitch from the
+# contemplation pose to the prerecording's landing pose (yaw=0,
+# pitch=72.64) with most of the swing in the second half, and flips
+# the crouch on at a random point in the first half. Uncrouches on
+# arrival.
+@define Int afterMove = Int(math::random(5D, afterUpper))
+@if afterMove > 37
+    @var afterMove = 37
+@fi
+@if afterMove < 5
+    @var afterMove = 5
+@fi
+@var Harha::delay(afterMove)
+
+# Re-check: afterMove can be up to ~1.85 s in fast mode, plenty of
+# room for the human to click during it. Skip sneakWalkTo +
+# prerecording if so.
+@if sideToMove[player] != playerColor[player]
+    @var lastEngineMoveEnd[player] = system::currentTimeMillis()
+    # @player DEBUG: Returning 2
+    @return
+@fi
+
+@if fastMode
+    @var afterMove = Int(math::random(20D, 40D))
+    @var Harha::delay(afterMove)
+@fi
+@var mannequin::sneakWalkTo(player, Float(-9133.0), Float(9668.75))
+
+# Final safety check before starting the next prerecording: if the
+# player responded during the walk, skip starting the prerecording
+@if sideToMove[player] != playerColor[player]
+    @var lastEngineMoveEnd[player] = system::currentTimeMillis()
+    # @player DEBUG: Returning 3
+    @return
+@fi
+
+
 
 @var mannequin::startRandomPrerecording(player)
+
+@var lastEngineMoveEnd[player] = system::currentTimeMillis()

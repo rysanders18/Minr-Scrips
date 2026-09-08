@@ -14,24 +14,24 @@
 @using rychess
 @fast
 
-@player &6=== Phase 4: Perft Test ===
+# @player &6=== Phase 4: Perft Test ===
 
 @var newGame(player)
 @define Long t1 = system::currentTimeMillis()
 @define Int p1 = perft(player, 1)
 @define Long e1 = system::currentTimeMillis() - t1
-@player &eDepth 1: {{p1}} &7(expected 20) &8[{{e1}}ms]
+# @player &eDepth 1: {{p1}} &7(expected 20) &8[{{e1}}ms]
 
 @var newGame(player)
 @define Long t2 = system::currentTimeMillis()
 @define Int p2 = perft(player, 2)
 @define Long e2 = system::currentTimeMillis() - t2
-@player &eDepth 2: {{p2}} &7(expected 400) &8[{{e2}}ms]
+# @player &eDepth 2: {{p2}} &7(expected 400) &8[{{e2}}ms]
 
 @var newGame(player)
 @define Long t3 = system::currentTimeMillis()
 @define Int p3 = perft(player, 3)
 @define Long e3 = system::currentTimeMillis() - t3
-@player &eDepth 3: {{p3}} &7(expected 8902) &8[{{e3}}ms]
+# @player &eDepth 3: {{p3}} &7(expected 8902) &8[{{e3}}ms]
 
-@player &6=== Done ===
+# @player &6=== Done ===

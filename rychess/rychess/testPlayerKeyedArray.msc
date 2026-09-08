@@ -13,23 +13,23 @@
 @using rychess
 @fast
 
-@player &6=== Phase 1: Player-Keyed Array Test ===
+# @player &6=== Phase 1: Player-Keyed Array Test ===
 
 @define Int[] sample = Int[10, 20, 30, 40, 50]
 @var testBoard[player] = sample
 
 @define Int lenA = testBoard[player].length()
-@player &eStored length: {{lenA}} &7(expected 5)
+# @player &eStored length: {{lenA}} &7(expected 5)
 
 @define Int valA = testBoard[player][2]
-@player &eIndex 2: {{valA}} &7(expected 30)
+# @player &eIndex 2: {{valA}} &7(expected 30)
 
 @var testBoard[player].append(60)
 
 @define Int lenAfter = testBoard[player].length()
-@player &eAfter append len: {{lenAfter}} &7(expected 6)
+# @player &eAfter append len: {{lenAfter}} &7(expected 6)
 
 @define Int valAfter = testBoard[player][5]
-@player &eIndex 5: {{valAfter}} &7(expected 60)
+# @player &eIndex 5: {{valAfter}} &7(expected 60)
 
-@player &6=== Done ===
+# @player &6=== Done ===

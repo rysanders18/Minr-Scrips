@@ -42,9 +42,9 @@ SRC = os.path.join(HERE, 'slimemaze')
 OUT = os.path.join(HERE, 'datapack', 'slimemaze')
 
 # chain-name prefixes making up the build and the undo (prefix + digits)
-BUILD_PREFIXES = ('build', 'walls', 'dome', 'floor', 'decor')
-CLEAR_PREFIXES = ('remove', 'removewalls', 'removedome', 'removefloor',
-                  'removedecor')
+BUILD_PREFIXES = ('build', 'walls', 'lanterns', 'dome', 'floor', 'decor')
+CLEAR_PREFIXES = ('remove', 'removewalls', 'removelanterns',
+                  'removedome', 'removefloor', 'removedecor')
 
 CMD_RE = re.compile(r'^@bypass /(setblock|fill) (.+)$')
 INT_RE = re.compile(r'-?\d+')
@@ -61,9 +61,7 @@ def collect(prefixes):
     for fn in os.listdir(SRC):
         m = pat.match(fn)
         if m:
-            files.append((BUILD_PREFIXES.index(m.group(1))
-                          if m.group(1) in BUILD_PREFIXES
-                          else CLEAR_PREFIXES.index(m.group(1)),
+            files.append((prefixes.index(m.group(1)),
                           int(m.group(2)), fn))
     cmds = []
     bbox = [10**9, 10**9, -10**9, -10**9]  # cx1 cz1 cx2 cz2 (chunk coords)
@@ -120,7 +118,19 @@ def main():
                     help='also copy into .minecraft/saves/WORLD/datapacks')
     ap.add_argument('--no-strict', action='store_true',
                     help="strip the 'strict' flag (for MC < 1.21.5)")
+    ap.add_argument('--src', metavar='DIR',
+                    help='read the emitted chains from DIR instead of '
+                         './slimemaze (e.g. a v3 sandbox emit)')
+    ap.add_argument('--out', metavar='DIR',
+                    help='write the datapack to DIR instead of '
+                         './datapack/slimemaze')
     args = ap.parse_args()
+
+    global SRC, OUT
+    if args.src:
+        SRC = os.path.abspath(args.src)
+    if args.out:
+        OUT = os.path.abspath(args.out)
 
     fndir = os.path.join(OUT, 'data', 'slimemaze', 'function')
     shutil.rmtree(OUT, ignore_errors=True)
@@ -129,10 +139,24 @@ def main():
           ['{"pack": {"pack_format": 71, "supported_formats": [48, 999],',
            ' "description": "slimemaze singleplayer test build"}}'])
 
+    # server-set emissions (user 2026-08-17) carry the whole build as
+    # buildALL chains and no segmented/remove chains at all: read
+    # buildALL when present (it subsumes build+walls+lanterns+dome+
+    # floor+decor), and tolerate an empty clear set (wipe covers it)
+    has_all = any(re.fullmatch(r'buildALL\d+\.msc', f)
+                  for f in os.listdir(SRC))
+    build_prefixes = ('buildALL',) if has_all else BUILD_PREFIXES
+
     ylims = [10**9, -10**9]
-    for name, prefixes, label in (('build', BUILD_PREFIXES, 'placing'),
+    wipe_bbox = None
+    for name, prefixes, label in (('build', build_prefixes, 'placing'),
                                   ('clear', CLEAR_PREFIXES, 'clearing')):
         cmds, bbox = collect(prefixes)
+        if name == 'build':
+            wipe_bbox = bbox
+        if not cmds:
+            print('%s: no source chains - skipped (use wipe)' % name)
+            continue
         for c in cmds:
             nums = [int(v) for v in INT_RE.findall(c)]
             ys = [nums[1]] + ([nums[4]] if len(nums) >= 6 else [])
@@ -143,6 +167,7 @@ def main():
         emit(name, cmds, bbox, fndir, label)
         print('%s: %d commands, chunks x %d..%d z %d..%d'
               % (name, len(cmds), bbox[0], bbox[2], bbox[1], bbox[3]))
+    bbox = wipe_bbox
 
     # wipe: air-fill the whole bounding box in 32k-block fill slabs,
     # so a rebuild is clean regardless of what any older datapack

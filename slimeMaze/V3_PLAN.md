@@ -616,3 +616,57 @@ is termination capacity: funnel-zone bubbles, repair-arm landings
 (`ld_j_slack`, `ld_growblk`), or a user decision to relax
 FORK_GAP_MAX / maze size. Window farms (GM_FARM=1) measured worse
 and have a residual rule bug - leave off.
+
+## Trigger-color rule (user, 2026-08-17)
+
+**Rule**: at least one slime block of the destination palette before
+every seamless teleport - the color switch must never sit on the
+teleport bounce.
+
+Root cause of violations (2-10 per buildable seed): the SPLICE_LEAD
+loop in `compute_palette` refuses to recolor fork-guard blocks, so a
+trigger hanging one bounce past a fork got zero lead-colored approach
+blocks and the flip landed exactly on the trigger.
+
+**Enforced at the palette layer** (`compute_palette` empty-lead
+rescue): recolor the blocking guard cluster - fork block plus all its
+guarded kids, chains walked up - to the window palette, plus
+MIN_RUN-2 plain blocks above the topmost fork so sibling-arm rides
+never see a lead_lock-pinned short run; `absorb_up` clears slivers
+above the cluster. `verify()` re-checks the rule on the final palette
+("trigger color" errors).
+
+Placement-time enforcement (rejecting splices whose trigger feeder is
+fork-guarded, incl. suffix-walk trimming for landings) was built and
+measured first and **rejected**: 7-seed (1/5/6/7/8/11/14) mean
+forkgap viol 96 -> 120, splices down, erasures up - the funnel band
+cannot spare the landing capacity. The palette rescue is
+geometry-free: all stats bit-identical to baseline, pinned short runs
+~identical, 16-22 rescues per seed, 0 unrescued, 0 trigger-color
+verify errors.
+
+**Landing side (same day)**: the block the teleport drops the player
+on (win[1]) must not sit immediately after a color switch either.
+win_uniform used to paint win[1:] to the window MAX palette, shoving
+the flip onto the landing bounce with win[0] behind it in the old
+color. Now windows uniform to the BASE block's (win[0]) palette - the
+flip moves past the window end (monotone-safe: base level <= every
+natural in-window level <= downstream). Anchoring runs PER-TURN
+inside the sorted splice loop, not as a pre-pass, so a trigger
+rescue that recolors a later-processed window's blocks self-heals:
+the window re-anchors to the palette as it now stands (lead_locked
+members keep their color; the copy mirrors the mixed sequence, so
+tail fidelity always holds). The rescue veto is window-y aware:
+copies, lead_locked blocks and windows processed at >= our y are
+untouchable; strictly-later windows are fair game. verify() gained
+"landing color" alongside "trigger color". 7-seed: both hists >= 1
+everywhere, 0 color errors, geometry unchanged, pinned short runs
+11 -> 13 total (reported-only).
+
+Both rules are ALSO in walls.py's union-find palette (the one that
+actually colors the world): the approach unions already covered the
+trigger side; the landing side is `union(win[0], win[1])` plus a
+validator line, with the window-side boundary-legalization walk
+starting at win[0]. Seed-6 build: palette attempt 0 VALID, 0 rule
+violations, datapack installed. Note wall_test.py is dead (imports
+v2 generate_maze and hangs in its rewind_retry landing search).

@@ -31,7 +31,6 @@
     @var diamondCookieChance[player] = 500
     @var diamondCookieChanceStage[player] = 0
     @var diamondCookiesClicked[player] = 0
-    @var roomNumber[player] = 1
     @var goldenCookieLocations[player] = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false]
     @var diamondCookieLocations[player] = Boolean[false, false, false, false, false, false, false, false, false, false, false, false, false, false]
     @var milkActivated[player] = false

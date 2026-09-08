@@ -1,0 +1,156 @@
+# performEngineMove(Player player, Int move)
+# Animates the engine's move "from the mannequin's perspective", a
+# beat-by-beat performance that replaces the bare makeMove +
+# applyMoveVisually + displayBoard that engineMove used to inline:
+#
+#   1. Compute (yaw, pitch) from the mannequin's eye to the from-square
+#      centre and ease the head to it (mannequin::easeFaceTo).
+#   2. Settle 1-4 ticks (look at the piece before reaching for it).
+#   3. playSelectSound + highlightMoves(fromSq) — same handshake the
+#      human path runs from interactEntity when a piece is clicked.
+#   4. Decide pause, 2-20 ticks ("hmm, where am I putting this").
+#   5. Ease the head from the from-square pose to the to-square pose.
+#   6. Settle 1-4 ticks before committing.
+#   7. clearHighlights, makeMove, applyMoveVisually, displayBoard, and
+#      the appropriate move sound (capture for flags 1/3, otherwise the
+#      quiet move sound).
+#
+# Square centre → world coords is linear interpolation between A1
+# (-9134.30, -60.90625, 9671.30) and H8 (-9131.71, -60.90625, 9668.66);
+# files run +X (a→h), ranks run -Z (1→8). Eye position is
+# (curX, curY + 1.62, curZ) — vanilla standing eye offset, which is what
+# the mannequin is at by the time this runs (the contemplation crouch in
+# engineMove step 6 always flips back to standing before makeMove).
+#
+# yaw = atan2(-dx, dz) and pitch = -atan2(dy, horiz). MSC has only
+# single-arg math::arctan, so yaw needs explicit quadrant correction;
+# pitch's horizontal distance is non-negative so a single-arg arctan
+# suffices, with a guard for the "directly above the square" edge case.
+#
+# Caller (engineMove) is expected to have already placed the mannequin
+# near the action via cruiseToFacing — this function does not move feet,
+# only the head.
+
+@using rychess
+@fast
+
+@define Int fromSq = moveFrom(move)
+@define Int toSq = moveTo(move)
+@define Int flags = moveFlags(move)
+
+# Square centres in world coords.
+@define Double xStep = (-9131.71D - (-9134.30D)) / 7D
+@define Double zStep = (9668.66D - 9671.30D) / 7D
+@define Double fromX = -9134.30D + Double(fromSq % 8) * xStep
+@define Double fromZ = 9671.30D + Double(fromSq / 8) * zStep
+@define Double toX = -9134.30D + Double(toSq % 8) * xStep
+@define Double toZ = 9671.30D + Double(toSq / 8) * zStep
+@define Double boardY = -60.90625D
+
+# Mannequin eye position.
+@define Double eyeX = mannequin::curX[player]
+@define Double eyeY = mannequin::curY[player] + 1.62D
+@define Double eyeZ = mannequin::curZ[player]
+
+# ---- Yaw + pitch toward the FROM square ----
+@define Double dxF = fromX - eyeX
+@define Double dzF = fromZ - eyeZ
+@define Double dyF = boardY - eyeY
+@define Double horizF = math::sqrt(dxF * dxF + dzF * dzF)
+
+@define Double numerF = 0D - dxF
+@define Double yawFrom = 0D
+@if dzF > 0D
+    @var yawFrom = math::arctan(numerF / dzF)
+@elseif dzF < 0D
+    @if numerF >= 0D
+        @var yawFrom = math::arctan(numerF / dzF) + 180D
+    @else
+        @var yawFrom = math::arctan(numerF / dzF) - 180D
+    @fi
+@else
+    @if numerF > 0D
+        @var yawFrom = 90D
+    @elseif numerF < 0D
+        @var yawFrom = -90D
+    @fi
+@fi
+
+@define Double pitchFrom = 0D
+@if horizF > 0.0001D
+    @var pitchFrom = math::arctan((0D - dyF) / horizF)
+@else
+    @if dyF < 0D
+        @var pitchFrom = 90D
+    @fi
+@fi
+
+@var mannequin::easeFaceTo(player, yawFrom, pitchFrom)
+
+# Beat 2: dwell on the piece before selecting it.
+@define Int dwellFrom = Int(math::random(1D, 2D))
+@var Harha::delay(dwellFrom)
+
+@var playSelectSound(player)
+@var highlightMoves(player, fromSq)
+
+# Beat 4: deciding-where-to-put-it pause.
+@define Int decide = Int(math::random(2D, 11D))
+@var Harha::delay(decide)
+
+# ---- Yaw + pitch toward the TO square ----
+@define Double dxT = toX - eyeX
+@define Double dzT = toZ - eyeZ
+@define Double dyT = boardY - eyeY
+@define Double horizT = math::sqrt(dxT * dxT + dzT * dzT)
+
+@define Double numerT = 0D - dxT
+@define Double yawTo = 0D
+@if dzT > 0D
+    @var yawTo = math::arctan(numerT / dzT)
+@elseif dzT < 0D
+    @if numerT >= 0D
+        @var yawTo = math::arctan(numerT / dzT) + 180D
+    @else
+        @var yawTo = math::arctan(numerT / dzT) - 180D
+    @fi
+@else
+    @if numerT > 0D
+        @var yawTo = 90D
+    @elseif numerT < 0D
+        @var yawTo = -90D
+    @fi
+@fi
+
+@define Double pitchTo = 0D
+@if horizT > 0.0001D
+    @var pitchTo = math::arctan((0D - dyT) / horizT)
+@else
+    @if dyT < 0D
+        @var pitchTo = 90D
+    @fi
+@fi
+
+@var mannequin::easeFaceTo(player, yawTo, pitchTo)
+
+# Beat 6: dwell on the destination before committing.
+@define Int dwellTo = Int(math::random(1D, 4D))
+@var Harha::delay(dwellTo)
+
+# Beat 7: commit. clearHighlights mirrors interactEntity's order
+# (clear first, then state mutation) so the highlight textures revert
+# before the piece visually slides.
+@var clearHighlights(player)
+@var makeMove(player, move)
+@var applyMoveVisually(player, move)
+@var displayBoard(player)
+@if flags == 1 || flags == 3
+    @var playCaptureSound(player)
+@else
+    @var playMoveSound(player)
+@fi
+@var noticeVariantRules(player, move)
+
+@if inCheck(player)
+    @var playCheckSound(player)
+@fi

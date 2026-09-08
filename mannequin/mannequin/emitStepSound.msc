@@ -1,0 +1,117 @@
+# emitStepSound(Player player, Double dx, Double dz, Boolean isOnGround, Boolean isSneaking)
+# Per-tick step-sound trigger. Mirrors net.minecraft.world.entity.Entity
+# #move from Mojang-mapped 1.21.1 line-for-line (Yarn names in parens):
+#
+#   this.distanceTraveled (moveDist) += Math.sqrt(dx² + f² + dz²) * 0.6F
+#       where f = canClimb(blockBelow) ? actualY : 0.0
+#
+# Since the mannequin doesn't climb ladders/vines/scaffolding/
+# powder_snow, canClimb() is always false → f=0, and the accumulator
+# reduces to sqrt(dx² + dz²) * 0.6F. The Y component is irrelevant for
+# our motion paths regardless (cruise has small jump arcs that average
+# out; prerecording teleports along the recorded Y).
+#
+# The trigger fires when ALL of the following are true:
+#   (a) moveDist > nextStep          — accumulator crossed threshold
+#   (b) blockBelow != AIR            — vanilla `!blockState2.isAir()`
+#   (c) isOnGround                   — vanilla stepOnBlock's first gate
+# When (a) + (b) + (c) succeed, vanilla's stepOnBlock returns true and
+# nextStep is advanced to floor(moveDist) + 1. If (a) is false the
+# trigger short-circuits silently; if (b) is false (mid-air, block under
+# feet is air), trigger short-circuits AND nextStep is preserved (so the
+# very first solid-block frame after a jump fires a step); if (c) is
+# false, same as (b) — preserve nextStep.
+#
+# Sneak suppression (PlayerEntity#getMoveEffect → MoveEffect.NONE while
+# onGround && sneaking): nextStep STILL advances when the trigger fires
+# (stepOnBlock returns true regardless), but the actual /playsound is
+# skipped. Without this, when sneak ended the accumulator would have
+# crossed many integer boundaries and a burst of steps would fire on the
+# first non-sneak tick. With it, the cadence stays vanilla-correct.
+#
+# Block-below position: vanilla uses Entity#getOnPos() with a 1e-5F
+# y-offset (NOT the 0.2F offset getLandingPos uses for the sprint
+# particle / fall sound — that's a different lookup). 1e-5 means
+# floor(curY - 1e-5) which equals floor(curY) - 1 only when curY is
+# exactly at an integer; otherwise it equals floor(curY). For a
+# mannequin standing on top of a full block at y=N.0 the result is
+# block at (x, N-1, z) → the block they're standing on. For standing
+# on a slab top at y=N.5, result is (x, N, z) → the slab. Correct
+# in both cases.
+#
+# Sound dispatch: emitBlockSound(player, blockType, x, y, z, isFall=false)
+# does the BlockSoundGroup → /playsound mapping. The y passed in is the
+# block's top surface (curY) — vanilla plays step sounds at the entity's
+# feet, which IS curY for ground-aligned positions and a non-issue for
+# attenuation purposes (the listener attenuates by 3D distance and the
+# y-error is ≤1 block).
+
+@using mannequin
+@fast
+
+# ---- Accumulator: identical to Entity#move ----
+# math::sqrt is the same primitive used by the existing collide path
+# (see clone-map/syd/compareTrajectories.msc for prior art). Float
+# coerces the Double *0.6 result so it composes with the Float moveDist
+# state — matters because the trigger compares the Float against
+# Float(nextStep) below.
+@define Double distH = math::sqrt(dx * dx + dz * dz)
+@var moveDist[player] = moveDist[player] + Float(distH * 0.6D)
+
+# ---- Trigger condition (a): moveDist must have crossed nextStep ----
+# Float vs Int comparison: nextStep is stored as Int (vanilla
+# calculateNextStepSoundDistance returns (int)distanceTraveled + 1).
+# Coerce explicitly so this isn't a silent Float-to-Int truncation.
+@if moveDist[player] <= Float(nextStep[player])
+    @return
+@fi
+
+# ---- Trigger condition (b): block below feet must be non-air ----
+# 1e-5F = 0.00001F y-offset — Entity#getOnPos's exact constant. Using
+# 0.2 here would be the getLandingPos lookup (fall sound) and would
+# misfire near slab/stair tops where the entity's feet are actually
+# 0.5 above the floor block (the 0.2 epsilon would still land in the
+# slab/floor, but the step's intended block is the slab).
+@define Int bx = Int(math::floor(curX[player]))
+@define Int by = Int(math::floor(curY[player] - 0.00001D))
+@define Int bz = Int(math::floor(curZ[player]))
+@define String blockType = Block(bx, by, bz, world[player]).getBlockType()
+
+# Air-variant short-circuit: vanilla also bails before stepOnBlock is
+# even called. nextStep is NOT updated — accumulator keeps growing so
+# the first solid-block landing fires immediately.
+@if blockType == "AIR" || blockType == "CAVE_AIR" || blockType == "VOID_AIR"
+    @return
+@fi
+
+# ---- Trigger condition (c): isOnGround ----
+# stepOnBlock's first gate. Without it, a sprint-jump descending past
+# its peak could fire an early step when the falling y first crosses
+# back into the landing block's cell — false-positive ~3-5 ticks before
+# vanilla would. Cruise passes onGround[player] (post-collision flag,
+# 100% accurate); playPrerecording derives it from |dy| < epsilon.
+@if !isOnGround
+    @return
+@fi
+
+# All three conditions held → vanilla stepOnBlock returns true → bump
+# nextStep. Cast to floor for vanilla parity ((int)moveDist + 1 in
+# Mojang-mapped source, which truncates toward zero, not toward
+# negative infinity — but moveDist is always non-negative here).
+# math::floor is consumed as Double throughout the repo, so widen the
+# Float accumulator before flooring rather than relying on undocumented
+# Float-overload behavior.
+@var nextStep[player] = Int(math::floor(Double(moveDist[player]))) + 1
+
+# Sneak suppression: nextStep advanced (no burst on sneak-end), but the
+# audible step is muted. Mirrors playSound=false flag flowing through
+# stepOnBlock when PlayerEntity#getMoveEffect returns NONE.
+@if isSneaking
+    @return
+@fi
+
+# Emit. Feet position passed to /playsound = (curX, curY, curZ). y is
+# at the entity's feet (= block top surface when standing on full
+# blocks) — vanilla's same convention for Entity#playSound called from
+# inside playStepSound.
+@var mannequin::emitBlockSound(player, blockType, curX[player], curY[player], curZ[player], false)

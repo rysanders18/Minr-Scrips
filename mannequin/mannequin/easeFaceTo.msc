@@ -1,0 +1,69 @@
+# easeFaceTo(Player player, Double yaw, Double pitch)
+# Smoothly turns the mannequin's head from its current (curYawDeg,
+# curPitchDeg) to (yaw, pitch), blocking until both axes are within 1°
+# of target. Position is preserved — only orientation changes — and the
+# mannequin is re-teleported every tick so the client sees the new
+# pose. Uses the same easeStep curve as cruiseTick's coast-phase facing
+# ease: ~24 ticks for 180°, ~18 for 90°, ~11 for 30°.
+#
+# Yaw uses standard Minecraft convention (0 = +Z south, 90 = -X west,
+# ±180 = -Z north, -90 = +X east). The yaw diff is wrapped to (-180,
+# 180] before easing so 170° → -170° turns the short way (+20).
+#
+# Use this when you want a "look at" gesture *without* moving the
+# mannequin's feet; for the variant that combines walk + ease, see
+# cruiseToFacing.
+#
+# Defensive: bumps tickGen and clears isCruising/isCoasting so a
+# cruiseTick still spinning from a prior call can't overwrite our
+# per-tick teleports.
+#
+# 200-tick budget is the safety net — convergence is guaranteed in well
+# under that for any reasonable rotation.
+
+@using mannequin
+@fast
+
+@if !isSpawned[player]
+    @return
+@fi
+
+@var isCruising[player] = false
+@var isCoasting[player] = false
+@var tickGen[player] = tickGen[player] + 1
+
+@for Int i in list::range(0, 200)
+    @if !player.isOnline()
+        @return
+    @fi
+    @if !isSpawned[player]
+        @return
+    @fi
+
+    @define Double yawDiff = yaw - curYawDeg[player]
+    @var yawDiff = ((yawDiff + 180D) % 360D) - 180D
+    @if yawDiff <= -180D
+        @var yawDiff = yawDiff + 360D
+    @fi
+    @define Double pitchDiff = pitch - curPitchDeg[player]
+
+    @define Double absYaw = yawDiff
+    @if absYaw < 0D
+        @var absYaw = 0D - absYaw
+    @fi
+    @define Double absPitch = pitchDiff
+    @if absPitch < 0D
+        @var absPitch = 0D - absPitch
+    @fi
+    @if absYaw <= 1D && absPitch <= 1D
+        @var curYawDeg[player] = yaw
+        @var curPitchDeg[player] = pitch
+        @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+        @return
+    @fi
+
+    @var curYawDeg[player] = curYawDeg[player] + mannequin::easeStep(yawDiff)
+    @var curPitchDeg[player] = curPitchDeg[player] + mannequin::easeStep(pitchDiff)
+    @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+    @delay 1
+@done

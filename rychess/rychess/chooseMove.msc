@@ -24,7 +24,7 @@
 @fast
 
 @define Int searchDepth = 2
-@define Int maxBranches = 5
+@define Int maxBranches = 20
 
 @var profGenLegal[player] = 0
 @var profGenOrdered[player] = 0
@@ -51,7 +51,7 @@
 @define Int searchedCount = 0
 @define Int myColorAtRoot = sideToMove[player]
 
-@player &7[DBG] scanning {{moves.length()}} ordered pseudo-legal moves (depth={{searchDepth}}, maxBranches={{maxBranches}})
+# @player &7[DBG] scanning {{moves.length()}} ordered pseudo-legal moves (depth={{searchDepth}}, maxBranches={{maxBranches}})
 @for Int i in list::range(0, moves.length())
     @if searchedCount < maxBranches
         @define Int move = moves[i]
@@ -74,11 +74,6 @@
 
         @if legal == 1
             @define Int score = -searchInner(player, searchDepth - 1, -beta, -curAlpha)
-            @if fromType == 1 && sameRank == 1
-                @player &b[DBG] {{squareName(fromSq)}}->{{squareName(toSq)}} pawnLat flag={{moveFlags(move)}} score={{score}}
-            @else
-                @player &7[DBG] {{squareName(fromSq)}}->{{squareName(toSq)}} flag={{moveFlags(move)}} score={{score}}
-            @fi
             @if foundLegal == 0
                 @var foundLegal = 1
                 @var bestMove = move
@@ -112,16 +107,13 @@
 @define Int searchInCheck = profInCheck[player]
 
 @if foundLegal == 0
-    @player &c[DBG] no legal moves - mate or stalemate
     @return 0
 @fi
 
-@player &a[DBG] picked {{squareName(moveFrom(bestMove))}}->{{squareName(moveTo(bestMove))}} score={{bestScore}}
 
 # Cheap opponent-reply listing.
 @var makeMove(player, bestMove)
 @define Int[] replies = genLegalMoves(player)
-@player &7[DBG] opponent has {{replies.length()}} legal replies (captures+laterals shown)
 @for Int j in list::range(0, replies.length())
     @define Int reply = replies[j]
     @define Int rFrom = moveFrom(reply)
@@ -130,11 +122,6 @@
     @define Int rSameRank = 0
     @if (rFrom / 8) == (rTo / 8)
         @var rSameRank = 1
-    @fi
-    @if rType == 1 && rSameRank == 1
-        @player &b[DBG]   reply {{squareName(rFrom)}}->{{squareName(rTo)}} pawnLat flag={{moveFlags(reply)}}
-    @elseif moveFlags(reply) == 1
-        @player &e[DBG]   reply {{squareName(rFrom)}}->{{squareName(rTo)}} cap flag={{moveFlags(reply)}}
     @fi
 @done
 @var unmakeMove(player, bestMove)
@@ -151,12 +138,18 @@
 @define Int dbgIsAttacked = profIsAttacked[player] - searchIsAttacked
 @define Int dbgInCheck = profInCheck[player] - searchInCheck
 
-@player &6[PROFILE] === chooseMove {{totalMs}}ms (search={{searchMs}}ms debug={{debugMs}}ms) ===
-@player &6[PROFILE] SEARCH phase calls:
-@player &6[PROFILE]   genLegal={{searchGenLegal}} genOrdered={{searchGenOrdered}} searchInner={{searchSearchInner}} qsearch={{searchQsearch}}
-@player &6[PROFILE]   makeMove={{searchMakeMove}} evaluate={{searchEvaluate}} isAttacked={{searchIsAttacked}} inCheck={{searchInCheck}}
-@player &6[PROFILE] DEBUG-REPLY phase deltas:
-@player &6[PROFILE]   genLegal={{dbgGenLegal}} qsearch={{dbgQsearch}} makeMove={{dbgMakeMove}}
-@player &6[PROFILE]   evaluate={{dbgEvaluate}} isAttacked={{dbgIsAttacked}} inCheck={{dbgInCheck}}
+# @player &6[PROFILE] === chooseMove {{totalMs}}ms (search={{searchMs}}ms debug={{debugMs}}ms) ===
+# @player &6[PROFILE] SEARCH phase calls:
+# @player &6[PROFILE]   genLegal={{searchGenLegal}} genOrdered={{searchGenOrdered}} searchInner={{searchSearchInner}} qsearch={{searchQsearch}}
+# @player &6[PROFILE]   makeMove={{searchMakeMove}} evaluate={{searchEvaluate}} isAttacked={{searchIsAttacked}} inCheck={{searchInCheck}}
+# @player &6[PROFILE] DEBUG-REPLY phase deltas:
+# @player &6[PROFILE]   genLegal={{dbgGenLegal}} qsearch={{dbgQsearch}} makeMove={{dbgMakeMove}}
+# @player &6[PROFILE]   evaluate={{dbgEvaluate}} isAttacked={{dbgIsAttacked}} inCheck={{dbgInCheck}}
+
+# Score-swing cache: shift current → previous, then write this turn's
+# bestScore into current. Consumers (chat-bank triggers, etc.) read
+# the delta between these any time after chooseMove returns.
+@var prevEngineScore[player] = curEngineScore[player]
+@var curEngineScore[player] = bestScore
 
 @return bestMove

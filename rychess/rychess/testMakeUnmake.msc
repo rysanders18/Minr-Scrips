@@ -13,12 +13,12 @@
 @define Int e4 = squareIndex("e4")
 @define Int move = moveEncode(e2, e4, 0, 2)
 
-@player &6=== Phase 3: Make / Unmake Test ===
+# @player &6=== Phase 3: Make / Unmake Test ===
 
 @define Int e2Before = boardGet(player, e2)
 @define Int e4Before = boardGet(player, e4)
 @define Int stmBefore = sideToMove[player]
-@player &eBefore: e2={{e2Before}} &7(expected 1) e4={{e4Before}} &7(expected 0) stm={{stmBefore}} &7(expected 0)
+# @player &eBefore: e2={{e2Before}} &7(expected 1) e4={{e4Before}} &7(expected 0) stm={{stmBefore}} &7(expected 0)
 
 @var makeMove(player, move)
 
@@ -26,7 +26,7 @@
 @define Int e4After = boardGet(player, e4)
 @define Int stmAfter = sideToMove[player]
 @define Int plyAfter = undoPly[player]
-@player &eAfter make: e2={{e2After}} &7(expected 0) e4={{e4After}} &7(expected 1) stm={{stmAfter}} &7(expected 1) ply={{plyAfter}} &7(expected 1)
+# @player &eAfter make: e2={{e2After}} &7(expected 0) e4={{e4After}} &7(expected 1) stm={{stmAfter}} &7(expected 1) ply={{plyAfter}} &7(expected 1)
 
 @var unmakeMove(player, move)
 
@@ -34,8 +34,8 @@
 @define Int e4Restored = boardGet(player, e4)
 @define Int stmRestored = sideToMove[player]
 @define Int plyRestored = undoPly[player]
-@player &eAfter unmake: e2={{e2Restored}} &7(expected 1) e4={{e4Restored}} &7(expected 0) stm={{stmRestored}} &7(expected 0) ply={{plyRestored}} &7(expected 0)
+# @player &eAfter unmake: e2={{e2Restored}} &7(expected 1) e4={{e4Restored}} &7(expected 0) stm={{stmRestored}} &7(expected 0) ply={{plyRestored}} &7(expected 0)
 
 @var displayBoard(player)
 
-@player &6=== Done ===
+# @player &6=== Done ===

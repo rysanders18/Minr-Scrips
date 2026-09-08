@@ -1,0 +1,41 @@
+# chatTaunt(Player player, Int delta)
+# Engine-favorable swing handler. Triggered from engineMove when
+# curEngineScore - prevEngineScore >= 200 (in centipawns, after the
+# mate-score gate), meaning the engine's eval jumped in its favor
+# between turns — usually because the human just blundered.
+#
+# Body is a TEST PLACEHOLDER. Replace with the real message bank
+# (random pick from a taunt pool, cooldown gating, etc.) — keep the
+# (player, delta) signature so the trigger in engineMove doesn't
+# need to change.
+
+@using rychess
+@fast
+
+# Gate 1: stay silent in the opening so the bot doesn't trash-talk
+# during book moves. fullmove starts at 1 and ticks after black's
+# turn, so "first 8 full moves" = fullmove < 9.
+@if fullmove[player] < 9
+    @return
+@fi
+
+# Gate 2: 5-move cooldown. lastTauntFullmove tracks the fullmove
+# number of the most recent taunt; if we haven't waited at least 5
+# full moves since then, stay quiet. (Resets to 0 in newGame so a
+# stale value from a previous game doesn't gag us for 5 moves of
+# the new one.)
+@if fullmove[player] - lastTauntFullmove[player] < 5
+    @return
+@fi
+
+# Gate 3: 20% silent roll. Even when everything else clears, skip
+# one in five so the bot doesn't taunt EVERY qualifying swing.
+@if math::random(0D, 1D) < 0.2D
+    @return
+@fi
+
+@var lastTauntFullmove[player] = fullmove[player]
+
+@define String[] taunts = String["lol", "nice", "wow", "this is great", "good job", "hmmm", "hmm", "uhh", "uhhh", "ahahahah", "ahahah", "bro", "this is good", "nice one", "LMAO", "LOL", "brother", "omg", "yep you sold", "ur selling", "bro what is this", "what am i looking at", "sooo like", "thx", "i appreciate this", "thank you", "ty", "ty for that", "tysm", "wow this is nice", "great job", "ahahahahaha", "lol", "great", "hmm", "hrmmm", "am i trippin", "???", "??", "?", "?!?!?", "broooo", "wyd bro", "uhmmm hmm", "hmmm yes", "hmm yes very good", "hmm very nice", "more moves like this pls", "what is bro doing", "ur cooked", "ur cooked and chopped", "this is too ez", "bru im crine", "are you sure", "wow really", "nice one lmfao", "u should get better", "u need lessons", "genuinely what", "you are ai", "youre a bot", "..."]
+
+@player &aRYgamer1&7 -> You: {{taunts[Int(math::random(0D, Double(taunts.length() - 1)))]}}

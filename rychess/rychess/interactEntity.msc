@@ -16,17 +16,21 @@
 #                              run engineMove for the bot reply
 #     - Click illegal target-> @player error in chat, selection stays
 #
-# Clicks during the engine's think (sideToMove != playerColor) are
-# ignored - the human's pieces don't match sideToMove during that
-# window so the per-piece check would already filter them, but the
-# early return makes the intent explicit.
+# Clicks during the engine's turn are ignored. We gate on
+# humanCanMove[player] (not sideToMove == playerColor) because the
+# engine's search yields ticks via @delay 1 in chooseMove/searchInner,
+# and during those yields makeMove has temporarily flipped sideToMove
+# to the simulated side - which can equal playerColor for the duration
+# of one or more ticks. A sideToMove-based guard would let clicks
+# through during those windows and mutate the position mid-search.
 
 @using rychess
 @fast
 
 # @player DEBUG: clicked square {{square}} ({{squareName(square)}}), piece={{board[player][square]}}, selectedSquare={{selectedSquare[player]}}
 
-@if sideToMove[player] != playerColor[player]
+@if !humanCanMove[player]
+    @bypass /playsound minecraft:block.netherite_block.break master @s ~ ~ ~ 0.3 1
     @return
 @fi
 
@@ -68,44 +72,45 @@
 @done
 
 @if matchedMove == 0
-    @player &cThat piece can't move there.
-    @player &7---- DEBUG ----
-    @player &7from={{selected}} ({{squareName(selected)}}) to={{square}} ({{squareName(square)}})
-    @player &7piece on from: {{board[player][selected]}}  piece on to: {{board[player][square]}}
-    @player &7sideToMove: {{sideToMove[player]}}  playerColor: {{playerColor[player]}}
-    @player &7total legal moves: {{legal.length()}}
-    @define Int fromMoveCount = 0
-    @for Int i in list::range(0, legal.length())
-        @define Int m = legal[i]
-        @if moveFrom(m) == selected
-            @var fromMoveCount = fromMoveCount + 1
-            @player &7  legal: {{squareName(moveFrom(m))}} -> {{squareName(moveTo(m))}} (toSq={{moveTo(m)}}, flags={{moveFlags(m)}})
-        @fi
-    @done
-    @player &7legal moves from {{squareName(selected)}}: {{fromMoveCount}}
+    @bypass /playsound minecraft:block.note_block.didgeridoo master @a[x=-9134.0,y=-61.0,z=9669.0,distance=..20] -9134.0 -61.0 9669.0 1 1
     @return
 @fi
 
 @var clearHighlights(player)
+@var humanCanMove[player] = false
 @var makeMove(player, matchedMove)
 @var applyMoveVisually(player, matchedMove)
 @var displayBoard(player)
+@var noticeVariantRules(player, matchedMove)
 @var selectedSquare[player] = -1
 
 @if checkGameOver(player)
+    # Player win = checkmate where the side to move is the engine.
+    # sideToMove just flipped to the engine's color when the human
+    # played their mating move, so sideToMove != playerColor here
+    # identifies the engine as the mated side. Stalemate and 50-move
+    # draws fall through silently (no reveal).
+    @if isCheckmate(player) && sideToMove[player] != playerColor[player]
+        @var chatPlayerWin(player)
+    @fi
+    @if isCheckmate(player) && sideToMove[player] == playerColor[player]
+        @var chatPlayerLose(player)
+    @fi
     @return
 @fi
 
 @if inCheck(player)
     @var playCheckSound(player)
+@fi
+
+# First-move bot join. The mannequin starts the session unspawned;
+# this fires once per session — after the human's very first move
+# — to fake a Minecraft join event for RYgamer1, spawn the
+# mannequin, beat 40 ticks, drop a "yo", then beat 20 more before
+# the engine actually starts its turn. Subsequent moves see
+# isSpawned == true and skip straight to engineMove.
+@if !mannequin::isSpawned[player]
+    @var chatBotJoin(player)
 @fi
 
 @var engineMove(player)
-
-@if checkGameOver(player)
-    @return
-@fi
-
-@if inCheck(player)
-    @var playCheckSound(player)
-@fi

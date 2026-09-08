@@ -18,14 +18,14 @@
         @define String glyph = pieceGlyph(bd[sq])
         @var line = line + glyph + " "
     @done
-    @player {{line}}
+    # @player {{line}}
 @done
 
-@player &l &7 a b c d e f g h
+# @player &l &7 a b c d e f g h
 
 @define Int stm = sideToMove[player]
 @if stm == 0
-    @player &fSide to move: &l&fWhite
+    # @player &fSide to move: &l&fWhite
 @else
-    @player &fSide to move: &l&cBlack
+    # @player &fSide to move: &l&cBlack
 @fi

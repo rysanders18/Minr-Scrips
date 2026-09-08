@@ -12,14 +12,14 @@
 @fast
 
 @if isSpawned[player]
-    @bypass minecraft:kill @e[tag=mannequinUsername_{{player.getUniqueId()}}]
-    @bypass minecraft:kill @e[tag=mannequin_{{player.getUniqueId()}}]
+    @bypass minecraft:kill @e[tag=mannequinUsername_rychess]
+    @bypass minecraft:kill @e[tag=mannequin_rychess]
 @fi
 
-@var curX[player] = player.getX()
-@var curY[player] = player.getY()
-@var curZ[player] = player.getZ()
-@var groundY[player] = player.getY()
+@var curX[player] = -9133.0D
+@var curY[player] = -61.0D
+@var curZ[player] = 9668.75D
+@var groundY[player] = -61.0D
 @var world[player] = player.getWorld()
 @var velX[player] = 0D
 @var velY[player] = 0D
@@ -36,6 +36,16 @@
 # corrects this within 1-2 ticks if the mannequin is actually mid-air.
 @var onGround[player] = true
 
-@bypass /summon mannequin {{curX[player]}} {{curY[player]}} {{curZ[player]}} {pose:"standing",Tags:["mannequin_{{player.getUniqueId()}}"],Passengers:[{id:"minecraft:text_display",billboard:"center",Tags:["mannequinUsername_{{player.getUniqueId()}}"],teleport_duration:1,shadow:0b,Motion:[0.0,0.3,0.0],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[1f,1f,1f]},text:{"color":"green","text":"{{player.getName()}}"}}],profile:{"id":[I;-118533046,-1659876403,-1351387569,742009199],"properties":[{"name":"textures","value":"ewogICJ0aW1lc3RhbXAiIDogMTc3ODA5ODc1MjU1NiwKICAicHJvZmlsZUlkIiA6ICJmOGVmNTQ0YTlkMTA0YmNkYWY3Mzc2NGYyYzNhMjk2ZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJSWWdhbWVyMSIsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNDQ2NzA5NzM2ZWEyZWFkMzk3NTIzNzU2MmQ2ZmQ3OTRhMTNiOGI3YzIzYjQyYzQ4ZjUzODEzYzEwYTc5YWM2IgogICAgfQogIH0KfQ=="}]}}
+# Reset step-sound + fall-sound state so a respawned mannequin starts
+# from a clean slate. Without these, a previously-accumulated moveDist
+# could fire a step on the first cruise tick after respawn, and a
+# previously-airborne wasOnGround would emit a phantom land sound when
+# the new spawn's grounded-detection kicks in.
+@var moveDist[player] = 0.0F
+@var nextStep[player] = 1
+@var fallDistance[player] = 0.0F
+@var wasOnGround[player] = true
+
+@bypass /summon mannequin -9133.0 -61.0 9668.75 {Invulnerable:1b,pose:"standing",Tags:["mannequin_rychess"],Passengers:[{id:"minecraft:text_display",billboard:"center",Tags:["mannequinUsername_rychess"],teleport_duration:1,shadow:0b,Motion:[0.0,0.3,0.0],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0.3f,0f],scale:[1f,1f,1f]},text:{"color":"green","text":"RYgamer1"}}],profile:{"id":[I;-118533046,-1659876403,-1351387569,742009199],"properties":[{"name":"textures","value":"ewogICJ0aW1lc3RhbXAiIDogMTc3ODA5ODc1MjU1NiwKICAicHJvZmlsZUlkIiA6ICJmOGVmNTQ0YTlkMTA0YmNkYWY3Mzc2NGYyYzNhMjk2ZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJSWWdhbWVyMSIsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zNDQ2NzA5NzM2ZWEyZWFkMzk3NTIzNzU2MmQ2ZmQ3OTRhMTNiOGI3YzIzYjQyYzQ4ZjUzODEzYzEwYTc5YWM2IgogICAgfQogIH0KfQ=="}]}}
 
 @var isSpawned[player] = true

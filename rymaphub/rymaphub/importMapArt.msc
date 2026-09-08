@@ -172,7 +172,7 @@
                         @fi
                         @var bar = bar + "|"
                     @done
-                    @player &8[{{bar}}&8] &f{{received}}&#d4d4d4/&f{{dataTotal}}&8 - &#d4d4d4paste message &f{{next + 1}}
+                    @player &8[{{bar + 1}}&8] &f{{received + 1}}&#d4d4d4/&f{{dataTotal}}&8 - &#d4d4d4paste message &f{{next + 1}}
                 @fi
             @else
                 @bypass playsound minecraft:block.note_block.didgeridoo master {{player}} ~ ~ ~ 1 0.5

@@ -99,6 +99,10 @@
     # so the dust looks identical to a cruiseTo run.
     @define Double dx = px - curX[player]
     @define Double dz = pz - curZ[player]
+    # Vertical delta for the fall-distance accumulator. Recorded Y only
+    # changes on jumps (rising arc has dy > 0, descent has dy < 0, flat
+    # ground has dy = 0). Captured BEFORE curY is overwritten.
+    @define Double dy = py - curY[player]
 
     @var curX[player] = px
     @var curY[player] = py
@@ -119,9 +123,9 @@
     # tick to the same value.
     @if i == 0 || curSneak != prevSneak
         @if curSneak
-            @bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "sneaking"
+            @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"crouching"}
         @else
-            @bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"
+            @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}
         @fi
     @fi
     @var prevSneak = curSneak
@@ -131,11 +135,35 @@
         @var mannequin::emitSprintParticle(player)
     @fi
 
-    @bypass /minecraft:tp @e[tag=mannequin_{{player.getUniqueId()}},limit=1] {{px}} {{py}} {{pz}} {{yawF}} {{pitchF}}
+    # Step + fall sound parity. The prerecording path has no real
+    # collision flag, so onGround is derived: feet block must be non-air
+    # AND vertical motion must be small (|dy| < 0.05). The dy threshold
+    # filters out jump-arc frames where the recorded player was airborne
+    # — those frames have |dy| in the 0.08-0.42 range from gravity. Flat
+    # walking has dy ≈ 0; stairs / slabs have one-frame |dy| ≈ 0.5 but
+    # the y-check on subsequent flat frames re-grounds quickly. emitStep
+    # and emitFall each guard their own internal accumulators, so this
+    # block is safe to run every tick — moveDist/nextStep advance only
+    # when the block-below check passes, fallDistance accumulates only
+    # while airborne.
+    @define Int gbx = Int(math::floor(curX[player]))
+    @define Int gby = Int(math::floor(curY[player] - 0.00001D))
+    @define Int gbz = Int(math::floor(curZ[player]))
+    @define String gbt = Block(gbx, gby, gbz, world[player]).getBlockType()
+    @define Boolean blockBelowSolid = gbt != "AIR" && gbt != "CAVE_AIR" && gbt != "VOID_AIR"
+    @define Double absDy = dy
+    @if absDy < 0D
+        @var absDy = 0D - absDy
+    @fi
+    @define Boolean isOnGroundFrame = blockBelowSolid && absDy < 0.05D
+    @var mannequin::emitStepSound(player, dx, dz, isOnGroundFrame, curSneak)
+    @var mannequin::emitFallSound(player, dy, isOnGroundFrame)
+
+    @bypass /execute in minecraft:theta run minecraft:tp @e[tag=mannequin_rychess,limit=1] {{px}} {{py}} {{pz}} {{yawF}} {{pitchF}}
 
     @delay 1
 @done
 
 # Natural-end cleanup: clear the active flag and snap to standing.
 @var prerecordingActive[player] = false
-@bypass /data modify entity @e[tag=mannequin_{{player.getUniqueId()}},limit=1] Pose set value "standing"
+@bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}

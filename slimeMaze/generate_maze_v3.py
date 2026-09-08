@@ -355,10 +355,26 @@ DEEP_BLOCK = 'minecraft:deepslate'
 DEEP_Y = 5
 NAMESPACE = 'slimemaze'
 WORLD_NAME = 'Epsilon'  # world the ground scripts are created in
+EMIT_SERVER_SET = True  # user rule (2026-08-17): generate ONLY the
+                        # server import set - build + slimegrounds +
+                        # core singles (+ buildALL from
+                        # make_buildall.py). grounds (splice trigger
+                        # wiring) is stable on the server for the
+                        # frozen seed-2 geometry and remove chains are
+                        # obsolete (the datapack route wipes by bbox),
+                        # so neither is written anymore; grounds stays
+                        # DECLARED in the .nms because build2/buildALL
+                        # tail-call grounds1. Flip to False if a new
+                        # maze/seed ever needs fresh wiring files
 MAX_PART_LINES = 3400   # hastebin import limit is ~4k lines; stay under
-SG_PART_LINES = 2300    # slimegrounds parts: the 3-literal-Block create
-                        # lines are ~230 chars, so the CHARACTER budget
-                        # blows before the line budget - split earlier
+SG_PART_LINES = 1900    # slimegrounds parts: the create lines carry a
+                        # literal Block[] future fan (user 2026-08-19)
+                        # and average ~260 chars (worst 400+ at forks),
+                        # so the CHARACTER budget blows before the line
+                        # budget - split early enough to keep every
+                        # part under the known-good ~300KB hastebin
+                        # cap (2300-line parts hit 350KB in the array
+                        # form; 450KB parts failed to upload 2026-08-06)
 SPLICE_FX_MIN_D = 64    # spliceFx only fires when the teleport moves
                         # the player more than this many blocks
                         # (euclidean |delta|); short hops stay silent
@@ -4692,6 +4708,41 @@ def verify(sim):
             errs.append('splice for branch %d rises %d > %d'
                         % (sp['branch'], dy, SPLICE_MAX_RISE))
 
+    # trigger-color rule (user 2026-08-17): at least one slime block
+    # of the destination palette before every seamless teleport - the
+    # color switch must never sit on the teleport bounce. Verified on
+    # the ACTUAL palette (compute_palette re-runs its guard-cluster
+    # rescue), not structurally: the rescue is a palette-layer repair
+    pal = compute_palette(sim, verbose=False)
+    for sp in sim.splices:
+        t = sp['copy'][0]
+        tb = blks[t]
+        pv = tb['prev'] if tb is not None else None
+        if pv is None or blks[pv] is None:
+            errs.append('trigger color: splice for branch %d has no '
+                        'live bounce upstream of its trigger'
+                        % sp['branch'])
+        elif pal.get(pv, 0) != pal.get(t, 0):
+            errs.append('trigger color: splice for branch %d switches '
+                        'palette (%d -> %d) on the teleport bounce at '
+                        '(%d,%d,%d)'
+                        % (sp['branch'], pal.get(pv, 0), pal.get(t, 0),
+                           tb['x'], tb['y'], tb['z']))
+        # ...and the landing side: the block the teleport drops the
+        # player on (win[1]) must not sit immediately after a color
+        # switch - its upstream neighbour win[0] carries the same
+        # palette (win_uniform anchors the window to win[0]'s color)
+        w0, w1 = sp['win'][0], sp['win'][1]
+        if blks[w0] is None or blks[w1] is None:
+            continue          # already reported as erased blocks
+        if pal.get(w0, 0) != pal.get(w1, 0):
+            errs.append('landing color: splice for branch %d lands on '
+                        'a fresh palette switch (%d -> %d) at '
+                        '(%d,%d,%d)'
+                        % (sp['branch'], pal.get(w0, 0),
+                           pal.get(w1, 0), blks[w1]['x'],
+                           blks[w1]['y'], blks[w1]['z']))
+
     # turn-run rule (user, 2026-08-15): on every traversable route a
     # turn-direction change is followed by at least TURN_RUN_MIN-1
     # bounces of the new direction. Enumerate every ride window of
@@ -4834,6 +4885,7 @@ NMS_VARS = [
     '    relative Long timeOfLastDarkness = 0L',
     '    relative Boolean darkness = false',
     '    relative String lastColor = "LIGHT_BLUE"',
+    '    relative Block lastBlock',
 ]
 # hand-added namespace state referenced by the HAND-TUNED hooks; the
 # emitter re-declares these on every regen so hook code keeps working
@@ -4857,6 +4909,16 @@ SPAWN_OVERRIDE = {(4846, 3086): (4846, 3046)}
 # block-by-block to their window counterparts', with the flip
 # SPLICE_LEAD bounces before the trigger ----
 SPLICE_LEAD = 4          # palette flips this many bounces before a splice
+                         # trigger. The lead may come up short against a
+                         # branch boundary or fork guard, but never
+                         # EMPTY (user rule 2026-08-17: the player
+                         # rides at least one slime block of the
+                         # destination palette before every seamless
+                         # teleport - the color switch never sits on
+                         # the teleport bounce). When the loop colors
+                         # nothing, the guard-cluster rescue recolors
+                         # the blocking fork chord instead; verify()
+                         # re-checks the rule on the final palette
 MERGE_LEAD = 3           # ...and this many before a merge junction
 MIN_RUN = 3              # a palette stretch along any traversable path is
                          # at least this many slime blocks - no color may
@@ -4934,7 +4996,8 @@ def compute_palette(sim, verbose=True):
     # fork guard - repairs below never touch them
     winlock = set()
     for sp in sim.splices:
-        winlock.update(sp['win'][1:])
+        winlock.update(sp['win'])     # incl. win[0]: the landing rule
+                                      # anchors the window color to it
         winlock.update(sp['copy'])
     lead_lock = set()
 
@@ -4997,25 +5060,53 @@ def compute_palette(sim, verbose=True):
                 merge_flips += absorb_up(top2, jp, br['id'])
                 break
 
-    # used windows become one color: a splice tail mirrors its window
-    # block-for-block, and a flip in a window's last bounces would
-    # strand a 1-2 block sliver at the visible end of the tail. The
-    # window's own flip point moves up to its start instead (levels
-    # only ever increase, so downstream stays monotone)
+    # (used-window uniforming happens INSIDE the splice loop below, at
+    # each splice's own turn - see the anchor step there)
     win_uniform = 0
-    for sp in sim.splices:
-        wb = [j for j in sp['win'][1:] if blks[j] is not None]
-        if not wb:
-            continue
-        hi = max(pal_blk.get(j, 0) for j in wb)
-        for j in wb:
-            if pal_blk.get(j, 0) != hi:
-                pal_blk[j] = hi
-                win_uniform += 1
 
-    lead_short = flipped = 0
+    # rescue-veto data: copies are always untouchable (tail fidelity),
+    # but a WINDOW block may be recolored by a rescue if every window
+    # containing it is processed strictly LATER in the loop below
+    # (lower win[1] y): those windows re-read the palette at their
+    # turn, so their uniformity, copy fidelity and both color rules
+    # self-heal around the recolor
+    copy_lock = set()
+    win_wy = {}
+    for sp2 in sim.splices:
+        copy_lock.update(sp2['copy'])
+        if blks[sp2['win'][1]] is None:
+            continue
+        wy2 = blks[sp2['win'][1]]['y']
+        for j in sp2['win']:
+            win_wy[j] = max(win_wy.get(j, wy2), wy2)
+
+    lead_short = lead_rescue = lead_zero = flipped = 0
     for sp in sorted(sim.splices,
                      key=lambda s: -blks[s['win'][1]]['y']):
+        # used windows become one color, anchored to the BASE block's
+        # (win[0]) palette AT THIS SPLICE'S TURN: a splice tail
+        # mirrors its window block-for-block, and a flip in the
+        # window's last bounces would strand a sliver at the visible
+        # end of the tail; anchoring to win[0] makes the landing
+        # bounce win[1] never the first block of a new color (user
+        # rule 2026-08-17, landing side). Monotone-safe: the base
+        # level is <= every natural level inside the window, and the
+        # first block past the window resumes at its natural (>=)
+        # level. Anchoring per-turn (not in a pre-pass) lets an
+        # earlier splice's guard-cluster rescue recolor win[0] or a
+        # window member: the window re-anchors to the palette as it
+        # NOW stands. lead_locked members (rescue clusters, merge
+        # leads) keep their color - the mirrored copy follows the
+        # mixed sequence exactly, so tail fidelity always holds
+        w0 = sp['win'][0]
+        wb = [j for j in sp['win'][1:] if blks[j] is not None]
+        if wb:
+            tgt = (pal_blk.get(w0, 0) if blks[w0] is not None
+                   else max(pal_blk.get(j, 0) for j in wb))
+            for j in wb:
+                if j not in lead_lock and pal_blk.get(j, 0) != tgt:
+                    pal_blk[j] = tgt
+                    win_uniform += 1
         wpal = [pal_blk.get(j, 0) for j in sp['win'][1:]]
         for cj, pj in zip(sp['copy'], wpal):
             if blks[cj] is not None and pal_blk.get(cj) != pj:
@@ -5034,7 +5125,65 @@ def compute_palette(sim, verbose=True):
             n += 1
         if n < SPLICE_LEAD - 1:
             lead_short += 1
-        flipped += absorb_up(top, wpal[0], sp['branch'])
+        ab_branch = sp['branch']
+        if n == 0:
+            # trigger-color rule (user 2026-08-17): the color switch
+            # must never sit on the teleport bounce - the player
+            # always rides at least one slime block of the
+            # destination palette before a seamless teleport. The
+            # lead came up empty (the trigger hangs one bounce past
+            # a fork whose guard the loop respects, or the approach
+            # crosses a branch boundary), so recolor upstream
+            # anyway: a single-kid block is safe regardless of
+            # branch (every route through it reaches this trigger);
+            # a fork-guard block moves as a whole guard CLUSTER
+            # (fork block plus ALL its guarded kids, chains
+            # included), so the fork chord stays one color and the
+            # sibling arm re-flips legally one bounce past the
+            # fork. absorb_up clears any sliver stranded above;
+            # clusters pinned by window fidelity or an earlier
+            # override are left alone and reported as residual
+            p0 = blks[sp['copy'][0]]['prev']
+            if p0 is None or blks[p0] is None:
+                lead_zero += 1
+            else:
+                cluster = [p0]
+                t2 = p0
+                need2 = 0
+                while t2 in guard or need2 > 0:
+                    f = blks[t2]['prev']
+                    if f is None or blks[f] is None:
+                        break         # corridor root: accept the
+                                      # sliver, the sandwich pass
+                                      # reports it
+                    if t2 in guard:
+                        # pull the whole fork chord in, and demand
+                        # MIN_RUN - 2 plain blocks above the fork so
+                        # a SIBLING arm's ride through the cluster
+                        # ([above, fork, sib-kid]) is never a short
+                        # run the lead_lock would pin
+                        for k in live_kids(f):
+                            if k not in cluster:
+                                cluster.append(k)
+                        need2 = MIN_RUN - 1
+                    if f not in cluster:
+                        cluster.append(f)
+                    need2 -= 1
+                    t2 = f
+                my_wy = blks[sp['win'][1]]['y']
+                if any(j in lead_lock or j in copy_lock
+                       or win_wy.get(j, my_wy - 1) >= my_wy
+                       for j in cluster):
+                    lead_zero += 1
+                else:
+                    for j in cluster:
+                        pal_blk[j] = wpal[0]
+                        lead_lock.add(j)
+                    flipped += len(cluster)
+                    lead_rescue += 1
+                    top = t2
+                    ab_branch = br_of.get(t2)
+        flipped += absorb_up(top, wpal[0], ab_branch)
 
     # sandwich pass: no color may last fewer than MIN_RUN blocks along
     # any traversable path. Short runs are repaired by advancing them
@@ -5097,9 +5246,11 @@ def compute_palette(sim, verbose=True):
     if verbose:
         print('palette: %d of %d blocks past their transition, %d '
               'merge-arm blocks flipped, %d splice-tail blocks flipped, '
-              '%d approaches shorter than the %d-bounce lead'
+              '%d approaches shorter than the %d-bounce lead, %d '
+              'guard-cluster rescues, %d empty leads UNRESCUED'
               % (sum(1 for p in pal_blk.values() if p), len(pal_blk),
-                 merge_flips, flipped, lead_short, SPLICE_LEAD))
+                 merge_flips, flipped, lead_short, SPLICE_LEAD,
+                 lead_rescue, lead_zero))
         print('palette rules: %d fork-guarded blocks, %d window blocks '
               'uniformed, %d short-run blocks repaired, %d short runs '
               'left pinned (min run %d)'
@@ -5324,6 +5475,35 @@ def emit(sim, outdir):
         n1 = succ.get(i, i)
         return sim.blocks[n1], sim.blocks[succ.get(n1, n1)]
 
+    FUTURE_DEPTH = 3     # slimeblock() receives ALL downstream bounce
+                         # blocks within this many bounces (user
+                         # 2026-08-19): the old literal next1/next2
+                         # pair had to GUESS the arm at forks (the
+                         # longest-same-color rule) and mispredicted
+                         # whenever the player took the other arm -
+                         # the array covers every arm, so the hook is
+                         # right at intersections by construction
+
+    def future_blocks(i):
+        # every live downstream block within FUTURE_DEPTH bounces of
+        # i: BFS over live kids, deduped (merge diamonds keep their
+        # shallowest occurrence), ordered depth-first-level by block
+        # index for deterministic re-emission. May be SHORTER than a
+        # full fan (dead-end tail tips) - the array just ends; no
+        # self-repetition like the old pair form
+        out, seen, frontier = [], {i}, [i]
+        for _ in range(FUTURE_DEPTH):
+            nxt = []
+            for j in sorted(frontier):
+                for k in live_kids(j):
+                    if k not in seen:
+                        seen.add(k)
+                        nxt.append(k)
+            nxt.sort()
+            out.extend(nxt)
+            frontier = nxt
+        return [sim.blocks[j] for j in out]
+
     # The splice-trigger import: a 3x3 BLANKET of WALK scripts per
     # trigger block (first two tail blocks of each splice) on the
     # carpet layer (y+1), exactly like the slimeblock blankets - walk,
@@ -5391,11 +5571,13 @@ def emit(sim, outdir):
     # carpet/air cells are passed through, not stood on - walk scripts
     # fire on pass-through, so grazing bounces and
     # near-misses still fire the HAND-TUNED slimeblock(player, here,
-    # next1, next2) hook. All three Block args are literals: `here` is
-    # the OWNING SLIME BLOCK (never the cell - the hook's particle
-    # origin and carpet lookup key off the real block), next1/next2
-    # the next two along the onward path (forks resolved by the
-    # longest-same-color rule). Cells are deduped: nearest owner
+    # future) hook. All args are literals: `here` is the OWNING SLIME
+    # BLOCK (never the cell - the hook's particle origin and carpet
+    # lookup key off the real block), `future` a Block[] of EVERY
+    # downstream bounce block within FUTURE_DEPTH bounces (user
+    # 2026-08-19: covers all arms at forks - the old next1/next2 pair
+    # guessed one arm by longest-same-color and failed at
+    # intersections). Cells are deduped: nearest owner
     # (squared horizontal distance, then lower block index) wins; a
     # cell that lands on a live slime block is dropped (that block's
     # own blanket covers it one level up), and the 3x3 above a splice
@@ -5432,7 +5614,9 @@ def emit(sim, outdir):
     sg_groups, rsg_groups = [], []
     for i in sorted(by_owner):
         b = sim.blocks[i]
-        n1, n2 = nexts(i)
+        fut = ', '.join('Block(%d, %d, %d, "%s")'
+                        % (fb['x'], fb['y'], fb['z'], WORLD_NAME)
+                        for fb in future_blocks(i))
         gg, ug = [], []
         for pos in sorted(by_owner[i]):
             rm = ('@command script remove walk %d %d %d %s'
@@ -5443,31 +5627,37 @@ def emit(sim, outdir):
             gg.append('@command script create walk %d %d %d %s '
                       '@var %s::slimeblock(player, '
                       'Block(%d, %d, %d, "%s"), '
-                      'Block(%d, %d, %d, "%s"), '
-                      'Block(%d, %d, %d, "%s"))'
+                      'Block[%s])'
                       % (pos[0], pos[1], pos[2], WORLD_NAME,
                          NAMESPACE, b['x'], b['y'], b['z'], WORLD_NAME,
-                         n1['x'], n1['y'], n1['z'], WORLD_NAME,
-                         n2['x'], n2['y'], n2['z'], WORLD_NAME))
+                         fut))
             ug.append(rm)
         sg_groups.append(gg)
         rsg_groups.append(ug)
 
     nb = emit_chain(split_blocks(build_items), 'build', None,
                     next_fn='grounds1')
-    ng = emit_chain(split_parts(ground_groups, SG_PART_LINES),
-                    'grounds', None, next_fn='slimegrounds1')
     nsg = emit_chain(split_parts(sg_groups, SG_PART_LINES),
                      'slimegrounds',
                      '&aSlime maze build complete - splice + slime '
                      'bounce triggers imported!')
-    nr = emit_chain(split_blocks(undo_items), 'remove', None,
-                    next_fn='removegrounds1')
-    nrg = emit_chain(split_parts(unground_groups), 'removegrounds', None,
-                     next_fn='removeslimegrounds1')
-    nrsg = emit_chain(split_parts(rsg_groups), 'removeslimegrounds',
-                      '&aSlime maze removed - all ground triggers '
-                      'cleared.')
+    if EMIT_SERVER_SET:
+        # grounds stay DECLARED (build2 / buildALL tail-call grounds1,
+        # whose implementation lives on the server) but no grounds or
+        # remove* files are written - count the parts for the
+        # declarations only
+        ng = len(split_parts(ground_groups, SG_PART_LINES))
+        nr = nrg = nrsg = 0
+    else:
+        ng = emit_chain(split_parts(ground_groups, SG_PART_LINES),
+                        'grounds', None, next_fn='slimegrounds1')
+        nr = emit_chain(split_blocks(undo_items), 'remove', None,
+                        next_fn='removegrounds1')
+        nrg = emit_chain(split_parts(unground_groups), 'removegrounds',
+                         None, next_fn='removeslimegrounds1')
+        nrsg = emit_chain(split_parts(rsg_groups), 'removeslimegrounds',
+                          '&aSlime maze removed - all ground triggers '
+                          'cleared.')
 
     # splice dispatcher
     def toff(name, axis, v):
@@ -5488,10 +5678,13 @@ def emit(sim, outdir):
         '# position, facing and momentum. See splices.txt for trigger',
         '# regions. The splice ground triggers call this function with',
         '# the trigger block and its two onward tail blocks; each branch',
-        '# teleports, then calls slimeblock() with all three re-based onto',
-        '# the DESTINATION window (block + delta - the copy is an exact',
-        '# translation), so bounce effects match the real corridor the',
-        '# player now rides. Every branch falls through (no @return) to',
+        '# teleports, then calls slimeblock() with the trigger re-based',
+        '# onto the DESTINATION window (block + delta - the copy is an',
+        '# exact translation) and the two onward blocks, likewise',
+        '# re-based, as its future Block[] (the tail is fork-free, so',
+        '# two are exact; the wired grounds chains pass no deeper), so',
+        '# bounce effects match the real corridor the player now rides.',
+        '# Every branch falls through (no @return) to',
         '# the spliceFx(player) call - the HAND-TUNED swap effects hook,',
         '# which regeneration never overwrites - but the hook only fires',
         '# when the teleport moves the player more than %d blocks'
@@ -5522,7 +5715,7 @@ def emit(sim, outdir):
         sp_lines.append('    @bypass /minecraft:tp @s ~%d ~%d ~%d'
                         % (dx, dy, dz))
         sp_lines.append('    @console /function execute '
-                        '%s::slimeblock(%s, %s, %s, %s)'
+                        '%s::slimeblock(%s, %s, Block[%s, %s])'
                         % (NAMESPACE, pname,
                            tblock('trigger', dx, dy, dz),
                            tblock('next1', dx, dy, dz),
@@ -5676,6 +5869,13 @@ def emit(sim, outdir):
         '# documentation only - every trigger import is too many lines) -',
         '# after a re-import, run grounds1 once to re-wire everything.',
         ''])
+    if EMIT_SERVER_SET:
+        nms = [l for l in nms if '::remove1' not in l
+               and 'the remove chain mirrors' not in l]
+        nms = [l.replace('# Build/remove parts chain automatically',
+                         '# Build parts chain automatically')
+               .replace('# both. Importing', '# Importing')
+               for l in nms]
     for k in range(1, nb + 1):
         nms.append('    build%d(Player player)' % k)
     for k in range(1, ng + 1):
@@ -5698,7 +5898,7 @@ def emit(sim, outdir):
     nms.append('    fallFx1(Player player)')
     nms.append('    fallFx2(Player player)')
     nms.append('    slimeblock(Player player, Block slimeblock, '
-               'Block next1, Block next2)')
+               'Block[] future)')
     nms.append('    fall(Player player)')
     nms.append('@endnamespace')
     write(os.path.join(outdir, '%s.nms' % NAMESPACE), nms)

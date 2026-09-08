@@ -1,0 +1,17 @@
+START POSITIONS (seed 2) - one per entry corridor
+A fall for a player who has NEVER bounced teleports them above
+a uniformly random one of these, EXCEPT start 6 (hardest entry:
+9 decoy forks before the golden trunk, never given out by fall);
+anyone with a lastBlock respawns at a splice window at most 30
+blocks above it instead (see fall.msc).
+
+start  1: 4722 292 3359   (spawn at 4722 296 3359, yaw 40.9)
+start  2: 4735 292 3516   (spawn at 4735 296 3516, yaw 40.9)
+start  3: 4656 292 3414   (spawn at 4656 296 3414, yaw -49.1)
+start  4: 4545 292 3552   (spawn at 4545 296 3552, yaw 85.9)
+start  5: 4626 292 3200   (spawn at 4626 296 3200, yaw 130.9)
+start  6: 4618 292 3281   (spawn at 4618 296 3281, yaw 40.9)
+start  7: 4546 292 3237   (spawn at 4546 296 3237, yaw 175.9)
+start  8: 4799 292 3352   (spawn at 4799 296 3352, yaw 175.9)
+start  9: 4632 292 3300   (spawn at 4632 296 3300, yaw -94.1)
+start 10: 4732 292 3285   (spawn at 4732 296 3285, yaw -49.1)

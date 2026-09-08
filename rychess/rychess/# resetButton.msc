@@ -1,0 +1,65 @@
+# newGame(Player player)
+# Resets all per-player game state and renders the starting position.
+# Call this once to begin a new game.
+
+@using rychess
+@fast
+
+@var username = player.getName()
+
+@bypass /fill -9135 -61 9659 -9132 -56 9659 minecraft:barrier replace air strict
+@bypass /fill -9135 -61 9660 -9132 -61 9660 minecraft:bamboo_fence[east=true,north=false,south=false,waterlogged=false,west=true] strict
+@bypass /fill -9135 -60 9660 -9132 -60 9660 minecraft:yellow_candle strict
+
+@var resetAllBoardTextures(player)
+@var sideToMove[player] = 0
+@var castling[player] = 15
+@var epSquare[player] = -1
+@var halfmoveClock[player] = 0
+@var fullmove[player] = 1
+@var selectedSquare[player] = -1
+@var humanCanMove[player] = true
+
+@var pieceCodeAt[player] = Int[0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, 21, 22, 23, 24, 25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37]
+
+@var undoStack[player] = Int[]
+@for Int i in list::range(0, 1000)
+    @var undoStack[player].append(0)
+@done
+@var undoPly[player] = 0
+
+@var boardStartPos(player)
+
+@player &6&lNew Game Started!
+@bypass /playsound minecraft:block.note_block.pling master @s ~ ~ ~ 0.5 1
+@var displayBoard(player)
+
+@for Int rankTag in list::range(0, 4)
+    @for Int fileTag in list::range(0, 8)
+        @define Int spawnRank = rankTag
+        @if rankTag == 2
+            @var spawnRank = 6
+        @elseif rankTag == 3
+            @var spawnRank = 7
+        @fi
+        @define Int spawnSq = spawnRank * 8 + fileTag
+        @define Int code = rankTag * 10 + fileTag
+        @var movePieceVisually(code, spawnSq)
+        @if rankTag <= 1
+            @var recolorPiece(code, "minecraft:white_concrete_powder")
+        @else
+            @var recolorPiece(code, "minecraft:gray_concrete_powder")
+        @fi
+        # Bishops (files 2 and 5 on the back ranks) have a polished_blackstone
+        # diagonal slash at entity index 11 that recolorPiece just whitewashed -
+        # restore it. (NB: the entity index here is 11, not 10. The polished_-
+        # blackstone passenger's Tags field in __init__.msc reads rychessXX11;
+        # the rychessXX10 tag belongs to the PRECEDING passenger in the NBT
+        # because Tags is emitted last within each passenger block.)
+        @if rankTag == 0 || rankTag == 3
+            @if fileTag == 2 || fileTag == 5
+                @bypass /data modify entity @e[limit=1,tag=rychess{{rankTag}}{{fileTag}}11] block_state.Name set value "minecraft:polished_blackstone"
+            @fi
+        @fi
+    @done
+@done

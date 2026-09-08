@@ -1,4 +1,5 @@
 # recordPrerecording(Player player, Int recordingIndex)#@using mannequin
+@using mannequin
 @fast
 
 @define Position[] tempRecording = Position[]

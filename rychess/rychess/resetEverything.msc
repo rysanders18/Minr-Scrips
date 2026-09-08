@@ -1,0 +1,16 @@
+# resetEverything(Player player)
+@using rychess
+@fast
+
+@if player.getGameMode() == "ADVENTURE"
+@if Region("rychessroom", "Theta").getPlayersInside().length() < 2
+    # reset board and allat shi
+    @var newGame(player)
+
+    # Kill mannequin
+    @var mannequin::isSpawned[player] = false
+    @console execute in minecraft:theta run minecraft:kill @e[tag=mannequinUsername_rychess]
+    @console execute in minecraft:theta run minecraft:kill @e[tag=mannequin_rychess]
+
+@fi
+@fi

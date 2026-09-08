@@ -11,15 +11,15 @@
 @define Int[] moves = genAllPseudoLegal(player)
 @define Int n = moves.length()
 
-@player &6=== Phase 3: Move Generation Test ===
-@player &eMoves from start: {{n}} &7(expected 20)
+# @player &6=== Phase 3: Move Generation Test ===
+# @player &eMoves from start: {{n}} &7(expected 20)
 
 @for Int i in list::range(0, n)
     @define Int m = moves[i]
     @define String fromName = squareName(moveFrom(m))
     @define String toName = squareName(moveTo(m))
     @define Int flags = moveFlags(m)
-    @player &7  {{i}}: {{fromName}} -> {{toName}} &8(flags={{flags}})
+    # @player &7  {{i}}: {{fromName}} -> {{toName}} &8(flags={{flags}})
 @done
 
-@player &6=== Done ===
+# @player &6=== Done ===

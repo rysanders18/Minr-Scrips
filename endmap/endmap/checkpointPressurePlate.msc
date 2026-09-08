@@ -2,6 +2,12 @@
 @using endmap
 @fast
 
+@if player.getCurrentChallenge() == "tcb1"
+    @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+    @bypass /title @p actionbar {"bold":true,"color":"red","text":"No checkpoint granted."}
+    @return
+@fi
+
 @if cpnumber[player] < cp
 
     # Define vars
@@ -9,6 +15,8 @@
     
     # Change players cp number to new cp
     @var cpnumber[player] = cp
+
+    @var player.setCheckpoint()
 
     # Playsounds and text
     @bypass /playsound minecraft:block.note_block.pling master {{player}} ~ ~ ~ 1 {{musicNotes[13]}}

@@ -5,21 +5,21 @@
 @using rychess
 @fast
 
-@player &6=== Phase 2: Square Name Test ===
+# @player &6=== Phase 2: Square Name Test ===
 
-@player &eIndex of "a1": {{squareIndex("a1")}} &7(expected 0)
-@player &eIndex of "h1": {{squareIndex("h1")}} &7(expected 7)
-@player &eIndex of "a8": {{squareIndex("a8")}} &7(expected 56)
-@player &eIndex of "h8": {{squareIndex("h8")}} &7(expected 63)
-@player &eIndex of "e4": {{squareIndex("e4")}} &7(expected 28)
+# @player &eIndex of "a1": {{squareIndex("a1")}} &7(expected 0)
+# @player &eIndex of "h1": {{squareIndex("h1")}} &7(expected 7)
+# @player &eIndex of "a8": {{squareIndex("a8")}} &7(expected 56)
+# @player &eIndex of "h8": {{squareIndex("h8")}} &7(expected 63)
+# @player &eIndex of "e4": {{squareIndex("e4")}} &7(expected 28)
 
-@player &eName of 0: {{squareName(0)}} &7(expected a1)
-@player &eName of 7: {{squareName(7)}} &7(expected h1)
-@player &eName of 56: {{squareName(56)}} &7(expected a8)
-@player &eName of 63: {{squareName(63)}} &7(expected h8)
-@player &eName of 28: {{squareName(28)}} &7(expected e4)
+# @player &eName of 0: {{squareName(0)}} &7(expected a1)
+# @player &eName of 7: {{squareName(7)}} &7(expected h1)
+# @player &eName of 56: {{squareName(56)}} &7(expected a8)
+# @player &eName of 63: {{squareName(63)}} &7(expected h8)
+# @player &eName of 28: {{squareName(28)}} &7(expected e4)
 
-@player &eIndex of "z9": {{squareIndex("z9")}} &7(expected -1)
-@player &eIndex of "abc": {{squareIndex("abc")}} &7(expected -1)
+# @player &eIndex of "z9": {{squareIndex("z9")}} &7(expected -1)
+# @player &eIndex of "abc": {{squareIndex("abc")}} &7(expected -1)
 
-@player &6=== Done ===
+# @player &6=== Done ===

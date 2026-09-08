@@ -1,0 +1,16 @@
+# chatRuleLateral(Player player)
+# One-shot rule-explanation chat: fires the first time the player
+# witnesses a lateral pawn move (either side moving a pawn one square
+# sideways). noticeVariantRules dispatches here and sets the
+# seenLateralPawnRule flag so this never fires twice for the same
+# player.
+#
+# Body is a TEST PLACEHOLDER — replace with the real explanation
+# wording / random pick from a flavor pool. Keep the (player)
+# signature so the trigger stays unchanged.
+
+@using rychess
+@fast
+
+@delay 80
+@player &aRYgamer1&7 -> You: yo i forgot to mention pawns can move or capture one square sideways lol

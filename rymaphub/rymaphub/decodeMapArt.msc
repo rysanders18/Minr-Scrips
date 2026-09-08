@@ -71,7 +71,13 @@
 
 @var mapData[player] = ""
 @var colBuf[player] = Int[]
-@bypass /item replace entity {{player}} weapon.mainhand with minecraft:filled_map[minecraft:map_id={{mapId}}]
+@bypass /give {{player}} minecraft:map
+@bypass /give {{player}} glass_pane[attack_range={min_reach:0.0,max_reach:3.0,min_creative_reach:0.0,max_creative_reach:5.0,hitbox_margin:0.3},custom_name=[{"bold":true,"color":"#C4C4C4","text":"C"},{"color":"#C3C3C5","text":"o"},{"color":"#C2C2C7","text":"m"},{"color":"#C0C1C8","text":"b"},{"color":"#BFC1C9","text":"i"},{"color":"#BEC0CB","text":"n"},{"color":"#BDBFCC","text":"e "},{"color":"#BCBECD","text":"y"},{"color":"#BABDCF","text":"o"},{"color":"#B9BCD0","text":"u"},{"color":"#B8BBD1","text":"r "},{"color":"#B7BBD3","text":"m"},{"color":"#B6BAD4","text":"a"},{"color":"#B4B9D5","text":"p "},{"color":"#B3B8D7","text":"w"},{"color":"#B2B7D8","text":"i"},{"color":"#B1B6D9","text":"t"},{"color":"#B0B5DB","text":"h "},{"color":"#AEB4DC","text":"t"},{"color":"#ADB4DD","text":"h"},{"color":"#ACB3DF","text":"i"},{"color":"#ABB2E0","text":"s "},{"color":"#AAB1E2","text":"i"},{"color":"#A8B0E3","text":"n "},{"color":"#A7AFE4","text":"t"},{"color":"#A6AEE6","text":"h"},{"color":"#A5AEE7","text":"e "},{"color":"#A3ADE8","text":"c"},{"color":"#A2ACEA","text":"a"},{"color":"#A1ABEB","text":"r"},{"color":"#A0AAEC","text":"t"},{"color":"#9FA9EE","text":"o"},{"color":"#9DA8EF","text":"g"},{"color":"#9CA8F0","text":"r"},{"color":"#9BA7F2","text":"a"},{"color":"#9AA6F3","text":"p"},{"color":"#99A5F4","text":"h"},{"color":"#97A4F6","text":"y "},{"color":"#96A3F7","text":"t"},{"color":"#95A2F8","text":"a"},{"color":"#94A1FA","text":"b"},{"color":"#93A1FB","text":"l"},{"color":"#91A0FC","text":"e"},{"color":"#8F9EFF","text":"!"}],damage_type="arrow",kinetic_weapon={delay_ticks:0,contact_cooldown_ticks:10,forward_movement:0.0,damage_multiplier:1.0},provides_trim_material="minecraft:amethyst",use_effects={speed_multiplier:0.2}] 1
 @bypass playsound minecraft:entity.player.levelup master {{player}} ~ ~ ~ 1 1.2
 @player
-@player &#936be5&lRYmaphub &#40a02bMap art built. &7The map is in your hand.
+@player &#936be5&lRYmaphub &#40a02bMap art built.
+@delay 20
+@player
+@player &4&lMAKE SURE TO LOCK YOUR MAP!!!
+@player &4&lCLICK THE CARTOGRAPHY TABLE!!
+@bypass playsound minecraft:block.note_block.bell master {{player}} ~ ~ ~ 1 0.5

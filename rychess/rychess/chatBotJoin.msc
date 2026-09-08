@@ -1,0 +1,44 @@
+# chatBotJoin(Player player)
+# First-encounter sequence: fakes RYgamer1 joining the game,
+# spawns the mannequin, then beats 40 ticks → "yo" → beats 20 ticks
+# before returning. Caller (interactEntity) then proceeds to
+# engineMove so the bot's first move follows ~20 ticks after the
+# greeting.
+#
+# Gated by the caller on !mannequin::isSpawned[player]. In practice
+# this fires exactly once per session — on the human's very first
+# move — because spawnMannequin flips isSpawned to true and there's
+# no in-game path that despawns the mannequin afterward.
+#
+# Body is a TEST PLACEHOLDER — message wording / cadence / sound is
+# up to you. Keep the (player) signature so the trigger stays
+# unchanged.
+
+@using rychess
+@fast
+
+@if Player("f8ef544a-9d10-4bcd-af73-764f2c3a296f").isOnline() == false
+    @player &ePinging RYgamer1 on discord...
+    @player &7(If he doesn't join within the minute, please try again later.)
+    @bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 0.5 1
+    @var Harha::delay(Int(math::random(200D, 400D)))
+    @player &aRYgamer1&e joined the game
+@else
+    @player &eRYgamer1 is online, msging him to join...
+    @player &7(If he doesn't join within the minute, please try again later.)
+    @bypass /playsound minecraft:block.note_block.bell master @s ~ ~ ~ 0.5 1
+    @var Harha::delay(Int(math::random(200D, 400D)))
+@fi
+
+
+
+@delay 30
+@var mannequin::spawnMannequin(player)
+
+@define String[] joinMsg = String["yo", "sup", "ive been summoned", "lets do it", "chess time", "its time to play the game", "im ready", "whats good", "mmmm chess", "yooo", "time for chess", "hello"]
+
+
+
+@delay 40
+@player &aRYgamer1&7 -> You: {{joinMsg[Int(math::random(0D, Double(joinMsg.length() - 1)))]}}
+@delay 5

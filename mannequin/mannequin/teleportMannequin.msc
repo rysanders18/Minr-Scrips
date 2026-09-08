@@ -9,4 +9,4 @@
 @using mannequin
 @fast
 
-@bypass /minecraft:tp @e[tag=mannequin_{{player.getUniqueId()}},limit=1] {{x}} {{curY[player]}} {{z}} {{curYawDeg[player]}} {{curPitchDeg[player]}}
+@bypass /minecraft:tp @e[tag=mannequin_rychess,limit=1] {{x}} {{curY[player]}} {{z}} {{curYawDeg[player]}} {{curPitchDeg[player]}}

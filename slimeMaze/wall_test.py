@@ -141,12 +141,17 @@
 #
 # Usage: python wall_test.py
 
+import importlib
 import math
 import os
 import re
 from collections import defaultdict
 
-import generate_maze as gm
+# which generator the walls are built for. The v2 maze (generate_maze)
+# is the default so the standing build always regenerates byte-
+# identically; WT_GM=generate_maze_v3 points the same painter at a v3
+# sim. Both expose the same Sim/compute_palette/emit contract
+gm = importlib.import_module(os.environ.get('WT_GM', 'generate_maze'))
 
 
 def emitted_seed():
@@ -164,6 +169,11 @@ WALL_BASE = -4           # wall bottom relative to the local path level
 WALL_H = 13              # wall height (path-4 .. path+8)
 CLEAR = 4.3              # skip wall points this close to any centerline
 CLEAR_DY = 12            # ...within this many levels vertically
+INTRUDE_LO = -4.0        # stamp-intrusion test: a cell counts as being
+INTRUDE_HI = 13.0        # in a corridor's carved space from its floor
+                         # course to the vault interior above it
+INTRUDE_MARGIN = 0.5     # ...and only if the tail is this much CLOSER
+                         # to a centerline than the window is
 STRIDE = 0.4             # sampling stride along each chord
 RHYTHM = 5.0             # wall arc-length between pillars
 REGION = 128             # placement bucket size (8 chunks): tp once per
@@ -1454,9 +1464,83 @@ def main():
                     world[t] = pv
                     restored.append(t)
                     overwrote += 1
-    restored_set = set(restored)
     print('stamp overwrite repair: %d bystander floor surfaces '
           'restored' % overwrote)
+
+    # ---- stamp intrusion repair: OFF by default (WT_INTRUDE=1 enables).
+    # 2026-08-11 this ran unconditionally and reverted 773 stamped cells
+    # to the painter's pre-stamp opening; the user reported wall/dome
+    # errors on the resulting build, and reverting a stamped cell to air
+    # is by construction a HOLE in the tail's shell (see-through into
+    # the neighbouring corridor) - it trades an intrusion for a hole,
+    # both of which are wall errors. The painter must stay byte-
+    # identical to the build that has been validated in-world across
+    # four rounds of user coordinate reports, so this is now opt-in and
+    # the intrusion problem belongs on the generation side (keep tail
+    # tubes away from bystander corridors) instead.
+    #
+    # The idea below is still the correct DETECTOR and is kept for that:
+    # the same overwrite problem one step more general. The painter
+    # deliberately PRUNES wall/dome/floor
+    # points that fall inside another corridor's carved space (that is
+    # what opens the shared caverns), but the stamp then copies the
+    # window's solid content onto those very cells, putting decoration
+    # back inside a bystander corridor the player bounces through. On a
+    # v2-density maze this was 3 columns; a v3 maze, with twice the
+    # splice tails and far more stacked corridors, produced 96.
+    #
+    # The test cannot simply ask "is this cell inside a corridor at the
+    # tail" - the tail's OWN corridor answers yes for every cell of its
+    # own tube. But a tail is an exact integer translation of its
+    # window, so its own geometry scores IDENTICALLY on both sides:
+    # only a bystander can make the cell measurably closer to a
+    # centerline at the tail than it is at the window. Where that
+    # happens, the pre-stamp cell (the painter's opening) wins over
+    # identity, exactly as the floor does above - a decoration block
+    # inside a corridor is worse than an identity nick on the tube
+    # fringe. The restored cells join `restored`, so the chase re-syncs
+    # any chained tails and the shell verify treats them as sanctioned
+    def near_dist(x, z, y):
+        # horizontal distance to the nearest centerline sample whose
+        # corridor's carved space covers this cell's level (None if no
+        # corridor passes at this level)
+        best = None
+        gx, gz = int(x // 4), int(z // 4)
+        for ddx in (-1, 0, 1):
+            for ddz in (-1, 0, 1):
+                for sx, sz, sy in grid.get((gx + ddx, gz + ddz), ()):
+                    if INTRUDE_LO <= y - sy <= INTRUDE_HI:
+                        dd = math.hypot(sx - x, sz - z)
+                        if best is None or dd < best:
+                            best = dd
+        return best
+
+    intruded = 0
+    if os.environ.get('WT_INTRUDE'):
+        for (sdx, sdy, sdz), band, _ in REGIONS:
+            for (cx, cz), (plo, phi) in band.items():
+                for y in range(int(plo) - 5, int(phi) + 15):
+                    t = (cx - sdx, y - sdy, cz - sdz)
+                    wv = world.get(t)
+                    if wv is None or wv == pre_stamp_world.get(t):
+                        continue             # the stamp changed nothing
+                    dt = near_dist(t[0], t[2], t[1])
+                    if dt is None or dt >= CLEAR:
+                        continue             # not in anyone's corridor
+                    dw = near_dist(cx, cz, y)
+                    if dw is not None and dt >= dw - INTRUDE_MARGIN:
+                        continue             # own geometry, not a bystander
+                    pv = pre_stamp_world.get(t)
+                    if pv is None:
+                        world.pop(t, None)
+                    else:
+                        world[t] = pv
+                    restored.append(t)
+                    intruded += 1
+        print('stamp intrusion repair: %d cells returned to the '
+              'painter\'s opening inside a bystander corridor' % intruded)
+
+    restored_set = set(restored)
 
     # ---- restoration chase: a restored cell that is itself the
     # WINDOW of another splice must force its value onto that splice's
@@ -2451,20 +2535,29 @@ def main():
                             best = (d, sy)
             if best:
                 bad.append((x, z, yb, top, best[0], best[1]))
+    unann = 0
     for x, z, yb, top, d, sy in bad:
         capped = any(world.get((x, yb + up, z), (None,))[0]
                      in ('floor', 'dome') for up in (1, 2))
         note = ('  (capped)' if capped else
                 '  (run tops at %d, below that corridor)' % top
-                if top <= sy - 2 else '')
+                if top <= sy - 2 else
+                # base sits above that corridor's vault (its shell
+                # reaches path+13): the old 'dy -12' rows, verified
+                # benign in-world 2026-08-05 - stacked corridors pierce
+                # each other's vault crowns, never each other's air
+                '  (base at %d, above that corridor\'s vault)' % yb
+                if yb >= sy + 10 else '')
+        if not note:
+            unann += 1
         print('too-close column (%d, %d) base y=%d: %.2f from a '
               'centerline sample at y=%.1f (dy %+.1f)%s'
               % (x, z, yb, d, sy, sy - yb, note))
     print('columns: %d (panel %d, pillar %d, tip %d, tuff %d)  '
           'dome cols: %d  floor cols: %d (%d hole-patched)  '
-          'pruned pts: %d  too-close: %d'
+          'pruned pts: %d  too-close: %d (%d unannotated)'
           % (sum(counts), counts[0], counts[1], counts[2], counts[3],
-             dome_ncols, floor_ncols, patched, pruned, len(bad)))
+             dome_ncols, floor_ncols, patched, pruned, len(bad), unann))
     print('functions: %s' % ', '.join(names))
     print('run:  /function execute %s::walls1(Player("You"))'
           % gm.NAMESPACE)

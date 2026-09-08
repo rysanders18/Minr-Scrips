@@ -15,13 +15,13 @@
 
 @var newGame(player)
 @var playerColor[player] = humanColor
-@player &6=== Chess: You vs the Engine ===
+# @player &6=== Chess: You vs the Engine ===
 @if humanColor == 0
-    @player &aYou play &fWhite&a. Type your move (e.g. &fe2e4&a).
+    # @player &aYou play &fWhite&a. Type your move (e.g. &fe2e4&a).
 @else
-    @player &aYou play &fBlack&a. Engine moves first.
+    # @player &aYou play &fBlack&a. Engine moves first.
 @fi
-@player &7Type &fresign&7 to end the game.
+# @player &7Type &fresign&7 to end the game.
 
 # Spawn the mannequin (the visible engine player) and start it wandering
 # on a random prerecording. spawnMannequin places it at the caller's
@@ -38,23 +38,16 @@
         @return
     @fi
     @if inCheck(player)
-        @player &eYou are in check.
+        # @player &eYou are in check.
     @fi
 @fi
 
 @define String moveStr 
 
 @for Int turn in list::range(0, 400)
-    @prompt 900s moveStr &cTimed out. Game abandoned.
-
-    @if moveStr == "resign" || moveStr == "quit"
-        @player &eYou resigned.
-        @return
-    @fi
-
     @define Int move = parseMove(player, moveStr)
     @if move == 0
-        @player &cIllegal or invalid move: &f{{moveStr}}&c. Try again.
+        # @player &cIllegal or invalid move: &f{{moveStr}}&c. Try again.
     @else
         @var makeMove(player, move)
         @var applyMoveVisually(player, move)
@@ -64,7 +57,7 @@
             @return
         @fi
         @if inCheck(player)
-            @player &eEngine is in check.
+            # @player &eEngine is in check.
             @var playCheckSound(player)
         @fi
 
@@ -74,10 +67,10 @@
             @return
         @fi
         @if inCheck(player)
-            @player &eYou are in check.
+            # @player &eYou are in check.
             @var playCheckSound(player)
         @fi
     @fi
 @done
 
-@player &eMaximum turn limit reached.
+# @player &eMaximum turn limit reached.

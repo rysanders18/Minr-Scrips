@@ -2,6 +2,8 @@
 
 # Variables - per-player game state
 
+    String username
+
     relative Int[] board = Int[]
     relative Int sideToMove = 0
     relative Int castling = 15
@@ -15,6 +17,66 @@
     relative Int selectedSquare = -1
     relative Int playerColor = 0
     relative Int[] highlightedSquares = Int[]
+
+# Click-input gate. True iff a click on a board interaction entity
+# should be accepted as the human's next move. We can't gate on
+# sideToMove[player] == playerColor[player] because the engine's
+# search yields ticks (chooseMove/searchInner have @delay 1 between
+# branches) and during those yields the SIMULATED side has just been
+# flipped by makeMove — so sideToMove temporarily reads as
+# playerColor, letting clicks slip through and mutate the position
+# mid-search. humanCanMove is set true only at moments when the
+# real (non-simulated) state is "human's turn to act":
+#   - newGame end
+#   - engineMove end (right after performEngineMove commits)
+# It is cleared at the moments the human surrenders the turn:
+#   - interactEntity's legal-move branch, immediately before makeMove
+#   - engineMove start (defensive — protects against direct engineMove
+#     callers that didn't clear it)
+    relative Boolean humanCanMove = true
+
+# Timestamp (currentTimeMillis) at which the last engineMove call
+# finished. Used by engineMove to detect back-to-back invocations
+# (within 2.5 s of the previous turn ending) and compress the
+# realise/settle/after-move delay upper bounds to 1/3 of the
+# normal range — the mannequin still performs, but the dwell beats
+# don't drag when the player is moving fast.
+    relative Long lastEngineMoveEnd = 0L
+
+# Score-swing cache. chooseMove writes its search result here at the
+# end of every call: curEngineScore = bestScore from this turn,
+# prevEngineScore = whatever curEngineScore held before this turn.
+# All in the engine's negamax frame (positive = engine ahead).
+#
+# delta = curEngineScore[player] - prevEngineScore[player]:
+#   delta ≫ 0  → human's last move was a blunder (or engine's last
+#                move turned out better than expected)
+#   delta ≪ 0  → engine's last move was a blunder (or human played
+#                a great move) — same signal, can't disambiguate
+#                without a pre-move human-side search
+# Both default to 0 so the first chooseMove of a session produces a
+# delta of bestScore-0 — usually a non-event (eval near 0) but worth
+# a sanity gate in the consumer. Mate scores from searchInner can
+# reach ~±100000 → will produce huge deltas around game end; cap or
+# ignore deltas with |x| > ~5000 if you don't want mate-detection
+# chatter.
+    relative Int prevEngineScore = 0
+    relative Int curEngineScore = 0
+
+# Variant-rule first-time notices. Each flag flips to true the
+# first time the player witnesses the corresponding non-standard
+# pawn move (either side moving the pawn). noticeVariantRules
+# checks each flag, fires the matching chat-explanation if
+# unseen, and sets the flag. Never reset — "first time" is
+# per-player lifetime, not per-game.
+    relative Boolean seenLateralPawnRule = false
+    relative Boolean seenAnyrankPushRule = false
+
+# Fullmove number when chatTaunt last fired. Used for the 5-move
+# cooldown gate inside chatTaunt — taunts can only fire if
+# fullmove - lastTauntFullmove >= 5. 0 = never fired (or fresh
+# game; newGame resets this alongside fullmove).
+    relative Int lastTauntFullmove = 0
 
 # Variables - phase 1 test scratch
 
@@ -37,10 +99,10 @@
 # Standard simplified Michniewski tables, flipped so rank 1 comes first.
 # Black pieces look these up at (7 - sq/8) * 8 + (sq % 8).
 
-    Int[] pawnPST = Int[0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 10, -20, -20, 10, 10, 5, 5, -5, -10, 0, 0, -10, -5, 5, 0, 0, 0, 20, 20, 0, 0, 0, 5, 5, 10, 25, 25, 10, 5, 5, 10, 10, 20, 30, 30, 20, 10, 10, 50, 50, 50, 50, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] pawnPST = Int[0, 0, 0, 0, 0, 0, 0, 0, -5, 0, 0, -30, -30, 0, 0, -5, 5, -5, -10, 0, 0, -10, -5, 5, 0, 0, 0, 20, 20, 0, 0, 0, 5, 5, 10, 25, 25, 10, 5, 5, 10, 10, 20, 30, 30, 20, 10, 10, 50, 50, 50, 50, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0]
     Int[] knightPST = Int[-50, -40, -30, -30, -30, -30, -40, -50, -40, -20, 0, 5, 5, 0, -20, -40, -30, 5, 10, 15, 15, 10, 5, -30, -30, 0, 15, 20, 20, 15, 0, -30, -30, 5, 15, 20, 20, 15, 5, -30, -30, 0, 10, 15, 15, 10, 0, -30, -40, -20, 0, 0, 0, 0, -20, -40, -50, -40, -30, -30, -30, -30, -40, -50]
     Int[] bishopPST = Int[-20, -10, -10, -10, -10, -10, -10, -20, -10, 5, 0, 0, 0, 0, 5, -10, -10, 10, 10, 10, 10, 10, 10, -10, -10, 0, 10, 10, 10, 10, 0, -10, -10, 5, 5, 10, 10, 5, 5, -10, -10, 0, 5, 10, 10, 5, 0, -10, -10, 0, 0, 0, 0, 0, 0, -10, -20, -10, -10, -10, -10, -10, -10, -20]
-    Int[] rookPST = Int[0, 0, 0, 5, 5, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, 5, 10, 10, 10, 10, 10, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0]
+    Int[] rookPST = Int[-50, 0, 0, 5, 5, 0, 0, -50, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, -5, 0, 0, 0, 0, 0, 0, -5, 5, 10, 10, 10, 10, 10, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0]
     Int[] queenPST = Int[-20, -10, -10, -5, -5, -10, -10, -20, -10, 0, 5, 0, 0, 0, 0, -10, -10, 5, 5, 5, 5, 5, 0, -10, 0, 0, 5, 5, 5, 5, 0, -5, -5, 0, 5, 5, 5, 5, 0, -5, -10, 0, 5, 5, 5, 5, 0, -10, -10, 0, 0, 0, 0, 0, 0, -10, -20, -10, -10, -5, -5, -10, -10, -20]
     Int[] kingPST = Int[20, 30, 10, 0, 0, 10, 30, 20, 20, 20, 0, 0, 0, 0, 20, 20, -10, -20, -20, -20, -20, -20, -20, -10, -20, -30, -30, -40, -40, -30, -30, -20, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30]
 
@@ -183,6 +245,15 @@
     Int searchInner(Player player, Int depth, Int alpha, Int beta)
     Int chooseMove(Player player)
     engineMove(Player player)
+    performEngineMove(Player player, Int move)
+    chatTaunt(Player player, Int delta)
+    chatCope(Player player, Int delta)
+    chatRuleLateral(Player player)
+    chatRuleAnyrankPush(Player player)
+    chatPlayerWin(Player player)
+    chatPlayerLose(Player player)
+    chatBotJoin(Player player)
+    noticeVariantRules(Player player, Int move)
 
 # Functions - game termination & input (phase 6)
 
@@ -196,6 +267,7 @@
     highlightMoves(Player player, Int square)
     clearHighlights(Player player)
     resetAllBoardTextures(Player player)
+    resetEverything(Player player)
     playSelectSound(Player player)
     playDeselectSound(Player player)
     playMoveSound(Player player)

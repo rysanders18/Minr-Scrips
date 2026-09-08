@@ -1,0 +1,91 @@
+@using mannequin
+
+@player prerecording0 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording0[i].getX()}}, {{prerecording0[i].getY()}}, {{prerecording0[i].getZ()}}, {{prerecording0[i].getYaw()}}, {{prerecording0[i].getPitch()}}), 
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking0 = {{prerecordingSneaking0}}
+
+@player prerecording1 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording1[i].getX()}}, {{prerecording1[i].getY()}}, {{prerecording1[i].getZ()}}, {{prerecording1[i].getYaw()}}, {{prerecording1[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking1 = {{prerecordingSneaking1}}
+
+@player prerecording2 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording2[i].getX()}}, {{prerecording2[i].getY()}}, {{prerecording2[i].getZ()}}, {{prerecording2[i].getYaw()}}, {{prerecording2[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking2 = {{prerecordingSneaking2}}
+
+@player prerecording3 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording3[i].getX()}}, {{prerecording3[i].getY()}}, {{prerecording3[i].getZ()}}, {{prerecording3[i].getYaw()}}, {{prerecording3[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking3 = {{prerecordingSneaking3}}
+
+@player prerecording4 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording4[i].getX()}}, {{prerecording4[i].getY()}}, {{prerecording4[i].getZ()}}, {{prerecording4[i].getYaw()}}, {{prerecording4[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking4 = {{prerecordingSneaking4}}
+
+@player prerecording5 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording5[i].getX()}}, {{prerecording5[i].getY()}}, {{prerecording5[i].getZ()}}, {{prerecording5[i].getYaw()}}, {{prerecording5[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking5 = {{prerecordingSneaking5}}
+
+@player prerecording6 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording6[i].getX()}}, {{prerecording6[i].getY()}}, {{prerecording6[i].getZ()}}, {{prerecording6[i].getYaw()}}, {{prerecording6[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking6 = {{prerecordingSneaking6}}
+
+@player prerecording7 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording7[i].getX()}}, {{prerecording7[i].getY()}}, {{prerecording7[i].getZ()}}, {{prerecording7[i].getYaw()}}, {{prerecording7[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking7 = {{prerecordingSneaking7}}
+
+@player prerecording8 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording8[i].getX()}}, {{prerecording8[i].getY()}}, {{prerecording8[i].getZ()}}, {{prerecording8[i].getYaw()}}, {{prerecording8[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking8 = {{prerecordingSneaking8}}
+
+@player prerecording9 =
+@for Int i in list::range(0, 1000)
+    @player Position({{prerecording9[i].getX()}}, {{prerecording9[i].getY()}}, {{prerecording9[i].getZ()}}, {{prerecording9[i].getYaw()}}, {{prerecording9[i].getPitch()}}),
+    @if i % 50 == 0
+        @delay 1
+    @fi
+@done
+@player prerecordingSneaking9 = {{prerecordingSneaking9}}

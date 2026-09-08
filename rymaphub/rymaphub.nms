@@ -1,6 +1,6 @@
 @namespace rymaphub
 
-# RYmaphub - chat-message map art importer (protocol v5, staircased).
+# RYmaphub - chat-message map art importer (protocol v6, staircased).
 # Protocol and layout: see rymaphub/README.md. The encoder is the RYmaphub
 # web page (rymaphub/script.js on rysanders18.github.io); the constants in
 # the ALPHABET and BLOCKS sections below must match it exactly.

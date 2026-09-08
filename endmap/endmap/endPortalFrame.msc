@@ -18,21 +18,23 @@
 @elseif frameNumber == 3
     @var blockList = Block[Block(-4608, 109, 5488, "Theta_the_end")]
 @elseif frameNumber == 4
-    @var blockList = Block[Block(-4609, 109, 5501, "Theta_the_end")]
+    @var blockList = Block[Block(-4609, 110, 5500, "Theta_the_end")]
 @elseif frameNumber == 5
-    @var blockList = Block[Block(-4608, 108, 5505, "Theta_the_end")]
+    @var blockList = Block[Block(-4608, 110, 5504, "Theta_the_end")]
 @elseif frameNumber == 6
-    @var blockList = Block[Block(-4606, 108, 5509, "Theta_the_end")]
+    @var blockList = Block[Block(-4606, 110, 5508, "Theta_the_end")]
 @elseif frameNumber == 7
-    @var blockList = Block[Block(-4603, 109, 5511, "Theta_the_end")]
+    @var blockList = Block[Block(-4603, 110, 5511, "Theta_the_end")]
 @elseif frameNumber == 8
-    @var blockList = Block[Block(-4595, 111, 5512, "Theta_the_end"), Block(-4592, 112, 5513, "Theta_the_end"), Block(-4586, 113, 5508, "Theta_the_end"), Block(-4585, 114, 5505, "Theta_the_end")]
+    @var blockList = Block[Block(-4595, 111, 5513, "Theta_the_end"), Block(-4592, 112, 5512, "Theta_the_end"), Block(-4586, 113, 5508, "Theta_the_end"), Block(-4585, 114, 5505, "Theta_the_end")]
 @elseif frameNumber == 9
     @var blockList = Block[Block(-4587, 113, 5500, "Theta_the_end")]
 @elseif frameNumber == 10
     @var blockList = Block[Block(-4587, 115, 5492, "Theta_the_end"), Block(-4589, 116, 5489, "Theta_the_end")]
 @elseif frameNumber == 11
-    @var blockList = Block[Block(-4590, 116, 5483, "Theta_the_end")]
+    @var blockList = Block[Block(-4592, 116, 5487, "Theta_the_end"), Block(-4596, 116, 5486, "Theta_the_end")]
+@elseif frameNumber == 12
+    @var blockList = Block[Block(-4599, 116, 5488, "Theta_the_end"), Block(-4600, 117, 5491, "Theta_the_end")]
 @fi
 
 # Setblock to portal frame with eye
@@ -43,7 +45,11 @@
 
 # Setblock blocks
 @for Int i in list::range(0, blockList.length())
-    @console execute in minecraft:theta_the_end run setblock {{blockList[i].getX()}} {{blockList[i].getY()}} {{blockList[i].getZ()}} magenta_stained_glass
+    @if frameNumber % 2 == 0
+        @console execute in minecraft:theta_the_end run setblock {{blockList[i].getX()}} {{blockList[i].getY()}} {{blockList[i].getZ()}} magenta_stained_glass
+    @else
+        @console execute in minecraft:theta_the_end run setblock {{blockList[i].getX()}} {{blockList[i].getY()}} {{blockList[i].getZ()}} purple_stained_glass
+    @fi
     @bypass particle minecraft:witch {{blockList[i].getX() + 0.5}} {{blockList[i].getY() + 0.5}} {{blockList[i].getZ() + 0.5}} 0.3 0.3 0.3 0 20
 @done
 
@@ -70,10 +76,20 @@
     @bypass /playsound minecraft:item.chorus_fruit.teleport master @a[distance=..20] {{blockList[i].getX() + 0.5}} {{blockList[i].getY() + 0.5}} {{blockList[i].getZ() + 0.5}} 0.2 {{math::random(0.8D, 1.2D)}}
 
     # One Time Run
-    # @bypass /summon item_display {{blockList[i].getX()}} {{blockList[i].getY() + 0.75}} {{blockList[i].getZ()}} {Tags:["theCubeEyes{{blockList[i].getX()}},{{blockList[i].getY()}},{{blockList[i].getZ()}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAyZWFjZTc0NGUwYzkxMzc3OGZlOGIzNWUxM2UzYjA1NDlkNDU5YWU3MTNkZmM0ODBhMmI0MTA3M2NkNzQ5MiJ9fX0="}]}}}}
+
+    # @if frameNumber % 2 == 0
+    #     @bypass /summon item_display {{blockList[i].getX()}} {{blockList[i].getY() + 0.75}} {{blockList[i].getZ()}} {Tags:["theCubeEyes{{blockList[i].getX()}},{{blockList[i].getY()}},{{blockList[i].getZ()}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTZjOTg1YzAzOWQyYWExZDJiYmIzZGM5ZWRmODZkYzQzMmUzMTJmNGI3MjBkMGFiZGU0N2ViY2E3M2E2MTI5MCJ9fX0="}]}}}}
+    # @else
+    #     @bypass /summon item_display {{blockList[i].getX()}} {{blockList[i].getY() + 0.75}} {{blockList[i].getZ()}} {Tags:["theCubeEyes{{blockList[i].getX()}},{{blockList[i].getY()}},{{blockList[i].getZ()}}"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]},item:{id:"minecraft:player_head",count:1,components:{"minecraft:profile":{"properties":[{"name":"textures","value":"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAyZWFjZTc0NGUwYzkxMzc3OGZlOGIzNWUxM2UzYjA1NDlkNDU5YWU3MTNkZmM0ODBhMmI0MTA3M2NkNzQ5MiJ9fX0="}]}}}}
+    # @fi
+
+    # MAGENTA: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTZjOTg1YzAzOWQyYWExZDJiYmIzZGM5ZWRmODZkYzQzMmUzMTJmNGI3MjBkMGFiZGU0N2ViY2E3M2E2MTI5MCJ9fX0=
+    # PURPLE: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTAyZWFjZTc0NGUwYzkxMzc3OGZlOGIzNWUxM2UzYjA1NDlkNDU5YWU3MTNkZmM0ODBhMmI0MTA3M2NkNzQ5MiJ9fX0=
 @done
 
 @delay 0
 @bypass /setblock {{x}} {{y}} {{z}} minecraft:end_portal_frame[eye=false]
 @bypass /particle minecraft:smoke {{x + 0.5}} {{y + 0.8}} {{z + 0.5}} 0.1 0 0.1 0.01 15
 @bypass /playsound minecraft:block.end_portal_frame.fill master @a[distance=..20] {{x + 0.5}} {{y + 0.8}} {{z + 0.5}} 0.5 1.0
+
+

@@ -1,0 +1,104 @@
+@using endmap
+@fast
+
+@global_cooldown 10s
+
+# Kill Pig
+@bypass /minecraft:tp @e[tag=endmappig2,distance=..200] -4501 151 5499 
+@bypass /minecraft:kill @e[tag=endmappig2,distance=..200] 
+
+# Summon pig to ride
+@bypass /summon pig -4600 114.7 5499 {NoGravity:1b,Silent:1b,Invulnerable:1b,Tags:["endmappig2"],CustomName:[{"bold":true,"color":"#AC30FF","text":"T"},{"color":"#C433FB","text":"H"},{"color":"#DB36F8","text":"E "},{"color":"#F339F4","text":"C"},{"color":"#F339F4","text":"U"},{"color":"#DB36F8","text":"B"},{"color":"#AC30FF","text":"E"}],active_effects:[{id:"minecraft:invisibility",amplifier:1,duration:200000,show_particles:0b,show_icon:0b}]}
+@bypass /effect give {{player}} minecraft:darkness 2 0 true
+@bypass /playsound minecraft:block.beacon.deactivate master {{player}} ~ ~ ~ 0.5 0.5 1
+@bypass /playsound minecraft:entity.guardian.attack master {{player}} ~ ~ ~ 0.7 0.75
+@bypass /particle flash{color:[0.412,0.000,0.824,0.000],scale:5} ~ ~1.6 ~ .3 .3 .3 0 100
+@delay 1
+
+# Ride the pig
+@bypass /ride {{player}} mount @e[tag=endmappig2,limit=1,sort=nearest]
+@bypass /playsound minecraft:block.beacon.activate master {{player}} ~ ~ ~ 0.5 0.75
+@bypass /particle minecraft:portal ~ ~1.0 ~ 0 0 0 10 1000
+
+@delay 2s
+@define Double angle = 0D
+@for Int i in list::range(0, 36)
+    @var angle = Double(i) * 10D
+    @bypass /particle minecraft:end_rod ~{{3 * math::cos(angle) }} ~ ~{{3 * math::sin(angle)}} {{-3 * math::cos(angle)}} 1 {{-3 * math::sin(angle)}} 0.09 0
+@done
+
+@bypass /data merge entity @e[tag=endmappig2,limit=1] {Motion:[0.0,0.307,0.0]}
+@bypass /ride @s mount @e[tag=endmappig2,limit=1,sort=nearest]
+
+@bypass /playsound minecraft:entity.creaking.death master {{player}} ~ ~ ~ 0.25 0
+@bypass /playsound minecraft:item.totem.use master {{player}} ~ ~ ~ 0.25 {{math::random(1.1D, 1.4D)}}
+@bypass /playsound minecraft:block.beacon.ambient master {{player}} ~ ~ ~ 0.25 {{math::random(0.5D, 0.6D)}}
+@bypass /playsound minecraft:entity.lightning_bolt.thunder master {{player}} ~ ~ ~ 1 0.5
+
+@bypass /particle minecraft:witch -4599.50 116.00 5499.50 0 0.1 0 1 30
+@bypass /particle minecraft:end_rod -4599.50 116.00 5499.50 0 0 0 0.5 100
+@bypass /execute as @s at @s anchored eyes run particle flash{color:[0.412,0.000,0.824,0.000],scale:5} ^ ^ ^1 0 0 0 0 2 force @s
+@bypass /effect clear {{player}}
+
+@for Int i in list::range(0, 80)
+    @if i == 25
+        @bypass /setblock -4600 123 5499 air strict
+        @bypass /playsound block.stone.break master @s -4600 123 5499 0.3 1
+    @elseif i == 28
+        @bypass /setblock -4600 124 5499 air strict
+        @bypass /playsound minecraft:block.sand.break master @s -4600 124 5499 0.3 1
+    @elseif i == 31
+        @bypass /setblock -4600 125 5499 air strict
+        @bypass /playsound block.stone.break master @s -4600 125 5499 0.3 1
+    @elseif i == 34
+        @bypass /setblock -4600 126 5499 air strict
+        @bypass /playsound minecraft:block.stone.break master @s -4600 126 5499 0.3 1
+    @elseif i == 71
+        @bypass /setblock -4600 123 5499 minecraft:obsidian
+        @bypass /playsound block.stone.place master @s -4600 123 5499 0.3 1
+    @elseif i == 74
+        @bypass /setblock -4600 124 5499 minecraft:purple_concrete_powder
+        @bypass /playsound minecraft:block.sand.place master @s -4600 124 5499 0.3 1
+    @elseif i == 77
+        @bypass /setblock -4600 125 5499 minecraft:obsidian
+        @bypass /playsound block.stone.place master @s -4600 125 5499 0.3 1
+    @fi
+
+    @bypass /particle minecraft:reverse_portal ~ ~-1 ~ 0 1 0 1 10
+    @bypass /playsound minecraft:entity.illusioner.cast_spell master {{player}} ~ ~ ~ 0.15 {{(i / 80D) * 1.5 + 0.5}}
+    @bypass /ride @s mount @e[tag=endmappig2,limit=1,sort=nearest]
+    @delay 1
+
+    @if math::abs(player.getX() - -4600) > 5 || math::abs(player.getZ() - 5499) > 5 || math::abs(player.getY() - 120) > 8
+        @player &5&lCutscene canceled.
+        @bypass /minecraft:tp @e[tag=endmappig2,distance=..200] -4501 231 5499 
+        @bypass /minecraft:kill @e[tag=endmappig2,distance=..200] 
+    @return
+@fi
+@done
+
+@bypass /setblock -4600 126 5499 minecraft:magenta_stained_glass
+@bypass /playsound minecraft:block.stone.place master @s -4600 126 5499 0.3 1
+@bypass /minecraft:tp -4599.5 {{player.getY() - 0.27}} 5499.5
+@bypass /rocket {{player}} 0 .1 0
+@bypass /playsound minecraft:entity.ender_eye.death master {{player}} ~ ~ ~ 1 1
+
+@define Float multiplier = 1.5
+@for Int i in list::range(0, 720)
+    @var angle = Double(i) * 4D
+    @bypass /particle witch ~{{multiplier * math::cos(angle) }} ~0.5 ~{{multiplier * math::sin(angle)}} 0 1 0 0.09 0
+    @if i % 26 == 0
+        @delay 1
+        @var multiplier -= 0.1
+        @bypass /playsound minecraft:block.end_portal_frame.fill master {{player}} ~{{multiplier * math::cos(angle) }} ~0.5 ~{{multiplier * math::sin(angle)}} 0.25 {{(i / 720D) * 1.5 + 0.5}}
+    @fi
+@done
+
+@bypass /execute in theta_the_end run playsound minecraft:block.end_portal.spawn master {{player}} ~ ~ ~ 0.5 1
+@bypass /execute in theta_the_end run playsound minecraft:entity.lightning_bolt.thunder master {{player}} ~ ~ ~ 1 0.5
+@bypass /execute in theta_the_end run particle minecraft:witch ~ ~ ~ 0 0.1 0 1 30
+@bypass /execute in theta_the_end run particle minecraft:end_rod ~ ~ ~ 0 0 0 0.5 100
+@bypass /execute as @s at @s anchored eyes run particle flash{color:[0.412,0.000,0.824,0.000],scale:5} ^ ^ ^1 0 0 0 0 2 force @s
+
+@bypass /minecraft:tp @e[tag=endmappig2,distance=..200] -4501 151 5499 
+@bypass /minecraft:kill @e[tag=endmappig2,distance=..200] 

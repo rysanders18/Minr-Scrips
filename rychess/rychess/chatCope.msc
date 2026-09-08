@@ -1,0 +1,16 @@
+# chatCope(Player player, Int delta)
+# Engine-unfavorable swing handler. Triggered from engineMove when
+# curEngineScore - prevEngineScore <= -200 (in centipawns, after the
+# mate-score gate), meaning the engine's eval dropped between turns
+# — usually because the engine's last move turned out worse than
+# expected, or the human played a strong response.
+#
+# delta is negative on this path (engine's perspective). Body is a
+# TEST PLACEHOLDER. Replace with the real message bank — keep the
+# (player, delta) signature so the trigger in engineMove doesn't
+# need to change.
+
+@using rychess
+@fast
+
+@player &7<&crychess&7>&r &b[COPE TEST]&r engine-unfavorable swing detected, delta={{delta}} cp

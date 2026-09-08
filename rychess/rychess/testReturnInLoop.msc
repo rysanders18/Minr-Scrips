@@ -8,17 +8,17 @@
 @using rychess
 @fast
 
-@player &6=== Phase 1: Function-Return-In-Loop Test ===
+# @player &6=== Phase 1: Function-Return-In-Loop Test ===
 
 @define Int totalSum = 0
 @for Int size in list::range(1, 6)
     @define Int[] sub = buildList(size)
     @define Int subLen = sub.length()
     @define Int subSum = sub.sum()
-    @player &eSize {{size}}: len={{subLen}} sum={{subSum}}
+    # @player &eSize {{size}}: len={{subLen}} sum={{subSum}}
     @var totalSum = totalSum + subSum
 @done
 
-@player &eGrand total: {{totalSum}} &7(expected 20)
+# @player &eGrand total: {{totalSum}} &7(expected 20)
 
-@player &6=== Done ===
+# @player &6=== Done ===

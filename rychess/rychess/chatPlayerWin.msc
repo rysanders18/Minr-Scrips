@@ -1,0 +1,43 @@
+# chatPlayerWin(Player player)
+# Fires when the human checkmates the engine — the "ok I'm actually
+# an AI" reveal. Triggered from interactEntity at the first
+# checkGameOver call, gated on isCheckmate AND sideToMove !=
+# playerColor (which together identify a checkmate against the
+# engine, not against the human).
+#
+# Each @delay between lines is a "typing pause" so the messages
+# trickle in the way a real player's chat would. The leading 80-tick
+# delay lets the checkmate beat land first (player sees the move,
+# then the bot starts revealing itself a few seconds later).
+#
+# Body is a TEST PLACEHOLDER — replace with the real reveal
+# wording / pick from a flavor pool. Keep the (player) signature so
+# the trigger stays unchanged.
+
+@using rychess
+@fast
+
+@delay 40
+@player &aRYgamer1&7 -> You: ayyy gg
+@delay 45
+@player &aRYgamer1&7 -> You: ill open the gate for you
+@delay 60
+@player &aRYgamer1&7 -> You: btw this &lisnt actually RYgamer1.
+@delay 60
+@player &aRYgamer1&7 -> You: &aI made a chess engine with Minr Scripts! 
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 0.8
+@delay 55
+@player &aRYgamer1&7 -> You: &aAnd simulated myself playing using teleport commands!
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 0.9
+@delay 50
+@player &aRYgamer1&7 -> You: &aDont spoil it for anyone else!
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 1.0
+@delay 50
+@player &aRYgamer1&7 -> You: &aI hope I fooled you! &b&kk&b&lGG&b&kk
+@bypass /playsound minecraft:entity.chicken.egg master @s ~ ~ ~ 0.5 1.2
+@delay 60
+@player &7(The gate is now open)
+
+
+@bypass /fill -9134 -61 9660 -9133 -60 9660 air
+@bypass /fill -9135 -61 9659 -9132 -56 9659 air replace barrier strict

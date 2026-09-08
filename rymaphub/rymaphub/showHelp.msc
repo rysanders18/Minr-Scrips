@@ -11,26 +11,21 @@
 @fast
 
 @player
-@player &#936be5&lRY's Map Hub &8- &fHow it works
+@player &#936be5&lRY's Map Hub &8- &#d4d4d4Tutorial
 @player
-@player &e&l1. &fOpen the web page and upload an image.
-@bypass tellraw {{player}} ["",{"text":"   ","color":"#d4d4d4"},{"text":"rysanders18.github.io/rymaphub","color":"#936be5","underlined":true,"click_event":{"action":"open_url","url":"https://rysanders18.github.io/rymaphub/"},"hover_event":{"action":"show_text","value":[{"text":"Click to open in your browser","color":"#a1a1a1"}]}}]
-@player &e&l2. &fTune it. &#d4d4d4Dithering blends colours, staircasing
-@player &#d4d4d4   builds in 3D for three shades of every block.
-@player &e&l3. &fClick the import button here, then copy each
-@player &#d4d4d4   message and paste it into chat, in order.
-@player &#d4d4d4   The page copies the next one with &f'&#d4d4d4 or &fCtrl+C&#d4d4d4.
-@player &e&l4. &fThe map builds itself and lands in your hand.
+@player &e&l1. &#d4d4d4Open the web page and upload an image.
+@bypass tellraw {{player}} ["",{"text":"","color":"#d4d4d4"},{"text":"rysanders18.github.io/rymaphub","color":"#936be5","underlined":true,"click_event":{"action":"open_url","url":"https://rysanders18.github.io/rymaphub/"},"hover_event":{"action":"show_text","value":[{"text":"Click to open in your browser","color":"#a1a1a1"}]}}]
 @player
-@player &#936be5&lQuestions
-@player &7• &fHow many messages? &#d4d4d4About 55 for a photo, far
-@player &#d4d4d4  fewer for flat art. A tiny image can be just one.
-@player &7• &fOne failed? &#d4d4d4Nothing is lost. Paste that same
-@player &#d4d4d4  message again; the script waits for it.
-@player &7• &fStuck or bored? &#d4d4d4Type &fcancel&#d4d4d4 to stop.
-@player &7• &fCan I retype them? &#d4d4d4No. Always copy and paste,
-@player &#d4d4d4  one character wrong and the message is rejected.
-@player &7• &fWhy the strange characters? &#d4d4d4Each one carries a
-@player &#d4d4d4  pixel of your image, which is why so few are needed.
+@player &e&l2. &#d4d4d4Adjust your image. &#d4d4d4Dithering blends colours, staircasing
+@player &#d4d4d4builds in 3D for better colors.
+@player
+@player &e&l3. &#d4d4d4Click the import button here, then copy each
+@player &#d4d4d4message and paste it into chat, in order.
+@player
+@player &#d4d4d4● Press &#d4d4d4'&#d4d4d4 or &#d4d4d4Ctrl+C&#d4d4d4 to copy the next message.
+@player &#d4d4d4and use &#d4d4d4Alt+Tab&#d4d4d4 to switch between the browser and Minecraft.
+@player 
+@player &e&l4. &#d4d4d4&lLock your map!
+@player &#d4d4d4Click the cartography table to lock it.
 @player
 @bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5

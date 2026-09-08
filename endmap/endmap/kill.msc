@@ -1,0 +1,4 @@
+@using endmap
+@fast
+
+@var returnToCP(cpnumber[player], player)

@@ -1,0 +1,374 @@
+SPLICE REGISTRY (seed 2)
+For each dead end: the replica tail blocks, the relative tp,
+and the real window it maps onto. Trigger when the player is
+anywhere over the tail stretch (suggested: on entering the
+first tail block's column).
+
+splice   1  branch  58  tail (4668,248,3373)..(4699,242,3361)
+            /minecraft:tp @s ~-90 ~20 ~100   -> window at (4573,269,3476)   [NEW TERRITORY - off the route down]
+splice   2  branch  62  tail (4765,272,3441)..(4747,266,3471)
+            /minecraft:tp @s ~-101 ~18 ~-17   -> window at (4661,291,3418)   [NEW TERRITORY - off the route down]
+splice   3  branch  65  tail (4683,265,3331)..(4651,259,3323)
+            /minecraft:tp @s ~-60 ~8 ~-82   -> window at (4624,274,3255)   [NEW TERRITORY - off the route down]
+splice   4  branch  24  tail (4735,252,3402)..(4717,246,3432)
+            /minecraft:tp @s ~-71 ~38 ~22   -> window at (4661,291,3418)   [NEW TERRITORY - off the route down]
+splice   5  branch  25  tail (4685,274,3530)..(4667,268,3560)
+            /minecraft:tp @s ~-21 ~16 ~-106   -> window at (4661,291,3418)   [NEW TERRITORY - off the route down]
+splice   6  branch  28  tail (4618,275,3494)..(4622,269,3527)
+            /minecraft:tp @s ~99 ~14 ~-118   -> window at (4716,290,3370)   [NEW TERRITORY - off the route down]
+splice   7  branch  77  tail (4615,269,3556)..(4639,263,3538)
+            /minecraft:tp @s ~39 ~12 ~-86   -> window at (4649,282,3466)   [NEW TERRITORY - off the route down]
+splice   8  branch  33  tail (4559,263,3441)..(4536,257,3418)
+            /minecraft:tp @s ~119 ~12 ~11   -> window at (4678,276,3458)   [NEW TERRITORY - off the route down]
+splice   9  branch  34  tail (4570,233,3228)..(4560,227,3194)
+            /minecraft:tp @s ~78 ~56 ~64   -> window at (4644,290,3297)   [NEW TERRITORY - off the route down]
+splice  10  branch  35  tail (4642,232,3243)..(4672,226,3247)
+            /minecraft:tp @s ~74 ~42 ~-4   -> window at (4714,275,3245)   [NEW TERRITORY - off the route down]
+splice  11  branch  39  tail (4680,264,3194)..(4710,258,3198)
+            /minecraft:tp @s ~36 ~10 ~45   -> window at (4714,275,3245)   [NEW TERRITORY - off the route down]
+splice  12  branch  41  tail (4523,271,3314)..(4520,265,3344)
+            /minecraft:tp @s ~86 ~18 ~-120   -> window at (4616,290,3194)   [NEW TERRITORY - off the route down]
+splice  13  branch  42  tail (4618,270,3304)..(4589,264,3301)
+            /minecraft:tp @s ~-7 ~20 ~-13   -> window at (4613,291,3285)
+splice  14  branch  43  tail (4549,257,3273)..(4546,251,3303)
+            /minecraft:tp @s ~60 ~32 ~-79   -> window at (4616,290,3194)   [NEW TERRITORY - off the route down]
+splice  15  branch  45  tail (4492,268,3280)..(4473,262,3306)
+            /minecraft:tp @s ~79 ~14 ~2   -> window at (4577,283,3284)   [NEW TERRITORY - off the route down]
+splice  16  branch  49  tail (4798,271,3391)..(4802,265,3424)
+            /minecraft:tp @s ~-81 ~18 ~-15   -> window at (4716,290,3370)   [NEW TERRITORY - off the route down]
+splice  17  branch  51  tail (4755,255,3307)..(4785,249,3320)
+            /minecraft:tp @s ~-127 ~24 ~-89   -> window at (4624,280,3223)   [NEW TERRITORY - off the route down]
+splice  18  branch 105  tail (4764,261,3277)..(4793,255,3281)
+            /minecraft:tp @s ~-101 ~10 ~8   -> window at (4662,272,3279)   [NEW TERRITORY - off the route down]
+splice  19  branch 111  tail (4629,259,3469)..(4653,253,3451)
+            /minecraft:tp @s ~25 ~22 ~1   -> window at (4649,282,3466)
+splice  20  branch 112  tail (4601,256,3188)..(4591,250,3154)
+            /minecraft:tp @s ~49 ~32 ~98   -> window at (4648,289,3292)   [NEW TERRITORY - off the route down]
+splice  21  branch 153  tail (4693,269,3472)..(4664,263,3494)
+            /minecraft:tp @s ~98 ~34 ~44   -> window at (4795,304,3511)   [NEW TERRITORY - off the route down]
+splice  22  branch 175  tail (4684,254,3245)..(4688,248,3216)
+            /minecraft:tp @s ~38 ~24 ~16   -> window at (4728,279,3263)   [NEW TERRITORY - off the route down]
+splice  23  branch 176  tail (4673,243,3293)..(4701,237,3285)
+            /minecraft:tp @s ~-35 ~32 ~-119   -> window at (4638,276,3180)   [NEW TERRITORY - off the route down]
+splice  24  branch 189  tail (4568,275,3560)..(4603,269,3565)
+            /minecraft:tp @s ~-91 ~28 ~10   -> window at (4472,304,3566)   [NEW TERRITORY - off the route down]
+splice  25  branch 178  tail (4509,271,3461)..(4477,265,3465)
+            /minecraft:tp @s ~73 ~32 ~124   -> window at (4588,304,3584)   [NEW TERRITORY - off the route down]
+splice  26  branch 215  tail (4488,258,3346)..(4496,252,3374)
+            /minecraft:tp @s ~22 ~26 ~-116   -> window at (4516,285,3227)   [NEW TERRITORY - off the route down]
+splice  27  branch 218  tail (4658,255,3533)..(4635,249,3510)
+            /minecraft:tp @s ~20 ~20 ~-81   -> window at (4678,276,3458)   [NEW TERRITORY - off the route down]
+splice  28  branch 244  tail (4541,240,3370)..(4512,234,3378)
+            /minecraft:tp @s ~23 ~46 ~52   -> window at (4567,287,3428)   [NEW TERRITORY - off the route down]
+splice  29  branch 282  tail (4553,234,3340)..(4557,228,3310)
+            /minecraft:tp @s ~93 ~52 ~-66   -> window at (4649,287,3280)   [NEW TERRITORY - off the route down]
+splice  30  branch 283  tail (4624,221,3375)..(4642,215,3344)
+            /minecraft:tp @s ~-113 ~60 ~128   -> window at (4512,282,3509)   [NEW TERRITORY - off the route down]
+splice  31  branch 285  tail (4645,232,3288)..(4659,226,3254)
+            /minecraft:tp @s ~-98 ~70 ~2   -> window at (4542,303,3293)   [NEW TERRITORY - off the route down]
+splice  32  branch 288  tail (4732,249,3465)..(4703,243,3462)
+            /minecraft:tp @s ~-58 ~24 ~-25   -> window at (4675,274,3447)   [NEW TERRITORY - off the route down]
+splice  33  branch 297  tail (4788,260,3455)..(4775,254,3487)
+            /minecraft:tp @s ~46 ~24 ~-127   -> window at (4831,285,3322)   [NEW TERRITORY - off the route down]
+splice  34  branch 293  tail (4667,226,3315)..(4664,220,3344)
+            /minecraft:tp @s ~-95 ~74 ~-126   -> window at (4566,301,3187)   [NEW TERRITORY - off the route down]
+splice  35  branch 299  tail (4555,222,3265)..(4588,216,3265)
+            /minecraft:tp @s ~-79 ~28 ~-26   -> window at (4474,251,3245)   [NEW TERRITORY - off the route down]
+splice  36  branch 305  tail (4568,213,3373)..(4542,207,3358)
+            /minecraft:tp @s ~10 ~74 ~-7   -> window at (4582,288,3361)   [NEW TERRITORY - off the route down]
+splice  37  branch 315  tail (4614,207,3358)..(4595,201,3335)
+            /minecraft:tp @s ~8 ~68 ~-97   -> window at (4617,276,3266)   [NEW TERRITORY - off the route down]
+splice  38  branch 324  tail (4665,197,3298)..(4670,191,3263)
+            /minecraft:tp @s ~21 ~108 ~44   -> window at (4682,306,3346)   [NEW TERRITORY - off the route down]
+splice  39  branch 332  tail (4665,190,3352)..(4642,184,3370)
+            /minecraft:tp @s ~-85 ~16 ~-48   -> window at (4577,207,3298)   [NEW TERRITORY - off the route down]
+splice  40  branch 336  tail (4597,184,3354)..(4566,178,3346)
+            /minecraft:tp @s ~-23 ~66 ~48   -> window at (4580,251,3404)   [NEW TERRITORY - off the route down]
+splice  41  branch 349  tail (4588,172,3333)..(4616,166,3311)
+            /minecraft:tp @s ~-122 ~16 ~50   -> window at (4460,189,3381)   [NEW TERRITORY - off the route down]
+splice  42  branch 369  tail (4582,170,3294)..(4613,164,3282)
+            /minecraft:tp @s ~-87 ~66 ~17   -> window at (4490,237,3314)   [NEW TERRITORY - off the route down]
+splice  43  branch 368  tail (4606,166,3263)..(4637,160,3280)
+            /minecraft:tp @s ~120 ~112 ~-64   -> window at (4724,279,3193)   [NEW TERRITORY - off the route down]
+splice  44  branch 339  tail (4571,169,3279)..(4541,163,3291)
+            /minecraft:tp @s ~107 ~32 ~100   -> window at (4678,202,3373)   [NEW TERRITORY - off the route down]
+splice  45  branch 351  tail (4670,156,3250)..(4689,150,3274)
+            /minecraft:tp @s ~-21 ~116 ~-90   -> window at (4644,273,3163)
+splice  46  branch 388  tail (4496,155,3366)..(4519,149,3348)
+            /minecraft:tp @s ~-15 ~44 ~-80   -> window at (4476,200,3282)   [NEW TERRITORY - off the route down]
+splice  47  branch 371  tail (4496,149,3393)..(4496,143,3425)
+            /minecraft:tp @s ~-31 ~42 ~-77   -> window at (4465,192,3309)   [NEW TERRITORY - off the route down]
+splice  48  branch 396  tail (4553,138,3361)..(4580,132,3339)
+            /minecraft:tp @s ~-22 ~50 ~-101   -> window at (4529,189,3266)   [NEW TERRITORY - off the route down]
+splice  49  branch 399  tail (4589,147,3233)..(4612,141,3257)
+            /minecraft:tp @s ~-72 ~42 ~-33   -> window at (4512,190,3196)   [NEW TERRITORY - off the route down]
+splice  50  branch 372  tail (4621,137,3270)..(4629,131,3299)
+            /minecraft:tp @s ~-47 ~42 ~-40   -> window at (4568,180,3231)   [NEW TERRITORY - off the route down]
+splice  51  branch 422  tail (4523,126,3450)..(4506,120,3422)
+            /minecraft:tp @s ~4 ~30 ~-17   -> window at (4530,157,3439)   [NEW TERRITORY - off the route down]
+splice  52  branch 434  tail (4542,126,3467)..(4539,120,3496)
+            /minecraft:tp @s ~30 ~28 ~-87   -> window at (4566,155,3378)   [NEW TERRITORY - off the route down]
+splice  53  branch 423  tail (4587,124,3323)..(4615,118,3315)
+            /minecraft:tp @s ~-111 ~44 ~-97   -> window at (4473,169,3220)   [NEW TERRITORY - off the route down]
+splice  54  branch 438  tail (4585,124,3298)..(4559,118,3278)
+            /minecraft:tp @s ~117 ~50 ~26   -> window at (4700,175,3330)   [NEW TERRITORY - off the route down]
+splice  55  branch 435  tail (4496,115,3542)..(4500,109,3507)
+            /minecraft:tp @s ~16 ~38 ~-119   -> window at (4516,154,3427)   [NEW TERRITORY - off the route down]
+splice  56  branch 445  tail (4536,122,3521)..(4563,116,3500)
+            /minecraft:tp @s ~63 ~80 ~-89   -> window at (4593,203,3430)   [NEW TERRITORY - off the route down]
+splice  57  branch 444  tail (4522,106,3413)..(4518,100,3442)
+            /minecraft:tp @s ~23 ~24 ~127   -> window at (4539,131,3538)   [NEW TERRITORY - off the route down]
+splice  58  branch 480  tail (4516,101,3258)..(4542,95,3277)
+            /minecraft:tp @s ~-89 ~68 ~52   -> window at (4420,170,3310)   [NEW TERRITORY - off the route down]
+splice  59  branch 505  tail (4453,99,3508)..(4427,93,3493)
+            /minecraft:tp @s ~121 ~50 ~-101   -> window at (4578,150,3402)   [NEW TERRITORY - off the route down]
+splice  60  branch 456  tail (4584,99,3333)..(4592,93,3362)
+            /minecraft:tp @s ~111 ~108 ~-58   -> window at (4689,208,3275)   [NEW TERRITORY - off the route down]
+splice  61  branch 476  tail (4625,87,3366)..(4655,81,3349)
+            /minecraft:tp @s ~-123 ~76 ~-114   -> window at (4503,164,3259)   [NEW TERRITORY - off the route down]
+splice  62  branch 481  tail (4569,91,3452)..(4543,85,3437)
+            /minecraft:tp @s ~-45 ~90 ~-117   -> window at (4528,182,3330)
+splice  63  branch 470  tail (4515,94,3503)..(4528,88,3534)
+            /minecraft:tp @s ~-44 ~38 ~43   -> window at (4468,133,3541)   [NEW TERRITORY - off the route down]
+splice  64  branch 485  tail (4519,101,3481)..(4544,95,3496)
+            /minecraft:tp @s ~-116 ~24 ~-95   -> window at (4396,126,3386)   [NEW TERRITORY - off the route down]
+splice  65  branch 520  tail (4563,83,3504)..(4598,77,3509)
+            /minecraft:tp @s ~17 ~14 ~-122   -> window at (4576,98,3387)   [NEW TERRITORY - off the route down]
+splice  66  branch 506  tail (4598,72,3315)..(4632,66,3301)
+            /minecraft:tp @s ~-94 ~90 ~-69   -> window at (4502,163,3252)   [NEW TERRITORY - off the route down]
+splice  67  branch 521  tail (4585,80,3255)..(4603,74,3279)
+            /minecraft:tp @s ~-14 ~82 ~-89   -> window at (4565,163,3169)   [NEW TERRITORY - off the route down]
+splice  68  branch 537  tail (4542,68,3208)..(4576,62,3194)
+            /minecraft:tp @s ~-28 ~92 ~31   -> window at (4508,161,3241)   [NEW TERRITORY - off the route down]
+splice  69  branch 539  tail (4570,79,3362)..(4570,73,3394)
+            /minecraft:tp @s ~-128 ~30 ~-115   -> window at (4441,110,3240)   [NEW TERRITORY - off the route down]
+splice  70  branch 511  tail (4519,74,3412)..(4487,68,3404)
+            /minecraft:tp @s ~128 ~26 ~-84   -> window at (4653,101,3330)   [NEW TERRITORY - off the route down]
+splice  71  branch 557  tail (4522,65,3457)..(4550,59,3435)
+            /minecraft:tp @s ~42 ~36 ~-56   -> window at (4558,102,3401)   [NEW TERRITORY - off the route down]
+splice  72  branch 581  tail (4507,58,3350)..(4498,52,3316)
+            /minecraft:tp @s ~-70 ~52 ~11   -> window at (4443,111,3363)   [NEW TERRITORY - off the route down]
+splice  73  branch 584  tail (4548,56,3256)..(4565,50,3226)
+            /minecraft:tp @s ~-84 ~28 ~-12   -> window at (4458,85,3247)   [NEW TERRITORY - off the route down]
+splice  74  branch 600  tail (4580,49,3244)..(4614,43,3235)
+            /minecraft:tp @s ~-48 ~108 ~-9   -> window at (4526,158,3235)   [NEW TERRITORY - off the route down]
+splice  75  branch 564  tail (4534,58,3284)..(4511,52,3302)
+            /minecraft:tp @s ~3 ~58 ~-76   -> window at (4534,117,3202)   [NEW TERRITORY - off the route down]
+splice  76  branch 592  tail (4526,58,3367)..(4543,52,3395)
+            /minecraft:tp @s ~-12 ~84 ~-91   -> window at (4511,143,3271)
+splice  77  branch 679  tail (4445,28,3450)..(4462,22,3480)
+            /minecraft:tp @s ~-48 ~48 ~-107   -> window at (4399,77,3337)   [NEW TERRITORY - off the route down]
+splice  78  branch 639  tail (4621,36,3372)..(4591,30,3369)
+            /minecraft:tp @s ~35 ~118 ~-49   -> window at (4658,155,3317)   [NEW TERRITORY - off the route down]
+splice  79  branch 656  tail (4647,36,3294)..(4614,30,3308)
+            /minecraft:tp @s ~-42 ~50 ~-80   -> window at (4611,87,3216)   [NEW TERRITORY - off the route down]
+splice  80  branch 682  tail (4686,24,3250)..(4655,18,3232)
+            /minecraft:tp @s ~-125 ~54 ~-5   -> window at (4567,79,3247)   [NEW TERRITORY - off the route down]
+splice  81  branch 701  tail (4678,42,3373)..(4707,36,3365)
+            /minecraft:tp @s ~-119 ~110 ~-56   -> window at (4554,153,3315)   [NEW TERRITORY - off the route down]
+splice  82  branch 661  tail (4542,27,3303)..(4576,21,3294)
+            /minecraft:tp @s ~-105 ~48 ~-34   -> window at (4433,76,3265)   [NEW TERRITORY - off the route down]
+splice  83  branch 680  tail (4571,24,3332)..(4567,18,3362)
+            /minecraft:tp @s ~-107 ~86 ~-86   -> window at (4458,111,3244)   [NEW TERRITORY - off the route down]
+splice  84  branch 729  tail (4556,16,3244)..(4566,10,3278)
+            /minecraft:tp @s ~-28 ~100 ~83   -> window at (4522,117,3325)   [NEW TERRITORY - off the route down]
+splice  85  branch 677  tail (4692,37,3350)..(4720,31,3328)
+            /minecraft:tp @s ~-128 ~64 ~51   -> window at (4558,102,3401)   [NEW TERRITORY - off the route down]
+splice  86  branch 641  tail (4495,17,3471)..(4469,11,3456)
+            /minecraft:tp @s ~-8 ~66 ~-4   -> window at (4491,84,3462)   [NEW TERRITORY - off the route down]
+splice  87  branch 734  tail (4694,34,3426)..(4724,28,3438)
+            /minecraft:tp @s ~-95 ~68 ~-21   -> window at (4593,103,3403)   [NEW TERRITORY - off the route down]
+splice  88  branch 792  tail (4735,30,3416)..(4750,24,3390)
+            /minecraft:tp @s ~-87 ~74 ~22   -> window at (4642,105,3436)   [NEW TERRITORY - off the route down]
+splice  89  branch 691  tail (4604,27,3529)..(4630,21,3549)
+            /minecraft:tp @s ~-49 ~74 ~-118   -> window at (4550,102,3407)   [NEW TERRITORY - off the route down]
+splice  90  branch 696  tail (4505,13,3259)..(4526,7,3287)
+            /minecraft:tp @s ~6 ~116 ~-18   -> window at (4504,130,3242)   [NEW TERRITORY - off the route down]
+splice  91  branch 789  tail (4506,11,3235)..(4542,5,3230)
+            /minecraft:tp @s ~-98 ~24 ~84   -> window at (4402,36,3320)   [NEW TERRITORY - off the route down]
+splice  92  branch 686  tail (4761,24,3435)..(4776,18,3409)
+            /minecraft:tp @s ~-113 ~80 ~3   -> window at (4642,105,3436)   [NEW TERRITORY - off the route down]
+splice  93  branch 749  tail (4449,-5,3384)..(4454,-11,3420)
+            /minecraft:tp @s ~7 ~120 ~30   -> window at (4455,116,3407)   [NEW TERRITORY - off the route down]
+splice  94  branch 788  tail (4545,4,3317)..(4563,-2,3341)
+            /minecraft:tp @s ~-112 ~8 ~-25   -> window at (4427,13,3295)   [NEW TERRITORY - off the route down]
+splice  95  branch 795  tail (4499,6,3333)..(4481,0,3309)
+            /minecraft:tp @s ~-55 ~70 ~91   -> window at (4450,77,3426)   [NEW TERRITORY - off the route down]
+splice  96  branch 800  tail (4674,-6,3545)..(4665,-12,3581)
+            /minecraft:tp @s ~-63 ~44 ~-78   -> window at (4608,39,3462)   [NEW TERRITORY - off the route down]
+splice  97  branch 809  tail (4745,10,3480)..(4737,4,3451)
+            /minecraft:tp @s ~7 ~30 ~24   -> window at (4746,41,3507)   [NEW TERRITORY - off the route down]
+splice  98  branch 775  tail (4698,33,3305)..(4726,27,3297)
+            /minecraft:tp @s ~-124 ~66 ~88   -> window at (4569,100,3398)   [NEW TERRITORY - off the route down]
+splice  99  branch 864  tail (4708,-14,3513)..(4708,-20,3546)
+            /minecraft:tp @s ~-104 ~54 ~-56   -> window at (4598,41,3455)   [NEW TERRITORY - off the route down]
+splice 100  branch 819  tail (4668,-6,3372)..(4660,-12,3343)
+            /minecraft:tp @s ~80 ~46 ~-67   -> window at (4743,41,3307)   [NEW TERRITORY - off the route down]
+splice 101  branch 856  tail (4738,0,3548)..(4729,-6,3584)
+            /minecraft:tp @s ~-127 ~38 ~-81   -> window at (4608,39,3462)   [NEW TERRITORY - off the route down]
+splice 102  branch 869  tail (4647,-6,3351)..(4615,-12,3355)
+            /minecraft:tp @s ~123 ~46 ~-124   -> window at (4773,41,3232)   [NEW TERRITORY - off the route down]
+splice 103  branch 884  tail (4691,-8,3412)..(4706,-14,3386)
+            /minecraft:tp @s ~10 ~50 ~96   -> window at (4695,43,3506)   [NEW TERRITORY - off the route down]
+splice 104  branch 881  tail (4566,-10,3541)..(4594,-16,3519)
+            /minecraft:tp @s ~-23 ~50 ~23   -> window at (4537,41,3562)   [NEW TERRITORY - off the route down]
+splice 105  branch 906  tail (4711,-9,3447)..(4715,-15,3417)
+            /minecraft:tp @s ~32 ~58 ~-49   -> window at (4737,50,3398)   [NEW TERRITORY - off the route down]
+splice 106  branch 912  tail (4614,-21,3569)..(4600,-27,3602)
+            /minecraft:tp @s ~-2 ~58 ~-95   -> window at (4611,38,3467)   [NEW TERRITORY - off the route down]
+splice 107  branch 887  tail (4625,-12,3481)..(4659,-18,3471)
+            /minecraft:tp @s ~-97 ~8 ~98   -> window at (4522,-3,3577)   [NEW TERRITORY - off the route down]
+splice 108  branch 938  tail (4630,-17,3510)..(4626,-23,3545)
+            /minecraft:tp @s ~-22 ~56 ~-48   -> window at (4604,40,3457)   [NEW TERRITORY - off the route down]
+splice 109  branch 871  tail (4516,-20,3469)..(4487,-26,3476)
+            /minecraft:tp @s ~108 ~120 ~58   -> window at (4626,101,3532)   [NEW TERRITORY - off the route down]
+splice 110  branch 899  tail (4522,-22,3530)..(4551,-28,3522)
+            /minecraft:tp @s ~75 ~34 ~52   -> window at (4594,13,3576)   [NEW TERRITORY - off the route down]
+splice 111  branch 945  tail (4479,-28,3508)..(4461,-34,3484)
+            /minecraft:tp @s ~-35 ~104 ~-84   -> window at (4450,77,3426)
+splice 112  branch 988  tail (4664,-47,3517)..(4651,-53,3487)
+            /minecraft:tp @s ~86 ~82 ~-40   -> window at (4755,36,3481)   [NEW TERRITORY - off the route down]
+splice 113  branch 1013  tail (4477,-41,3330)..(4511,-47,3320)
+            /minecraft:tp @s ~-62 ~10 ~67   -> window at (4411,-30,3401)   [NEW TERRITORY - off the route down]
+splice 114  branch 1041  tail (4709,-43,3568)..(4695,-49,3601)
+            /minecraft:tp @s ~-97 ~80 ~-94   -> window at (4611,38,3467)   [NEW TERRITORY - off the route down]
+splice 115  branch 1056  tail (4476,-47,3293)..(4481,-53,3258)
+            /minecraft:tp @s ~-12 ~72 ~6   -> window at (4465,26,3306)   [NEW TERRITORY - off the route down]
+splice 116  branch 907  tail (4553,-42,3355)..(4579,-48,3370)
+            /minecraft:tp @s ~-100 ~18 ~85   -> window at (4455,-23,3434)   [NEW TERRITORY - off the route down]
+splice 117  branch 961  tail (4692,-47,3463)..(4678,-53,3496)
+            /minecraft:tp @s ~-80 ~84 ~11   -> window at (4611,38,3467)   [NEW TERRITORY - off the route down]
+splice 118  branch 1018  tail (4669,-51,3339)..(4665,-57,3374)
+            /minecraft:tp @s ~-61 ~90 ~123   -> window at (4604,40,3457)   [NEW TERRITORY - off the route down]
+splice 119  branch 1031  tail (4574,-40,3307)..(4608,-46,3297)
+            /minecraft:tp @s ~93 ~82 ~-76   -> window at (4665,43,3237)   [NEW TERRITORY - off the route down]
+splice 120  branch 1033  tail (4533,-40,3444)..(4548,-46,3418)
+            /minecraft:tp @s ~-106 ~10 ~-74   -> window at (4421,-29,3368)   [NEW TERRITORY - off the route down]
+splice 121  branch 1038  tail (4742,-40,3442)..(4739,-46,3472)
+            /minecraft:tp @s ~12 ~12 ~78   -> window at (4748,-27,3518)   [NEW TERRITORY - off the route down]
+splice 122  branch 1045  tail (4628,-49,3483)..(4614,-55,3516)
+            /minecraft:tp @s ~-16 ~86 ~-9   -> window at (4611,38,3467)   [NEW TERRITORY - off the route down]
+splice 123  branch 1046  tail (4658,-40,3387)..(4668,-46,3421)
+            /minecraft:tp @s ~12 ~20 ~52   -> window at (4664,-19,3437)   [NEW TERRITORY - off the route down]
+splice 124  branch 1069  tail (4488,-43,3395)..(4516,-49,3387)
+            /minecraft:tp @s ~-86 ~54 ~-57   -> window at (4402,12,3345)   [NEW TERRITORY - off the route down]
+splice 125  branch 983  tail (4571,-46,3390)..(4571,-52,3423)
+            /minecraft:tp @s ~33 ~86 ~67   -> window at (4598,41,3455)   [NEW TERRITORY - off the route down]
+splice 126  branch 1105  tail (4451,-49,3427)..(4447,-55,3457)
+            /minecraft:tp @s ~-18 ~100 ~38   -> window at (4439,52,3465)   [NEW TERRITORY - off the route down]
+splice 127  branch 1126  tail (4482,-54,3458)..(4459,-60,3476)
+            /minecraft:tp @s ~20 ~104 ~59   -> window at (4500,51,3511)   [NEW TERRITORY - off the route down]
+splice 128  branch 1055  tail (4540,-37,3235)..(4537,-43,3264)
+            /minecraft:tp @s ~-117 ~8 ~56   -> window at (4430,-28,3290)   [NEW TERRITORY - off the route down]
+splice 129  branch 1073  tail (4741,-35,3368)..(4723,-41,3344)
+            /minecraft:tp @s ~-91 ~96 ~-68   -> window at (4646,62,3305)   [NEW TERRITORY - off the route down]
+splice 130  branch 1100  tail (4510,-45,3243)..(4510,-51,3280)
+            /minecraft:tp @s ~-58 ~50 ~79   -> window at (4451,6,3316)   [NEW TERRITORY - off the route down]
+splice 131  branch 875  tail (4725,-38,3308)..(4702,-44,3327)
+            /minecraft:tp @s ~37 ~88 ~24   -> window at (4759,51,3327)   [NEW TERRITORY - off the route down]
+splice 132  branch 971  tail (4701,-42,3295)..(4667,-48,3304)
+            /minecraft:tp @s ~-104 ~14 ~-86   -> window at (4599,-27,3203)   [NEW TERRITORY - off the route down]
+splice 133  branch 1005  tail (4552,-42,3294)..(4516,-48,3299)
+            /minecraft:tp @s ~35 ~12 ~-78   -> window at (4593,-29,3214)   [NEW TERRITORY - off the route down]
+splice 134  branch 1017  tail (4778,-38,3407)..(4774,-44,3442)
+            /minecraft:tp @s ~8 ~24 ~-125   -> window at (4792,-13,3279)   [NEW TERRITORY - off the route down]
+splice 135  branch 1104  tail (4666,-52,3250)..(4637,-58,3258)
+            /minecraft:tp @s ~-50 ~30 ~-14   -> window at (4618,-21,3242)   [NEW TERRITORY - off the route down]
+splice 136  branch 1130  tail (4593,-50,3192)..(4593,-56,3155)
+            /minecraft:tp @s ~-128 ~76 ~114   -> window at (4463,27,3312)   [NEW TERRITORY - off the route down]
+splice 137  branch 1068  tail (4740,-40,3417)..(4704,-46,3417)
+            /minecraft:tp @s ~100 ~18 ~-56   -> window at (4846,-21,3358)   [NEW TERRITORY - off the route down]
+splice 138  branch 183  tail (4746,279,3317)..(4715,273,3300)
+            /minecraft:tp @s ~19 ~26 ~31   -> window at (4771,306,3348)   [NEW TERRITORY - off the route down]
+splice 139  branch 186  tail (4483,277,3494)..(4451,271,3498)
+            /minecraft:tp @s ~99 ~26 ~91   -> window at (4588,304,3584)
+splice 140  branch 180  tail (4770,285,3280)..(4796,279,3306)
+            /minecraft:tp @s ~18 ~16 ~-19   -> window at (4782,302,3262)   [NEW TERRITORY - off the route down]
+splice 141  branch 213  tail (4526,268,3208)..(4530,262,3178)
+            /minecraft:tp @s ~120 ~18 ~66   -> window at (4649,287,3280)   [NEW TERRITORY - off the route down]
+splice 142  branch 240  tail (4644,262,3349)..(4620,256,3373)
+            /minecraft:tp @s ~-10 ~30 ~55   -> window at (4640,293,3406)   [NEW TERRITORY - off the route down]
+splice 143  branch 359  tail (4600,173,3212)..(4626,167,3231)
+            /minecraft:tp @s ~-115 ~78 ~-6   -> window at (4479,252,3206)   [NEW TERRITORY - off the route down]
+splice 144  branch 407  tail (4465,143,3441)..(4478,137,3471)
+            /minecraft:tp @s ~111 ~106 ~-121   -> window at (4572,250,3316)   [NEW TERRITORY - off the route down]
+splice 145  branch 482  tail (4495,102,3347)..(4521,96,3362)
+            /minecraft:tp @s ~82 ~120 ~49   -> window at (4579,223,3390)   [NEW TERRITORY - off the route down]
+splice 146  branch 540  tail (4502,90,3546)..(4523,84,3573)
+            /minecraft:tp @s ~-40 ~16 ~-78   -> window at (4459,107,3462)   [NEW TERRITORY - off the route down]
+splice 147  branch 492  tail (4474,88,3399)..(4448,82,3374)
+            /minecraft:tp @s ~-22 ~38 ~67   -> window at (4458,127,3468)   [NEW TERRITORY - off the route down]
+splice 148  branch 554  tail (4441,74,3349)..(4423,68,3325)
+            /minecraft:tp @s ~77 ~106 ~-11   -> window at (4524,181,3335)
+splice 149  branch 666  tail (4519,27,3517)..(4554,21,3522)
+            /minecraft:tp @s ~-74 ~54 ~-32   -> window at (4441,82,3481)   [NEW TERRITORY - off the route down]
+splice 150  branch 690  tail (4532,27,3485)..(4549,21,3454)
+            /minecraft:tp @s ~-3 ~74 ~115   -> window at (4523,102,3600)   [NEW TERRITORY - off the route down]
+splice 151  branch 702  tail (4479,22,3393)..(4502,16,3375)
+            /minecraft:tp @s ~-70 ~20 ~30   -> window at (4412,43,3429)   [NEW TERRITORY - off the route down]
+splice 152  branch 629  tail (4460,36,3404)..(4469,30,3438)
+            /minecraft:tp @s ~-63 ~34 ~-3   -> window at (4394,71,3395)   [NEW TERRITORY - off the route down]
+splice 153  branch 769  tail (4502,3,3392)..(4476,-3,3377)
+            /minecraft:tp @s ~98 ~60 ~-98   -> window at (4606,64,3294)   [NEW TERRITORY - off the route down]
+splice 154  branch 687  tail (4484,28,3316)..(4492,22,3285)
+            /minecraft:tp @s ~-77 ~82 ~25   -> window at (4405,111,3347)   [NEW TERRITORY - off the route down]
+splice 155  branch 836  tail (4559,37,3477)..(4577,31,3501)
+            /minecraft:tp @s ~-123 ~14 ~38   -> window at (4440,52,3511)   [NEW TERRITORY - off the route down]
+splice 156  branch 846  tail (4562,-4,3499)..(4586,-10,3481)
+            /minecraft:tp @s ~-45 ~48 ~61   -> window at (4520,45,3565)   [NEW TERRITORY - off the route down]
+splice 157  branch 806  tail (4561,5,3414)..(4543,-1,3391)
+            /minecraft:tp @s ~80 ~102 ~74   -> window at (4637,108,3493)   [NEW TERRITORY - off the route down]
+splice 158  branch 681  tail (4602,36,3298)..(4630,30,3281)
+            /minecraft:tp @s ~-79 ~128 ~-102   -> window at (4517,165,3198)   [NEW TERRITORY - off the route down]
+splice 159  branch 859  tail (4475,-5,3435)..(4505,-11,3439)
+            /minecraft:tp @s ~-85 ~18 ~-85   -> window at (4389,14,3344)   [NEW TERRITORY - off the route down]
+splice 160  branch 732  tail (4657,34,3465)..(4689,28,3473)
+            /minecraft:tp @s ~12 ~8 ~-17   -> window at (4663,43,3446)   [NEW TERRITORY - off the route down]
+splice 161  branch 931  tail (4710,-17,3218)..(4675,-23,3214)
+            /minecraft:tp @s ~104 ~20 ~54   -> window at (4819,4,3276)   [NEW TERRITORY - off the route down]
+splice 162  branch 934  tail (4607,-16,3284)..(4593,-22,3318)
+            /minecraft:tp @s ~-6 ~14 ~-74   -> window at (4607,-1,3207)   [NEW TERRITORY - off the route down]
+splice 163  branch 940  tail (4653,-12,3299)..(4626,-18,3321)
+            /minecraft:tp @s ~125 ~14 ~-66   -> window at (4784,3,3235)   [NEW TERRITORY - off the route down]
+splice 164  branch 825  tail (4664,-4,3245)..(4651,-10,3215)
+            /minecraft:tp @s ~107 ~46 ~30   -> window at (4773,43,3281)   [NEW TERRITORY - off the route down]
+splice 165  branch 970  tail (4734,-17,3227)..(4769,-23,3231)
+            /minecraft:tp @s ~-51 ~56 ~-4   -> window at (4677,40,3223)   [NEW TERRITORY - off the route down]
+splice 166  branch 911  tail (4780,-30,3492)..(4817,-36,3491)
+            /minecraft:tp @s ~-127 ~26 ~6   -> window at (4648,-3,3500)   [NEW TERRITORY - off the route down]
+splice 167  branch 1051  tail (4760,-31,3284)..(4727,-37,3271)
+            /minecraft:tp @s ~1 ~48 ~-59   -> window at (4761,18,3231)   [NEW TERRITORY - off the route down]
+splice 168  branch 947  tail (4611,-31,3411)..(4598,-37,3380)
+            /minecraft:tp @s ~-24 ~30 ~-84   -> window at (4592,0,3331)   [NEW TERRITORY - off the route down]
+splice 169  branch 645  tail (4656,25,3507)..(4624,19,3512)
+            /minecraft:tp @s ~-110 ~106 ~83   -> window at (4550,132,3585)   [NEW TERRITORY - off the route down]
+splice 170  branch 1009  tail (4684,-22,3323)..(4648,-28,3332)
+            /minecraft:tp @s ~98 ~16 ~38   -> window at (4787,-5,3358)   [NEW TERRITORY - off the route down]
+splice 171  branch 1107  tail (4653,17,3259)..(4662,11,3293)
+            /minecraft:tp @s ~-120 ~98 ~72   -> window at (4528,116,3327)   [NEW TERRITORY - off the route down]
+splice 172  branch 1111  tail (4724,-41,3394)..(4690,-47,3403)
+            /minecraft:tp @s ~79 ~42 ~-128   -> window at (4808,2,3270)
+splice 173  branch 1112  tail (4713,-40,3252)..(4728,-46,3226)
+            /minecraft:tp @s ~45 ~42 ~101   -> window at (4752,3,3351)   [NEW TERRITORY - off the route down]
+splice 174  branch 817  tail (4668,-7,3521)..(4694,-13,3541)
+            /minecraft:tp @s ~-113 ~108 ~-110   -> window at (4550,102,3407)   [NEW TERRITORY - off the route down]
+splice 175  branch 917  tail (4533,-12,3454)..(4533,-18,3421)
+            /minecraft:tp @s ~-120 ~82 ~40   -> window at (4419,71,3496)   [NEW TERRITORY - off the route down]
+splice 176  branch 1283  tail (4652,287,3317)..(4622,281,3334)
+            /minecraft:tp @s ~-72 ~10 ~-112   -> window at (4580,298,3199)   [NEW TERRITORY - off the route down]
+splice 177  branch 1284  tail (4482,261,3327)..(4456,255,3312)
+            /minecraft:tp @s ~96 ~26 ~39   -> window at (4582,288,3361)   [NEW TERRITORY - off the route down]
+splice 178  branch 1285  tail (4665,257,3585)..(4689,251,3567)
+            /minecraft:tp @s ~-11 ~24 ~-115   -> window at (4649,282,3466)   [NEW TERRITORY - off the route down]
+splice 179  branch 1336  tail (4629,244,3447)..(4594,238,3438)
+            /minecraft:tp @s ~127 ~52 ~94   -> window at (4762,297,3538)   [NEW TERRITORY - off the route down]
+splice 180  branch 1497  tail (4696,8,3210)..(4688,2,3181)
+            /minecraft:tp @s ~52 ~32 ~95   -> window at (4743,41,3307)   [NEW TERRITORY - off the route down]
+splice 181  branch 1543  tail (4588,21,3417)..(4616,15,3395)
+            /minecraft:tp @s ~-24 ~80 ~-16   -> window at (4558,102,3401)   [NEW TERRITORY - off the route down]
+splice 182  branch 1574  tail (4571,8,3586)..(4597,2,3605)
+            /minecraft:tp @s ~57 ~28 ~-125   -> window at (4630,37,3455)   [NEW TERRITORY - off the route down]
+splice 183  branch 1575  tail (4756,-21,3468)..(4792,-27,3473)
+            /minecraft:tp @s ~-102 ~38 ~97   -> window at (4647,18,3565)   [NEW TERRITORY - off the route down]
+splice 184  branch 1592  tail (4614,-46,3264)..(4582,-52,3245)
+            /minecraft:tp @s ~126 ~80 ~12   -> window at (4746,35,3278)   [NEW TERRITORY - off the route down]

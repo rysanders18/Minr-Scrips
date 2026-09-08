@@ -1,0 +1,295 @@
+# emitBlockSound(Player player, String blockType, Double px, Double py, Double pz, Boolean isFall)
+# Soundgroup dispatcher. Picks the vanilla 1.21 BlockSoundGroup for
+# blockType (the enum name returned by Block.getBlockType(), e.g.
+# "OAK_PLANKS") and issues a /playsound for either the step or fall
+# variant under the "player" source category — matching how a real
+# player's footstep gets routed through PlayerEntity#getSoundCategory.
+#
+# Vanilla math, replicated literally:
+#   step: vol = soundGroup.volume * 0.15F,  pitch = soundGroup.pitch
+#   fall: vol = soundGroup.volume * 0.5F,   pitch = soundGroup.pitch * 0.75F
+# Default group volume/pitch is 1.0F/1.0F. Three SoundGroup constants
+# deviate from default in 1.21.1:
+#   METAL                    : volume=1.0F, pitch=1.5F
+#   ANVIL (and BELL)         : volume=0.3F, pitch=1.0F
+#   WEEPING_VINES_LOW_PITCH  : volume=1.0F, pitch=0.5F
+# Anything else uses 1.0/1.0.
+#
+# /playsound volume implicitly drives audible range (range = 16*volume in
+# vanilla packet handling), so a 0.15-vol step is heard within ~2.4
+# blocks just like a real player's footstep. minVolume is omitted (=0)
+# so distant listeners hear nothing rather than a floor.
+#
+# Mapping strategy: exact-match first for blocks whose group is NOT
+# inferable from substring (slime, honey, anvil, lichen, …), then
+# contains()-based bucketing for the broad groups (wood / stone / metal /
+# wool / sand / glass / grass / gravel / etc.). Default fall-through is
+# STONE — matches getBlockBoxes' "unknown block = full unit cube" policy.
+# The block enum names from Block.getBlockType() are UPPER_SNAKE_CASE.
+#
+# Order matters: gilded_blackstone must come BEFORE the "contains
+# BLACKSTONE → stone" rule; moss_carpet before "contains CARPET → wool";
+# muddy_mangrove_roots before mangrove_roots; bamboo_wood (planks family)
+# before plain bamboo (the plant); cherry_sapling / cherry_leaves before
+# the generic CHERRY → cherry_wood bucket. Each branch sets groupName
+# plus (optionally) vol and pitch overrides, then falls through to the
+# single /playsound at the bottom.
+
+@using mannequin
+@fast
+
+@define String groupName = "stone"
+@define Double vol = 1.0D
+@define Double pitch = 1.0D
+
+# ---- Soundgroups with unique step/fall events that are not derivable
+# from any substring rule. Exact-match first. ----
+@if blockType == "SLIME_BLOCK"
+    @var groupName = "slime_block"
+@elseif blockType == "HONEY_BLOCK"
+    @var groupName = "honey_block"
+@elseif blockType == "POWDER_SNOW"
+    @var groupName = "powder_snow"
+@elseif blockType == "SNOW" || blockType == "SNOW_BLOCK"
+    @var groupName = "snow"
+@elseif blockType == "LADDER"
+    @var groupName = "ladder"
+@elseif blockType == "SCAFFOLDING"
+    @var groupName = "scaffolding"
+@elseif blockType == "DECORATED_POT"
+    @var groupName = "decorated_pot"
+@elseif blockType == "FROGSPAWN"
+    @var groupName = "frogspawn"
+@elseif blockType == "LODESTONE"
+    @var groupName = "lodestone"
+@elseif blockType == "BONE_BLOCK"
+    @var groupName = "bone_block"
+@elseif blockType == "NETHERITE_BLOCK"
+    @var groupName = "netherite_block"
+@elseif blockType == "GILDED_BLACKSTONE"
+    @var groupName = "gilded_blackstone"
+@elseif blockType == "CALCITE"
+    @var groupName = "calcite"
+@elseif blockType == "DRIPSTONE_BLOCK"
+    @var groupName = "dripstone_block"
+@elseif blockType == "POINTED_DRIPSTONE"
+    @var groupName = "pointed_dripstone"
+@elseif blockType == "AMETHYST_BLOCK"
+    @var groupName = "amethyst_block"
+@elseif blockType == "AMETHYST_CLUSTER" || blockType == "SMALL_AMETHYST_BUD" || blockType == "MEDIUM_AMETHYST_BUD" || blockType == "LARGE_AMETHYST_BUD"
+    @var groupName = "amethyst_cluster"
+@elseif blockType == "MUD"
+    @var groupName = "mud"
+@elseif blockType == "PACKED_MUD"
+    @var groupName = "packed_mud"
+@elseif blockType == "MUD_BRICKS" || blockType == "MUD_BRICK_SLAB" || blockType == "MUD_BRICK_STAIRS" || blockType == "MUD_BRICK_WALL"
+    @var groupName = "mud_bricks"
+@elseif blockType == "ROOTED_DIRT"
+    @var groupName = "rooted_dirt"
+@elseif blockType == "MUDDY_MANGROVE_ROOTS"
+    @var groupName = "muddy_mangrove_roots"
+@elseif blockType == "MANGROVE_ROOTS"
+    @var groupName = "mangrove_roots"
+@elseif blockType == "HANGING_ROOTS"
+    @var groupName = "hanging_roots"
+@elseif blockType == "AZALEA" || blockType == "POTTED_AZALEA_BUSH"
+    @var groupName = "azalea"
+@elseif blockType == "FLOWERING_AZALEA"
+    @var groupName = "flowering_azalea"
+@elseif blockType == "AZALEA_LEAVES" || blockType == "FLOWERING_AZALEA_LEAVES"
+    @var groupName = "azalea_leaves"
+@elseif blockType == "MOSS_BLOCK"
+    @var groupName = "moss"
+@elseif blockType == "MOSS_CARPET"
+    @var groupName = "moss_carpet"
+@elseif blockType == "PINK_PETALS"
+    @var groupName = "pink_petals"
+@elseif blockType == "BIG_DRIPLEAF" || blockType == "BIG_DRIPLEAF_STEM" || blockType == "LILY_PAD"
+    @var groupName = "big_dripleaf"
+@elseif blockType == "SMALL_DRIPLEAF"
+    @var groupName = "small_dripleaf"
+@elseif blockType == "TUFF"
+    @var groupName = "tuff"
+@elseif blockType == "TUFF_BRICKS" || blockType == "TUFF_BRICK_SLAB" || blockType == "TUFF_BRICK_STAIRS" || blockType == "TUFF_BRICK_WALL" || blockType == "CHISELED_TUFF_BRICKS"
+    @var groupName = "tuff_bricks"
+@elseif blockType == "POLISHED_TUFF" || blockType == "POLISHED_TUFF_SLAB" || blockType == "POLISHED_TUFF_STAIRS" || blockType == "POLISHED_TUFF_WALL"
+    @var groupName = "polished_tuff"
+@elseif blockType == "POLISHED_DEEPSLATE" || blockType == "POLISHED_DEEPSLATE_SLAB" || blockType == "POLISHED_DEEPSLATE_STAIRS" || blockType == "POLISHED_DEEPSLATE_WALL"
+    @var groupName = "polished_deepslate"
+@elseif blockType == "DEEPSLATE_BRICKS" || blockType == "DEEPSLATE_BRICK_SLAB" || blockType == "DEEPSLATE_BRICK_STAIRS" || blockType == "DEEPSLATE_BRICK_WALL" || blockType == "CRACKED_DEEPSLATE_BRICKS" || blockType == "CHISELED_DEEPSLATE"
+    @var groupName = "deepslate_bricks"
+@elseif blockType == "DEEPSLATE_TILES" || blockType == "DEEPSLATE_TILE_SLAB" || blockType == "DEEPSLATE_TILE_STAIRS" || blockType == "DEEPSLATE_TILE_WALL" || blockType == "CRACKED_DEEPSLATE_TILES"
+    @var groupName = "deepslate_tiles"
+@elseif blockType == "DEEPSLATE" || blockType == "COBBLED_DEEPSLATE" || blockType == "COBBLED_DEEPSLATE_SLAB" || blockType == "COBBLED_DEEPSLATE_STAIRS" || blockType == "COBBLED_DEEPSLATE_WALL" || blockType == "INFESTED_DEEPSLATE"
+    @var groupName = "deepslate"
+@elseif blockType == "SCULK"
+    @var groupName = "sculk"
+@elseif blockType == "SCULK_VEIN"
+    @var groupName = "sculk_vein"
+@elseif blockType == "SCULK_SENSOR" || blockType == "CALIBRATED_SCULK_SENSOR"
+    @var groupName = "sculk_sensor"
+@elseif blockType == "SCULK_CATALYST"
+    @var groupName = "sculk_catalyst"
+@elseif blockType == "SCULK_SHRIEKER"
+    @var groupName = "sculk_shrieker"
+@elseif blockType == "BASALT" || blockType == "POLISHED_BASALT" || blockType == "SMOOTH_BASALT"
+    @var groupName = "basalt"
+@elseif blockType == "WARPED_NYLIUM" || blockType == "CRIMSON_NYLIUM"
+    @var groupName = "nylium"
+@elseif blockType == "NETHER_WART_BLOCK" || blockType == "WARPED_WART_BLOCK"
+    @var groupName = "nether_wart"
+@elseif blockType == "NETHER_GOLD_ORE"
+    @var groupName = "nether_gold_ore"
+@elseif blockType == "NETHER_QUARTZ_ORE"
+    @var groupName = "nether_ore"
+@elseif blockType == "NETHER_BRICKS" || blockType == "RED_NETHER_BRICKS" || blockType == "CHISELED_NETHER_BRICKS" || blockType == "CRACKED_NETHER_BRICKS" || blockType == "NETHER_BRICK_FENCE" || blockType == "NETHER_BRICK_SLAB" || blockType == "NETHER_BRICK_STAIRS" || blockType == "NETHER_BRICK_WALL" || blockType == "RED_NETHER_BRICK_SLAB" || blockType == "RED_NETHER_BRICK_STAIRS" || blockType == "RED_NETHER_BRICK_WALL"
+    @var groupName = "nether_bricks"
+@elseif blockType == "NETHER_SPROUTS"
+    @var groupName = "nether_sprouts"
+
+# ---- Anvils: BlockSoundGroup.ANVIL deviates from the default 1.0/1.0
+# with vol=0.3F (quieter "clank" rather than a thud). Bell uses ANVIL
+# soundgroup too. ----
+@elseif blockType == "ANVIL" || blockType == "CHIPPED_ANVIL" || blockType == "DAMAGED_ANVIL" || blockType == "BELL"
+    @var groupName = "anvil"
+    @var vol = 0.3D
+
+# ---- Metal: BlockSoundGroup.METAL deviates with pitch=1.5F. Covers
+# iron/gold blocks and the iron-family fixtures (doors, trapdoors, bars,
+# chain, lantern). Copper has its own group and is handled below. ----
+@elseif blockType == "IRON_BLOCK" || blockType == "GOLD_BLOCK" || blockType == "RAW_IRON_BLOCK" || blockType == "RAW_GOLD_BLOCK" || blockType == "IRON_DOOR" || blockType == "IRON_TRAPDOOR" || blockType == "IRON_BARS" || blockType == "CHAIN" || blockType == "LANTERN" || blockType == "SOUL_LANTERN" || blockType == "HEAVY_WEIGHTED_PRESSURE_PLATE" || blockType == "LIGHT_WEIGHTED_PRESSURE_PLATE" || blockType == "HOPPER" || blockType == "CAULDRON" || blockType == "WATER_CAULDRON" || blockType == "LAVA_CAULDRON" || blockType == "POWDER_SNOW_CAULDRON"
+    @var groupName = "metal"
+    @var pitch = 1.5D
+
+# ---- Soul soil / soul sand: own groups with their own .step/.fall IDs. ----
+@elseif blockType == "SOUL_SAND"
+    @var groupName = "soul_sand"
+@elseif blockType == "SOUL_SOIL"
+    @var groupName = "soul_soil"
+
+# ---- Coral (live): CORAL_BLOCK soundgroup. Dead coral uses STONE
+# (fall-through default). Live tube/brain/bubble/fire/horn coral blocks
+# share BlockSoundGroup.CORAL_BLOCK. ----
+@elseif blockType == "TUBE_CORAL_BLOCK" || blockType == "BRAIN_CORAL_BLOCK" || blockType == "BUBBLE_CORAL_BLOCK" || blockType == "FIRE_CORAL_BLOCK" || blockType == "HORN_CORAL_BLOCK"
+    @var groupName = "coral_block"
+
+# ---- Wet things: WET_GRASS group covers kelp, seagrass, wet sponge. ----
+@elseif blockType == "KELP_BLOCK" || blockType == "KELP" || blockType == "KELP_PLANT" || blockType == "SEAGRASS" || blockType == "TALL_SEAGRASS" || blockType == "WET_SPONGE"
+    @var groupName = "wet_grass"
+
+# ---- Glow lichen + vines: VINE group (block.vine.step). Weeping vines
+# specifically uses WEEPING_VINES_LOW_PITCH (same id family but pitch
+# 0.5F). Cave vines route through the vine group too. ----
+@elseif blockType == "WEEPING_VINES" || blockType == "WEEPING_VINES_PLANT"
+    @var groupName = "weeping_vines"
+    @var pitch = 0.5D
+@elseif blockType == "VINE" || blockType == "GLOW_LICHEN" || blockType == "TWISTING_VINES" || blockType == "TWISTING_VINES_PLANT" || blockType == "CAVE_VINES" || blockType == "CAVE_VINES_PLANT"
+    @var groupName = "vine"
+
+# ---- Bamboo plant (BAMBOO group): the cane itself and its sapling.
+# BAMBOO_WOOD (planks family) is the contains() rule below. ----
+@elseif blockType == "BAMBOO" || blockType == "BAMBOO_SAPLING" || blockType == "POTTED_BAMBOO"
+    @var groupName = "bamboo"
+
+# ---- Cherry leaves / sapling: their own groups, not CHERRY_WOOD. ----
+@elseif blockType == "CHERRY_LEAVES"
+    @var groupName = "cherry_leaves"
+@elseif blockType == "CHERRY_SAPLING" || blockType == "POTTED_CHERRY_SAPLING"
+    @var groupName = "cherry_sapling"
+
+# ---- Substring buckets. Order is important: more-specific prefixes
+# first, because String.contains() is greedy. ----
+
+# Bamboo planks/slab/stairs/fence/etc. (BAMBOO_WOOD group). The plain
+# BAMBOO plant was caught above, so any remaining match here is the
+# wood-product family.
+@elseif blockType.contains("BAMBOO_PLANKS") || blockType.contains("BAMBOO_SLAB") || blockType.contains("BAMBOO_STAIRS") || blockType.contains("BAMBOO_FENCE") || blockType.contains("BAMBOO_DOOR") || blockType.contains("BAMBOO_TRAPDOOR") || blockType.contains("BAMBOO_BUTTON") || blockType.contains("BAMBOO_PRESSURE_PLATE") || blockType.contains("BAMBOO_SIGN") || blockType.contains("BAMBOO_WALL_SIGN") || blockType.contains("BAMBOO_HANGING_SIGN") || blockType.contains("BAMBOO_BLOCK") || blockType.contains("BAMBOO_MOSAIC") || blockType.contains("CHISELED_BAMBOO") || blockType.contains("STRIPPED_BAMBOO")
+    @var groupName = "bamboo_wood"
+
+# Cherry wood family (CHERRY_WOOD group). cherry_leaves/sapling were
+# caught above so anything left here is wood-product.
+@elseif blockType.contains("CHERRY")
+    @var groupName = "cherry_wood"
+
+# Crimson / Warped wood family (NETHER_WOOD group). All crimson_* and
+# warped_* planks/log/stem/door/trapdoor/etc. share this group.
+@elseif blockType.contains("CRIMSON") || blockType.contains("WARPED")
+    @var groupName = "nether_wood"
+
+# Copper family (COPPER group). Includes every oxidation level (regular,
+# exposed, weathered, oxidized) and waxed variants. COPPER_BULB and
+# COPPER_GRATE have their own groups in 1.20.5+ — bucketing them with
+# COPPER is a deliberate simplification (the audible difference is small
+# and these are rare in the worlds the mannequin walks).
+@elseif blockType.contains("COPPER")
+    @var groupName = "copper"
+
+# Sand family: regular sand + red sand + suspicious sand. Gravel is
+# bucketed with gravel below.
+@elseif blockType == "SAND" || blockType == "RED_SAND" || blockType == "SUSPICIOUS_SAND" || blockType.contains("CONCRETE_POWDER")
+    @var groupName = "sand"
+
+# Gravel family + dirt-like things that vanilla puts under GRAVEL
+# soundgroup (DIRT, COARSE_DIRT, PODZOL, SUSPICIOUS_GRAVEL). MUD is its
+# own group and was caught above.
+@elseif blockType == "GRAVEL" || blockType == "SUSPICIOUS_GRAVEL" || blockType == "DIRT" || blockType == "COARSE_DIRT" || blockType == "PODZOL"
+    @var groupName = "gravel"
+
+# Wool carpets (WOOL group). MOSS_CARPET was caught above and routed to
+# its own group.
+@elseif blockType.contains("CARPET")
+    @var groupName = "wool"
+
+# Wool blocks proper.
+@elseif blockType.contains("WOOL")
+    @var groupName = "wool"
+
+# Glass blocks + panes + ice variants + lit decorative blocks that share
+# the GLASS soundgroup (glowstone, sea_lantern, redstone_lamp, beacon,
+# conduit, tinted_glass).
+@elseif blockType.contains("GLASS") || blockType == "ICE" || blockType == "PACKED_ICE" || blockType == "BLUE_ICE" || blockType == "FROSTED_ICE" || blockType == "GLOWSTONE" || blockType == "SEA_LANTERN" || blockType == "REDSTONE_LAMP" || blockType == "BEACON" || blockType == "CONDUIT"
+    @var groupName = "glass"
+
+# Grass-family surfaces: grass_block, dirt_path, mycelium, hay_block,
+# leaves (non-azalea, non-cherry), saplings, small flora, sugar_cane,
+# sweet_berry_bush (routed to GRASS step per spec), all generic crops.
+@elseif blockType == "GRASS_BLOCK" || blockType == "HAY_BLOCK" || blockType == "DIRT_PATH" || blockType == "MYCELIUM" || blockType == "DRIED_KELP_BLOCK" || blockType == "SUGAR_CANE" || blockType == "SWEET_BERRY_BUSH" || blockType == "FERN" || blockType == "LARGE_FERN" || blockType == "DEAD_BUSH" || blockType == "WHEAT" || blockType == "BEETROOTS" || blockType == "CARROTS" || blockType == "POTATOES" || blockType == "TORCHFLOWER_CROP" || blockType == "PITCHER_CROP" || blockType.contains("_SAPLING") || blockType.contains("_LEAVES")
+    @var groupName = "grass"
+
+# Wood family — the broadest bucket. Prefix-matched so it catches every
+# derivative shape (slab, stairs, fence, fence_gate, door, trapdoor,
+# pressure_plate, button, sign, wall_sign, hanging_sign, bed, log,
+# stripped_log, planks, wood, hyphae, etc.) for each wood type. The
+# prefix "OAK_" alone catches DARK_OAK_* and PALE_OAK_* too because
+# both contain that substring at a non-zero index. STRIPPED_<type>_* is
+# similarly subsumed.
+#
+# Bamboo / cherry / crimson / warped wood families have their own
+# soundgroups and were peeled off above. _LEAVES and _SAPLING were
+# routed to the GRASS bucket above. ENDER_CHEST is NOT here — it uses
+# STONE soundgroup despite being chest-shaped, so it falls through to
+# the default. The gourd/mushroom blocks (PUMPKIN/MELON/MUSHROOM_BLOCK)
+# all use BlockSoundGroup.WOOD in 1.21.1.
+@elseif blockType.contains("OAK_") || blockType.contains("SPRUCE_") || blockType.contains("BIRCH_") || blockType.contains("JUNGLE_") || blockType.contains("ACACIA_") || blockType.contains("MANGROVE_") || blockType.contains("MUSHROOM_BLOCK") || blockType.contains("_BED") || blockType == "MUSHROOM_STEM" || blockType == "BOOKSHELF" || blockType == "CHISELED_BOOKSHELF" || blockType == "CRAFTING_TABLE" || blockType == "CHEST" || blockType == "TRAPPED_CHEST" || blockType == "BARREL" || blockType == "JUKEBOX" || blockType == "NOTE_BLOCK" || blockType == "CAMPFIRE" || blockType == "SOUL_CAMPFIRE" || blockType == "COMPOSTER" || blockType == "BEEHIVE" || blockType == "BEE_NEST" || blockType == "CARTOGRAPHY_TABLE" || blockType == "FLETCHING_TABLE" || blockType == "LOOM" || blockType == "LECTERN" || blockType == "DAYLIGHT_DETECTOR" || blockType == "PUMPKIN" || blockType == "CARVED_PUMPKIN" || blockType == "JACK_O_LANTERN" || blockType == "MELON"
+    @var groupName = "wood"
+
+# Everything else (most stone variants, brick variants, concrete, all
+# terracotta and glazed_terracotta, sandstone and red_sandstone families,
+# quartz family, prismarine, end_stone, blackstone, polished_blackstone,
+# nether_quartz things not caught above, ...) falls through to STONE.
+@fi
+
+# ---- Resolve sound ID + final vol/pitch from step/fall variant ----
+@define String suffix = "step"
+@define Double finalVol = vol * 0.15D
+@define Double finalPitch = pitch
+@if isFall
+    @var suffix = "fall"
+    @var finalVol = vol * 0.3D
+    @var finalPitch = pitch * 0.75D
+@fi
+
+# /playsound under "player" source so the listener's "Players" volume
+# slider governs it — the same category PlayerEntity#getSoundCategory()
+# returns for a real player's footstep. minVolume defaults to 0.
+@bypass /execute in minecraft:theta run playsound minecraft:block.{{groupName}}.{{suffix}} player @a {{px}} {{py}} {{pz}} {{finalVol}} {{finalPitch}}

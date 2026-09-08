@@ -17,6 +17,5 @@
 @player &#d4d4d4  the messages it gives you into chat here.
 @player
 @bypass tellraw {{player}} ["",{"text":"  ","color":"#d4d4d4"},{"text":"rysanders18.github.io/rymaphub","color":"#936be5","bold":true,"underlined":true,"click_event":{"action":"open_url","url":"https://rysanders18.github.io/rymaphub/"},"hover_event":{"action":"show_text","value":[{"text":"Click to open in your browser","color":"#a1a1a1"}]}}]
-@bypass tellraw {{player}} ["",{"text":"  ","color":"#d4d4d4"},{"text":"[Copy link]","color":"#5c9c5c","bold":true,"click_event":{"action":"copy_to_clipboard","value":"https://rysanders18.github.io/rymaphub/"},"hover_event":{"action":"show_text","value":[{"text":"Copies the address to your clipboard","color":"#a1a1a1"}]}}]
 @player
 @bypass playsound minecraft:block.note_block.harp master {{player}} ~ ~ ~ 1 1.5

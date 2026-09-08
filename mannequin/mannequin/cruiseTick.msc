@@ -74,6 +74,14 @@
     # below; reset to 0 in cruiseTo/cruiseToFacing only on idle entry.
     @var cruiseTicks[player] = cruiseTicks[player] + 1
 
+    # Snapshot the pre-tick position. The post-collision deltas computed
+    # at the end of this loop (newPos - prevPos) feed emitStepSound and
+    # emitFallSound, mirroring how Entity#move computes its actualMovement
+    # from (newPos - oldPos) after collide() clamps the requested delta.
+    @define Double prevX = curX[player]
+    @define Double prevY = curY[player]
+    @define Double prevZ = curZ[player]
+
     @define Double dx = targetX[player] - curX[player]
     @define Double dz = targetZ[player] - curZ[player]
     @define Double distSq = dx * dx + dz * dz
@@ -306,6 +314,23 @@
     @if isCruising[player]
         @var mannequin::emitSprintParticle(player)
     @fi
+
+    # Step + fall sounds. Use POST-COLLISION motion deltas (newPos -
+    # prevPos), not the pre-collision velocity, because vanilla's
+    # Entity#move computes its moveDist contribution from the clamped
+    # actualMovement after collide() has zeroed velocity on collision
+    # axes. Wall-slide ticks therefore correctly contribute their
+    # actual horizontal slide distance to moveDist (not the requested
+    # velocity that got clamped to zero). isOnGround is the post-
+    # collision flag set by collideY this tick — exactly vanilla's
+    # onGround read inside stepOnBlock. Cruise never sneaks, so
+    # isSneaking is hard-coded false; this matches a real sprinting
+    # player, whose getMoveEffect returns ALL → step sound plays.
+    @define Double stepDx = curX[player] - prevX
+    @define Double stepDy = curY[player] - prevY
+    @define Double stepDz = curZ[player] - prevZ
+    @var mannequin::emitStepSound(player, stepDx, stepDz, onGround[player], false)
+    @var mannequin::emitFallSound(player, stepDy, onGround[player])
 
     @var mannequin::teleportMannequin(player, curX[player], curZ[player])
 

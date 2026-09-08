@@ -1,0 +1,250 @@
+@namespace slimemaze
+
+# Seamless slime-bounce maze - generate_maze.py (seed 2)
+# 10 entries at y=300 merge into 3 tunnels (golden trunk + trunk ports); one line reaches y=-64
+# 5598 blocks, 178 forks, 1506 dead ends (184 spliced, 1 merged)
+# 1 braids (both fork choices win, rejoining lower) and 175 of 184 teleports land somewhere the player has not been
+# fork cadence: no stretch runs more than 20 bounces without a fork (max 29, avg 9.6, 30.6 blocks per fork)
+# Bounds: x 4389..4846, z 3154..3605
+#
+
+# Variables (hand-added state used by the HAND-TUNED hooks)
+
+    relative Int streak = 0
+    relative Long timeOfLastDarkness = 0L
+    relative Boolean darkness = false
+    relative String lastColor = "LIGHT_BLUE"
+    relative Block lastBlock
+    relative Int actionbarWord = 8
+
+# Action-bar colour wipe state - see slimemaze/actionbar.msc for what
+# each slot means and who writes it. The two colour defaults must match
+# the hexColor fallback in slimeblock.msc, so the first bounce of a run
+# paints solid instead of wiping green over green.
+    relative String barTarget = "#00FF00"
+    relative String barOld = "#00FF00"
+    relative String barText = ""
+    relative String barSound = "minecraft:block.moss.step"
+    relative Double barVol = 0.3D
+    relative Int barCut = 0
+    relative Int barGen = 0
+    relative Int barLive = 0
+
+# One BLOCK STEP sound per carpet colour, index-aligned with the
+# carpets/hexColors tables in slimeblock.msc - the maze answers a colour
+# change by sounding like the block that colour is made of:
+#    0 white       snow          8 light_gray  calcite
+#    1 orange      copper        9 cyan        sculk
+#    2 magenta     nether wart  10 purple      amethyst
+#    3 light_blue  powder snow  11 blue        glass
+#    4 yellow      sand         12 brown       mud
+#    5 lime        SLIME        13 green       moss
+#    6 pink        pink petals  14 red         netherrack
+#    7 gray        deepslate    15 black       basalt
+# Lime gets the slime block: the one colour that sounds like the thing
+# the player is actually riding.
+# Step sounds are short, dry and land cleanly at one per tick where a
+# sustained sound would smear across the wipe. Namespace constant, not a
+# local: read on colour changes only, but a local would re-allocate the
+# whole list every time.
+    String[] barSounds = String["minecraft:block.snow.step", "minecraft:block.copper.step", "minecraft:block.bone_block.step", "minecraft:block.powder_snow.step", "minecraft:block.trial_spawner.step", "minecraft:block.candle.step", "minecraft:block.pink_petals.step", "minecraft:block.sculk_catalyst.step", "minecraft:block.iron.step", "minecraft:block.nether_wood.step", "minecraft:block.amethyst_block.step", "minecraft:block.glass.step", "minecraft:block.iron.step", "minecraft:block.copper_bulb.step", "minecraft:block.netherrack.step", "minecraft:block.basalt.step"]
+
+# Per-colour playsound VOLUME, index-aligned with barSounds (same legend
+# as above) - vanilla step sounds are mastered wildly differently, so
+# one global volume leaves some barking and some inaudible. 0.3D was the
+# old global value; raise the quiet ones / lower the loud ones here.
+    Double[] barVolumes = Double[0.30D, 0.21D, 0.15D, 0.13D, 0.14D, 0.3D, 0.16D, 0.20D, 0.18D, 0.09D, 0.20D, 0.20D, 0.20D, 0.18D, 0.15D, 0.20D]
+
+    String[] actionbarWords = String["Voices", "Nightmares", "Mistakes", "Failures", "Horrors", "Regrets", "Wounds", "Doubts", "Choices", "Walls", "Sessions", "Faces", "Screams", "Secrets", "Lies", "Memories", "Losses", "Terrors"]
+
+
+
+#
+# Build:  /function execute slimemaze::build1(Player("You"))
+# Splice: /function execute slimemaze::splice(Player("You"), Int(n), Block(x, y, z, "Epsilon"), Block(...), Block(...))
+# Fall:   /function execute slimemaze::fall(Player("You"))
+# Grounds: /function execute slimemaze::grounds1(Player("You"))
+# Build parts chain automatically; the build chain runs
+# grounds1 (splice trigger blankets) then slimegrounds1 (per-
+# Importing the namespace wires NOTHING (__init__ is
+# documentation only - every trigger import is too many lines) -
+# after a re-import, run grounds1 once to re-wire everything.
+
+    actionbar(Player player, String hexColor, Int colorIdx)
+    actionbarWipe(Player player)
+    build1(Player player)
+    build2(Player player)
+    slimegrounds1(Player player)
+    slimegrounds2(Player player)
+    slimegrounds3(Player player)
+    slimegrounds4(Player player)
+    slimegrounds5(Player player)
+    slimegrounds6(Player player)
+    slimegrounds7(Player player)
+    slimegrounds8(Player player)
+    slimegrounds9(Player player)
+    slimegrounds10(Player player)
+    slimegrounds11(Player player)
+    slimegrounds12(Player player)
+    slimegrounds13(Player player)
+    slimegrounds14(Player player)
+    slimegrounds15(Player player)
+    slimegrounds16(Player player)
+    slimegrounds17(Player player)
+    slimegrounds18(Player player)
+    slimegrounds19(Player player)
+    slimegrounds20(Player player)
+    slimegrounds21(Player player)
+    slimegrounds22(Player player)
+    slimegrounds23(Player player)
+    slimegrounds24(Player player)
+    slimegrounds25(Player player)
+    slimegrounds26(Player player)
+    slimegrounds27(Player player)
+    slimegrounds28(Player player)
+    slimegrounds29(Player player)
+    slimegrounds30(Player player)
+    slimegrounds31(Player player)
+    slimegrounds32(Player player)
+    slimegrounds33(Player player)
+    slimegrounds34(Player player)
+    slimegrounds35(Player player)
+    slimegrounds36(Player player)
+    slimegrounds37(Player player)
+    slimegrounds38(Player player)
+    slimegrounds39(Player player)
+    slimegrounds40(Player player)
+    slimegrounds41(Player player)
+    slimegrounds42(Player player)
+    slimegrounds43(Player player)
+    slimegrounds44(Player player)
+    slimegrounds45(Player player)
+    slimegrounds46(Player player)
+    slimegrounds47(Player player)
+    slimegrounds48(Player player)
+    slimegrounds49(Player player)
+    slimegrounds50(Player player)
+    splice(Player player, Int n, Block trigger, Block next1, Block next2)
+    scaryTitle(Player player)
+    text(Int textNumber, Player player)
+    spliceFx(Player player)
+    fallFx1(Player player)
+    fallFx2(Player player)
+    slimeblock(Player player, Block slimeblock, Block[] future)
+    slimeblockFx(Block block, Player player)
+    fall(Player player)
+    attributeReset(Player player)
+# AUTO fallgrounds (make_fallgrounds.py)
+    fallgrounds1(Player player)
+    fallgrounds2(Player player)
+    fallgrounds3(Player player)
+    fallgrounds4(Player player)
+    fallgrounds5(Player player)
+    fallgrounds6(Player player)
+    fallgrounds7(Player player)
+    fallgrounds8(Player player)
+    fallgrounds9(Player player)
+    fallgrounds10(Player player)
+    fallgrounds11(Player player)
+    fallgrounds12(Player player)
+    fallgrounds13(Player player)
+    fallgrounds14(Player player)
+    fallgrounds15(Player player)
+    fallgrounds16(Player player)
+    fallgrounds17(Player player)
+    fallgrounds18(Player player)
+    fallgrounds19(Player player)
+    fallgrounds20(Player player)
+    fallgrounds21(Player player)
+    fallgrounds22(Player player)
+    fallgrounds23(Player player)
+    fallgrounds24(Player player)
+    fallgrounds25(Player player)
+    fallgrounds26(Player player)
+    fallgrounds27(Player player)
+    fallgrounds28(Player player)
+    fallgrounds29(Player player)
+    fallgrounds30(Player player)
+    fallgrounds31(Player player)
+    fallgrounds32(Player player)
+    fallgrounds33(Player player)
+    fallgrounds34(Player player)
+    fallgrounds35(Player player)
+    fallgrounds36(Player player)
+    fallgrounds37(Player player)
+    fallgrounds38(Player player)
+    fallgrounds39(Player player)
+    fallgrounds40(Player player)
+    fallgrounds41(Player player)
+    fallgrounds42(Player player)
+    fallgrounds43(Player player)
+    fallgrounds44(Player player)
+    fallgrounds45(Player player)
+    fallgrounds46(Player player)
+    fallgrounds47(Player player)
+    fallgrounds48(Player player)
+    fallgrounds49(Player player)
+    fallgrounds50(Player player)
+    fallgrounds51(Player player)
+    fallgrounds52(Player player)
+    fallgrounds53(Player player)
+    fallgrounds54(Player player)
+    fallgrounds55(Player player)
+    fallgrounds56(Player player)
+    fallgrounds57(Player player)
+    fallgrounds58(Player player)
+    fallgrounds59(Player player)
+    fallgrounds60(Player player)
+    fallgrounds61(Player player)
+    fallgrounds62(Player player)
+    fallgrounds63(Player player)
+    fallgrounds64(Player player)
+    fallgrounds65(Player player)
+    fallgrounds66(Player player)
+    fallgrounds67(Player player)
+    fallgrounds68(Player player)
+    fallgrounds69(Player player)
+    fallgrounds70(Player player)
+    fallgrounds71(Player player)
+    fallgrounds72(Player player)
+    fallgrounds73(Player player)
+    fallgrounds74(Player player)
+    fallgrounds75(Player player)
+    fallgrounds76(Player player)
+    fallgrounds77(Player player)
+    fallgrounds78(Player player)
+    fallgrounds79(Player player)
+    fallgrounds80(Player player)
+    fallgrounds81(Player player)
+    fallgrounds82(Player player)
+    fallgrounds83(Player player)
+    fallgrounds84(Player player)
+    fallgrounds85(Player player)
+    fallgrounds86(Player player)
+    fallgrounds87(Player player)
+    fallgrounds88(Player player)
+    fallgrounds89(Player player)
+    fallgrounds90(Player player)
+    fallgrounds91(Player player)
+    fallgrounds92(Player player)
+    fallgrounds93(Player player)
+    fallgrounds94(Player player)
+    fallgrounds95(Player player)
+    fallgrounds96(Player player)
+    fallgrounds97(Player player)
+    fallgrounds98(Player player)
+    fallgrounds99(Player player)
+    fallgrounds100(Player player)
+    fallgrounds101(Player player)
+    fallgrounds102(Player player)
+    fallgrounds103(Player player)
+    fallgrounds104(Player player)
+    fallgrounds105(Player player)
+    fallgrounds106(Player player)
+    fallgrounds107(Player player)
+    fallgrounds108(Player player)
+    fallgrounds109(Player player)
+    fallgrounds110(Player player)
+    fallgrounds111(Player player)
+# END AUTO fallgrounds
+@endnamespace

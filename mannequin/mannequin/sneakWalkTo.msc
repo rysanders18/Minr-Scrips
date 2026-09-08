@@ -1,0 +1,234 @@
+# sneakWalkTo(Player player, Float tx, Float tz)
+# Slow crouched approach from current position to (tx, tz). Designed for
+# the "final approach" between a cruiseToFacing coast and a prerecording
+# playback: cruiseToFacing's coast can settle ~1 b away from the requested
+# target, and the prerecording's first /tp would visibly snap that gap.
+# This walks the residual in naturally first, then uncrouches on arrival
+# so the prerecording starts from a tight match.
+#
+# Final pose: yaw=0.0, pitch=72.64 (facing south +Z, head tilted down
+# at the board). These are hardcoded because this function is currently
+# only called by engineMove which always wants the same landing pose.
+# yaw/pitch are eased from (yaw0, pitch0) to that target across the walk
+# using progress² so most of the "mouse movement" happens in the second
+# half — reads as a player who locks the camera back onto the board only
+# once they're close enough to commit, rather than panning the whole way
+# in. progress = 1 - (curDist² / initialDist²) clamped to [0, 1].
+#
+# Constraints (the "looks like a player adjusting, not a robot panning"
+# rules from the user spec):
+#   - Heading is locked to one of 8 vanilla key-direction vectors (W,
+#     W+A, A, S+A, S, S+D, D, W+D in player-local frame). Recomputed
+#     EACH TICK from the current displacement to target, so the keys
+#     can flip mid-walk (e.g. "holding S" turns into "S+A" as the
+#     mannequin closes the sideways gap last).
+#   - Walk yaw is allowed to deviate from the eased base yaw by at
+#     most ±5°. Within that budget we pick the correction that aligns
+#     the chosen 8-direction heading as closely as possible with the
+#     true (current → target) direction.
+#   - Walk speed is fixed at ~0.065 b/t (vanilla sneak-walk terminal),
+#     so the approach LOOKS like sneak-walking even though we aren't
+#     running real physics. The chess room floor is flat — no need to
+#     route through collideY/collideX/collideZ.
+#
+# Pose: starts STANDING (not crouching). Flips to "crouching" at a
+# random progress in [0, 0.5] — i.e. anywhere from "instantly" to "the
+# halfway point". Flips back to "standing" on exit, including all
+# early-exit paths so we never leave the mannequin frozen mid-crouch.
+#
+# Termination: when distSq <= speed² the next step would overshoot,
+# so we snap curX/curZ to the exact target, snap yaw/pitch to the
+# landing target (0.0, 72.64), teleport, uncrouch, and return. The
+# 200-tick budget is a safety net — for a ~1 b residual at 0.065 b/t
+# the walk finishes in ~15-25 ticks.
+#
+# Defensive on entry: bumps tickGen and clears isCruising/isCoasting
+# so a cruiseTick still spinning from a prior call can't fight our
+# per-tick teleports. cruiseToFacing should already have settled by
+# the time engineMove calls us, but cheap insurance.
+
+@using mannequin
+@fast
+
+@if !isSpawned[player]
+    @return
+@fi
+
+# Make sure no cruiseTick from earlier is still running and writing to
+# the same per-player state. See file header.
+@var isCruising[player] = false
+@var isCoasting[player] = false
+@var tickGen[player] = tickGen[player] + 1
+
+@define Double targetX_d = Double(tx)
+@define Double targetZ_d = Double(tz)
+@define Double yaw0 = curYawDeg[player]
+@define Double pitch0 = curPitchDeg[player]
+@define Double yawTarget = 0D
+@define Double pitchTarget = 72.64D
+
+# Short-way wrap of the yaw delta so the ease doesn't take the long way
+# round when yaw0 sits in the third quadrant (e.g. -130° → 0° goes +130,
+# not -230). Same wrap convention as cruiseTick.
+@define Double yawDelta = yawTarget - yaw0
+@var yawDelta = ((yawDelta + 180D) % 360D) - 180D
+@if yawDelta <= -180D
+    @var yawDelta = yawDelta + 360D
+@fi
+@define Double pitchDelta = pitchTarget - pitch0
+
+# 0.065 b/t = terminal sprint-less sneak-walk speed. Slow enough that
+# 1 b takes ~15 ticks (a deliberate-looking shuffle) rather than a dash.
+@define Double speed = 0.065D
+
+# Initial distance² for the progress curve. Guard against starting on top
+# of the target — if dist² < 0.0045 the arrival check exits on tick 0
+# anyway, but we still need a non-zero denominator for the progress math
+# in case of weird coincident-coord rounding.
+@define Double dx0 = targetX_d - curX[player]
+@define Double dz0 = targetZ_d - curZ[player]
+@define Double initialDistSq = dx0 * dx0 + dz0 * dz0
+@if initialDistSq < 0.0001D
+    @var initialDistSq = 0.0001D
+@fi
+
+# Crouch-start progress: somewhere in [0, 0.5]. Tracked with a flag so the
+# /data merge command only fires once (idempotent, but saves a bypass per
+# tick after the flip).
+@define Double crouchProgress = math::random(0D, 0.5D)
+@define Boolean crouched = false
+
+@for Int i in list::range(0, 200)
+    @if !player.isOnline()
+        @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}
+        @return
+    @fi
+    @if !isSpawned[player]
+        @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}
+        @return
+    @fi
+
+    @define Double dx = targetX_d - curX[player]
+    @define Double dz = targetZ_d - curZ[player]
+    @define Double distSq = dx * dx + dz * dz
+
+    # Arrival / overshoot guard. speed² = 0.004225; rounding up to 0.0045D
+    # gives a 0.067 b tolerance so we exit on the LAST useful step rather
+    # than taking one more and overshooting. Snap exactly to target on the
+    # way out — including the landing yaw/pitch — so the prerecording's
+    # first frame has nothing to interpolate.
+    @if distSq <= 0.0045D
+        @var curX[player] = targetX_d
+        @var curZ[player] = targetZ_d
+        @var curYawDeg[player] = yawTarget
+        @var curPitchDeg[player] = pitchTarget
+        @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+        @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}
+        @return
+    @fi
+
+    # Progress fraction (0 at start, 1 at arrival) using distance², which
+    # is monotonic in dist so still works as a 0→1 ramp. progress² puts
+    # most of the yaw/pitch swing in the second half of the walk.
+    @define Double progress = 1D - (distSq / initialDistSq)
+    @if progress < 0D
+        @var progress = 0D
+    @elseif progress > 1D
+        @var progress = 1D
+    @fi
+    @define Double eased = progress * progress
+
+    # Flip to crouching once we cross the random threshold in the first
+    # half. After that, the boolean keeps us from re-issuing the command.
+    @if !crouched && progress >= crouchProgress
+        @bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"crouching"}
+        @var crouched = true
+    @fi
+
+    @define Double baseYaw = yaw0 + yawDelta * eased
+    @define Double basePitch = pitch0 + pitchDelta * eased
+
+    # Desired world yaw to face target = atan2(-dx, dz). MSC only has
+    # single-arg math::arctan so we do quadrant correction manually —
+    # same recipe used in cruiseTick.msc and Untitled-1.msc.
+    @define Double numer = -dx
+    @define Double phi = 0D
+    @if dz > 0D
+        @var phi = math::arctan(numer / dz)
+    @elseif dz < 0D
+        @if numer >= 0D
+            @var phi = math::arctan(numer / dz) + 180D
+        @else
+            @var phi = math::arctan(numer / dz) - 180D
+        @fi
+    @else
+        @if numer > 0D
+            @var phi = 90D
+        @elseif numer < 0D
+            @var phi = -90D
+        @else
+            @var phi = baseYaw
+        @fi
+    @fi
+
+    # delta = phi - baseYaw wrapped to (-180, 180]. Same wrap convention
+    # cruiseTick uses for yaw differences.
+    @define Double delta = phi - baseYaw
+    @var delta = ((delta + 180D) % 360D) - 180D
+    @if delta <= -180D
+        @var delta = delta + 360D
+    @fi
+
+    # Snap delta to nearest 45° → psi ∈ {-135, -90, -45, 0, 45, 90, 135, 180}.
+    # psi names the 8-direction in player-local frame: 0=W, 90=D, ±180=S,
+    # -90=A, etc. MSC has math::floor but no math::round; round-half-up
+    # via floor(x + 0.5) for x>=0 and -floor(-x + 0.5) for x<0.
+    @define Double kF = delta / 45D
+    @define Double psi = 0D
+    @if kF >= 0D
+        @var psi = math::floor(kF + 0.5D) * 45D
+    @else
+        @var psi = (0D - math::floor((0D - kF) + 0.5D)) * 45D
+    @fi
+    # ±180 are the same direction (S); normalize so the world-yaw math
+    # below doesn't accidentally produce a different-but-equivalent
+    # walk yaw across the wrap.
+    @if psi == -180D
+        @var psi = 180D
+    @fi
+
+    # Required yaw correction to make heading exactly match phi,
+    # clamped to ±5° per the spec. If |delta - psi| > 5 the walk will
+    # not aim directly at target; next tick's recompute will pick a
+    # different psi (the keys flip) and the new correction starts over.
+    @define Double yawCorr = delta - psi
+    @if yawCorr > 5D
+        @var yawCorr = 5D
+    @elseif yawCorr < -5D
+        @var yawCorr = -5D
+    @fi
+    @define Double walkYaw = baseYaw + yawCorr
+
+    # World-frame heading angle = (player yaw walkYaw) + (player-relative
+    # offset psi). Same heading-vector formula cruiseTick uses for forward
+    # motion: (-sin, cos) on a Minecraft yaw.
+    @define Double moveDirYaw = walkYaw + psi
+    @define Double hX = -math::sin(moveDirYaw)
+    @define Double hZ =  math::cos(moveDirYaw)
+
+    @var curX[player] = curX[player] + speed * hX
+    @var curZ[player] = curZ[player] + speed * hZ
+    @var curYawDeg[player] = walkYaw
+    @var curPitchDeg[player] = basePitch
+    @var mannequin::teleportMannequin(player, curX[player], curZ[player])
+
+    @delay 1
+@done
+
+# 200 tick budget exhausted (shouldn't happen — defensive). Snap to the
+# landing pose so the prerecording starts from the same place a normal
+# exit would have left us.
+@var curYawDeg[player] = yawTarget
+@var curPitchDeg[player] = pitchTarget
+@var mannequin::teleportMannequin(player, curX[player], curZ[player])
+@bypass /execute in minecraft:theta run data merge entity @e[tag=mannequin_rychess,limit=1] {pose:"standing"}

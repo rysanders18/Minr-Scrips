@@ -67,6 +67,34 @@
 # first sprint-jump (player takes a stride or two before bunny-hopping).
     relative Int cruiseTicks = 0
 
+# Vanilla 1.21 step-sound accumulator. Mirrors Entity#move (Yarn names
+# in parens): distanceTraveled (moveDist) += sqrt(dx²+dz²) * 0.6F every
+# tick after the position update. Y is clamped to 0 because the mannequin
+# doesn't climb ladders/vines (`canClimb` returns false). When moveDist
+# crosses nextStep AND the block below feet is non-air AND the mannequin
+# is grounded, a step sound fires and nextStep = floor(moveDist) + 1.
+# Sneak suppression matches PlayerEntity#getMoveEffect → NONE while
+# (onGround && sneaking): stepOnBlock still returns true so nextStep
+# still advances (no burst on sneak-end), but the actual sound emission
+# is muted. Default nextStep = 1 matches vanilla Entity#nextStep's
+# initial value — first stride fires when moveDist crosses 1.0F, i.e.
+# after ~1.67 blocks of horizontal motion (since each block of motion
+# contributes 0.6F to moveDist).
+    relative Float moveDist = 0.0F
+    relative Int nextStep = 1
+
+# Vanilla fall-distance tracker. Entity#updateFallStateInternal does:
+# while airborne and dy < 0, fallDistance += -dy. On the airborne→ground
+# edge, LivingEntity#handleFallDamage runs: i = ceil(fallDistance - 3),
+# and if i > 0 it plays entity.player.small_fall (i ≤ 4) or big_fall
+# (i > 4) at vol 1.0 / pitch 1.0, then the block's block.X.fall at
+# vol*0.5 / pitch*0.75 using the block at floor(y - 0.2F). Threshold
+# means flat-ground sprint-jumps (fallDistance ~1.25) emit no land sound,
+# matching vanilla. wasOnGround seeds true since spawnMannequin places
+# the entity on solid ground.
+    relative Float fallDistance = 0.0F
+    relative Boolean wasOnGround = true
+
 # Per-tick input recordings. recordInputs resets these arrays at session
 # start and appends one element per recorded tick. All NINE arrays share
 # the same length and index alignment — array[N] is the state of all
@@ -125,20 +153,21 @@
     Double gravity = 0.08D
     Double airDragVertical = 0.98D
 
-# Max yaw delta applied per tick (degrees). 15 = 300 deg/sec, snappy.
+# Max yaw delta applied per tick (degrees). 20 = 400 deg/sec, snappy.
 # Used by clampTurn during cruise yaw tracking AND as the upper bound on
-# the per-tick step in the coast-phase facing ease.
-    Double maxTurnPerTickDeg = 15D
+# the per-tick step in the coast-phase facing ease (and the engine-move
+# head-turn easeFaceTo).
+    Double maxTurnPerTickDeg = 20D
 
 # Coast facing ease: each tick, close this fraction of the remaining gap
 # to (targetYaw, targetPitch). 0.15 = 15% per tick → critically-damped
 # deceleration in the middle of a rotation. Bounded above by
 # maxTurnPerTickDeg (so big rotations don't spike) and below by
 # minFacingStepDeg (so the exponential tail doesn't drag). Three regimes:
-#   - Gap > 100°  → linear at maxTurnPerTickDeg (cap).
-#   - 13°…100°    → exponential, gap × facingEaseFactor.
-#   - Gap < 13°   → linear at minFacingStepDeg (floor).
-# 180° ≈ 24 ticks (~1.2 s); 90° ≈ 18; 30° ≈ 11. Without the floor the
+#   - Gap > 67°   → linear at maxTurnPerTickDeg (cap, 20).
+#   - 17°…67°     → exponential, gap × facingEaseFactor.
+#   - Gap < 17°   → linear at minFacingStepDeg (floor).
+# 180° ≈ 14 ticks (~0.7 s); 90° ≈ 9; 30° ≈ 6. Without the floor the
 # last ~30° tail alone takes ~20 ticks of barely-moving creep, which is
 # what made the rotation feel slow at the end.
     Double facingEaseFactor = 0.30D
@@ -207,6 +236,8 @@
     teleportMannequin(Player player, Double x, Double z)
     stopCruising(Player player)
     setFacing(Player player, Double yaw, Double pitch)
+    easeFaceTo(Player player, Double yaw, Double pitch)
+    sneakWalkTo(Player player, Float tx, Float tz)
     Double clampTurn(Double curYaw, Double targetYaw)
     Double easeStep(Double diff)
 
@@ -234,6 +265,34 @@
 # the block under the mannequin's feet is air, so mid sprint-jump arc
 # the dust correctly disappears without a separate ground check.
     emitSprintParticle(Player player)
+
+# Vanilla-equivalent step + fall sounds. Both motion paths (cruiseTick and
+# playPrerecording) call emitStepSound and emitFallSound once per tick
+# after updating curX/curY/curZ. emitBlockSound is the soundgroup
+# dispatcher used by both: it picks the BlockSoundGroup for the block at
+# the given coords, then emits /playsound with vanilla volume/pitch math
+# (step: vol*0.15 / pitch unchanged ; fall: vol*0.5 / pitch*0.75). Source
+# category is "player" to match how a real player's footsteps are routed
+# through PlayerEntity#getSoundCategory().
+#
+# emitStepSound runs the Entity#move accumulator: moveDist increments by
+# sqrt(dx²+dz²)*0.6F every tick (Y clamped to 0 — the mannequin doesn't
+# climb), and a step fires when moveDist > nextStep AND the block below
+# feet is non-air AND isOnGround. After firing nextStep = floor(moveDist)
+# + 1. Sneaking mutes the audible step but still advances nextStep, so
+# there's no flurry on sneak-end (mirrors PlayerEntity#getMoveEffect →
+# MoveEffect.NONE setting playSound=false in stepOnBlock).
+#
+# emitFallSound mirrors Entity#updateFallStateInternal + LivingEntity#
+# handleFallDamage: fallDistance += -dy each airborne tick while dy < 0;
+# on the airborne→grounded edge, if ceil(fallDistance - 3) > 0 play
+# entity.player.small_fall (i ≤ 4) or big_fall (i > 4) at vol 1.0 /
+# pitch 1.0, then the block-material fall sound. Resets fallDistance on
+# land. Flat-ground sprint-jumps (fallDistance ~1.25) emit no sound,
+# matching vanilla.
+    emitStepSound(Player player, Double dx, Double dz, Boolean isOnGround, Boolean isSneaking)
+    emitFallSound(Player player, Double dy, Boolean isOnGround)
+    emitBlockSound(Player player, String blockType, Double px, Double py, Double pz, Boolean isFall)
 
 # Input recording. recordInputs blocks the caller for durationTicks while
 # polling the player's live key state once per tick. recInputTrue is the

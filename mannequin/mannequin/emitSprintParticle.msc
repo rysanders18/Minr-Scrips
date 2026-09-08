@@ -43,4 +43,4 @@
 @define Double vx = -velX[player] * 4D
 @define Double vz = -velZ[player] * 4D
 
-@bypass /particle minecraft:block{block_state:{Name:"minecraft:{{blockName}}"}} {{px}} {{py}} {{pz}} {{vx}} 1.5 {{vz}} 1 0 force
+@bypass /execute in minecraft:theta run particle minecraft:block{block_state:{Name:"minecraft:{{blockName}}"}} {{px}} {{py}} {{pz}} {{vx}} 1.5 {{vz}} 1 0 force

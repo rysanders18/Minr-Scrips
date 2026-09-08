@@ -1,0 +1,25 @@
+# enterRegion
+
+@using rychess
+@fast
+
+@define Player playerInside
+
+@if player.getGameMode() == "ADVENTURE"
+    @if Region("rychessroomenter", "Theta").getPlayersInside().length() > 1
+        @var playerInside = Region("rychessroomenter", "Theta").getPlayersInside()[0]
+        @player &cThe chess room is currently occupied. Please wait before entering.
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        @var player.teleport(Position(-9129.50, 100.00, 9678.50, 90.0, 10.0, "Theta"))
+        @return
+    @fi
+    @if Region("rychessroom", "Theta").getPlayersInside().length() > 0
+        @var playerInside = Region("rychessroom", "Theta").getPlayersInside()[0]
+        @player &cThe chess room is currently occupied. Please wait for &l{{playerInside}} &cto finish before entering.
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        @var player.teleport(Position(-9129.50, 100.00, 9678.50, 90.0, 10.0, "Theta"))
+        @return
+    @fi
+
+    @var resetEverything(player)
+@fi

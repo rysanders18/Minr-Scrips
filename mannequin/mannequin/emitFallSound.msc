@@ -1,0 +1,114 @@
+# emitFallSound(Player player, Double dy, Boolean isOnGround)
+# Per-tick fall-distance accumulator + landing-edge detector. Mirrors
+# Entity#updateFallStateInternal (the fallDistance tracker) and
+# LivingEntity#handleFallDamage (the landing trigger) from 1.21.1.
+#
+# Accumulator (Entity#updateFallStateInternal, simplified for our case):
+#   if (onGround) reset on edge; else if (dy < 0) fallDistance -= dy
+# i.e. while airborne and dy is negative (downward motion), increase
+# fallDistance by the magnitude of that descent. Upward motion does
+# NOT decrease fallDistance — peaks of jumps preserve whatever was
+# accumulated. The reset happens on the airborne→grounded EDGE so we
+# can read the final value before zeroing it.
+#
+# Landing trigger (LivingEntity#handleFallDamage):
+#   int i = ceil(fallDistance - 3.0F)                  # damageMultiplier=1
+#   if (i > 0) {
+#       playSound(getFallSound(i), 1.0F, 1.0F)         # generic/player small/big
+#       playBlockFallSound()                            # block-material layer
+#   }
+#   getFallSound(int distance):
+#       return distance > 4 ? big : small
+#
+# So fallDistance must exceed 3.0 for ANY sound (i ≥ 1), and 7.0 for
+# big_fall (i ≥ 5). A flat-ground sprint-jump (peak ≈ 1.25 b above
+# ground) accumulates fallDistance ≈ 1.25 → i = -2 → no sound. Vanilla
+# match: real players sprint-jumping over flat terrain emit no land
+# sound.
+#
+# Player-specific sound IDs: PlayerEntity overrides getFallSounds() to
+# return {ENTITY_PLAYER_SMALL_FALL, ENTITY_PLAYER_BIG_FALL} instead of
+# the LivingEntity defaults (entity.generic.*). To be indistinguishable
+# from a real player we use the player variants. Vanilla volume 1.0F /
+# pitch 1.0F — these are NOT scaled like step sounds.
+#
+# Block fall layer (playBlockFallSound): uses the block at floor(y -
+# 0.2F) — the getLandingPos epsilon, NOT the step's 1e-5F — at vol *
+# 0.5F / pitch * 0.75F. Skipped if that block is air (entity died
+# mid-air or something weird). Delegated to emitBlockSound(..., isFall
+# = true), which does the soundgroup table walk and applies the *0.5 /
+# *0.75 scaling internally.
+#
+# Order of operations matters: read fallDistance BEFORE zeroing it,
+# update wasOnGround AFTER computing the edge. The airborne dy < 0
+# branch handles peak frames correctly because dy >= 0 at the apex
+# leaves fallDistance untouched (vanilla's same pattern).
+
+@using mannequin
+@fast
+
+# ---- Landing edge: airborne → grounded transition ----
+# This is THE moment vanilla calls fallOn → handleFallDamage. Read the
+# accumulated fallDistance, decide on sound, then reset.
+@if !wasOnGround[player] && isOnGround
+    # i = ceil(fallDistance - 3.0F), damageMultiplier = 1.0 for player.
+    @define Float fd = fallDistance[player]
+    @define Float damageF = fd - 3.0F
+    # ceil for non-negative values = -floor(-x). MSC has math::floor but
+    # not math::ceil, so compute manually. For damageF <= 0 the result
+    # would be <= 0 anyway and we'd skip — but write it out for clarity.
+    @define Int i = 0
+    @if damageF > 0.0F
+        @define Int floored = Int(math::floor(Double(damageF)))
+        @if Float(floored) == damageF
+            @var i = floored
+        @else
+            @var i = floored + 1
+        @fi
+    @fi
+
+    @if i > 1
+        # Pick small vs big based on the damage value (vanilla's "i", not
+        # the raw fall distance). i > 4 means fall > 7 b roughly.
+        @define String fallId = "minecraft:entity.player.small_fall"
+        @if i > 4
+            @var fallId = "minecraft:entity.player.big_fall"
+        @fi
+
+        # Generic fall sound at vol 1.0 / pitch 1.0, "player" source —
+        # PlayerEntity routes through SoundCategory.PLAYERS, so a real
+        # player's land sound plays under the same category. Range = 16
+        # blocks (vanilla packet semantics, range = 16 * volume).
+        @bypass /execute in minecraft:theta run playsound {{fallId}} player @a {{curX[player]}} {{curY[player]}} {{curZ[player]}} 0.5 1.0
+
+        # Block-material fall layer. Uses getLandingPos's 0.2F y-offset,
+        # NOT the step's 1e-5F — vanilla playBlockFallSound's exact
+        # constant. For an entity that just landed on a full block,
+        # floor(y - 0.2) = floor(y) - 1 since y is exactly at the block
+        # boundary post-collision; for landing on a slab at y=N.5, floor
+        # (N.5 - 0.2) = floor(N.3) = N → still the slab. emitBlockSound
+        # with isFall=true applies the *0.5 vol / *0.75 pitch scaling.
+        @define Int bx = Int(math::floor(curX[player]))
+        @define Int by = Int(math::floor(curY[player] - 0.2D))
+        @define Int bz = Int(math::floor(curZ[player]))
+        @define String blockType = Block(bx, by, bz, world[player]).getBlockType()
+        @if blockType != "AIR" && blockType != "CAVE_AIR" && blockType != "VOID_AIR"
+            @var mannequin::emitBlockSound(player, blockType, curX[player], curY[player], curZ[player], true)
+        @fi
+    @fi
+
+    # Reset for next airborne phase.
+    @var fallDistance[player] = 0.0F
+@elseif !isOnGround && dy < 0D
+    # Airborne and descending: vanilla "fallDistance -= dy". dy < 0 so
+    # -dy > 0, accumulating positive distance. Upward motion (dy >= 0)
+    # leaves fallDistance untouched — apex of jump preserves the rising
+    # contribution being 0 (correct since "fall" hasn't started yet).
+    @var fallDistance[player] = fallDistance[player] + Float(-dy)
+@fi
+
+# Update edge-detector for next tick. After the landing branch this is
+# !false && true → wasOnGround becomes true. After the airborne branch
+# wasOnGround stays false. After a still-grounded tick (no branch
+# taken) wasOnGround stays true.
+@var wasOnGround[player] = isOnGround
