@@ -1,0 +1,60 @@
+# Boolean processStringFast(Player player, String input, String[] initialStates)
+
+# Batch-optimized twin of processString. Two differences:
+#   1. The connection list is split ONCE here into parallel arrays
+#      (froms/tos/types) and reused by moveFast / getEpsilonClosureFast for every
+#      symbol, instead of re-splitting every connection on every scan.
+#   2. The start-state set + its epsilon closure is computed ONCE by the caller
+#      and passed in as initialStates (the NFA is static across a test batch), so
+#      getStartStates and its Block() world reads don't run per string.
+# world/room are read bare (relative, auto-keyed to the running player), matching
+# getConnections usage elsewhere.
+# Returns: true if input is accepted.
+
+@using nfa
+@fast
+
+# Parse the connection list once into parallel arrays
+@define String[] froms = String[]
+@define String[] tos = String[]
+@define String[] types = String[]
+@for String connection in nfa::getConnections(world * 5 + room)
+    @define String[] parts = connection.split(";")
+    @if parts.length() >= 6 && parts[0] == "connection"
+        @var froms.append(parts[1])
+        @var tos.append(parts[2])
+        @var types.append(parts[3])
+    @fi
+@done
+
+@define String[] currentStates = initialStates
+
+# Process each symbol in the input string
+@for Int i in list::range(0, input.length())
+    @if i < input.length()
+        @define String symbol = input.substring(i, i + 1)
+
+        @var currentStates = nfa::moveFast(currentStates, symbol, froms, tos, types)
+
+        # Epsilon closure of the resulting set
+        @define String[] withEpsilon = String[]
+        @for String state in currentStates
+            @for String s in nfa::getEpsilonClosureFast(state, froms, tos, types)
+                @if !withEpsilon.contains(s)
+                    @var withEpsilon.append(s)
+                @fi
+            @done
+        @done
+
+        @var currentStates = withEpsilon
+    @fi
+@done
+
+# Accept iff any final state is an accept state
+@for String state in currentStates
+    @if nfa::isAcceptState(state)
+        @return true
+    @fi
+@done
+
+@return false

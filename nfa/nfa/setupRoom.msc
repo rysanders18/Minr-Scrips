@@ -1,0 +1,197 @@
+# setupRoom(Player player, Int room, Int world)
+
+# Called when a player enters a room that holds their saved progress (their relative
+# listOfBlocks / listOfConnections / listOfBranches). It:
+#   1. Copies the player's relative lists into this room's shared globals so the simulator
+#      (which reads the globals) matches what the player built. Direct assignment via an
+#      @if roomIdx chain (NOT the append accessors, which would double the relative copy).
+#   2. Places only the INITIAL nodes: every non-air state that is not a transition
+#      destination (the start node, plus any source-only or isolated states). listOfBlocks
+#      is a positional array over a 5x5x5 grid (3 blocks apart); index -> coords is the
+#      inverse of editListOfBlocks. Codes: 0 air, 1 netherite, 2 iron, 3 sea_lantern,
+#      4 emerald, 5 verdant_froglight.
+#   3. Walks listOfConnections in list order; for each it draws the branch (from the stored
+#      parts[6] geometry blob: pos1,pos2,norm1,norm2,count — only `distance` is recomputed)
+#      and then, once the branch has finished animating, places that connection's
+#      destination node. So each node pops in exactly when its incoming branch reaches it.
+#
+# ASSUMES the room has already been cleared/reset (no stale blocks or nfaBranch entities);
+# drawTransition does not de-dupe, so calling this on a populated room would stack branches.
+
+@using nfa
+@fast
+
+@define Int roomIdx = world * 5 + room
+@player DEBUG: roomIdx = {{roomIdx}}, room = {{room}}, world = {{world}}
+@define Vector3 roomOrigin = roomOrigins[world * 5 + room]
+@player roomOrigin = {{roomOrigin.getX()}}, {{roomOrigin.getY()}}, {{roomOrigin.getZ()}}
+@player DEBUG: {{String(roomOrigin.getX()).substring(0, String(roomOrigin.getX()).length() - 2)}} {{String(roomOrigin.getY()).substring(0, String(roomOrigin.getY()).length() - 2)}} {{String(roomOrigin.getZ()).substring(0, String(roomOrigin.getZ()).length() - 2)}} {{String(roomOrigin.getX() + 12).substring(0, String(roomOrigin.getX() + 12).length() - 2)}} {{String(roomOrigin.getY() + 12).substring(0, String(roomOrigin.getY() + 12).length() - 2)}} {{String(roomOrigin.getZ() + 12).substring(0, String(roomOrigin.getZ() + 12).length() - 2)}} air strict
+@bypass /execute in minecraft:theta run fill {{String(roomOrigin.getX()).substring(0, String(roomOrigin.getX()).length() - 2)}} {{String(roomOrigin.getY()).substring(0, String(roomOrigin.getY()).length() - 2)}} {{String(roomOrigin.getZ()).substring(0, String(roomOrigin.getZ()).length() - 2)}} {{String(roomOrigin.getX() + 12).substring(0, String(roomOrigin.getX() + 12).length() - 2)}} {{String(roomOrigin.getY() + 12).substring(0, String(roomOrigin.getY() + 12).length() - 2)}} {{String(roomOrigin.getZ() + 12).substring(0, String(roomOrigin.getZ() + 12).length() - 2)}} air strict
+@bypass /minecraft:kill @e[tag=nfaBranch{{room}}{{world}},distance=..50]
+
+# 1. Sync the room's shared globals to this player's relative copies.
+@if roomIdx == 0
+    @var listOfBlocks0 = listOfBlocks[player]
+    @var listOfConnections0 = listOfConnections[player]
+    @var listOfBranches0 = listOfBranches[player]
+@elseif roomIdx == 1
+    @var listOfBlocks1 = listOfBlocks[player]
+    @var listOfConnections1 = listOfConnections[player]
+    @var listOfBranches1 = listOfBranches[player]
+@elseif roomIdx == 2
+    @var listOfBlocks2 = listOfBlocks[player]
+    @var listOfConnections2 = listOfConnections[player]
+    @var listOfBranches2 = listOfBranches[player]
+@elseif roomIdx == 3
+    @var listOfBlocks3 = listOfBlocks[player]
+    @var listOfConnections3 = listOfConnections[player]
+    @var listOfBranches3 = listOfBranches[player]
+@elseif roomIdx == 4
+    @var listOfBlocks4 = listOfBlocks[player]
+    @var listOfConnections4 = listOfConnections[player]
+    @var listOfBranches4 = listOfBranches[player]
+@elseif roomIdx == 5
+    @var listOfBlocks5 = listOfBlocks[player]
+    @var listOfConnections5 = listOfConnections[player]
+    @var listOfBranches5 = listOfBranches[player]
+@elseif roomIdx == 6
+    @var listOfBlocks6 = listOfBlocks[player]
+    @var listOfConnections6 = listOfConnections[player]
+    @var listOfBranches6 = listOfBranches[player]
+@elseif roomIdx == 7
+    @var listOfBlocks7 = listOfBlocks[player]
+    @var listOfConnections7 = listOfConnections[player]
+    @var listOfBranches7 = listOfBranches[player]
+@elseif roomIdx == 8
+    @var listOfBlocks8 = listOfBlocks[player]
+    @var listOfConnections8 = listOfConnections[player]
+    @var listOfBranches8 = listOfBranches[player]
+@elseif roomIdx == 9
+    @var listOfBlocks9 = listOfBlocks[player]
+    @var listOfConnections9 = listOfConnections[player]
+    @var listOfBranches9 = listOfBranches[player]
+@elseif roomIdx == 10
+    @var listOfBlocks10 = listOfBlocks[player]
+    @var listOfConnections10 = listOfConnections[player]
+    @var listOfBranches10 = listOfBranches[player]
+@elseif roomIdx == 11
+    @var listOfBlocks11 = listOfBlocks[player]
+    @var listOfConnections11 = listOfConnections[player]
+    @var listOfBranches11 = listOfBranches[player]
+@elseif roomIdx == 12
+    @var listOfBlocks12 = listOfBlocks[player]
+    @var listOfConnections12 = listOfConnections[player]
+    @var listOfBranches12 = listOfBranches[player]
+@elseif roomIdx == 13
+    @var listOfBlocks13 = listOfBlocks[player]
+    @var listOfConnections13 = listOfConnections[player]
+    @var listOfBranches13 = listOfBranches[player]
+@elseif roomIdx == 14
+    @var listOfBlocks14 = listOfBlocks[player]
+    @var listOfConnections14 = listOfConnections[player]
+    @var listOfBranches14 = listOfBranches[player]
+@elseif roomIdx == 15
+    @var listOfBlocks15 = listOfBlocks[player]
+    @var listOfConnections15 = listOfConnections[player]
+    @var listOfBranches15 = listOfBranches[player]
+@elseif roomIdx == 16
+    @var listOfBlocks16 = listOfBlocks[player]
+    @var listOfConnections16 = listOfConnections[player]
+    @var listOfBranches16 = listOfBranches[player]
+@elseif roomIdx == 17
+    @var listOfBlocks17 = listOfBlocks[player]
+    @var listOfConnections17 = listOfConnections[player]
+    @var listOfBranches17 = listOfBranches[player]
+@elseif roomIdx == 18
+    @var listOfBlocks18 = listOfBlocks[player]
+    @var listOfConnections18 = listOfConnections[player]
+    @var listOfBranches18 = listOfBranches[player]
+@elseif roomIdx == 19
+    @var listOfBlocks19 = listOfBlocks[player]
+    @var listOfConnections19 = listOfConnections[player]
+    @var listOfBranches19 = listOfBranches[player]
+@else
+    @player &csetupRoom: bad roomIdx {{roomIdx}}
+    @return
+@fi
+
+@define Int roomOriginX = Int(roomOrigins[roomIdx].getX())
+@define Int roomOriginY = Int(roomOrigins[roomIdx].getY())
+@define Int roomOriginZ = Int(roomOrigins[roomIdx].getZ())
+
+# Collect every connection's destination block (parts[2], "x,y,z"). These nodes are NOT
+# placed up front -- each appears only when the branch pointing at it finishes drawing.
+@define String[] destinations = String[]
+@for String connection in listOfConnections[player]
+    @define String[] parts = connection.split(";")
+    @if parts.length() >= 7 && parts[0] == "connection"
+        @if !destinations.contains(parts[2])
+            @var destinations.append(parts[2])
+        @fi
+    @fi
+@done
+
+# 2. Place the INITIAL nodes only: every non-air state that is not a transition
+# destination (the start node, plus any source-only or isolated states). blockIdx -> coords
+# is the inverse of editListOfBlocks' math (5x5x5 grid, 3-block spacing).
+@for Int idx in list::range(0, listOfBlocks[player].length())
+    @define Int code = listOfBlocks[player][idx]
+    @if code != 0
+        @define Int gx = idx / 25
+        @define Int rem = idx % 25
+        @define Int gy = rem / 5
+        @define Int gz = rem % 5
+        @define Int bx = roomOriginX + gx * 3
+        @define Int by = roomOriginY + gy * 3
+        @define Int bz = roomOriginZ + gz * 3
+        @if !destinations.contains("{{bx}},{{by}},{{bz}}")
+            @var nfa::placeStateBlock(code, bx, by, bz)
+        @fi
+    @fi
+@done
+
+# 3. Transitions, in list order. For each: place its SOURCE node (so the branch never
+# starts floating), draw the branch, then -- once it has finished animating (drawTransition
+# blocks via @delay) -- place its DESTINATION node. So each node pops in as its incoming
+# branch reaches it, and every branch has solid blocks at both ends regardless of list order.
+@for Int i in list::range(0, listOfConnections[player].length())
+    @define String[] parts = listOfConnections[player][i].split(";")
+    @if parts.length() >= 7 && parts[0] == "connection"
+        @define String[] geo = parts[6].split(",")
+        @if geo.length() >= 13
+            @define Vector3 pos1 = Vector3(Double(geo[0]), Double(geo[1]), Double(geo[2]))
+            @define Vector3 pos2 = Vector3(Double(geo[3]), Double(geo[4]), Double(geo[5]))
+            @define Vector3 norm1 = Vector3(Double(geo[6]), Double(geo[7]), Double(geo[8]))
+            @define Vector3 norm2 = Vector3(Double(geo[9]), Double(geo[10]), Double(geo[11]))
+            @define Int count = Int(geo[12])
+            @define Double distance = pos1.distance(pos2)
+
+            # Place the SOURCE node first so the branch never starts on a floating point.
+            # (No-op if it was already placed as an initial node or an earlier destination.)
+            @define String[] srcCoords = parts[1].split(",")
+            @define Int sx = Int(srcCoords[0])
+            @define Int sy = Int(srcCoords[1])
+            @define Int sz = Int(srcCoords[2])
+            @define Int srcIdx = ((sx - roomOriginX) / 3) * 25 + ((sy - roomOriginY) / 3) * 5 + ((sz - roomOriginZ) / 3)
+            @player DEBUG: srcIdx{{srcIdx}} = ((sx{{sx}} - roomOriginX{{roomOriginX}}) / 3) * 25 + ((sy{{sy}} - roomOriginY{{roomOriginY}}) / 3) * 5 + ((sz{{sz}} - roomOriginZ{{roomOriginZ}}) / 3)
+            @var nfa::placeStateBlock(listOfBlocks[player][srcIdx], sx, sy, sz)
+
+            @bypass /playsound minecraft:block.beacon.activate master @a[distance=..30] ~ ~ ~ 0.5 {{Float(i) / Float(listOfConnections[player].length()) * 1.5 + 0.5}}
+            @var nfa::drawTransition(player, pos1, pos2, norm1, norm2, distance, count, parts[3])
+
+            # Reveal the destination node now that the branch has reached it. Its stored type
+            # code comes from listOfBlocks via the same blockIdx math used to encode it.
+            @define String[] destCoords = parts[2].split(",")
+            @define Int dx = Int(destCoords[0])
+            @define Int dy = Int(destCoords[1])
+            @define Int dz = Int(destCoords[2])
+            @define Int destIdx = ((dx - roomOriginX) / 3) * 25 + ((dy - roomOriginY) / 3) * 5 + ((dz - roomOriginZ) / 3)
+            @var nfa::placeStateBlock(listOfBlocks[player][destIdx], dx, dy, dz)
+        @fi
+    @fi
+@done
+
+@bypass /execute at @e[type=minecraft:block_display,distance=..30] run particle minecraft:firework ~ ~ ~ 0 0 0 .1 1
+@bypass /execute at @e[type=minecraft:block_display,distance=..30] run particle minecraft:enchanted_hit ~ ~ ~ 0 0 0 1 1
+@bypass /playsound minecraft:entity.creaking.death master {{player}} ~ ~ ~ 0.5 0.5
+# TODO: summon particles at each entity at the end and playsound

@@ -1,0 +1,6 @@
+# script on each LARGE region, not small region for flying
+# syntax: rynfa00 = rynfa{{room}}{{world}}
+@using nfa
+@fast
+
+@var rejoinRegion(player)

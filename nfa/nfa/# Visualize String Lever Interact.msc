@@ -1,0 +1,52 @@
+# Visualize String Lever Interact.msc
+@using nfa
+@fast
+
+@delay 1
+
+# Define vars
+@define Block leverBlock = Block(block.getX(), block.getY(), block.getZ(), "Theta")
+@define Player[] playersInRoom = Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside()
+
+# If lever is flipped on, prompt and visualize.
+@if String(block).contains("powered=true")
+
+    @player &eEnter a string of 1's and 0's to visualize:
+    @bypass /playsound minecraft:block.note_block.bit master @a[distance=..30] ~ ~ ~ 0.5 2
+    @bypass /particle minecraft:scrape {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0 0 0 10 10
+
+    @define String stringToVisualize = ""
+    @prompt 20s stringToVisualize You ran out of time to enter a string
+
+    # Reject anything that isn't a non-empty string of only 0s and 1s (also catches
+    # an empty string from a prompt timeout). No regex in MSC, so scan each char.
+    @define Boolean validString = true
+    @if stringToVisualize.length() == 0
+        @var validString = false
+    @fi
+    @for Int i in list::range(0, stringToVisualize.length())
+        @define String ch = stringToVisualize.substring(i, i + 1)
+        @if ch != "0" && ch != "1" && ch != "2"
+            @var validString = false
+        @fi
+    @done
+
+    @if !validString
+        @player &cInvalid input! Enter only 0's and 1's.
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        @return
+    @elseif stringToVisualize.length() > 30
+        @player &cString too long! Max length is 30.
+        @bypass /playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        @return
+    @fi
+
+    @var visualizeStringLever(player, playersInRoom, stringToVisualize, leverBlock, true)
+
+# If lever is flipped off, unvisualize.
+@else
+    @player &eTurning off visualization...
+    @bypass /playsound minecraft:block.note_block.bit master @a[distance=..30] ~ ~ ~ 0.5 1.497
+    @bypass /particle minecraft:scrape {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0 0 0 10 10
+    @var visualizeStringLever(player, playersInRoom, "", leverBlock, true)
+@fi

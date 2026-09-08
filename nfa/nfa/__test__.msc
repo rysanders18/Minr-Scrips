@@ -1,0 +1,3 @@
+@using nfa
+@define Block block = Block(block.getX(), block.getY(), block.getZ(), "Theta")
+@var visualizeStringLeverChatscript(player, Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside(), "0101", block, false)

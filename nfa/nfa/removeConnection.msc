@@ -1,0 +1,101 @@
+# removeConnection(Player player, Int roomIdx, String value)
+
+# Removes the first matching connection from the shared per-room list AND the
+# caller's relative copy. Each remove is guarded with contains() because find()
+# THROWS ElementNotFoundException on a missing value (it does not return -1) -
+# the relative copy may not hold a connection that the shared global does.
+# roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@define Player[] playersInRoom = Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside()
+@for Player p in playersInRoom
+    @if listOfConnections[p].contains(value)
+        @var listOfConnections[p].remove(listOfConnections[p].find(value))
+    @fi
+@done
+
+@if roomIdx == 0
+    @if listOfConnections0.contains(value)
+        @var listOfConnections0.remove(listOfConnections0.find(value))
+    @fi
+@elseif roomIdx == 1
+    @if listOfConnections1.contains(value)
+        @var listOfConnections1.remove(listOfConnections1.find(value))
+    @fi
+@elseif roomIdx == 2
+    @if listOfConnections2.contains(value)
+        @var listOfConnections2.remove(listOfConnections2.find(value))
+    @fi
+@elseif roomIdx == 3
+    @if listOfConnections3.contains(value)
+        @var listOfConnections3.remove(listOfConnections3.find(value))
+    @fi
+@elseif roomIdx == 4
+    @if listOfConnections4.contains(value)
+        @var listOfConnections4.remove(listOfConnections4.find(value))
+    @fi
+@elseif roomIdx == 5
+    @if listOfConnections5.contains(value)
+        @var listOfConnections5.remove(listOfConnections5.find(value))
+    @fi
+@elseif roomIdx == 6
+    @if listOfConnections6.contains(value)
+        @var listOfConnections6.remove(listOfConnections6.find(value))
+    @fi
+@elseif roomIdx == 7
+    @if listOfConnections7.contains(value)
+        @var listOfConnections7.remove(listOfConnections7.find(value))
+    @fi
+@elseif roomIdx == 8
+    @if listOfConnections8.contains(value)
+        @var listOfConnections8.remove(listOfConnections8.find(value))
+    @fi
+@elseif roomIdx == 9
+    @if listOfConnections9.contains(value)
+        @var listOfConnections9.remove(listOfConnections9.find(value))
+    @fi
+@elseif roomIdx == 10
+    @if listOfConnections10.contains(value)
+        @var listOfConnections10.remove(listOfConnections10.find(value))
+    @fi
+@elseif roomIdx == 11
+    @if listOfConnections11.contains(value)
+        @var listOfConnections11.remove(listOfConnections11.find(value))
+    @fi
+@elseif roomIdx == 12
+    @if listOfConnections12.contains(value)
+        @var listOfConnections12.remove(listOfConnections12.find(value))
+    @fi
+@elseif roomIdx == 13
+    @if listOfConnections13.contains(value)
+        @var listOfConnections13.remove(listOfConnections13.find(value))
+    @fi
+@elseif roomIdx == 14
+    @if listOfConnections14.contains(value)
+        @var listOfConnections14.remove(listOfConnections14.find(value))
+    @fi
+@elseif roomIdx == 15
+    @if listOfConnections15.contains(value)
+        @var listOfConnections15.remove(listOfConnections15.find(value))
+    @fi
+@elseif roomIdx == 16
+    @if listOfConnections16.contains(value)
+        @var listOfConnections16.remove(listOfConnections16.find(value))
+    @fi
+@elseif roomIdx == 17
+    @if listOfConnections17.contains(value)
+        @var listOfConnections17.remove(listOfConnections17.find(value))
+    @fi
+@elseif roomIdx == 18
+    @if listOfConnections18.contains(value)
+        @var listOfConnections18.remove(listOfConnections18.find(value))
+    @fi
+@elseif roomIdx == 19
+    @if listOfConnections19.contains(value)
+        @var listOfConnections19.remove(listOfConnections19.find(value))
+    @fi
+@else
+    @player &cremoveConnection: bad roomIdx {{roomIdx}}
+@fi

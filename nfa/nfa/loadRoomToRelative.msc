@@ -1,0 +1,95 @@
+# loadRoomToRelative(Player player, Int room, Int world)
+
+# Copies a room's shared globals (listOfBlocks/Connections/Branches{roomIdx}) INTO the
+# player's relative copies. Used when a player joins an in-progress co-op room so they adopt
+# its current state WITHOUT rebuilding it (the blocks/branches are already in the world).
+# This is the reverse of setupRoom's phase-1 sync. roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@define Int roomIdx = world * 5 + room
+
+@if roomIdx == 0
+    @var listOfBlocks[player] = listOfBlocks0
+    @var listOfConnections[player] = listOfConnections0
+    @var listOfBranches[player] = listOfBranches0
+@elseif roomIdx == 1
+    @var listOfBlocks[player] = listOfBlocks1
+    @var listOfConnections[player] = listOfConnections1
+    @var listOfBranches[player] = listOfBranches1
+@elseif roomIdx == 2
+    @var listOfBlocks[player] = listOfBlocks2
+    @var listOfConnections[player] = listOfConnections2
+    @var listOfBranches[player] = listOfBranches2
+@elseif roomIdx == 3
+    @var listOfBlocks[player] = listOfBlocks3
+    @var listOfConnections[player] = listOfConnections3
+    @var listOfBranches[player] = listOfBranches3
+@elseif roomIdx == 4
+    @var listOfBlocks[player] = listOfBlocks4
+    @var listOfConnections[player] = listOfConnections4
+    @var listOfBranches[player] = listOfBranches4
+@elseif roomIdx == 5
+    @var listOfBlocks[player] = listOfBlocks5
+    @var listOfConnections[player] = listOfConnections5
+    @var listOfBranches[player] = listOfBranches5
+@elseif roomIdx == 6
+    @var listOfBlocks[player] = listOfBlocks6
+    @var listOfConnections[player] = listOfConnections6
+    @var listOfBranches[player] = listOfBranches6
+@elseif roomIdx == 7
+    @var listOfBlocks[player] = listOfBlocks7
+    @var listOfConnections[player] = listOfConnections7
+    @var listOfBranches[player] = listOfBranches7
+@elseif roomIdx == 8
+    @var listOfBlocks[player] = listOfBlocks8
+    @var listOfConnections[player] = listOfConnections8
+    @var listOfBranches[player] = listOfBranches8
+@elseif roomIdx == 9
+    @var listOfBlocks[player] = listOfBlocks9
+    @var listOfConnections[player] = listOfConnections9
+    @var listOfBranches[player] = listOfBranches9
+@elseif roomIdx == 10
+    @var listOfBlocks[player] = listOfBlocks10
+    @var listOfConnections[player] = listOfConnections10
+    @var listOfBranches[player] = listOfBranches10
+@elseif roomIdx == 11
+    @var listOfBlocks[player] = listOfBlocks11
+    @var listOfConnections[player] = listOfConnections11
+    @var listOfBranches[player] = listOfBranches11
+@elseif roomIdx == 12
+    @var listOfBlocks[player] = listOfBlocks12
+    @var listOfConnections[player] = listOfConnections12
+    @var listOfBranches[player] = listOfBranches12
+@elseif roomIdx == 13
+    @var listOfBlocks[player] = listOfBlocks13
+    @var listOfConnections[player] = listOfConnections13
+    @var listOfBranches[player] = listOfBranches13
+@elseif roomIdx == 14
+    @var listOfBlocks[player] = listOfBlocks14
+    @var listOfConnections[player] = listOfConnections14
+    @var listOfBranches[player] = listOfBranches14
+@elseif roomIdx == 15
+    @var listOfBlocks[player] = listOfBlocks15
+    @var listOfConnections[player] = listOfConnections15
+    @var listOfBranches[player] = listOfBranches15
+@elseif roomIdx == 16
+    @var listOfBlocks[player] = listOfBlocks16
+    @var listOfConnections[player] = listOfConnections16
+    @var listOfBranches[player] = listOfBranches16
+@elseif roomIdx == 17
+    @var listOfBlocks[player] = listOfBlocks17
+    @var listOfConnections[player] = listOfConnections17
+    @var listOfBranches[player] = listOfBranches17
+@elseif roomIdx == 18
+    @var listOfBlocks[player] = listOfBlocks18
+    @var listOfConnections[player] = listOfConnections18
+    @var listOfBranches[player] = listOfBranches18
+@elseif roomIdx == 19
+    @var listOfBlocks[player] = listOfBlocks19
+    @var listOfConnections[player] = listOfConnections19
+    @var listOfBranches[player] = listOfBranches19
+@else
+    @player &cloadRoomToRelative: bad roomIdx {{roomIdx}}
+@fi

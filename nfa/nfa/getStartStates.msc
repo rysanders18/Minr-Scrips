@@ -12,9 +12,9 @@
 
 # Collect all unique block coordinates from connections
 @define String[] allBlocks = String[]
-@for String connection in listOfConnections[player]
+@for String connection in nfa::getConnections(world * 5 + room)
     @define String[] parts = connection.split(";")
-    @if parts.length() == 6 && parts[0] == "connection"
+    @if parts.length() >= 6 && parts[0] == "connection"
         @if !allBlocks.contains(parts[1])
             @var allBlocks.append(parts[1])
         @fi

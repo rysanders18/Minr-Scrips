@@ -1,0 +1,52 @@
+# String[] getBranches(Int roomIdx)
+
+# Returns the shared per-room branch list (source of truth for reads).
+# roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@if roomIdx == 0
+    @return listOfBranches0
+@elseif roomIdx == 1
+    @return listOfBranches1
+@elseif roomIdx == 2
+    @return listOfBranches2
+@elseif roomIdx == 3
+    @return listOfBranches3
+@elseif roomIdx == 4
+    @return listOfBranches4
+@elseif roomIdx == 5
+    @return listOfBranches5
+@elseif roomIdx == 6
+    @return listOfBranches6
+@elseif roomIdx == 7
+    @return listOfBranches7
+@elseif roomIdx == 8
+    @return listOfBranches8
+@elseif roomIdx == 9
+    @return listOfBranches9
+@elseif roomIdx == 10
+    @return listOfBranches10
+@elseif roomIdx == 11
+    @return listOfBranches11
+@elseif roomIdx == 12
+    @return listOfBranches12
+@elseif roomIdx == 13
+    @return listOfBranches13
+@elseif roomIdx == 14
+    @return listOfBranches14
+@elseif roomIdx == 15
+    @return listOfBranches15
+@elseif roomIdx == 16
+    @return listOfBranches16
+@elseif roomIdx == 17
+    @return listOfBranches17
+@elseif roomIdx == 18
+    @return listOfBranches18
+@elseif roomIdx == 19
+    @return listOfBranches19
+@fi
+
+@player &cgetBranches: bad roomIdx {{roomIdx}}
+@return String[]

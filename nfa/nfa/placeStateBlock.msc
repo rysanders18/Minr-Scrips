@@ -1,0 +1,22 @@
+# placeStateBlock(Int code, Int x, Int y, Int z)
+
+# Sets one NFA state block at world coords (x,y,z) from its listOfBlocks code:
+# 0 air, 1 netherite_block, 2 iron_block, 3 sea_lantern, 4 emerald_block, 5 verdant_froglight.
+# Shared by setupRoom's "initial nodes" pass and its per-transition destination reveal.
+
+@using nfa
+@fast
+
+@define String blockId = "air"
+@if code == 1
+    @var blockId = "netherite_block"
+@elseif code == 2
+    @var blockId = "iron_block"
+@elseif code == 3
+    @var blockId = "sea_lantern"
+@elseif code == 4
+    @var blockId = "emerald_block"
+@elseif code == 5
+    @var blockId = "verdant_froglight[axis=y]"
+@fi
+@bypass /setblock {{x}} {{y}} {{z}} minecraft:{{blockId}} strict

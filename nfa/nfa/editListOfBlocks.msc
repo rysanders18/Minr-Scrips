@@ -1,0 +1,67 @@
+# editListOfBlocks(Player player, Int room, Int world, Block block, Int newValue)
+# 0 = air
+# 1 = netherite_block
+# 2 = iron_block
+# 3 = sea_lantern
+# 4 = emerald_block
+# 5 = verdant_froglight
+
+# TODO, add reset function
+
+@using nfa
+@fast
+
+@define Int roomIdx = world * 5 + room
+@define Int roomOriginX = Int(roomOrigins[roomIdx].getX())
+@define Int roomOriginY = Int(roomOrigins[roomIdx].getY())
+@define Int roomOriginZ = Int(roomOrigins[roomIdx].getZ())
+
+# Calculates blockIdx based off the coordinates of which block was edited and the roomOrigin.
+@define Int blockIdx = ((block.getX() - roomOriginX) / 3) * 25 + ((block.getY() - roomOriginY) / 3) * 5 + ((block.getZ() - roomOriginZ) / 3)
+
+@define Player[] playersInRoom = Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside()
+@for Player p in playersInRoom
+    @var listOfBlocks[p][blockIdx] = newValue
+@done
+
+@if roomIdx == 0
+    @var listOfBlocks0[blockIdx] = newValue
+@elseif roomIdx == 1
+    @var listOfBlocks1[blockIdx] = newValue
+@elseif roomIdx == 2
+    @var listOfBlocks2[blockIdx] = newValue
+@elseif roomIdx == 3
+    @var listOfBlocks3[blockIdx] = newValue
+@elseif roomIdx == 4
+    @var listOfBlocks4[blockIdx] = newValue
+@elseif roomIdx == 5
+    @var listOfBlocks5[blockIdx] = newValue
+@elseif roomIdx == 6
+    @var listOfBlocks6[blockIdx] = newValue
+@elseif roomIdx == 7
+    @var listOfBlocks7[blockIdx] = newValue
+@elseif roomIdx == 8
+    @var listOfBlocks8[blockIdx] = newValue
+@elseif roomIdx == 9
+    @var listOfBlocks9[blockIdx] = newValue
+@elseif roomIdx == 10
+    @var listOfBlocks10[blockIdx] = newValue
+@elseif roomIdx == 11
+    @var listOfBlocks11[blockIdx] = newValue
+@elseif roomIdx == 12
+    @var listOfBlocks12[blockIdx] = newValue
+@elseif roomIdx == 13
+    @var listOfBlocks13[blockIdx] = newValue
+@elseif roomIdx == 14
+    @var listOfBlocks14[blockIdx] = newValue
+@elseif roomIdx == 15
+    @var listOfBlocks15[blockIdx] = newValue
+@elseif roomIdx == 16
+    @var listOfBlocks16[blockIdx] = newValue
+@elseif roomIdx == 17
+    @var listOfBlocks17[blockIdx] = newValue
+@elseif roomIdx == 18
+    @var listOfBlocks18[blockIdx] = newValue
+@elseif roomIdx == 19
+    @var listOfBlocks19[blockIdx] = newValue
+@fi

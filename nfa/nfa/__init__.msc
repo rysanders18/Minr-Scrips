@@ -1,0 +1,37 @@
+# Region Stuff
+# //pos 5007,115,3007 4991,124,2990
+# /rg define rynfastart RYgamer1 Crowenza
+@using nfa
+
+@command /s i a Theta rynfastart https://paste.minr.org/enuwuzuzim
+
+@command /s i a Theta rynfa00 https://paste.minr.org/cigacepixo
+@command /s i a Theta rynfa10 https://paste.minr.org/cigacepixo
+@command /s i a Theta rynfa20 https://paste.minr.org/cigacepixo
+@command /s i a Theta rynfa30 https://paste.minr.org/cigacepixo
+@command /s i a Theta rynfa40 https://paste.minr.org/cigacepixo
+
+@bypass /rg flag -w "Theta" -h 7 rynfa00 join-location 5061, 30, 3000, 7, -89
+@bypass /rg flag -w "Theta" -h 7 rynfa10 join-location 5061, 30, 3000, 7, -89
+@bypass /rg flag -w "Theta" -h 7 rynfa20 join-location 5061, 30, 3000, 7, -89
+@bypass /rg flag -w "Theta" -h 7 rynfa30 join-location 5061, 30, 3000, 7, -89
+@bypass /rg flag -w "Theta" -h 7 rynfa40 join-location 5061, 30, 3000, 7, -89
+
+@define Int x
+@define Int y
+@define Int z
+
+@for Vector3 roomOrigin in roomOrigins
+@var x = Int(roomOrigin.getX()) 
+@var y = Int(roomOrigin.getY())
+@var z = Int(roomOrigin.getZ())
+@player Importing 125 nodes at {{x}}, {{y}}, {{z}}
+@delay 5s
+@for Int i in list::range(0, 5)
+    @for Int j in list::range(0, 5)
+        @for Int k in list::range(0, 5)
+             @command /script import interact {{x + (i * 3)}} {{y + (k * 3)}} {{z + (j * 3)}} Theta https://paste.minr.org/tijameqapi 
+        @done
+    @done
+@done
+@done

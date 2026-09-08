@@ -1,0 +1,56 @@
+# appendConnection(Player player, Int roomIdx, String value)
+
+# Appends a connection record to the shared per-room list AND the caller's
+# relative copy (kept in sync). roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@define Player[] playersInRoom = Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside()
+@for Player p in playersInRoom
+    @var listOfConnections[p].append(value)
+@done
+
+@if roomIdx == 0
+    @var listOfConnections0.append(value)
+@elseif roomIdx == 1
+    @var listOfConnections1.append(value)
+@elseif roomIdx == 2
+    @var listOfConnections2.append(value)
+@elseif roomIdx == 3
+    @var listOfConnections3.append(value)
+@elseif roomIdx == 4
+    @var listOfConnections4.append(value)
+@elseif roomIdx == 5
+    @var listOfConnections5.append(value)
+@elseif roomIdx == 6
+    @var listOfConnections6.append(value)
+@elseif roomIdx == 7
+    @var listOfConnections7.append(value)
+@elseif roomIdx == 8
+    @var listOfConnections8.append(value)
+@elseif roomIdx == 9
+    @var listOfConnections9.append(value)
+@elseif roomIdx == 10
+    @var listOfConnections10.append(value)
+@elseif roomIdx == 11
+    @var listOfConnections11.append(value)
+@elseif roomIdx == 12
+    @var listOfConnections12.append(value)
+@elseif roomIdx == 13
+    @var listOfConnections13.append(value)
+@elseif roomIdx == 14
+    @var listOfConnections14.append(value)
+@elseif roomIdx == 15
+    @var listOfConnections15.append(value)
+@elseif roomIdx == 16
+    @var listOfConnections16.append(value)
+@elseif roomIdx == 17
+    @var listOfConnections17.append(value)
+@elseif roomIdx == 18
+    @var listOfConnections18.append(value)
+@elseif roomIdx == 19
+    @var listOfConnections19.append(value)
+@else
+    @player &cappendConnection: bad roomIdx {{roomIdx}}
+@fi

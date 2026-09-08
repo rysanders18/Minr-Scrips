@@ -1,0 +1,25 @@
+# visualizeStringLeverChatscript(Player player, Player[] playersInRoom, String string, Block block, Boolean leverFlicked)
+@using nfa
+@fast
+
+@define Block leverBlock = Block(block.getX(), block.getY(), (block.getZ() + 4), "Theta")
+
+# If lever is off
+@if String(leverBlock).contains("powered=false")
+    # flip lever
+    @bypass /setblock {{leverBlock.getX()}} {{leverBlock.getY()}} {{leverBlock.getZ()}} minecraft:lever[face=floor,facing=north,powered=true]
+    @bypass /playsound minecraft:block.stone_button.click_on master @a[distance=..20] {{leverBlock.getX()}} {{leverBlock.getY()}} {{leverBlock.getZ()}} 1 1
+    @bypass /playsound minecraft:block.note_block.bit master @a[distance=..30] ~ ~ ~ 0.5 2
+    @bypass /particle minecraft:scrape {{leverBlock.getX()}} {{leverBlock.getY() + 0.5}} {{leverBlock.getZ()}} 0 0 0 10 10
+@fi
+
+@for Player partner in playersInRoom
+    @var isVisualizing[partner] = true
+    @var lastVisualizedString[partner] = string
+@done
+
+# Visualize that string
+@var visualizeString(player, string, true)
+@player @var visualizeString({{player}}, {{string}}, true)
+
+

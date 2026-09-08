@@ -1,0 +1,31 @@
+# String[] moveFast(String[] states, String symbol, String[] froms, String[] tos, String[] types)
+
+# Same as move(), but operates on pre-parsed parallel connection arrays
+# (froms[i] -> tos[i] on edge types[i]) instead of re-splitting connection
+# strings on every scan. symbol "0" follows gold edges, "1" diamond, "2" waxed copper.
+# Returns: String[] of block coordinates reachable from any state on the symbol.
+
+@using nfa
+@fast
+
+@define String[] result = String[]
+@define String targetBlockType = "minecraft:gold_block"
+@if symbol == "1"
+    @var targetBlockType = "minecraft:diamond_block"
+@elseif symbol == "2"
+    @var targetBlockType = "minecraft:waxed_copper_block"
+@fi
+
+# For each state in current set, scan the pre-parsed edges
+@for String state in states
+    @for Int i in list::range(0, froms.length())
+        @if types[i] == targetBlockType && froms[i] == state
+            @define String nextBlock = tos[i]
+            @if !result.contains(nextBlock)
+                @var result.append(nextBlock)
+            @fi
+        @fi
+    @done
+@done
+
+@return result

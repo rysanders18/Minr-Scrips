@@ -1,0 +1,30 @@
+# visualizeStringLever(Player player, Player[] playersInRoom, String string, Block block, Boolean leverFlicked)
+@using nfa
+@fast
+
+# If lever is on
+@if String(block).contains("powered=true")
+    # Set everyone in the room variables
+    @for Player partner in playersInRoom
+        @var isVisualizing[partner] = true
+        @var lastVisualizedString[partner] = string
+    @done
+
+    # Visualize that string
+    @var visualizeString(player, string, true)
+    @player DEBUG: @var visualizeString({{player}}, {{string}}, true)
+
+# If lever is off
+@else
+    # Set everyone in the room variables
+    @for Player partner in playersInRoom
+        @var isVisualizing[partner] = false
+    @done
+
+    # unvisualize the last visualized string
+    @var visualizeString(player, lastVisualizedString[player], false)
+@fi
+
+
+
+

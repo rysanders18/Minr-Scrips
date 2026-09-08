@@ -1,0 +1,28 @@
+# resetEntireRoom(Player player, Int room, Int world)
+@using nfa
+
+@define Vector3 roomOrigin = roomOrigins[world * 5 + room]
+# @player roomOrigin = {{roomOrigin.getX()}}, {{roomOrigin.getY()}}, {{roomOrigin.getZ()}}, {{world}}*5 + {{room}}
+@bypass /execute in minecraft:theta run fill {{String(roomOrigin.getX()).substring(0, String(roomOrigin.getX()).length() - 2)}} {{String(roomOrigin.getY()).substring(0, String(roomOrigin.getY()).length() - 2)}} {{String(roomOrigin.getZ()).substring(0, String(roomOrigin.getZ()).length() - 2)}} {{String(roomOrigin.getX() + 12).substring(0, String(roomOrigin.getX() + 12).length() - 2)}} {{String(roomOrigin.getY() + 12).substring(0, String(roomOrigin.getY() + 12).length() - 2)}} {{String(roomOrigin.getZ() + 12).substring(0, String(roomOrigin.getZ() + 12).length() - 2)}} air strict
+
+@define Int roomOriginX = Int(roomOrigin.getX())
+@define Int roomOriginY = Int(roomOrigin.getY())
+@define Int roomOriginZ = Int(roomOrigin.getZ())
+
+# For every non-air cell, decode its coords (inverse of editListOfBlocks' index math:
+# blockIdx = gx*25 + gy*5 + gz over a 5x5x5 grid, 3 blocks apart) and place its block.
+@for Int idx in list::range(0, listOfBlocks[player].length())
+    @define Int code = listOfBlocks[player][idx]
+    @if code != 0
+        @define Int gx = idx / 25
+        @define Int rem = idx % 25
+        @define Int gy = rem / 5
+        @define Int gz = rem % 5
+        @define Int bx = roomOriginX + gx * 3
+        @define Int by = roomOriginY + gy * 3
+        @define Int bz = roomOriginZ + gz * 3
+        @var nfa::placeStateBlock(code, bx, by, bz)
+    @fi
+@done
+
+@var seaLanternPresent[world * 5 + room] = true

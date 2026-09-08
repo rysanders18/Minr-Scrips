@@ -14,6 +14,9 @@
 @define String[] toProcess = String[]
 @var toProcess.append(blockCoords)
 
+# Fetch the connection list once instead of per BFS iteration
+@define String[] connections = nfa::getConnections(world * 5 + room)
+
 # Process each state in the closure until no new states are found
 # Use a large iteration limit to simulate while loop behavior
 @define Int index = 0
@@ -22,9 +25,9 @@
         @define String currentBlock = toProcess[index]
         
         # Find all iron (epsilon) transitions from current block
-        @for String connection in listOfConnections[player]
+        @for String connection in connections
             @define String[] parts = connection.split(";")
-            @if parts.length() == 6 && parts[0] == "connection" && parts[3] == "minecraft:iron_block"
+            @if parts.length() >= 6 && parts[0] == "connection" && parts[3] == "minecraft:iron_block"
                 # Check if current block is the source (directed transition: block1 -> block2)
                 @if parts[1] == currentBlock
                     @define String nextBlock = parts[2]

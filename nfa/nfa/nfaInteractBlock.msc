@@ -9,22 +9,37 @@
 #     @return
 # @fi
 
+# TODO: add per room locking/unlocking to prevent race conditions when multiple players are in the same room. Currently two players can start drawing the same branch at the same time, or remove a branch that is actively being drawn.
+
 
 @define String blockName = "minecraft:gold_block"
 @if player.getItemInMainHand().getItemType() == "DIAMOND_SWORD"
     @var blockName = "minecraft:diamond_block"
 @elseif player.getItemInMainHand().getItemType() == "IRON_SWORD"
     @var blockName = "minecraft:iron_block"
+@elseif player.getItemInMainHand().getItemType() == "COPPER_SWORD"
+    @var blockName = "minecraft:waxed_copper_block"
 @fi
 
-@var hotbarFunction(player)
+@if player.getItemInMainHand().getItemType() == "AIR"
+    @var hotbarFunction(player)
+    @return
+@else
+    @var hotbarFunction(player)
+@fi
 
-# Handle holding Netherite Ingot
+# Handle holding Netherite Block
 @if player.getItemInMainHand().getItemType() == "NETHERITE_BLOCK"
     # Set a block 3 blocks away in the direction of player.getTargetBlockFace(120)
     @define Int targetX = block.getX()
     @define Int targetY = block.getY()
     @define Int targetZ = block.getZ()
+
+    @define Int sourceTargetX = block.getX()
+    @define Int sourceTargetY = block.getY()
+    @define Int sourceTargetZ = block.getZ()
+
+    
     
     @if player.getTargetBlockFace(120) == "UP"
         @var targetY += 3
@@ -39,31 +54,74 @@
     @elseif player.getTargetBlockFace(120) == "EAST"
         @var targetX += 3
     @fi
-    
-    @if Block(targetX, targetY, targetZ, "Theta").getBlockType() != "AIR" && Block(targetX, targetY, targetZ, "Theta").getBlockType() != "LIGHT"
-        # Block is not air
-        @player DEBUG: {{Block(targetX, targetY, targetZ, "Theta").getBlockType()}}
-        @bypass playsound minecraft:block.netherite_block.hit master @s ~ ~ ~ 0.75 1
+
+    # Dont do anything if it is light=0, this is the border of each area and prevents players from placing blocks outside of the area
+    @if !String(Block(targetX, targetY, targetZ, "Theta")).contains("level=0")
+
+        # If block is solid
+        @if Block(targetX, targetY, targetZ, "Theta").getBlockType() != "AIR" && Block(targetX, targetY, targetZ, "Theta").getBlockType() != "LIGHT"
+            # Block is not air
+            @player &cThere is already a state here!
+            @bypass playsound minecraft:block.netherite_block.hit master @s ~ ~ ~ 0.75 1
+            @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 1
+            @return
+        @fi
+
+        @bypass /setblock {{targetX}} {{targetY}} {{targetZ}} netherite_block strict
+        @var nfa::editListOfBlocks(player, room, world, Block(targetX, targetY, targetZ, "Theta"), 1)
+        @bypass /execute in minecraft:theta run particle block{block_state:"netherite_block"} {{targetX}} {{targetY + 0.5}} {{targetZ}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+        @bypass playsound minecraft:block.netherite_block.place master @a[distance=..20] ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
+        @return
+    @else
+        @player &cYou cannot add states past this point!
+
+        # TODO: better particles here to indicate the border of the area
+        @bypass /execute in minecraft:theta run particle block{block_state:"redstone_block"} {{sourceTargetX}} {{sourceTargetY + 0.5}} {{sourceTargetZ}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+        @bypass playsound minecraft:block.netherite_block.place master @a[distance=..20] ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 1
         @return
     @fi
-
-    @bypass /setblock {{targetX}} {{targetY}} {{targetZ}} netherite_block strict
-    @bypass /execute in minecraft:theta run particle block{block_state:"netherite_block"} {{targetX}} {{targetY + 0.5}} {{targetZ}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
-    @bypass playsound minecraft:block.netherite_block.place master @a[distance=..20] ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
-    @return
-
 @fi
 
-# Handle holding Emerald
+# Handle holding Emerald (accept-state toggle)
 @if player.getItemInMainHand().getItemType() == "EMERALD"
-    # Place block
-    @if block.getBlockType() == "EMERALD_BLOCK"
-        @bypass playsound minecraft:block.netherite_block.hit master @s ~ ~ ~ 0.5 1
-        @bypass execute in minecraft:theta run particle block{block_state:"minecraft:{{blockName}}"} {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+    @var blockName = block.getBlockType().toLowerCase()
+
+    # Toggle OFF: clicking a state that is already an accept state strips the accept aspect.
+    # froglight (start+accept) keeps the start aspect; a plain emerald drops to a basic state.
+    @if block.getBlockType() == "EMERALD_BLOCK" || block.getBlockType() == "VERDANT_FROGLIGHT"
+        @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
+        @bypass playsound minecraft:block.amethyst_block.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 1
+        @bypass execute in minecraft:theta run particle egg_crack {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+
+        # froglight -> sea_lantern: keep the start aspect, drop only accept.
+        @if block.getBlockType() == "VERDANT_FROGLIGHT"
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} sea_lantern strict
+            @var nfa::editListOfBlocks(player, room, world, block, 3)
+            @return
+        @fi
+
+        # emerald_block -> basic state (iron if it has connections, else netherite).
+        @define Boolean hasConnections = false
+        @for String connection in nfa::getConnections(world * 5 + room)
+            @define String[] parts = connection.split(";")
+            @if parts.length() >= 6 && parts[0] == "connection"
+                @if parts[1] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}" || parts[2] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}"
+                    @var hasConnections = true
+                @fi
+            @fi
+        @done
+        @if hasConnections == true
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} iron_block strict
+            @var nfa::editListOfBlocks(player, room, world, block, 2)
+        @else
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} netherite_block strict
+            @var nfa::editListOfBlocks(player, room, world, block, 1)
+        @fi
         @return
     @fi
 
-    @var blockName = block.getBlockType().toLowerCase()
+    # Toggle ON: clicking a non-accept state adds the accept aspect.
     @bypass playsound minecraft:block.note_block.chime master @s ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
     @if block.getBlockType() == "NETHERITE_BLOCK"
         @bypass playsound minecraft:block.netherite_block.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 {{math::random(0.9D, 1.1D)}}
@@ -76,25 +134,64 @@
 
     @if block.getBlockType() == "SEA_LANTERN"
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} minecraft:verdant_froglight[axis=y] strict
+        @var nfa::editListOfBlocks(player, room, world, block, 5)
     @else
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} emerald_block strict
+        @var nfa::editListOfBlocks(player, room, world, block, 4)
     @fi
     @bypass execute in minecraft:theta run particle egg_crack {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
 
     @return
 @fi
 
-# Handle holding Prismarine Crystals
+# Handle holding Prismarine Crystals (start-state toggle)
 @if player.getItemInMainHand().getItemType() == "PRISMARINE_CRYSTALS"
     @var blockName = block.getBlockType().toLowerCase()
-    # Place block
-    @if block.getBlockType() == "SEA_LANTERN"
-        @bypass playsound minecraft:block.netherite_block.hit master @s ~ ~ ~ 0.5 1
-        @bypass execute in minecraft:theta run particle block{block_state:"minecraft:{{blockName}}"} {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+
+    # Toggle OFF: clicking a state that is already a start state strips the start aspect.
+    # froglight (start+accept) keeps the accept aspect; a plain sea_lantern drops to a basic state.
+    @if block.getBlockType() == "SEA_LANTERN" || block.getBlockType() == "VERDANT_FROGLIGHT"
+        @bypass playsound minecraft:block.beacon.deactivate master @s ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
+        @bypass playsound minecraft:block.glass.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 1
+        @bypass execute in minecraft:theta run particle scrape {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+
+        @var seaLanternPresent[world * 5 + room] = false
+
+        # froglight -> emerald_block: keep the accept aspect, drop only start.
+        @if block.getBlockType() == "VERDANT_FROGLIGHT"
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} emerald_block strict
+            @var nfa::editListOfBlocks(player, room, world, block, 4)
+            @return
+        @fi
+
+        # sea_lantern -> basic state (iron if it has connections, else netherite).
+        @define Boolean hasConnections = false
+        @for String connection in nfa::getConnections(world * 5 + room)
+            @define String[] parts = connection.split(";")
+            @if parts.length() >= 6 && parts[0] == "connection"
+                @if parts[1] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}" || parts[2] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}"
+                    @var hasConnections = true
+                @fi
+            @fi
+        @done
+        @if hasConnections == true
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} iron_block strict
+            @var nfa::editListOfBlocks(player, room, world, block, 2)
+        @else
+            @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} netherite_block strict
+            @var nfa::editListOfBlocks(player, room, world, block, 1)
+        @fi
         @return
     @fi
 
-    @var blockName = block.getBlockType().toLowerCase()
+    # Toggle ON: clicking a non-start state adds the start aspect.
+    # Refuse to create a second start state in this room.
+    @if seaLanternPresent[world * 5 + room] == true
+        @player &cYou cannot have more than one initial state!
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        @return
+    @fi
+
     @bypass playsound minecraft:block.beacon.activate master @s ~ ~ ~ 1 {{math::random(0.9D, 1.1D)}}
     @if block.getBlockType() == "NETHERITE_BLOCK"
         @bypass playsound minecraft:block.netherite_block.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 {{math::random(0.9D, 1.1D)}}
@@ -104,10 +201,13 @@
         @bypass playsound minecraft:block.iron.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 1
     @fi
 
+    @var seaLanternPresent[world * 5 + room] = true
     @if block.getBlockType() == "EMERALD_BLOCK"
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} minecraft:verdant_froglight[axis=y] strict
+        @var nfa::editListOfBlocks(player, room, world, block, 5)
     @else
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} sea_lantern strict
+        @var nfa::editListOfBlocks(player, room, world, block, 3)
     @fi
 
     @bypass execute in minecraft:theta run particle scrape {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
@@ -140,9 +240,9 @@
 
     # Setblock to Netherite block if there are no connections, else Iron Block
     @define Boolean hasConnections = false
-    @for String connection in listOfConnections[player]
+    @for String connection in nfa::getConnections(world * 5 + room)
         @define String[] parts = connection.split(";")
-        @if parts.length() == 6 && parts[0] == "connection"
+        @if parts.length() >= 6 && parts[0] == "connection"
             # Check both block endpoints (parts[1] and parts[2])
             @if parts[1] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}" || parts[2] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}"
                 @var hasConnections = true
@@ -150,22 +250,69 @@
         @fi
     @done
 
+    # Converting a start state down to a Basic state removes it.
+    @if block.getBlockType() == "SEA_LANTERN" || block.getBlockType() == "VERDANT_FROGLIGHT"
+        @var seaLanternPresent[world * 5 + room] = false
+    @fi
     @if hasConnections == true
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} iron_block strict
+        @var nfa::editListOfBlocks(player, room, world, block, 2)
     @else
         @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} netherite_block strict
+        @var nfa::editListOfBlocks(player, room, world, block, 1)
     @fi
 
     @return
 @fi
 
+# Handle holding Prismarine Crystals (start-state toggle)
+@if player.getItemInMainHand().getItemType() == "BAMBOO_SIGN"
+    # Execute at the coordinates blocks if there is a text display there
+    # @player DEBUG: {{util::executeAndQuerySuccess("/execute in minecraft:theta run minecraft:kill @e[tag=rynfaNote{{room}}{{world}}.{{block.getX()}}.{{block.getY()}}.{{block.getZ()}}]")}}
+    @if util::executeAndQuerySuccess("/execute in minecraft:theta run minecraft:kill @e[tag=rynfaNote{{room}}{{world}}.{{block.getX()}}.{{block.getY()}}.{{block.getZ()}}]")
+        @bypass /playsound minecraft:entity.player.attack.sweep master @s ~ ~ ~ 0.75 1
+        # @player &eNote removed.
+        @bypass /particle minecraft:explosion {{block.getX()}} {{block.getY() + 1.5}} {{block.getZ()}} 0 0 0 0.11 1
+        @return
+    @fi
+
+    @define String note
+
+    @bypass /title {{player}} times 0 600 5
+    @bypass /title {{player}} subtitle {"text":"Type your note in chat.","color":"yellow"}
+    @bypass /title {{player}} title ""
+    # @player &eType your note in chat.
+    @bypass /playsound minecraft:ui.button.click master @s ~ ~ ~ 0.75 1
+    @prompt 30s note You took too long!
+
+    @bypass /summon text_display {{block.getX()}} {{block.getY() + 1.5}} {{block.getZ()}} {billboard:"center",see_through:1b,alignment:"center",Tags:["rynfaNote{{room}}{{world}}","rynfaNote{{room}}{{world}}.{{block.getX()}}.{{block.getY()}}.{{block.getZ()}}"],text:{"bold":true,"color":"aqua","shadow_color":-14606047,"text":"{{note}}"}}
+    @bypass /particle minecraft:soul_fire_flame {{block.getX()}} {{block.getY() + 1.5}} {{block.getZ()}} 0 0 0 0.1 10
+    @bypass /particle minecraft:white_smoke {{block.getX()}} {{block.getY() + 1.5}} {{block.getZ()}} 0 0 0 0.05 15
+    @bypass /playsound minecraft:item.firecharge.use master @s {{block.getX()}} {{block.getY() + 1.5}} {{block.getZ()}} 0.3 1.7
+    
+    @bypass /title {{player}} clear
+@fi
+
 
 # Handle holding Pickaxe
 @if player.getItemInMainHand().getItemType() == "NETHERITE_PICKAXE"
+    # Return if the player has an in-progress branch (pos1 set, waiting on pos2) anchored to this block.
+    # The source block of pos1 is floor(pos1 - norm1*0.5) — same formula used when finalizing a branch below.
+    @if posMode[player] == true
+        @define Int pos1BlockX = math::floor(pos01[player].getX() - norm01[player].getX() * 0.5D)
+        @define Int pos1BlockY = math::floor(pos01[player].getY() - norm01[player].getY() * 0.5D)
+        @define Int pos1BlockZ = math::floor(pos01[player].getZ() - norm01[player].getZ() * 0.5D)
+        @if pos1BlockX == block.getX() && pos1BlockY == block.getY() && pos1BlockZ == block.getZ()
+            @player &cCannot remove this block while you have a transition in progress on it!
+            @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 1
+            @return
+        @fi
+    @fi
+
     # Return if there are transitions with this block
-    @for String connection in listOfConnections[player]
+    @for String connection in nfa::getConnections(world * 5 + room)
         @define String[] parts = connection.split(";")
-        @if parts.length() == 6 && parts[0] == "connection"
+        @if parts.length() >= 6 && parts[0] == "connection"
             # Check both block endpoints (parts[1] and parts[2])
             @if parts[1] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}" || parts[2] == "{{block.getX()}},{{block.getY()}},{{block.getZ()}}"
                 @player &cCannot remove this block while it has existing transitions!
@@ -190,14 +337,19 @@
         @bypass playsound minecraft:block.glass.break master @a[distance=..20] {{block.getX()}} {{block.getY()}} {{block.getZ()}} 0.75 1
     @fi
     @bypass execute in minecraft:theta run particle block{block_state:"minecraft:{{block.getBlockType().toLowerCase()}}"} {{block.getX()}} {{block.getY() + 0.5}} {{block.getZ()}} 0.325 0.325 0.325 1 40 normal @a[distance=..50]
+    # Mining out a start state removes it.
+    @if block.getBlockType() == "SEA_LANTERN" || block.getBlockType() == "VERDANT_FROGLIGHT"
+        @var seaLanternPresent[world * 5 + room] = false
+    @fi
     @bypass /setblock {{block.getX()}} {{block.getY()}} {{block.getZ()}} air strict
-    
+    @var nfa::editListOfBlocks(player, room, world, block, 0)
+
     @return
 @fi
 
 
 # Handle Swords
-@if (player.getItemInMainHand().getItemType() == "GOLDEN_SWORD" || player.getItemInMainHand().getItemType() == "DIAMOND_SWORD" || player.getItemInMainHand().getItemType() == "IRON_SWORD")
+@if (player.getItemInMainHand().getItemType() == "GOLDEN_SWORD" || player.getItemInMainHand().getItemType() == "DIAMOND_SWORD" || player.getItemInMainHand().getItemType() == "IRON_SWORD" || player.getItemInMainHand().getItemType() == "COPPER_SWORD")
     @if posMode[player] == false
         # set position 1
         @bypass playsound minecraft:ui.button.click master @s ~ ~ ~ 0.5 {{Harha::musicNotes[12]}}
@@ -220,7 +372,7 @@
             @var pos01[player] = Vector3(block.getX() + 1.0D, block.getY() + 0.5D, block.getZ() + 0.5D)
             @var norm01[player] = Vector3(1D, 0D, 0D)
         @fi
-        @player &aPosition 1 set to &e({{pos01[player].getX()}}, {{pos01[player].getY()}}, {{pos01[player].getZ()}})
+        # @player &aPosition 1 set to &e({{pos01[player].getX()}}, {{pos01[player].getY()}}, {{pos01[player].getZ()}})
         @var posMode[player] = true
     @else
         # set position 2
@@ -244,7 +396,7 @@
             @var pos02[player] = Vector3(block.getX() + 1.0D, block.getY() + 0.5D, block.getZ() + 0.5D)
             @var norm02[player] = Vector3(-1D, 0D, 0D)
         @fi
-        @player &aPosition 2 set to &e({{pos02[player].getX()}}, {{pos02[player].getY()}}, {{pos02[player].getZ()}})
+        # @player &aPosition 2 set to &e({{pos02[player].getX()}}, {{pos02[player].getY()}}, {{pos02[player].getZ()}})
         @var posMode[player] = false
         
         @define Vector3 pos1 = pos01[player]
@@ -266,7 +418,18 @@
                 @var arcLength += point.distance(arcLengthPoints[arcLengthPoints.find(point) - 1])
             @fi
         @done
-        
+
+        # Resolve arcLength -> path-point count here (not in drawTransition) so the count
+        # can be persisted with the connection and a redraw never repeats this pass or the
+        # floating-point substring edge-case overrides below.
+        @define Int count = Int(arcLength * 2.5D + 5)
+        @var arcLength = arcLength * 0.999999999999999D
+        @if String(arcLength).substring(0, 10) == "1.00984782"
+            @var count = 15
+        @elseif String(arcLength).substring(0, 10) == "1.31999999" || String(arcLength).substring(0, 10) == "1.32000000"
+            @var count = 20
+        @fi
+
         # @player DEBUG: &aArc Length between Position 1 and Position 2: &e{{arcLength}} blocks
         # @player DEBUG: &aDistance between Position 1 and Position 2: &e{{distance}} blocks
         
@@ -295,7 +458,7 @@
         
         # Remove branch if it already exists
         # This allows players to remove branches by reselecting the same two points
-        @if listOfBranches[player].contains("branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
+        @if nfa::getBranches(world * 5 + room).contains("branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
             
             @if system::currentTimeMillis() - timeOfLastBranch[player] < 900
                 @player &cPlease wait a moment before removing another branch.
@@ -303,19 +466,19 @@
                 @return
             @fi
             
-            @var listOfBranches[player].remove(listOfBranches[player].find("branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}"))
-            @var listOfBranches[player].remove(listOfBranches[player].find("branch{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}"))
+            @var nfa::removeBranch(player, world * 5 + room, "branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
+            @var nfa::removeBranch(player, world * 5 + room, "branch{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
             
             # Remove connection in both possible orderings
             # Remove based on clicked positions (face positions), not block coordinates
             # @player &eDEBUG: Looking for connection to remove with pos1={{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}} pos2={{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}
-            @for String connection in listOfConnections[player]
+            @for String connection in nfa::getConnections(world * 5 + room)
                 @define String[] parts = connection.split(";")
-                @if parts.length() == 6 && parts[0] == "connection"
+                @if parts.length() >= 6 && parts[0] == "connection"
                     # Check if this connection matches the position coordinates from the clicked faces (either direction)
                     @if (parts[4] == "{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}" && parts[5] == "{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}") || (parts[4] == "{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}" && parts[5] == "{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
                         # @player &aDEBUG: Found matching connection: {{connection}}
-                        @var listOfConnections[player].remove(listOfConnections[player].find(connection))
+                        @var nfa::removeConnection(player, world * 5 + room, connection)
                         # @player &aDEBUG: Removed connection
                     @fi
                 @fi
@@ -323,13 +486,13 @@
             
             # Remove the reverse direction as well if it exists
             # @player &eDEBUG: Looking for reverse connection
-            @for String connection in listOfConnections[player]
+            @for String connection in nfa::getConnections(world * 5 + room)
                 @define String[] parts = connection.split(";")
-                @if parts.length() == 6 && parts[0] == "connection"
+                @if parts.length() >= 6 && parts[0] == "connection"
                     # Check for reverse ordering
                     @if (parts[4] == "{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}" && parts[5] == "{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
                         # @player &aDEBUG: Found reverse connection: {{connection}}
-                        @var listOfConnections[player].remove(listOfConnections[player].find(connection))
+                        @var nfa::removeConnection(player, world * 5 + room, connection)
                         # @player &aDEBUG: Removed reverse connection
                     @fi
                 @fi
@@ -337,34 +500,34 @@
             
             # Check if block1 should be converted to netherite (no remaining connections)
             @define Boolean hasConnectionBlock1 = false
-            @for String connection in listOfConnections[player]
+            @for String connection in nfa::getConnections(world * 5 + room)
                 @define String[] parts = connection.split(";")
-                @if parts.length() == 6 && parts[0] == "connection"
+                @if parts.length() >= 6 && parts[0] == "connection"
                     @if parts[1] == "{{blockX1}},{{blockY1}},{{blockZ1}}" || parts[2] == "{{blockX1}},{{blockY1}},{{blockZ1}}"
                         @var hasConnectionBlock1 = true
                     @fi
                 @fi
             @done
-            
             @if block1.getBlockType() == "IRON_BLOCK" && !hasConnectionBlock1
                 @bypass /setblock {{blockX1}} {{blockY1}} {{blockZ1}} minecraft:netherite_block strict
                 @bypass /particle minecraft:block{block_state:"iron_block"} {{blockX1}} {{blockY1}} {{blockZ1}} 0.5 0.5 0.5 1 10
+                @var nfa::editListOfBlocks(player, room, world, block1, 1)
             @fi
             
             # Check if block2 should be converted to netherite (no remaining connections)
             @define Boolean hasConnectionBlock2 = false
-            @for String connection in listOfConnections[player]
+            @for String connection in nfa::getConnections(world * 5 + room)
                 @define String[] parts = connection.split(";")
-                @if parts.length() == 6 && parts[0] == "connection"
+                @if parts.length() >= 6 && parts[0] == "connection"
                     @if parts[1] == "{{blockX2}},{{blockY2}},{{blockZ2}}" || parts[2] == "{{blockX2}},{{blockY2}},{{blockZ2}}"
                         @var hasConnectionBlock2 = true
                     @fi
                 @fi
             @done
-            
             @if block2.getBlockType() == "IRON_BLOCK" && !hasConnectionBlock2
                 @bypass /setblock {{blockX2}} {{blockY2}} {{blockZ2}} minecraft:netherite_block strict
                 @bypass /particle minecraft:block{block_state:"iron_block"} {{blockX2}} {{blockY2}} {{blockZ2}} 0.5 0.5 0.5 1 10
+                @var nfa::editListOfBlocks(player, room, world, block2, 1)
             @fi
             
             # Visual effect for branch removal
@@ -381,29 +544,33 @@
         
         # Block branches that would share the same pos1 or pos2
         # This prevents overlapping branches
-        @for String branch in listOfBranches[player]
-            @if branch.contains("{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
-                @player &cPosition &e1 &cis already used in another branch!
-                @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
-                @return
-            @fi
-            @if branch.contains("{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
-                @player &cPosition &e2 &cis already used in another branch!
-                @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
-                @return
-            @fi
-        @done
+        # @for String branch in nfa::getBranches(world * 5 + room)
+        #     @if branch.contains("{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
+        #         @player &cPosition &e1 &cis already used in another branch!
+        #         @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+        #         @return
+        #     @fi
+            # @if branch.contains("{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
+            #     @player &cPosition &e2 &cis already used in another branch!
+            #     @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
+            #     @return
+            # @fi
+        # @done
         
         # Handles more path blocking.
         # Check if there is already a connection from block1 with the same block type
         # This prevents multiple golden or diamond connections from the same block
-        @for String connection in listOfConnections[player]
+        @for String connection in nfa::getConnections(world * 5 + room)
             @define String[] parts = connection.split(";")
-            @if parts.length() == 6 && parts[0] == "connection" && parts[1] == "{{blockX1}},{{blockY1}},{{blockZ1}}" && parts[3] == "{{blockName}}"
+            @if parts.length() >= 6 && parts[0] == "connection" && parts[1] == "{{blockX1}},{{blockY1}},{{blockZ1}}" && parts[3] == "{{blockName}}"
                 @if parts[3] == "minecraft:gold_block"
                     @player &cThere is already a &eGolden &cconnection from this block!
                 @elseif parts[3] == "minecraft:diamond_block"
                     @player &cThere is already a &bDiamond &cconnection from this block!
+                @elseif parts[3] == "minecraft:iron_block"
+                    @player &cThere is already an &fEpsilon &cconnection from this block!
+                @elseif parts[3] == "minecraft:waxed_copper_block"
+                    @player &cThere is already a &6Copper &cconnection from this block!
                 @fi
                 @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.5 1
                 @return
@@ -415,96 +582,37 @@
             @bypass /setblock {{blockX1}} {{blockY1}} {{blockZ1}} minecraft:iron_block strict
             @bypass /particle minecraft:block{block_state:"netherite_block"} {{blockX1}} {{blockY1}} {{blockZ1}} 0.5 0.5 0.5 1 10
             @bypass /playsound minecraft:block.iron.place master @s ~ ~ ~ 0.3 1
+            @var nfa::editListOfBlocks(player, room, world, block1, 2)
         @elseif block1.getBlockType() == "SEA_LANTERN"
             @bypass /playsound minecraft:block.beacon.activate master @s ~ ~ ~ 0.75 2
         @fi
+
+        # block2 also becomes iron when the branch lands on it. Its physical setblock is
+        # deferred until after the draw animation, but record it in the list NOW so the
+        # block list reflects the new connection immediately rather than ~1s later.
+        @if block2.getBlockType() == "NETHERITE_BLOCK"
+            @var nfa::editListOfBlocks(player, room, world, block2, 2)
+        @fi
         
         # Store the branch info
-        @var listOfBranches[player].append("branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
-        @var listOfBranches[player].append("branch{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
+        @var nfa::appendBranch(player, world * 5 + room, "branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
+        @var nfa::appendBranch(player, world * 5 + room, "branch{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}")
         
-        # Store the connection info
-        @var listOfConnections[player].append("connection;{{blockX1}},{{blockY1}},{{blockZ1}};{{blockX2}},{{blockY2}},{{blockZ2}};{{blockName}};{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}};{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}")
+        # Store the connection info. parts[6] is the redraw geometry blob (comma-delimited):
+        # pos1(3), pos2(3), norm1(3), norm2(3), count. setupRoom parses this to redraw the
+        # branch via drawTransition with zero recomputation. parts[4]/parts[5] stay as the
+        # concatenated branch-identity keys used for removal matching.
+        @var nfa::appendConnection(player, world * 5 + room, "connection;{{blockX1}},{{blockY1}},{{blockZ1}};{{blockX2}},{{blockY2}},{{blockZ2}};{{blockName}};{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}};{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}};{{pos1.getX()}},{{pos1.getY()}},{{pos1.getZ()}},{{pos2.getX()}},{{pos2.getY()}},{{pos2.getZ()}},{{norm1.getX()}},{{norm1.getY()}},{{norm1.getZ()}},{{norm2.getX()}},{{norm2.getY()}},{{norm2.getZ()}},{{count}}")
         
         # @player DEBUG: listOfBranches: {{listOfBranches[player]}}
         # @player DEBUG:listOfConnections: {{listOfConnections[player]}}
         
         
         
-        # Calculates the path and draws it
-        
-
-        @define Int count = Int(arcLength * 2.5D + 5)
-        
-        @var arcLength = arcLength * 0.999999999999999D
-
-        @if String(arcLength).substring(0, 10) == "1.00984782"
-            @var count = 15
-        @elseif String(arcLength).substring(0, 10) == "1.31999999"
-            @var count = 20
-        @fi
-        
-        # @player DEBUG: &acount = &e{{count}}
-        
-        @define Int i = 0
-        @define Float scale = 0.48F
-        @define Vector3[] path = Vector3[]
-        
-        # Calculate the path points based off distance
-        # Uses hermite curve function for smooth curves
-        @if distance < 1
-            @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 10.0D)
-        @elseif distance == 1D
-            
-            # @player norm1 before: {{norm1}}
-            # @player norm2 before: {{norm2}}
-            
-            @if norm1.getX() != 0D && norm2.getX() != 0D
-                # @player case1
-                @var norm1 = Vector3(norm1.getX(), math::cos(Double(player.getPitch() + 90)), math::sin(Double(player.getYaw() + 90)))
-                @var norm2 = Vector3(norm1.getX(), -norm1.getY(), -norm1.getZ())
-            @elseif norm1.getY() != 0D && norm2.getY() != 0D
-                # @player case2
-                @var norm1 = Vector3(math::cos(Double(player.getYaw() + 90)), norm1.getY(), math::sin(Double(player.getYaw() + 90)))
-                @var norm2 = Vector3(-norm1.getX(), norm1.getY(), -norm1.getZ())
-            @elseif norm1.getZ() != 0D && norm2.getZ() != 0D
-                # @player case3
-                @var norm1 = Vector3(math::cos(Double(player.getYaw() + 90)), math::sin(Double(player.getYaw() + 90)), norm1.getZ())
-                @var norm2 = Vector3(-norm1.getX(), -norm1.getY(), norm1.getZ())
-            @fi
-            
-            # @player norm1 after: {{norm1}}
-            # @player norm2 after: {{norm2}}
-            
-            @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 10.0D)
-        @else
-            @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 1.5D)
-        @fi
-        
+        # Mark branch-create time (debounces branch removal), then render the curve.
         @var timeOfLastBranch[player] = system::currentTimeMillis()
-        
-        @for Vector3 point in path
-            @define Double particleX = point.getX()
-            @define Double particleY = point.getY()
-            @define Double particleZ = point.getZ()
-            
-            @if i == count
-                @var blockName = "minecraft:emerald_block"
-                @var scale += 0.15F
-            @fi
-            # Spawn the particle at the calculated position
-            @bypass /playsound minecraft:block.bamboo_wood_button.click_on master @s {{particleX}} {{particleY}} {{particleZ}} 0.5 {{Float(i) / Float(count) * 1.5 + 0.5}}
-            @bypass /execute in minecraft:theta run particle minecraft:enchant {{particleX}} {{particleY}} {{particleZ}} 0.2 0.2 0.2 0.1 2
-            @bypass /execute in minecraft:theta run particle minecraft:electric_spark {{particleX}} {{particleY}} {{particleZ}} 0.2 0.2 0.2 0.5 1
-            @bypass /execute in minecraft:theta run summon block_display {{particleX}} {{particleY}} {{particleZ}} {Tags:["nfaBranch","branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}","nfaBranch{{i}}"],brightness:{sky:0,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-{{Float(scale) / 2}},-{{Float(scale) / 2}},-{{Float(scale) / 2}}],scale:[{{scale}},{{scale}},{{scale}}]},block_state:{Name:"{{blockName}}"}}
-            
-            @var i += 1
-            @var scale += 0.25F / Float(count)
-            @if i % 3 == 0
-                @delay 1
-            @fi
-        @done
-        
+        @var nfa::drawTransition(player, pos1, pos2, norm1, norm2, distance, count, blockName)
+
         # Set the 2nd block after the animation has finished
         @if block2.getBlockType() == "NETHERITE_BLOCK"
             @bypass /setblock {{blockX2}} {{blockY2}} {{blockZ2}} minecraft:iron_block strict

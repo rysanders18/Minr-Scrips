@@ -1,0 +1,101 @@
+# removeBranch(Player player, Int roomIdx, String value)
+
+# Removes the first matching branch tag from the shared per-room list AND the
+# caller's relative copy. Each remove is guarded with contains() because find()
+# THROWS ElementNotFoundException on a missing value (it does not return -1) -
+# the relative copy may not hold a branch that the shared global does.
+# roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@define Player[] playersInRoom = Region(String("rynfa" + String(room) + String(world)), "Theta").getPlayersInside()
+@for Player p in playersInRoom
+    @if listOfBranches[p].contains(value)
+        @var listOfBranches[p].remove(listOfBranches[p].find(value))
+    @fi
+@done
+
+@if roomIdx == 0
+    @if listOfBranches0.contains(value)
+        @var listOfBranches0.remove(listOfBranches0.find(value))
+    @fi
+@elseif roomIdx == 1
+    @if listOfBranches1.contains(value)
+        @var listOfBranches1.remove(listOfBranches1.find(value))
+    @fi
+@elseif roomIdx == 2
+    @if listOfBranches2.contains(value)
+        @var listOfBranches2.remove(listOfBranches2.find(value))
+    @fi
+@elseif roomIdx == 3
+    @if listOfBranches3.contains(value)
+        @var listOfBranches3.remove(listOfBranches3.find(value))
+    @fi
+@elseif roomIdx == 4
+    @if listOfBranches4.contains(value)
+        @var listOfBranches4.remove(listOfBranches4.find(value))
+    @fi
+@elseif roomIdx == 5
+    @if listOfBranches5.contains(value)
+        @var listOfBranches5.remove(listOfBranches5.find(value))
+    @fi
+@elseif roomIdx == 6
+    @if listOfBranches6.contains(value)
+        @var listOfBranches6.remove(listOfBranches6.find(value))
+    @fi
+@elseif roomIdx == 7
+    @if listOfBranches7.contains(value)
+        @var listOfBranches7.remove(listOfBranches7.find(value))
+    @fi
+@elseif roomIdx == 8
+    @if listOfBranches8.contains(value)
+        @var listOfBranches8.remove(listOfBranches8.find(value))
+    @fi
+@elseif roomIdx == 9
+    @if listOfBranches9.contains(value)
+        @var listOfBranches9.remove(listOfBranches9.find(value))
+    @fi
+@elseif roomIdx == 10
+    @if listOfBranches10.contains(value)
+        @var listOfBranches10.remove(listOfBranches10.find(value))
+    @fi
+@elseif roomIdx == 11
+    @if listOfBranches11.contains(value)
+        @var listOfBranches11.remove(listOfBranches11.find(value))
+    @fi
+@elseif roomIdx == 12
+    @if listOfBranches12.contains(value)
+        @var listOfBranches12.remove(listOfBranches12.find(value))
+    @fi
+@elseif roomIdx == 13
+    @if listOfBranches13.contains(value)
+        @var listOfBranches13.remove(listOfBranches13.find(value))
+    @fi
+@elseif roomIdx == 14
+    @if listOfBranches14.contains(value)
+        @var listOfBranches14.remove(listOfBranches14.find(value))
+    @fi
+@elseif roomIdx == 15
+    @if listOfBranches15.contains(value)
+        @var listOfBranches15.remove(listOfBranches15.find(value))
+    @fi
+@elseif roomIdx == 16
+    @if listOfBranches16.contains(value)
+        @var listOfBranches16.remove(listOfBranches16.find(value))
+    @fi
+@elseif roomIdx == 17
+    @if listOfBranches17.contains(value)
+        @var listOfBranches17.remove(listOfBranches17.find(value))
+    @fi
+@elseif roomIdx == 18
+    @if listOfBranches18.contains(value)
+        @var listOfBranches18.remove(listOfBranches18.find(value))
+    @fi
+@elseif roomIdx == 19
+    @if listOfBranches19.contains(value)
+        @var listOfBranches19.remove(listOfBranches19.find(value))
+    @fi
+@else
+    @player &cremoveBranch: bad roomIdx {{roomIdx}}
+@fi

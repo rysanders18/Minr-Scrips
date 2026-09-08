@@ -1,0 +1,178 @@
+# visualizeString(Player player, String inputString, Boolean isVisualizing)
+
+# Lever-style glow toggle for an input string's path through the NFA. It walks the
+# path (gold edges for "0", diamond for "1", waxed copper for "2", iron for ε), collecting every traversed
+# transition's branch in order, then animates them one segment at a time (@delay 1):
+#   - isVisualizing true:  instantly clear all glow in the room, then slowly GLOW
+#     every traversed transition (glow_color_override 16728887). The path stays lit.
+#   - isVisualizing false: slowly UN-glow every traversed transition (no instant
+#     reset) -- turns a previously-lit path back off.
+# Uses move()/getEpsilonClosure() only to walk the path; changes no NFA state.
+# NOT for batch verification (heavy + slow) -- use runTest(..., false) for that.
+
+@using nfa
+@fast
+
+@define Int roomIdx = world * 5 + room
+@define String[] rainbowColors = String["16711680", "16714240", "16716800", "16719616", "16722176", "16724736", "16727296", "16729856", "16732672", "16735232", "16737792", "16740352", "16742912", "16745728", "16748288", "16750848", "16753408", "16755968", "16758784", "16761344", "16763904", "16766464", "16769024", "16771840", "16774400", "16776960", "16121600", "15466240", "14745344", "14089984", "13434624", "12779264", "12123904", "11403008", "10747648", "10092288", "9436928", "8781568", "8060672", "7405312", "6749952", "6094592", "5439232", "4718336", "4062976", "3407616", "2752256", "2096896", "1376000", "720640", "65280", "65290", "65300", "65311", "65321", "65331", "65341", "65351", "65362", "65372", "65382", "65392", "65402", "65413", "65423", "65433", "65443", "65453", "65464", "65474", "65484", "65494", "65504", "65515", "65525", "65535", "62975", "60415", "57599", "55039", "52479", "49919", "47359", "44543", "41983", "39423", "36863", "34303", "31487", "28927", "26367", "23807", "21247", "18431", "15871", "13311", "10751", "8191", "5375", "2815", "255", "655615", "1310975", "2031871", "2687231", "3342591", "3997951", "4653311", "5374207", "6029567", "6684927", "7340287", "7995647", "8716543", "9371903", "10027263", "10682623", "11337983", "12058879", "12714239", "13369599", "14024959", "14680319", "15401215", "16056575", "16711935", "16711925", "16711915", "16711904", "16711894", "16711884", "16711874", "16711864", "16711853", "16711843", "16711833", "16711823", "16711813", "16711802", "16711792", "16711782", "16711772", "16711762", "16711751", "16711741", "16711731", "16711721", "16711711", "16711700", "16711690"]
+
+# Safety cap on the per-branch segment scan (MSC has no while loop). The animate loop
+# below walks nfaBranch{s} upward and stops as soon as a command matches no entity, so
+# this only needs to exceed the longest possible branch -- iterations past a branch's
+# real end are skipped, not animated.
+@define Int maxSegments = 200
+
+# What to merge per segment: glow on when visualizing, off when un-visualizing.
+@define String glowNbt = "{Glowing:1b,glow_color_override:16728887}"
+@if !isVisualizing
+    @var glowNbt = "{Glowing:0b}"
+@fi
+
+# DEBUG
+# @bypass /data get entity @e[tag=branch5061.0129.53006.55059.0129.53006.5,tag=nfaBranch0,limit=1]
+
+# Turning the visualization ON: instantly clear any existing glow first.
+@if isVisualizing
+    @for String branchTag in nfa::getBranches(roomIdx)
+        @bypass /execute in minecraft:theta as @e[tag={{branchTag}}] run data merge entity @s {Glowing:0b}
+    @done
+@fi
+
+# --- Walk the path, collecting the branch tag of every transition taken, in order. ---
+# A connection's branch entities are tagged "branch" + pos1Str + pos2Str (parts[4]+[5]).
+@define String[] pathBranches = String[]
+
+# Start states -> ε-closure, then collect that closure's iron (ε) transitions.
+@define String[] currentStates = nfa::getStartStates(player)
+# DEBUG
+# @player &8[viz] startStates={{currentStates.length()}}: {{currentStates}}
+@define String[] withEpsilon = String[]
+@for String state in currentStates
+    @define String[] closure = nfa::getEpsilonClosure(player, state)
+    @for String s in closure
+        @if !withEpsilon.contains(s)
+            @var withEpsilon.append(s)
+        @fi
+    @done
+@done
+@for String connection in nfa::getConnections(roomIdx)
+    @define String[] parts = connection.split(";")
+    @if parts.length() >= 6 && parts[0] == "connection" && parts[3] == "minecraft:iron_block" && withEpsilon.contains(parts[1])
+        @define String branchTag = "branch" + parts[4] + parts[5]
+        @if !pathBranches.contains(branchTag)
+            @var pathBranches.append(branchTag)
+        @fi
+    @fi
+@done
+
+@var currentStates = withEpsilon
+
+@for Int i in list::range(0, inputString.length())
+    @if i < inputString.length()
+        @define String symbol = inputString.substring(i, i + 1)
+        @define String targetBlockType = "minecraft:gold_block"
+        @if symbol == "1"
+            @var targetBlockType = "minecraft:diamond_block"
+        @elseif symbol == "2"
+            @var targetBlockType = "minecraft:waxed_copper_block"
+        @fi
+
+        # Symbol transitions leaving the current states.
+        @for String connection in nfa::getConnections(roomIdx)
+            @define String[] parts = connection.split(";")
+            @if parts.length() >= 6 && parts[0] == "connection" && parts[3] == targetBlockType && currentStates.contains(parts[1])
+                @define String branchTag = "branch" + parts[4] + parts[5]
+                @if !pathBranches.contains(branchTag)
+                    @var pathBranches.append(branchTag)
+                @fi
+            @fi
+        @done
+
+        # Advance, then collect this closure's iron (ε) transitions.
+        @var currentStates = nfa::move(player, currentStates, symbol)
+        @var withEpsilon = String[]
+        @for String state in currentStates
+            @define String[] closure = nfa::getEpsilonClosure(player, state)
+            @for String s in closure
+                @if !withEpsilon.contains(s)
+                    @var withEpsilon.append(s)
+                @fi
+            @done
+        @done
+        @for String connection in nfa::getConnections(roomIdx)
+            @define String[] parts = connection.split(";")
+            @if parts.length() >= 6 && parts[0] == "connection" && parts[3] == "minecraft:iron_block" && withEpsilon.contains(parts[1])
+                @define String branchTag = "branch" + parts[4] + parts[5]
+                @if !pathBranches.contains(branchTag)
+                    @var pathBranches.append(branchTag)
+                @fi
+            @fi
+        @done
+
+        @var currentStates = withEpsilon
+    @fi
+@done
+
+# DEBUG
+# @player &8[viz] collected {{pathBranches.length()}} branches: {{pathBranches}}
+
+# Animation speed scales with input length by SKIPPING delays: speed = 1 + len/10
+# (len 1 ~= 1x, 5 = 1.5x, 10 = 2x, 20 = 3x, 30 = 4x). Every segment still glows and
+# plays its sound; we only emit a @delay once `speed` segments worth have glowed, so
+# higher speed = fewer delays = faster. The accumulator handles non-integer speeds.
+@define Float speed = 1.0 + Float(inputString.length()) / 10.0
+# Removing the glow (un-visualize) runs an extra 2x faster than drawing it.
+@if !isVisualizing
+    @var speed = speed * 2.0
+@fi
+@define Float delayAccumulator = 0.0
+# Global counter of lit segments; drives the rainbow hue (one full cycle per 150).
+@define Int rainbowIndex = 0
+
+# --- Animate every collected branch, one segment at a time, in path order. ---
+# A branch's segment count isn't stored, so walk nfaBranch{s} upward and stop the
+# moment a command matches no entity (executeAndQuerySuccess returns false) -- that
+# means we've gone past the branch's last segment.
+@for String branchTag in pathBranches
+    @define Boolean moreSegments = true
+    @define Int segCount = 0
+    @for Int s in list::range(0, maxSegments)
+        @if moreSegments
+            # @player /execute in minecraft:theta if entity @e[tag={{branchTag}},tag=nfaBranch{{s}}]
+            # @player {{util::executeAndQuerySuccess("/execute in minecraft:theta if entity @e[tag={{branchTag}},tag=nfaBranch{{s}}]")}}
+            # @bypass /teleport RYgamer1 @e[tag={{branchTag}},tag=nfaBranch{{s}},limit=1]
+            # @player /execute if entity RYgamer1 {{util::executeAndQuerySuccess("/execute if entity RYgamer1")}}
+            # @player {{util::executeAndQuerySuccess("/execute in theta if entity RYgamer1")}}
+
+            @if util::executeAndQuerySuccess("/execute in minecraft:theta if entity @e[tag={{branchTag}},tag=nfaBranch{{s}}]")
+                @var segCount += 1
+                # End-of-branch is detected by entity EXISTENCE above, not by the glow
+                # command's success: /data merge reports failure on "no change" too (not
+                # just "no entity"), which stopped this loop after segment 0 whenever a
+                # segment was already in the target glow state (the chatscript path).
+                # Glow (rainbow color when visualizing) / un-glow, then this segment's effects.
+                @if isVisualizing
+                    # Look up the precomputed rainbow color (just a modulo + array index).
+                    @bypass /execute in minecraft:theta as @e[tag={{branchTag}},tag=nfaBranch{{s}}] run data merge entity @s {Glowing:1b,glow_color_override:{{rainbowColors[rainbowIndex % 150]}}}
+                    @var rainbowIndex += 1
+                    @bypass /execute in minecraft:theta at @e[tag={{branchTag}},tag=nfaBranch{{s}}] run playsound minecraft:block.bone_block.place master @a[distance=..30] ~ ~ ~ 0.2 {{math::random(0.8D, 1.2D)}}
+                    @bypass /execute in minecraft:theta at @e[tag={{branchTag}},tag=nfaBranch{{s}}] run particle minecraft:electric_spark ~ ~ ~ 0.2 0.2 0.2 0.5 1
+                @else
+                    @bypass /execute in minecraft:theta as @e[tag={{branchTag}},tag=nfaBranch{{s}}] run data merge entity @s {{glowNbt}}
+                    @bypass /execute in minecraft:theta at @e[tag={{branchTag}},tag=nfaBranch{{s}}] run playsound minecraft:block.bone_block.break master @a[distance=..30] ~ ~ ~ 0.2 {{math::random(0.8D, 1.2D)}}
+                    @bypass /execute in minecraft:theta at @e[tag={{branchTag}},tag=nfaBranch{{s}}] run particle minecraft:smoke ~ ~ ~ 0.2 0.2 0.2 0.5 0.2
+                @fi
+                
+                @var delayAccumulator += 1.0
+                @if delayAccumulator >= speed
+                    @delay 1
+                    @var delayAccumulator -= speed
+                @fi
+            @else
+                @var moreSegments = false
+            @fi
+        @fi
+    @done
+    # DEBUG
+    # @player &8[viz] {{branchTag}} -> {{segCount}} segments lit
+@done

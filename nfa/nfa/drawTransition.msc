@@ -1,0 +1,75 @@
+# drawTransition(Player player, Vector3 pos1, Vector3 pos2, Vector3 norm1, Vector3 norm2, Double distance, Int count, String blockName)
+
+# Renders one transition (branch) between two clicked faces as a curved trail of
+# block_display entities. Builds a Hermite path pos1->pos2 (norm1/norm2 are the
+# tangents) sampled at `count` points, then summons one block_display per point tagged
+# "nfaBranch", "branch{pos1}{pos2}", and "nfaBranch{i}", animating with @delay every 3
+# entities. The final point is rendered as emerald_block (the arrowhead).
+# Inputs are passed by value; norm1/norm2/blockName are mutated locally only.
+# `count` is the resolved path-point count (the arcLength->count resolution, including the
+# "1.00984782"/"1.32" edge-case overrides, lives in the caller and is persisted with the
+# connection so a redraw never recomputes it). `distance` only selects the curve alpha.
+# NOTE: the distance==1 normal twisting reads the player's live look direction, so a
+# distance==1 branch redraws with a slightly different curve plane — inherent, not a bug.
+
+@using nfa
+@fast
+
+@define Int i = 0
+# Slight slight variation in scale to reduce z fighting
+@define Float scale = 0.48F + Float(math::random(0.0D, 0.01D))
+@define Vector3[] path = Vector3[]
+
+# Calculate the path points based off distance
+# Uses hermite curve function for smooth curves
+@if distance < 1
+    @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 10.0D)
+@elseif distance == 1D
+
+    # @player norm1 before: {{norm1}}
+    # @player norm2 before: {{norm2}}
+
+    @if norm1.getX() != 0D && norm2.getX() != 0D
+        # @player case1
+        @var norm1 = Vector3(norm1.getX(), math::cos(Double(player.getPitch() + 90)), math::sin(Double(player.getYaw() + 90)))
+        @var norm2 = Vector3(norm1.getX(), -norm1.getY(), -norm1.getZ())
+    @elseif norm1.getY() != 0D && norm2.getY() != 0D
+        # @player case2
+        @var norm1 = Vector3(math::cos(Double(player.getYaw() + 90)), norm1.getY(), math::sin(Double(player.getYaw() + 90)))
+        @var norm2 = Vector3(-norm1.getX(), norm1.getY(), -norm1.getZ())
+    @elseif norm1.getZ() != 0D && norm2.getZ() != 0D
+        # @player case3
+        @var norm1 = Vector3(math::cos(Double(player.getYaw() + 90)), math::sin(Double(player.getYaw() + 90)), norm1.getZ())
+        @var norm2 = Vector3(-norm1.getX(), -norm1.getY(), norm1.getZ())
+    @fi
+
+    # @player norm1 after: {{norm1}}
+    # @player norm2 after: {{norm2}}
+
+    @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 10.0D)
+@else
+
+    @var path = nfa::hermiteTwoPoint(pos1, pos2, norm1, norm2, count, 1.5D)
+@fi
+
+@for Vector3 point in path
+    @define Double particleX = point.getX()
+    @define Double particleY = point.getY()
+    @define Double particleZ = point.getZ()
+
+    @if i == count
+        @var blockName = "minecraft:emerald_block"
+        @var scale += 0.15F
+    @fi
+    # Spawn the particle at the calculated position
+    @bypass /execute in minecraft:theta run playsound minecraft:block.bamboo_wood_button.click_on master @a[distance=..30] {{particleX}} {{particleY}} {{particleZ}} 0.5 {{Float(i) / Float(count) * 1.5 + 0.5}}
+    @bypass /execute in minecraft:theta run particle minecraft:enchant {{particleX}} {{particleY}} {{particleZ}} 0.2 0.2 0.2 0.1 2
+    @bypass /execute in minecraft:theta run particle minecraft:electric_spark {{particleX}} {{particleY}} {{particleZ}} 0.2 0.2 0.2 0.5 1
+    @bypass /execute in minecraft:theta run summon block_display {{particleX}} {{particleY}} {{particleZ}} {Tags:["nfaBranch{{room[player]}}{{world[player]}}","branch{{pos1.getX()}}{{pos1.getY()}}{{pos1.getZ()}}{{pos2.getX()}}{{pos2.getY()}}{{pos2.getZ()}}","nfaBranch{{i}}"],brightness:{sky:0,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-{{Float(scale) / 2}},-{{Float(scale) / 2}},-{{Float(scale) / 2}}],scale:[{{scale}},{{scale}},{{scale}}]},block_state:{Name:"{{blockName}}"}}
+
+    @var i += 1
+    @var scale += 0.25F / Float(count)
+    @if i % 3 == 0
+        @delay 1
+    @fi
+@done

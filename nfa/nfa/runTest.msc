@@ -44,8 +44,8 @@
     @done
 @fi
 
-@var visualizeStates(player, withEpsilon)
 @if debug
+    @var visualizeStates(player, withEpsilon)
     @delay 20
 @fi
 
@@ -55,12 +55,12 @@
 @for Int i in list::range(0, inputString.length())
     @if i < inputString.length()
         @define String symbol = inputString.substring(i, i + 1)
-        
+
         @if debug
-            @player 
+            @player
             @player &63. Processing symbol '{{symbol}}':
         @fi
-        
+
         # Move
         @var currentStates = nfa::move(player, currentStates, symbol)
         @if debug
@@ -69,7 +69,7 @@
                 @player &7 - {{state}}
             @done
         @fi
-        
+
         # Epsilon closure
         @var withEpsilon = String[]
         @for String state in currentStates
@@ -80,7 +80,7 @@
                 @fi
             @done
         @done
-        
+
         @var currentStates = withEpsilon
 
         @if debug
@@ -89,9 +89,9 @@
                 @player &7 - {{state}}
             @done
         @fi
-        
-        @bypass visualizeStates(player, currentStates)
+
         @if debug
+            @bypass visualizeStates(player, currentStates)
             @delay 20
         @fi
     @fi
@@ -101,7 +101,7 @@
 @define Boolean accepted = false
 
 @if debug
-    @player 
+    @player
     @player &64. Final States:
 @fi
 
@@ -119,7 +119,7 @@
 @done
 
 @if debug
-    @player 
+    @player
     @if accepted
         @player &a✓ STRING ACCEPTED!
         @bypass playsound minecraft:entity.player.levelup master @s ~ ~ ~ 1 1.5

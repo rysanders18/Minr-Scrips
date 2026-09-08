@@ -1,0 +1,40 @@
+# String[] getEpsilonClosureFast(String blockCoords, String[] froms, String[] tos, String[] types)
+
+# Same BFS as getEpsilonClosure, but operates on pre-parsed parallel connection
+# arrays (froms[i] -> tos[i] on edge types[i]) instead of re-splitting connection
+# strings on every scan. Parse the connection list ONCE in the caller and reuse
+# these arrays across every move / closure of a run.
+# Returns: String[] of block coordinates reachable from blockCoords via epsilon
+# (iron) transitions.
+
+@using nfa
+@fast
+
+@define String[] closure = String[]
+@var closure.append(blockCoords)
+@define String[] toProcess = String[]
+@var toProcess.append(blockCoords)
+
+# Process each state in the closure until no new states are found.
+# Large iteration cap simulates a while loop (MSC has no while).
+@define Int index = 0
+@for Int iteration in list::range(0, 100)
+    @if index < toProcess.length()
+        @define String currentBlock = toProcess[index]
+
+        # Find all iron (epsilon) transitions from current block
+        @for Int i in list::range(0, froms.length())
+            @if types[i] == "minecraft:iron_block" && froms[i] == currentBlock
+                @define String nextBlock = tos[i]
+                @if !closure.contains(nextBlock)
+                    @var closure.append(nextBlock)
+                    @var toProcess.append(nextBlock)
+                @fi
+            @fi
+        @done
+
+        @var index += 1
+    @fi
+@done
+
+@return closure

@@ -1,0 +1,109 @@
+# rejoinRegion(Player player)
+# rejoinRegion -- region-enter handler (player implicit), modeled on Cookie's cookieSecretJoin.
+#
+# Original intent (kept for reference):
+#   When you rejoin the region, check if you're still in the same level as other players; if
+#   not, get sent to your own untaken room, reset it, and load your relative vars to the
+#   global. If you ARE in the same level and another player is in the region, load your
+#   relative vars FROM the global of that level/stage. If nobody else is in the region, push
+#   the globals back to match your relative vars.
+#
+# Implementation (5 rooms, world 0 -- mirrors the 5 roomOrigins and Cookie's 5 rooms):
+#   - Scan rynfa0..rynfa4. Join the first room that already holds a SAME-LEVEL player (co-op):
+#     adopt that room's shared global into my relative copy via loadRoomToRelative and do NOT
+#     rebuild (their build is already drawn).
+#   - Otherwise claim the first EMPTY room and call setupRoom, which clears it, pushes my saved
+#     relative build into its globals, and redraws. This covers both "different level -> own
+#     untaken room" and "alone -> restore my build".
+#   - If every room is occupied (by different-level players), bounce to the lobby.
+
+@fast
+@using nfa
+
+@bypass /tellraw RYgamer1 rejoinRegionRan
+
+@bypass /var set nfa roomTpCoords = Position[Position(5076.5, 129.0, 3000.5, 90.0, 0.0, "Theta"), Position(5076.5, 129.0, 2900.5, 90.0, 0.0, "Theta"), Position(5076.5, 129.0, 2800.5, 90.0, 0.0, "Theta"), Position(5076.5, 129.0, 2700.5, 90.0, 0.0, "Theta"), Position(5076.5, 129.0, 2600.5, 90.0, 0.0, "Theta")]
+
+@player DEBUG: rejoinRegion called for {{player.getName()}}, level = {{level[player]}}, room = {{room[player]}}, world = {{world[player]}}
+
+# @if player.getGameMode() != "ADVENTURE"
+#     @return
+# @fi
+
+@define Boolean theyMovedOnAndLeftYouToBeByYourself = false
+
+# Check if the players in the region you left off are still in the same level as you.
+@define Player[] inside = Region(String("rynfa" + String(room[player]) + String(world[player])), "Theta").getPlayersInside()
+@for Player p in inside
+    @if level[p] != level[player]
+        # They have left you
+        @var theyMovedOnAndLeftYouToBeByYourself = true
+    @fi
+@done
+
+@define Boolean thereIsNowhereForYouToGo = true
+
+# If they left you
+@if theyMovedOnAndLeftYouToBeByYourself == true
+    # look for first empty room
+    @for Int i in list::range(0, 5)
+        @define Int numberInside = Region(String("rynfa" + String(i) + String(world[player])), "Theta").getPlayersInside().length()
+        @if numberInside == 0
+            @var changePlayersRoomVariables(player, i)
+            @var thereIsNowhereForYouToGo = false
+            @player &aYou have been moved to your own room.
+            @var player.teleport(roomTpCoords[i + (5 * world[player])])
+            @var setupRoom(player, i, world[player])
+            @return
+        @fi
+    @done
+
+    # If all rooms are full
+    @if thereIsNowhereForYouToGo == true
+        @var player.teleport(Position(5000.5, 116.0, 3000.5, -90.0, 0.0, "Theta"))
+        @player &cAll NFA 5 rooms are currently occupied. Please beg and scream in chat for one to open up. Sorry!
+        @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 0.5
+    @fi
+
+# If they havent left you
+@else
+    @player DEBUG: THEY HAVENT LEFT YOU!!! loading room to your relative vars
+    @var nfa::loadRoomToRelative(player, room[player], world[player])
+@fi
+
+
+
+
+# # Pass 1: find a same-level room to co-op, and remember the first empty room.
+# @define Int joinRoom = -1
+# @define Int emptyRoom = -1
+# @for Int r in list::range(0, 5)
+#     @define Player[] inside = Region(String("rynfa" + String(r) + String(world[player])), "Theta").getPlayersInside()
+#     @player DEBUG: region = rynfa{{r}}{{world[player]}}, inside = {{inside}}, level = {{level[player]}}
+#     @if inside.length() == 0
+#         @if emptyRoom == -1
+#             @var emptyRoom = r
+#         @fi
+#     @elseif joinRoom == -1 && level[inside[0]] == level[player]
+#         @var joinRoom = r
+#     @fi
+# @done
+
+# @if joinRoom != -1
+#     # Same-level co-op room exists: join it and adopt its shared state. Don't rebuild.
+#     @var room[player] = joinRoom
+#     @var nfa::loadRoomToRelative(player, joinRoom, 0)
+    
+    
+#     @bypass playsound minecraft:entity.enderman.teleport master @s ~ ~ ~ 0.5 1
+# @elseif emptyRoom != -1
+#     # No co-op room: claim an empty one and restore my saved NFA into it. setupRoom already
+#     # clears the room (fill + kill branches), syncs relative -> global, and redraws.
+#     @var room[player] = emptyRoom
+#     @var nfa::setupRoom(player, emptyRoom, 0)
+#     # TODO: teleport the player into room emptyRoom (Cookie teleports here; fill in NFA coords).
+#     @bypass playsound minecraft:entity.enderman.teleport master @s ~ ~ ~ 0.5 1
+# @else
+#     @player &cAll NFA 5 rooms are currently occupied. Please wait for one to open up.
+#     @bypass playsound minecraft:block.note_block.didgeridoo master @s ~ ~ ~ 0.75 0.5
+# @fi

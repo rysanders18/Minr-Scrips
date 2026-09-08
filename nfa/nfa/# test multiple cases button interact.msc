@@ -1,0 +1,7 @@
+# testMultipleCases(Player player, Int room, Int world)
+
+@using nfa
+@fast
+@cooldown 1s
+
+@var testMultipleCases(player, room[player], world[player], Block(block.getX(), block.getY(), block.getZ(), "Theta"))

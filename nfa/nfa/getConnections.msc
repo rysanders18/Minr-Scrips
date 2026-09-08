@@ -1,0 +1,52 @@
+# String[] getConnections(Int roomIdx)
+
+# Returns the shared per-room connection list (source of truth for reads).
+# roomIdx = world * 5 + room (0..19).
+
+@using nfa
+@fast
+
+@if roomIdx == 0
+    @return listOfConnections0
+@elseif roomIdx == 1
+    @return listOfConnections1
+@elseif roomIdx == 2
+    @return listOfConnections2
+@elseif roomIdx == 3
+    @return listOfConnections3
+@elseif roomIdx == 4
+    @return listOfConnections4
+@elseif roomIdx == 5
+    @return listOfConnections5
+@elseif roomIdx == 6
+    @return listOfConnections6
+@elseif roomIdx == 7
+    @return listOfConnections7
+@elseif roomIdx == 8
+    @return listOfConnections8
+@elseif roomIdx == 9
+    @return listOfConnections9
+@elseif roomIdx == 10
+    @return listOfConnections10
+@elseif roomIdx == 11
+    @return listOfConnections11
+@elseif roomIdx == 12
+    @return listOfConnections12
+@elseif roomIdx == 13
+    @return listOfConnections13
+@elseif roomIdx == 14
+    @return listOfConnections14
+@elseif roomIdx == 15
+    @return listOfConnections15
+@elseif roomIdx == 16
+    @return listOfConnections16
+@elseif roomIdx == 17
+    @return listOfConnections17
+@elseif roomIdx == 18
+    @return listOfConnections18
+@elseif roomIdx == 19
+    @return listOfConnections19
+@fi
+
+@player &cgetConnections: bad roomIdx {{roomIdx}}
+@return String[]

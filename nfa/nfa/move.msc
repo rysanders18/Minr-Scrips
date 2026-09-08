@@ -4,7 +4,7 @@
 # Parameters:
 #   - player: The player whose connection list to search
 #   - states: Array of block coordinates to start from
-#   - symbol: "0" for gold transitions, "1" for diamond transitions
+#   - symbol: "0" for gold, "1" for diamond, "2" for waxed copper transitions
 # Returns: String[] of block coordinates reachable on the symbol
 
 @using nfa
@@ -14,14 +14,19 @@
 @define String targetBlockType = "minecraft:gold_block"
 @if symbol == "1"
     @var targetBlockType = "minecraft:diamond_block"
+@elseif symbol == "2"
+    @var targetBlockType = "minecraft:waxed_copper_block"
 @fi
+
+# Fetch the connection list once instead of per state
+@define String[] connections = nfa::getConnections(world * 5 + room)
 
 # For each state in current set
 @for String state in states
     # Find all transitions with the target symbol
-    @for String connection in listOfConnections[player]
+    @for String connection in connections
         @define String[] parts = connection.split(";")
-        @if parts.length() == 6 && parts[0] == "connection" && parts[3] == targetBlockType
+        @if parts.length() >= 6 && parts[0] == "connection" && parts[3] == targetBlockType
             # Check if current state is the source (parts[1] is FROM, parts[2] is TO)
             # Connections are DIRECTED: block1 -> block2
             @if parts[1] == state

@@ -1,0 +1,12 @@
+# testExecuteIfRYgamer1(Player player)
+
+@using nfa
+@fast
+
+@bypass /tellraw RYgamer1 "Starting Test!"
+
+@if util::executeAndQuerySuccess("/execute in minecraft:theta at RYgamer1 if entity RYgamer1")
+    @bypass /tellraw RYgamer1 {"text":"RYgamer1 detected!","color":"green"}
+@else
+    @bypass /tellraw RYgamer1 {"text":"RYgamer1 not detected!","color":"red"}
+@fi

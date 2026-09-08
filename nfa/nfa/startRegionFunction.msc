@@ -1,0 +1,6 @@
+# startRegionFunction(Player player)
+
+@using nfa
+@fast
+
+@var uuid[player] = player.getUniqueId()
